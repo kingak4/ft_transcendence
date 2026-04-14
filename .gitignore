@@ -1,0 +1,9 @@
+# IDE
+.vscode/
+*.iml
+*.iws
+*.ipr
+.idea/
+
+# Environment Variables
+.env
