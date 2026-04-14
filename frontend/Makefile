@@ -1,0 +1,1 @@
+# Makefile to bring up the Next.js server (either locally or in docker)
