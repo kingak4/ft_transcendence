@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:${POSTGRES_VERSION} #link to the image: https://hub.docker.com/_/postgres
+    image: postgres:${POSTGRES_VERSION}
     container_name: postgres-db-container
     env_file:
       - .env
