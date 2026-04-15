@@ -33,7 +33,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authProvider)
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api-docs/**", "/swagger-ui/**", "/auth/**").permitAll()
+            .requestMatchers("/api-docs/**", "/swagger-ui/**", "/users/**").permitAll()
             .anyRequest().authenticated()
         )
         .exceptionHandling(exception -> exception

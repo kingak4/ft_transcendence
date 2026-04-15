@@ -5,13 +5,13 @@ import code.modules.users.ports.in.LoginUser;
 import code.modules.users.ports.in.LoginUser.LoginCommand;
 import code.modules.users.ports.in.LoginUser.LoginResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -21,15 +21,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = AuthRestController.class)
+@WebMvcTest(controllers = LoginRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AuthRestControllerTest {
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+class LoginRestControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
-  private ObjectMapper objectMapper;
+  private final MockMvc mockMvc;
+  private final ObjectMapper objectMapper;
 
   @MockBean
   private LoginUser loginUser;
@@ -42,13 +40,13 @@ class AuthRestControllerTest {
     // given
     var email = "user@email.com";
     var password = "plain-password";
-    var loginRequest = new AuthRestController.LoginRequest(email, password);
+    var loginRequest = new LoginRestController.LoginRequest(email, password);
 
     when(loginUser.login(new LoginCommand(email, password)))
         .thenReturn(new LoginResult("jwt-token", "Bearer"));
 
     // when
-    mockMvc.perform(post("/auth/login")
+    mockMvc.perform(post("/users/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(loginRequest)))
         .andExpect(status().isOk())

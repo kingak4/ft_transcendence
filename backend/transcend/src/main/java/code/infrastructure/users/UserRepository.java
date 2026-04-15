@@ -15,7 +15,7 @@ public class UserRepository implements UserDao {
   public Optional<User> findByEmail(String email) {
 		User user = new User(
 				UUID.randomUUID(),
-				"user@email.com",
+					"user@email.com",
 				"$2a$10$AXw0YvIyeQmI.HBhlXCIDOx.3bWg4M7/rwOm7U7m7wAuJvSi5FEhS"
 		);
     return Optional.ofNullable(user.email().equals(email) ? user : null);
