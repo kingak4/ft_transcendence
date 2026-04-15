@@ -4,6 +4,7 @@ import code.modules.users.ports.in.AuthenticateUser;
 import code.modules.users.ports.out.HashingService;
 import code.modules.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,10 +17,10 @@ public class UserAuthenticationService implements AuthenticateUser {
   @Override
   public AuthResult authenticate(AuthCommand command) {
     var user = userDao.findByEmail(command.email())
-        .orElseThrow(InvalidCredentialsException::new);
+        .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
     if (!hashingService.matches(command.rawPassword(), user.password())) {
-      throw new InvalidCredentialsException();
+      throw new BadCredentialsException("Invalid email or password");
     }
 
     return new AuthResult(user.id(), user.email());

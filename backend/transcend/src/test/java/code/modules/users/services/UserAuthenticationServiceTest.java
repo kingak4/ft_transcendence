@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -59,7 +60,7 @@ class UserAuthenticationServiceTest {
     when(userDao.findByEmail(command.email())).thenReturn(Optional.empty());
 
     // when
-    assertThrows(InvalidCredentialsException.class, () -> service.authenticate(command));
+    assertThrows(BadCredentialsException.class, () -> service.authenticate(command));
 
     // then
     verify(userDao).findByEmail(command.email());
@@ -76,7 +77,7 @@ class UserAuthenticationServiceTest {
     when(hashingService.matches(command.rawPassword(), user.password())).thenReturn(false);
 
     // when
-    assertThrows(InvalidCredentialsException.class, () -> service.authenticate(command));
+    assertThrows(BadCredentialsException.class, () -> service.authenticate(command));
 
     // then
     verify(userDao).findByEmail(command.email());
