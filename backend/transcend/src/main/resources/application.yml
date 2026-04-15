@@ -1,6 +1,8 @@
 spring:
   application:
-    name: app-template
+    name: transcend-backend
+  main:
+    banner-mode: off
 server:
   port: 8000
   servlet:

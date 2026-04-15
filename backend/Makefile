@@ -1,1 +1,8 @@
-# Makefile to bring up the Spring boot backend (either locally or in docker)
+run: build
+	gradle bootRun
+
+build:
+	gradle build
+
+format:
+	gradle checkstyleApply
