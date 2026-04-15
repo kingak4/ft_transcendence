@@ -1,11 +1,12 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:${POSTGRES_VERSION} #link to the image: https://hub.docker.com/_/postgres
     container_name: postgres-db-container
     env_file:
       - .env
     volumes:
       - pgdata:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app_network
     ports:
