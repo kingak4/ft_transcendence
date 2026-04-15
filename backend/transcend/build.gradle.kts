@@ -4,7 +4,7 @@ plugins {
    jacoco
    alias(libs.plugins.spring.boot)
    alias(libs.plugins.spring.management)
-   id("com.diffplug.spotless") version "6.25.0"
+   alias(libs.plugins.formatter)
 }
 
 group = "code"
@@ -22,6 +22,7 @@ dependencies {
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
    implementation(libs.mapstruct)
+   implementation(libs.spring.security)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)
