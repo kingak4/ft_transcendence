@@ -23,6 +23,9 @@ dependencies {
    implementation(libs.spring.openapi)
    implementation(libs.mapstruct)
    implementation(libs.spring.security)
+   implementation(libs.spring.data.jpa)
+
+   runtimeOnly(libs.postgres)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)

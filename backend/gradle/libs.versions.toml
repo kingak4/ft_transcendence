@@ -17,6 +17,8 @@ mapstruct-lombok = "0.2.0"
 spring-openapi = "2.6.0"
 # https://plugins.gradle.org/plugin/com.diffplug.spotless
 formatter =  "6.25.0"
+# https://mvnrepository.com/artifact/org.postgresql/postgresql/42.7.10
+postgres = "42.7.10"
 
 [libraries]
 spring-modulith = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
@@ -25,6 +27,9 @@ spring-openapi = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", 
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+
+postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
