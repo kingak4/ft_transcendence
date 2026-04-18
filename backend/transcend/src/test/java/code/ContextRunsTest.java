@@ -9,6 +9,5 @@ import org.springframework.test.context.ActiveProfiles;
 class ContextRunsTest {
 
   @Test
-  void should_load() {
-  }
+  void should_load() {}
 }

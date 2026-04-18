@@ -1,44 +1,38 @@
 package code.infrastructure.security;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import code.modules.users.domain.User;
 import code.modules.users.ports.out.UserDao;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
-@ContextConfiguration(classes = CustomUserDetailsServiceTest.CustomUserDetailsServiceTestConfig.class)
+@ContextConfiguration(
+    classes = CustomUserDetailsServiceTest.CustomUserDetailsServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class CustomUserDetailsServiceTest {
 
-  @MockBean
-  private UserDao userDao;
+  @MockBean private UserDao userDao;
 
   private final UserDetailsService userDetailsService;
 
   @Configuration
   @Import(CustomUserDetailsService.class)
-  static class CustomUserDetailsServiceTestConfig {
-  }
+  static class CustomUserDetailsServiceTestConfig {}
 
   @Test
   void loadUserByUsernameReturnsUserDetailsWhenUserExists() {
@@ -64,8 +58,9 @@ class CustomUserDetailsServiceTest {
     when(userDao.findByEmail(email)).thenReturn(Optional.empty());
 
     // when
-    var exception = assertThrows(UsernameNotFoundException.class,
-        () -> userDetailsService.loadUserByUsername(email));
+    var exception =
+        assertThrows(
+            UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(email));
 
     // then
     assertEquals("User not found with email: " + email, exception.getMessage());

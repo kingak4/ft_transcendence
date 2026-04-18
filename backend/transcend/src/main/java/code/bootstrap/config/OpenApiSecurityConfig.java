@@ -10,14 +10,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
     info = @Info(title = "Transcend API"),
-    security = @SecurityRequirement(name = "bearerAuth")
-)
+    security = @SecurityRequirement(name = "bearerAuth"))
 @SecurityScheme(
     name = "bearerAuth",
     type = SecuritySchemeType.HTTP,
     scheme = "bearer",
     bearerFormat = "JWT",
-    description = "Call /users/login with fixture credentials: user@email.com / plain-password"
-)
-public class OpenApiSecurityConfig {
-}
+    description = "Call /users/login with fixture credentials: user@email.com / plain-password")
+public class OpenApiSecurityConfig {}

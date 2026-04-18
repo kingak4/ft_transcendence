@@ -26,21 +26,24 @@ public class SecurityConfig {
   public SecurityFilterChain securityEnabled(
       HttpSecurity http,
       DaoAuthenticationProvider authProvider,
-      JwtAuthenticationFilter jwtAuthenticationFilter
-  ) {
-    return http
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      JwtAuthenticationFilter jwtAuthenticationFilter) {
+    return http.csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authProvider)
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api-docs/**", "/swagger-ui/**", "/users/**").permitAll()
-            .anyRequest().authenticated()
-        )
-        .exceptionHandling(exception -> exception
-            .authenticationEntryPoint((request, response, authException) -> {
-              response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            })
-        )
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers("/api-docs/**", "/swagger-ui/**", "/users/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .exceptionHandling(
+            exception ->
+                exception.authenticationEntryPoint(
+                    (request, response, authException) -> {
+                      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    }))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
@@ -48,14 +51,12 @@ public class SecurityConfig {
   @Bean
   @SneakyThrows
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
-      return config.getAuthenticationManager();
+    return config.getAuthenticationManager();
   }
 
   @Bean
   public DaoAuthenticationProvider authProvider(
-      UserDetailsService userDetailsService,
-      PasswordEncoder passwordEncoder
-  ) {
+      UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
     provider.setPasswordEncoder(passwordEncoder);
     provider.setUserDetailsService(userDetailsService);

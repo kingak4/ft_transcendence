@@ -1,19 +1,5 @@
 package code.modules.users.services;
 
-import code.modules.users.domain.User;
-import code.modules.users.ports.in.AuthenticateUser.AuthCommand;
-import code.modules.users.ports.out.HashingService;
-import code.modules.users.ports.out.UserDao;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.BadCredentialsException;
-
-import java.util.Optional;
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -21,17 +7,27 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import code.modules.users.domain.User;
+import code.modules.users.ports.in.AuthenticateUser.AuthCommand;
+import code.modules.users.ports.out.HashingService;
+import code.modules.users.ports.out.UserDao;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
+
 @ExtendWith(MockitoExtension.class)
 class UserAuthenticationServiceTest {
 
-  @Mock
-  private UserDao userDao;
+  @Mock private UserDao userDao;
 
-  @Mock
-  private HashingService hashingService;
+  @Mock private HashingService hashingService;
 
-  @InjectMocks
-  private UserAuthenticationService service;
+  @InjectMocks private UserAuthenticationService service;
 
   @Test
   void authenticateReturnsAuthResultWhenCredentialsAreValid() {

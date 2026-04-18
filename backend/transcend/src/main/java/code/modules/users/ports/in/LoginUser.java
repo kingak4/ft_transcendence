@@ -4,9 +4,7 @@ public interface LoginUser {
 
   LoginResult login(LoginCommand command);
 
-  record LoginCommand(String email, String rawPassword) {
-  }
+  record LoginCommand(String email, String rawPassword) {}
 
-  record LoginResult(String accessToken, String tokenType) {
-  }
+  record LoginResult(String accessToken, String tokenType) {}
 }

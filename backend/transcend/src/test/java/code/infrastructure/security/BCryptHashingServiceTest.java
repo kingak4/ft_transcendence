@@ -1,5 +1,8 @@
 package code.infrastructure.security;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import code.bootstrap.config.EncoderConfig;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -9,9 +12,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringJUnitConfig
 @ContextConfiguration(classes = BCryptHashingServiceTest.BCryptHashingServiceTestConfig.class)
@@ -23,8 +23,7 @@ class BCryptHashingServiceTest {
 
   @Configuration
   @Import(BCryptHashingService.class)
-  static class BCryptHashingServiceTestConfig extends EncoderConfig {
-  }
+  static class BCryptHashingServiceTestConfig extends EncoderConfig {}
 
   @Test
   void encodeProducesPasswordThatMatchesRawInput() {

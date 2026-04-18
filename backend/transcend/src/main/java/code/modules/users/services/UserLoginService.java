@@ -1,8 +1,8 @@
 package code.modules.users.services;
 
+import code.modules.users.ports.in.AuthenticateUser;
 import code.modules.users.ports.in.LoginUser;
 import code.modules.users.ports.out.AccessTokenIssuer;
-import code.modules.users.ports.in.AuthenticateUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ public class UserLoginService implements LoginUser {
 
   @Override
   public LoginResult login(LoginCommand command) {
-    var authResult = authenticateUser.authenticate(
-        new AuthenticateUser.AuthCommand(command.email(), command.rawPassword())
-    );
+    var authResult =
+        authenticateUser.authenticate(
+            new AuthenticateUser.AuthCommand(command.email(), command.rawPassword()));
     String token = accessTokenIssuer.generateToken(authResult.email());
     return new LoginResult(token, TOKEN_TYPE);
   }

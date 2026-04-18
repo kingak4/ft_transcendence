@@ -1,9 +1,8 @@
 package code.infrastructure.security;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BearerTokenResolver {

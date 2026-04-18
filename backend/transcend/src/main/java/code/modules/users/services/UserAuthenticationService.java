@@ -16,8 +16,10 @@ public class UserAuthenticationService implements AuthenticateUser {
 
   @Override
   public AuthResult authenticate(AuthCommand command) {
-    var user = userDao.findByEmail(command.email())
-        .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
+    var user =
+        userDao
+            .findByEmail(command.email())
+            .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
     if (!hashingService.matches(command.rawPassword(), user.password())) {
       throw new BadCredentialsException("Invalid email or password");

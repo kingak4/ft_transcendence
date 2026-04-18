@@ -1,7 +1,7 @@
 GRADLE := gradlew
 PROFILE := local
 
-run: build
+run:
 	$(GRADLE) bootRun --args='--spring.profiles.active=$(PROFILE)'
 
 build:

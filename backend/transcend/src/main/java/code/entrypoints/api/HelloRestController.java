@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("hello")
 public class HelloRestController {
 
-    @GetMapping("user")
-    @Operation(summary = "A test controller, remove in the future") // TODO
-    public String helloUser() {
-        return "Hello User";
-    }
+  @GetMapping("user")
+  @Operation(summary = "A test controller, remove in the future") // TODO
+  public String helloUser() {
+    return "Hello User";
+  }
 }

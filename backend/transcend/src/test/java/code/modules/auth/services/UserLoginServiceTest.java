@@ -1,33 +1,29 @@
 package code.modules.auth.services;
 
-import code.modules.users.ports.in.LoginUser.LoginCommand;
-import code.modules.users.ports.out.AccessTokenIssuer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import code.modules.users.ports.in.AuthenticateUser;
 import code.modules.users.ports.in.AuthenticateUser.AuthResult;
+import code.modules.users.ports.in.LoginUser.LoginCommand;
+import code.modules.users.ports.out.AccessTokenIssuer;
 import code.modules.users.services.UserLoginService;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class UserLoginServiceTest {
 
-  @Mock
-  private AuthenticateUser authenticateUser;
+  @Mock private AuthenticateUser authenticateUser;
 
-  @Mock
-  private AccessTokenIssuer accessTokenIssuer;
+  @Mock private AccessTokenIssuer accessTokenIssuer;
 
-  @InjectMocks
-  private UserLoginService service;
+  @InjectMocks private UserLoginService service;
 
   @Test
   void loginAuthenticatesAndReturnsBearerToken() {
@@ -42,7 +38,8 @@ class UserLoginServiceTest {
 
     assertEquals("jwt-token", result.accessToken());
     assertEquals("Bearer", result.tokenType());
-    verify(authenticateUser).authenticate(new AuthenticateUser.AuthCommand(email, "plain-password"));
+    verify(authenticateUser)
+        .authenticate(new AuthenticateUser.AuthCommand(email, "plain-password"));
     verify(accessTokenIssuer).generateToken(email);
   }
 }

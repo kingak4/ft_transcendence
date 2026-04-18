@@ -35,11 +35,8 @@ public class JwtRequestAuthenticator {
         return;
       }
 
-      UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-          userDetails,
-          null,
-          userDetails.getAuthorities()
-      );
+      UsernamePasswordAuthenticationToken authToken =
+          new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authToken);
     } catch (JwtException exception) {

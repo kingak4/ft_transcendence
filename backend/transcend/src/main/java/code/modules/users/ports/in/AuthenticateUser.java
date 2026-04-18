@@ -6,9 +6,7 @@ public interface AuthenticateUser {
 
   AuthResult authenticate(AuthCommand command);
 
-  record AuthCommand(String email, String rawPassword) {
-  }
+  record AuthCommand(String email, String rawPassword) {}
 
-  record AuthResult(UUID userId, String email) {
-  }
+  record AuthResult(UUID userId, String email) {}
 }
