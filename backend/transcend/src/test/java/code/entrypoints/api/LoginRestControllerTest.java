@@ -7,9 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import code.infrastructure.security.JwtAuthenticationFilter;
-import code.modules.users.ports.in.LoginUser;
-import code.modules.users.ports.in.LoginUser.LoginCommand;
-import code.modules.users.ports.in.LoginUser.LoginResult;
+import code.modules.users.ports.in.LoginUseCase;
+import code.modules.users.ports.in.LoginUseCase.LoginCommand;
+import code.modules.users.ports.in.LoginUseCase.LoginResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class LoginRestControllerTest {
   private final MockMvc mockMvc;
   private final ObjectMapper objectMapper;
 
-  @MockBean private LoginUser loginUser;
+  @MockBean private LoginUseCase loginUseCase;
 
   @MockBean private JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -39,7 +39,7 @@ class LoginRestControllerTest {
     var password = "plain-password";
     var loginRequest = new LoginRestController.LoginRequest(email, password);
 
-    when(loginUser.login(new LoginCommand(email, password)))
+    when(loginUseCase.login(new LoginCommand(email, password)))
         .thenReturn(new LoginResult("jwt-token", "Bearer"));
 
     // when
@@ -53,6 +53,6 @@ class LoginRestControllerTest {
         .andExpect(jsonPath("$.tokenType").value("Bearer"));
 
     // then
-    verify(loginUser).login(new LoginCommand(email, password));
+    verify(loginUseCase).login(new LoginCommand(email, password));
   }
 }

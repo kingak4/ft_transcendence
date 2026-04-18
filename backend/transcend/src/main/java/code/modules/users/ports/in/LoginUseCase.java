@@ -1,6 +1,6 @@
 package code.modules.users.ports.in;
 
-public interface LoginUser {
+public interface LoginUseCase {
 
   LoginResult login(LoginCommand command);
 

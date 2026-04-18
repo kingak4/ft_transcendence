@@ -1,6 +1,6 @@
 package code.modules.users.services;
 
-import code.modules.users.ports.in.AuthenticateUser;
+import code.modules.users.ports.in.AuthenticateUseCase;
 import code.modules.users.ports.out.HashingService;
 import code.modules.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserAuthenticationService implements AuthenticateUser {
+public class AuthenticationService implements AuthenticateUseCase {
 
   private final UserDao userDao;
   private final HashingService hashingService;

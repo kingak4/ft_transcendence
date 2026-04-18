@@ -2,7 +2,7 @@ package code.modules.users.ports.in;
 
 import java.util.UUID;
 
-public interface RegisterUser {
+public interface RegisterUseCase {
 
   RegisteredUser register(RegisterCommand command); // TODO
 

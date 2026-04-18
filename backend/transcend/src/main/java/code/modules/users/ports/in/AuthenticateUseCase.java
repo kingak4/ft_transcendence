@@ -2,7 +2,7 @@ package code.modules.users.ports.in;
 
 import java.util.UUID;
 
-public interface AuthenticateUser {
+public interface AuthenticateUseCase {
 
   AuthResult authenticate(AuthCommand command);
 

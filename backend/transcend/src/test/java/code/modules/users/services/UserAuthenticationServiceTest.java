@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import code.modules.users.domain.User;
-import code.modules.users.ports.in.AuthenticateUser.AuthCommand;
+import code.modules.users.ports.in.AuthenticateUseCase.AuthCommand;
 import code.modules.users.ports.out.HashingService;
 import code.modules.users.ports.out.UserDao;
 import java.util.Optional;
@@ -27,7 +27,7 @@ class UserAuthenticationServiceTest {
 
   @Mock private HashingService hashingService;
 
-  @InjectMocks private UserAuthenticationService service;
+  @InjectMocks private AuthenticationService service;
 
   @Test
   void authenticateReturnsAuthResultWhenCredentialsAreValid() {
