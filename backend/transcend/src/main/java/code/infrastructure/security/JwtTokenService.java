@@ -39,12 +39,10 @@ public class JwtTokenService implements AccessTokenIssuer {
   }
 
   public boolean isTokenValid(String token, UserDetails userDetails) {
-    String username = extractUsername(token);
-    return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-  }
-
-  private boolean isTokenExpired(String token) {
-    return extractAllClaims(token).getExpiration().before(new Date());
+    Claims claims = extractAllClaims(token);
+    String username = claims.getSubject();
+    boolean isExpired = claims.getExpiration().before(new Date());
+    return username.equals(userDetails.getUsername()) && !isExpired;
   }
 
   private Claims extractAllClaims(String token) {
