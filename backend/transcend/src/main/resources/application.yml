@@ -13,5 +13,5 @@ springdoc:
 
 security:
   jwt:
-    secret: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+    secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
     expiration-ms: 3600000

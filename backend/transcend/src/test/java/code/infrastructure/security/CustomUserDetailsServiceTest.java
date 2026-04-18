@@ -63,7 +63,7 @@ class CustomUserDetailsServiceTest {
             UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(email));
 
     // then
-    assertEquals("User not found with email: " + email, exception.getMessage());
+    assertEquals("with email: " + email, exception.getMessage());
     verify(userDao).findByEmail(email);
   }
 }

@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    
+
     resolveFrom(request).ifPresent(token -> authenticateRequest(token, request));
 
     filterChain.doFilter(request, response);
@@ -64,8 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void setAuthentication(UserDetails userDetails, HttpServletRequest request) {
-    var authToken = new UsernamePasswordAuthenticationToken(
-        userDetails, null, userDetails.getAuthorities());
+    var authToken =
+        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authToken);
   }

@@ -18,8 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     var user =
         userDao
             .findByEmail(email)
-            .orElseThrow(
-                () -> new UsernameNotFoundException("User not found with email: " + email));
+            .orElseThrow(() -> new UsernameNotFoundException("with email: " + email));
 
     return org.springframework.security.core.userdetails.User.builder()
         .username(user.email())

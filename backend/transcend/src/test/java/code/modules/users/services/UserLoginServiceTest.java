@@ -1,24 +1,30 @@
 package code.modules.users.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import code.modules.users.ports.in.AuthenticateUseCase;
-import code.modules.users.ports.in.AuthenticateUseCase.AuthResult;
+import code.modules.users.domain.User;
 import code.modules.users.ports.in.LoginUseCase.LoginCommand;
 import code.modules.users.ports.out.AccessTokenIssuer;
+import code.modules.users.ports.out.HashingService;
+import code.modules.users.ports.out.UserDao;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @ExtendWith(MockitoExtension.class)
 class UserLoginServiceTest {
 
-  @Mock private AuthenticateUseCase authenticateUseCase;
+  @Mock private UserDao userDao;
+
+  @Mock private HashingService hashingService;
 
   @Mock private AccessTokenIssuer accessTokenIssuer;
 
@@ -26,22 +32,42 @@ class UserLoginServiceTest {
 
   @Test
   void loginAuthenticatesAndReturnsBearerToken() {
-    // given
+    var email = "john@example.com";
+    var command = new LoginCommand(email, "plain-password");
+    var user = new User(UUID.randomUUID(), email, "hashed-password");
+
+    when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
+    when(hashingService.matches("plain-password", "hashed-password")).thenReturn(true);
+    when(accessTokenIssuer.generateToken(email)).thenReturn("jwt-token");
+
+    var result = service.login(command);
+
+    assertEquals("jwt-token", result.accessToken());
+    assertEquals("Bearer", result.tokenType());
+    verify(userDao).findByEmail(email);
+    verify(hashingService).matches("plain-password", "hashed-password");
+    verify(accessTokenIssuer).generateToken(email);
+  }
+
+  @Test
+  void loginWithInvalidEmailThrowsException() {
     var email = "john@example.com";
     var command = new LoginCommand(email, "plain-password");
 
-    when(authenticateUseCase.authenticate(new AuthenticateUseCase.AuthCommand(email, "plain-password")))
-        .thenReturn(new AuthResult(UUID.randomUUID(), email));
-    when(accessTokenIssuer.generateToken(email)).thenReturn("jwt-token");
+    when(userDao.findByEmail(email)).thenReturn(Optional.empty());
 
-    // when
-    var result = service.login(command);
+    assertThrows(BadCredentialsException.class, () -> service.login(command));
+  }
 
-    // then
-    assertEquals("jwt-token", result.accessToken());
-    assertEquals("Bearer", result.tokenType());
-    verify(authenticateUseCase)
-        .authenticate(new AuthenticateUseCase.AuthCommand(email, "plain-password"));
-    verify(accessTokenIssuer).generateToken(email);
+  @Test
+  void loginWithInvalidPasswordThrowsException() {
+    var email = "john@example.com";
+    var command = new LoginCommand(email, "plain-password");
+    var user = new User(UUID.randomUUID(), email, "hashed-password");
+
+    when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
+    when(hashingService.matches("plain-password", "hashed-password")).thenReturn(false);
+
+    assertThrows(BadCredentialsException.class, () -> service.login(command));
   }
 }
