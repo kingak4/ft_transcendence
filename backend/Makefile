@@ -1,8 +1,14 @@
+GRADLE := gradlew
+PROFILE := local
+
 run: build
-	gradle bootRun
+	$(GRADLE) bootRun --args='--spring.profiles.active=$(PROFILE)'
 
 build:
-	gradle build
+	$(GRADLE) build
 
 format:
-	gradle checkstyleApply
+	$(GRADLE) checkstyleApply
+
+lint:
+	$(GRADLE) pmdMain pmdTest
