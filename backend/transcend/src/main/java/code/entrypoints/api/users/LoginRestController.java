@@ -1,5 +1,6 @@
-package code.entrypoints.api;
+package code.entrypoints.api.users;
 
+import code.entrypoints.api.users.mappers.LoginMapper;
 import code.modules.users.ports.in.LoginUseCase;
 import code.modules.users.ports.in.LoginUseCase.LoginResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginRestController {
 
   private final LoginUseCase loginUseCase;
+  private final LoginMapper loginMapper;
 
   @PostMapping("login")
   @Operation(summary = "Authenticate and issue JWT")
   @SecurityRequirements
   public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-    LoginResult result =
-        loginUseCase.login(new LoginUseCase.LoginCommand(request.email(), request.password()));
-    return new LoginResponse(result.accessToken(), result.tokenType());
+    LoginResult result = loginUseCase.login(loginMapper.toCommand(request));
+    return loginMapper.toResponse(result);
   }
 
   public record LoginRequest(String email, String password) {}

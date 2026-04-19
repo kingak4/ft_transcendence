@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import code.modules.users.domain.User;
 import code.modules.users.ports.in.LoginUseCase.LoginCommand;
-import code.modules.users.ports.out.AccessTokenIssuer;
+import code.modules.users.ports.out.AccessTokenProvider;
 import code.modules.users.ports.out.HashingService;
 import code.modules.users.ports.out.UserDao;
 import java.util.Optional;
@@ -26,7 +26,7 @@ class UserLoginServiceTest {
 
   @Mock private HashingService hashingService;
 
-  @Mock private AccessTokenIssuer accessTokenIssuer;
+  @Mock private AccessTokenProvider accessTokenProvider;
 
   @InjectMocks private UserLoginService service;
 
@@ -38,7 +38,7 @@ class UserLoginServiceTest {
 
     when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
     when(hashingService.matches("plain-password", "hashed-password")).thenReturn(true);
-    when(accessTokenIssuer.generateToken(email)).thenReturn("jwt-token");
+    when(accessTokenProvider.generateToken(email)).thenReturn("jwt-token");
 
     var result = service.login(command);
 
@@ -46,7 +46,7 @@ class UserLoginServiceTest {
     assertEquals("Bearer", result.tokenType());
     verify(userDao).findByEmail(email);
     verify(hashingService).matches("plain-password", "hashed-password");
-    verify(accessTokenIssuer).generateToken(email);
+    verify(accessTokenProvider).generateToken(email);
   }
 
   @Test

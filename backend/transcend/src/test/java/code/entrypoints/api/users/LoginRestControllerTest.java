@@ -1,4 +1,4 @@
-package code.entrypoints.api;
+package code.entrypoints.api.users;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import code.entrypoints.api.users.mappers.LoginMapper;
 import code.infrastructure.security.JwtAuthenticationFilter;
 import code.modules.users.ports.in.LoginUseCase;
 import code.modules.users.ports.in.LoginUseCase.LoginCommand;
@@ -32,15 +33,21 @@ class LoginRestControllerTest {
 
   @MockBean private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+  @MockBean private LoginMapper loginMapper;
+
   @Test
   void loginReturnsJwtWhenCredentialsAreValid() throws Exception {
     // given
     var email = "user@email.com";
     var password = "plain-password";
     var loginRequest = new LoginRestController.LoginRequest(email, password);
+    var loginCommand = new LoginCommand(email, password);
+    var loginResult = new LoginResult("jwt-token", "Bearer");
+    var loginResponse = new LoginRestController.LoginResponse("jwt-token", "Bearer");
 
-    when(loginUseCase.login(new LoginCommand(email, password)))
-        .thenReturn(new LoginResult("jwt-token", "Bearer"));
+    when(loginMapper.toCommand(loginRequest)).thenReturn(loginCommand);
+    when(loginUseCase.login(loginCommand)).thenReturn(loginResult);
+    when(loginMapper.toResponse(loginResult)).thenReturn(loginResponse);
 
     // when
     mockMvc
@@ -53,6 +60,8 @@ class LoginRestControllerTest {
         .andExpect(jsonPath("$.tokenType").value("Bearer"));
 
     // then
-    verify(loginUseCase).login(new LoginCommand(email, password));
+    verify(loginMapper).toCommand(loginRequest);
+    verify(loginUseCase).login(loginCommand);
+    verify(loginMapper).toResponse(loginResult);
   }
 }

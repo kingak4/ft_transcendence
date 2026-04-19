@@ -1,7 +1,7 @@
 package code.infrastructure.security;
 
 import code.bootstrap.config.JwtProperties;
-import code.modules.users.ports.out.AccessTokenIssuer;
+import code.modules.users.ports.out.AccessTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtTokenService implements AccessTokenIssuer {
+public class JwtTokenService implements AccessTokenProvider {
 
   private final SecretKey signingKey;
   private final long expirationMs;

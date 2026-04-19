@@ -1,6 +1,6 @@
 package code.modules.users.ports.out;
 
-public interface AccessTokenIssuer {
+public interface AccessTokenProvider {
 
   String generateToken(String subject);
 }

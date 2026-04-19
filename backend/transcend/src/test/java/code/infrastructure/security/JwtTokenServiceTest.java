@@ -1,38 +1,34 @@
 package code.infrastructure.security;
 
-import code.bootstrap.config.JwtProperties;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import code.bootstrap.config.JwtProperties;
+import java.util.Collections;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
 // openssl rand -base64 32
 @SpringJUnitConfig
-@TestPropertySource(properties = {
-    "security.jwt.secret=pXbFiUSy8W76pDARDCfcWzpSymurWCST1jYh46oBwrA=",
-    "security.jwt.expirationMs=3600000"
-})
-@ContextConfiguration(
-    classes = JwtTokenServiceTest.JwtTokenServiceTestConfig.class)
+@TestPropertySource(
+    properties = {
+      "security.jwt.secret=pXbFiUSy8W76pDARDCfcWzpSymurWCST1jYh46oBwrA=",
+      "security.jwt.expirationMs=3600000"
+    })
+@ContextConfiguration(classes = JwtTokenServiceTest.JwtTokenServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class JwtTokenServiceTest {
 
@@ -100,6 +96,8 @@ class JwtTokenServiceTest {
     Thread.sleep(10);
 
     // then
-    assertThrows(io.jsonwebtoken.ExpiredJwtException.class, () -> shortLivedService.isTokenValid(token, testUser));
+    assertThrows(
+        io.jsonwebtoken.ExpiredJwtException.class,
+        () -> shortLivedService.isTokenValid(token, testUser));
   }
 }

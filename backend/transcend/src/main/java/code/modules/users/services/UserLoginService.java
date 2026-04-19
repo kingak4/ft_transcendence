@@ -1,7 +1,7 @@
 package code.modules.users.services;
 
 import code.modules.users.ports.in.LoginUseCase;
-import code.modules.users.ports.out.AccessTokenIssuer;
+import code.modules.users.ports.out.AccessTokenProvider;
 import code.modules.users.ports.out.HashingService;
 import code.modules.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserLoginService implements LoginUseCase {
   private final UserDao userDao;
   private final HashingService hashingService;
-  private final AccessTokenIssuer accessTokenIssuer;
+  private final AccessTokenProvider accessTokenProvider;
 
   @Override
   public LoginResult login(LoginCommand command) {
@@ -26,7 +26,7 @@ public class UserLoginService implements LoginUseCase {
       throw new BadCredentialsException("Invalid email or password");
     }
 
-    String token = accessTokenIssuer.generateToken(user.email());
+    String token = accessTokenProvider.generateToken(user.email());
     return new LoginResult(token, "Bearer");
   }
 }

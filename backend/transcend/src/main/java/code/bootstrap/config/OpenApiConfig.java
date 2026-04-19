@@ -17,4 +17,4 @@ import org.springframework.context.annotation.Configuration;
     scheme = "bearer",
     bearerFormat = "JWT",
     description = "Call /users/login with fixture credentials: user@email.com / plain-password")
-public class OpenApiSecurityConfig {}
+public class OpenApiConfig {}
