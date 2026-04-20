@@ -5,4 +5,8 @@ public interface HashingService {
   boolean matches(String rawPassword, String encodedPassword);
 
   String encode(String rawPassword);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main
