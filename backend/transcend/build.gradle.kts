@@ -23,12 +23,9 @@ dependencies {
    implementation(libs.spring.openapi)
    implementation(libs.mapstruct)
    implementation(libs.spring.security)
-<<<<<<< HEAD
    implementation(libs.jjwt.api)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
-=======
->>>>>>> main
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)

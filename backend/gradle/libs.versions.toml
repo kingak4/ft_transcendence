@@ -15,10 +15,7 @@ mapstruct = "1.6.3"
 mapstruct-lombok = "0.2.0"
 # https://central.sonatype.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/versions
 spring-openapi = "2.6.0"
-<<<<<<< HEAD
 jjwt = "0.12.6"
-=======
->>>>>>> main
 # https://plugins.gradle.org/plugin/com.diffplug.spotless
 formatter =  "6.25.0"
 
@@ -29,12 +26,9 @@ spring-openapi = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", 
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-security = { module = "org.springframework.boot:spring-boot-starter-security" }
-<<<<<<< HEAD
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
-=======
->>>>>>> main
 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }

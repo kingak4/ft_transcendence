@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 GRADLE := gradlew
 PROFILE := local
 
@@ -13,13 +12,3 @@ format:
 
 lint:
 	$(GRADLE) pmdMain pmdTest
-=======
-run: build
-	gradle bootRun
-
-build:
-	gradle build
-
-format:
-	gradle checkstyleApply
->>>>>>> main

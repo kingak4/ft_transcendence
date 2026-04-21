@@ -4,11 +4,9 @@ import java.util.UUID;
 
 public interface RegisterUser {
 
-	RegisteredUser register(RegisterCommand command);
+  RegisteredUser register(RegisterCommand command);
 
-	record RegisterCommand(String email, String rawPassword) {
-	}
+  record RegisterCommand(String email, String rawPassword) {}
 
-	record RegisteredUser(UUID id, String email) {
-	}
+  record RegisteredUser(UUID id, String email) {}
 }

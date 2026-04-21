@@ -20,8 +20,4 @@ public class BCryptHashingService implements HashingService {
   public String encode(String rawPassword) {
     return passwordEncoder.encode(rawPassword);
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> main
