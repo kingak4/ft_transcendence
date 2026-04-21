@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: postgres-db-container
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app_network
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
