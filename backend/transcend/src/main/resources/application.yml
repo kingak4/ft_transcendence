@@ -1,6 +1,8 @@
 spring:
   main:
     banner-mode: off
+  modulith:
+    detection-strategy: explicitly-annotated
 server:
   servlet:
     context-path: /

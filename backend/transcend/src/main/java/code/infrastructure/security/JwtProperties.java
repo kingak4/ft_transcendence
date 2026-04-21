@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.infrastructure.security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

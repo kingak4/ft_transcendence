@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 
 @ExtendWith(MockitoExtension.class)
-class UserLoginServiceTest {
+class LoginServiceTest {
 
   @Mock private UserDao userDao;
 
@@ -28,7 +28,7 @@ class UserLoginServiceTest {
 
   @Mock private AccessTokenProvider accessTokenProvider;
 
-  @InjectMocks private UserLoginService service;
+  @InjectMocks private LoginService service;
 
   @Test
   void loginAuthenticatesAndReturnsBearerToken() {

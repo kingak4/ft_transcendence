@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserLoginService implements LoginUseCase {
+class LoginService implements LoginUseCase {
   private final UserDao userDao;
   private final HashingService hashingService;
   private final AccessTokenProvider accessTokenProvider;

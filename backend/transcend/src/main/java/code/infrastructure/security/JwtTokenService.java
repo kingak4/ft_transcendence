@@ -1,6 +1,6 @@
 package code.infrastructure.security;
 
-import code.bootstrap.config.JwtProperties;
+
 import code.modules.users.ports.out.AccessTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

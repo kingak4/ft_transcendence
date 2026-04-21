@@ -19,4 +19,9 @@ public class UserRepository implements UserDao {
             "$2a$10$AXw0YvIyeQmI.HBhlXCIDOx.3bWg4M7/rwOm7U7m7wAuJvSi5FEhS");
     return Optional.ofNullable(user.email().equals(email) ? user : null);
   }
+
+  @Override
+  public void createUser(User user) {
+    return user;
+  }
 }

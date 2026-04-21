@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import code.bootstrap.config.JwtProperties;
+import code.infrastructure.security.JwtProperties;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
