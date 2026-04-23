@@ -8,7 +8,7 @@ build:
 	$(GRADLE) build
 
 format:
-	$(GRADLE) checkstyleApply
+	$(GRADLE) spotlessApply
 
 lint:
 	$(GRADLE) pmdMain pmdTest
