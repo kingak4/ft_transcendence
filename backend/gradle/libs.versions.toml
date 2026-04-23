@@ -15,6 +15,7 @@ mapstruct = "1.6.3"
 mapstruct-lombok = "0.2.0"
 # https://central.sonatype.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/versions
 spring-openapi = "2.6.0"
+jjwt = "0.12.6"
 # https://plugins.gradle.org/plugin/com.diffplug.spotless
 formatter =  "6.25.0"
 # https://mvnrepository.com/artifact/org.postgresql/postgresql/42.7.10
@@ -30,6 +31,9 @@ spring-security = { module = "org.springframework.boot:spring-boot-starter-secur
 spring-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 
 postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }

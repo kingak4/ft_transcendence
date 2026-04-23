@@ -26,6 +26,9 @@ dependencies {
    implementation(libs.spring.data.jpa)
 
    runtimeOnly(libs.postgres)
+   implementation(libs.jjwt.api)
+   runtimeOnly(libs.jjwt.impl)
+   runtimeOnly(libs.jjwt.jackson)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)

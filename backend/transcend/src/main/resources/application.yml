@@ -1,10 +1,7 @@
 spring:
-  application:
-    name: transcend-backend
   main:
     banner-mode: off
 server:
-  port: 8000
   servlet:
     context-path: /
 
@@ -13,3 +10,8 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui/
+
+security:
+  jwt:
+    secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
+    expiration-ms: 3600000

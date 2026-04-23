@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: transcend-backend-dev
+server:
+  port: 8080
