@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import code.users.config.EncoderConfig;
+import code.users.ports.out.HashingService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig
-@ContextConfiguration(classes = BCryptHashingServiceTest.BCryptHashingServiceTestConfig.class)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@SpringJUnitConfig(BCryptHashingServiceTest.BCryptHashingServiceTestConfig.class)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class BCryptHashingServiceTest {
 
-  private final BCryptHashingService hashingService;
+  private final HashingService hashingService;
   private final PasswordEncoder passwordEncoder;
 
   @Configuration

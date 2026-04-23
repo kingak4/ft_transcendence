@@ -20,10 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig
-@ContextConfiguration(
-    classes = CustomUserDetailsServiceTest.CustomUserDetailsServiceTestConfig.class)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@SpringJUnitConfig(CustomUserDetailsServiceTest.CustomUserDetailsServiceTestConfig.class)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class CustomUserDetailsServiceTest {
 
   @MockBean private UserDao userDao;

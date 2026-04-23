@@ -21,14 +21,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 // openssl rand -base64 32
-@SpringJUnitConfig
 @TestPropertySource(
     properties = {
       "security.jwt.secret=pXbFiUSy8W76pDARDCfcWzpSymurWCST1jYh46oBwrA=",
       "security.jwt.expirationMs=3600000"
     })
-@ContextConfiguration(classes = JwtTokenServiceTest.JwtTokenServiceTestConfig.class)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@SpringJUnitConfig(JwtTokenServiceTest.JwtTokenServiceTestConfig.class)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class JwtTokenServiceTest {
 
   private final JwtTokenService jwtTokenService;

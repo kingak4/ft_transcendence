@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = LoginController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class LoginControllerTest {
 
   private final MockMvc mockMvc;

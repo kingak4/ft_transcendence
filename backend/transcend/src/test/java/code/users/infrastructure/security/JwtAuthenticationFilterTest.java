@@ -27,12 +27,11 @@ class JwtAuthenticationFilterTest {
   @Mock private JwtTokenService jwtTokenService;
 
   @Mock private UserDetailsService userDetailsService;
-
-  @InjectMocks private JwtAuthenticationFilter filter;
-
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
   @Mock private FilterChain filterChain;
+
+  @InjectMocks private JwtAuthenticationFilter filter;
 
   @BeforeEach
   void setUp() {

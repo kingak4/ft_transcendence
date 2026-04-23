@@ -104,8 +104,8 @@ tasks {
    jacoco {
       jacocoTestReport {
          reports {
-            xml.required = false
-            csv.required = false
+            xml.required = true
+            csv.required = true
             html.outputLocation = layout.buildDirectory.dir("reports/jacoco")
          }
          classDirectories.setFrom(
@@ -113,6 +113,11 @@ tasks {
                fileTree(it) {
                   exclude("**/*MapperImpl.class")
                   exclude("**/config/**")
+                  exclude("**/*Exception.class")
+                  exclude("**/*ExceptionHandler.class")
+                  exclude("**/TranscendApp.class")
+                  exclude("**/HelloRestController.class")
+                  exclude("**/ValidProfileInitializer.class")
                }
             })
          )

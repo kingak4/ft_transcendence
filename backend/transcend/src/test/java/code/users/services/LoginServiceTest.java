@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import code.users.domain.exceptions.InvalidCredentialsException;
 import code.users.domain.model.User;
+import code.users.ports.in.LoginUseCase;
 import code.users.ports.in.LoginUseCase.LoginCommand;
 import code.users.ports.out.AccessTokenProvider;
 import code.users.ports.out.HashingService;
@@ -14,21 +15,29 @@ import code.users.ports.out.UserDao;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import lombok.RequiredArgsConstructor;
 
-@ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(LoginServiceTest.LoginServiceTestConfig.class)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class LoginServiceTest {
 
-  @Mock private UserDao userDao;
+  @MockBean private UserDao userDao;
 
-  @Mock private HashingService hashingService;
+  @MockBean private HashingService hashingService;
 
-  @Mock private AccessTokenProvider accessTokenProvider;
+  @MockBean private AccessTokenProvider accessTokenProvider;
 
-  @InjectMocks private LoginService service;
+  private final LoginUseCase service;
+
+  @Configuration
+  @Import(LoginService.class)
+  static class LoginServiceTestConfig {}
 
   @Test
   void loginAuthenticatesAndReturnsBearerToken() {

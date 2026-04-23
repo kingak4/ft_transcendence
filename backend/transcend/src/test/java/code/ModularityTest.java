@@ -5,7 +5,7 @@ import org.springframework.modulith.core.ApplicationModules;
 
 class ModularityTest {
 
-  ApplicationModules modules = ApplicationModules.of(TranscendApp.class);
+  final ApplicationModules modules = ApplicationModules.of(TranscendApp.class);
 
   @Test
   void verifyModularity() {

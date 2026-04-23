@@ -4,7 +4,7 @@
 
 This project uses Spring Modulith to verify and document modular architecture.
 
-The documentation (PlantUML component diagrams and Asciidoc files) is automatically generated when running tests.
+The documentation (PlantUML component diagrams and AsciiDoc files) is automatically generated when running tests.
 
 **To generate the documentation:**
 ```bash
