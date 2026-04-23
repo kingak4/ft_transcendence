@@ -4,7 +4,7 @@ import static code.users.entrypoints.api.LoginController.LoginRequest;
 import static code.users.entrypoints.api.RegisterController.RegisterRequest;
 import static code.users.ports.in.RegisterUseCase.RegisterCommand;
 
-import code.bootstrap.config.SpringMapperConfig;
+import code.shared.config.SpringMapperConfig;
 import code.users.entrypoints.api.LoginController.LoginResponse;
 import code.users.entrypoints.api.RegisterController.RegisterResponse;
 import code.users.ports.in.LoginUseCase.LoginCommand;

@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.shared.config;
 
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;

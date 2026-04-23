@@ -22,6 +22,7 @@ public class JwtTokenService implements AccessTokenProvider {
     this.expirationMs = jwtProperties.getExpirationMs();
   }
 
+  @Override
   public String generateToken(String username) {
     Instant now = Instant.now();
 

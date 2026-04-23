@@ -5,8 +5,17 @@ import org.springframework.modulith.core.ApplicationModules;
 
 class ModularityTest {
 
+  ApplicationModules modules = ApplicationModules.of(TranscendApp.class);
+
   @Test
   void verifyModularity() {
-    ApplicationModules.of(TranscendApp.class).verify();
+    modules.verify();
+  }
+
+  @Test
+  void createModuleDocumentation() {
+    new org.springframework.modulith.docs.Documenter(modules)
+        .writeDocumentation()
+        .writeIndividualModulesAsPlantUml();
   }
 }

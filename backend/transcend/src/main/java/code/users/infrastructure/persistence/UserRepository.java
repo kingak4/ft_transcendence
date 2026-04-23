@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserRepository implements UserDao {
+class UserRepository implements UserDao {
 
   // Password for the fixture is 'plain-password'
   @Override

@@ -3,7 +3,7 @@ package code.users.infrastructure.security;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import code.bootstrap.config.EncoderConfig;
+import code.users.config.EncoderConfig;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

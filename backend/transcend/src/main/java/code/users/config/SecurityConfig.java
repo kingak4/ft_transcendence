@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.users.config;
 
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import lombok.SneakyThrows;

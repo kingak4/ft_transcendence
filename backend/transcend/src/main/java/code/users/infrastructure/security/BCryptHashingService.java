@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class BCryptHashingService implements HashingService {
+class BCryptHashingService implements HashingService {
 
   private final PasswordEncoder passwordEncoder;
 
