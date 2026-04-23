@@ -1,0 +1,129 @@
+Modules:
+1. Authentication (Registration & Login)
+2. User Profile & Settings
+3 .Guest/Sharing Module (planned for later implementation)
+4. Community Module
+
+
+1. Info in pass_rules
+
+2. User Profile & Settings Module
+After successful login, the user gains access to their profile and settings.
+
+2.1 Profile Management
+User can:
+View their profile
+Change username:
+Allowed once every 30 days
+Change password
+
+2.2 Settings Sections
+Language
+User can select application language
+Appearance
+
+Available options:
+Light mode
+Dark mode
+
+AI Settings
+Available options:
+Enable AI support
+AI response style:
+Short
+Detailed
+
+Notifications
+Available options:
+Email notifications
+Progress reminders
+
+Privacy
+Available options:
+Make profile public
+Make profile private
+
+Account Actions
+Log out
+Ends current session
+Delete account
+Permanently removes user account
+
+4.1 Interest-Based Chat Discovery
+Users are automatically matched based on shared interests and skills.
+Rules:
+Users learning the same skill (e.g. Python) are grouped together
+System generates dedicated chat spaces for each shared interest
+Chats are dynamically suggested based on user activity and profile
+
+4.2 Chat Creation
+Users can create new chat rooms.
+Requirements:
+Chat must include a mandatory description
+Example: “I am working on project X”
+Content Restrictions:
+Offensive language is strictly prohibited
+Hate speech is strictly forbidden
+Chat creation is blocked if:
+Name contains prohibited content
+Description contains prohibited content
+
+4.3 Messaging Rules
+Chat is text-only
+Sending images, files, or any media is not allowed
+Communication must remain purely textual
+
+4.4 Social Interaction System (Friends Feature)
+Users can:
+Send friend requests to other users
+Accept or reject invitations
+Friendship Rules:
+Private messaging is allowed only between friends
+If users are not friends:
+Private conversation is blocked
+Blocking Behavior:
+If a user removes a friend:
+All private communication is automatically stopped
+Access to private chat is revoked immediately
+
+4.5 Chat Types
+1. Interest-Based Chats
+Automatically generated based on shared skills/interests
+2. Public Group Chats
+Users can create or join general-purpose groups.
+Examples:
+Support groups
+Study groups
+General discussion rooms
+
+4.6 Moderation Rules
+System validates:
+Chat names
+Chat descriptions
+Messages
+Any content containing:
+Offensive language
+Hate speech
+must be blocked automatically.
+
+4.7 Social Engagement & Achievements
+The system includes social-based achievements.
+Examples:
+Adding friends increases progress toward achievements
+Joining group chats contributes to engagement metrics
+Active participation in chats is tracked
+
+4.8 Invite System
+Users can:
+Invite friends to join the platform
+Share a referral link
+Features:
+“Invite your friends” button available in the app
+Rewards or achievements may be granted for invitations (to be defined)
+
+4.9 Key Concept
+The Community module ensures:
+Safe communication environment
+Learning-based social connections
+Controlled private messaging (friend-only system)
+Engagement tracking through social activity
