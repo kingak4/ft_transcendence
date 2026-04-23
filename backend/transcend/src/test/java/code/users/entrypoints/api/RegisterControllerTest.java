@@ -56,9 +56,11 @@ class RegisterControllerTest {
     when(mapper.toResponse(registeredUser)).thenReturn(response);
 
     // when & then
-    mockMvc.perform(post("/users/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(uuid.toString()));
 
@@ -79,9 +81,11 @@ class RegisterControllerTest {
     when(registerUseCase.register(command)).thenThrow(new EmailAlreadyRegisteredException(email));
 
     // when & then
-    mockMvc.perform(post("/users/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.status").value(409))
         .andExpect(jsonPath("$.error").value("Conflict"))

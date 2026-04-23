@@ -25,7 +25,6 @@ dependencies {
    implementation(libs.jjwt.api)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
-   compileOnly("jakarta.annotation:jakarta.annotation-api:2.1.1")
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)

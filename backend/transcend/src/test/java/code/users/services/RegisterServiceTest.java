@@ -1,6 +1,5 @@
 package code.users.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,14 +14,13 @@ import code.users.ports.out.HashingService;
 import code.users.ports.out.UserDao;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import lombok.RequiredArgsConstructor;
 
 @SpringJUnitConfig(RegisterServiceTest.RegisterServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -69,7 +67,7 @@ class RegisterServiceTest {
 
     // when
     assertThrows(EmailAlreadyRegisteredException.class, () -> service.register(command));
-    
+
     // then
     verify(userDao).findByEmail(email);
   }
