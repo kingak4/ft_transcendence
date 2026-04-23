@@ -1,6 +1,6 @@
 package code.users.infrastructure.persistence;
 
-import code.users.domain.User;
+import code.users.domain.model.User;
 import code.users.ports.out.UserDao;
 import java.util.Optional;
 import java.util.UUID;

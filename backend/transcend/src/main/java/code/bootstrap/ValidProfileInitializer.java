@@ -1,6 +1,6 @@
 package code.bootstrap;
 
-import code.bootstrap.exception.IllegalProfileException;
+import code.bootstrap.exceptions.IllegalProfileException;
 import java.util.List;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -19,7 +19,7 @@ public class ValidProfileInitializer
     List<String> activeList = List.of(env.getActiveProfiles());
     boolean isValid = activeList.stream().anyMatch(allowedList::contains);
     if (!isValid) {
-      throw new IllegalProfileException("Active: " + activeList + ". Allowed: " + allowedList);
+      throw new IllegalProfileException(activeList, allowedList);
     }
   }
 }

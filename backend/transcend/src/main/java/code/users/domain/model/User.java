@@ -1,4 +1,4 @@
-package code.users.domain;
+package code.users.domain.model;
 
 import java.util.UUID;
 

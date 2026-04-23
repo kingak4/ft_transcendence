@@ -1,6 +1,6 @@
 package code.users.ports.out;
 
-import code.users.domain.User;
+import code.users.domain.model.User;
 import java.util.Optional;
 
 public interface UserDao {
