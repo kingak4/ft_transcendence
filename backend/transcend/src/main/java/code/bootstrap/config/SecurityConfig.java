@@ -1,6 +1,6 @@
 package code.bootstrap.config;
 
-import code.infrastructure.security.JwtAuthenticationFilter;
+import code.users.infrastructure.security.JwtAuthenticationFilter;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
