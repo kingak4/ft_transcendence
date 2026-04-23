@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import code.users.domain.exceptions.InvalidCredentialsException;
 import code.users.domain.model.User;
 import code.users.ports.in.LoginUseCase.LoginCommand;
 import code.users.ports.out.AccessTokenProvider;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.BadCredentialsException;
 
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
@@ -56,7 +56,7 @@ class LoginServiceTest {
 
     when(userDao.findByEmail(email)).thenReturn(Optional.empty());
 
-    assertThrows(BadCredentialsException.class, () -> service.login(command));
+    assertThrows(InvalidCredentialsException.class, () -> service.login(command));
   }
 
   @Test
@@ -68,6 +68,6 @@ class LoginServiceTest {
     when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
     when(hashingService.matches("plain-password", "hashed-password")).thenReturn(false);
 
-    assertThrows(BadCredentialsException.class, () -> service.login(command));
+    assertThrows(InvalidCredentialsException.class, () -> service.login(command));
   }
 }

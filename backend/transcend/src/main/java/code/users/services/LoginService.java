@@ -17,10 +17,7 @@ class LoginService implements LoginUseCase {
 
   @Override
   public LoginResult login(LoginCommand command) {
-    var user =
-        userDao
-            .findByEmail(command.email())
-            .orElseThrow(InvalidCredentialsException::new);
+    var user = userDao.findByEmail(command.email()).orElseThrow(InvalidCredentialsException::new);
 
     if (!hashingService.matches(command.rawPassword(), user.password())) {
       throw new InvalidCredentialsException();

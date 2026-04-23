@@ -4,7 +4,6 @@ import static code.users.entrypoints.api.LoginController.LoginRequest;
 import static code.users.entrypoints.api.RegisterController.RegisterRequest;
 import static code.users.ports.in.RegisterUseCase.RegisterCommand;
 
-import code.shared.config.SpringMapperConfig;
 import code.users.entrypoints.api.LoginController.LoginResponse;
 import code.users.entrypoints.api.RegisterController.RegisterResponse;
 import code.users.ports.in.LoginUseCase.LoginCommand;
@@ -13,7 +12,7 @@ import code.users.ports.in.RegisterUseCase.RegisteredUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(config = SpringMapperConfig.class)
+@Mapper
 public interface UsersApiMapper {
 
   @Mapping(source = "password", target = "rawPassword")
@@ -21,6 +20,7 @@ public interface UsersApiMapper {
 
   LoginResponse toResponse(LoginResult result);
 
+  @Mapping(source = "password", target = "rawPassword")
   RegisterCommand toCommand(RegisterRequest request);
 
   RegisterResponse toResponse(RegisteredUser result);
