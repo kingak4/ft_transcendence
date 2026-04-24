@@ -1,5 +1,7 @@
 package code.users.entrypoints.api;
 
+import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
+import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,12 +45,10 @@ class RegisterControllerTest {
   @Test
   void registerReturns200WithUserIdWhenSuccessful() throws Exception {
     // given
-    var email = "john@example.com";
-    var password = "password123";
-    var request = new RegisterRequest(email, password);
-    var command = new RegisterCommand(email, password);
+    var request = new RegisterRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
+    var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
     var uuid = UUID.randomUUID();
-    var registeredUser = new RegisteredUser(uuid);
+    var registeredUser = new RegisteredUser(code.users.domain.model.UserId.of(uuid));
     var response = new RegisterController.RegisterResponse(uuid);
 
     when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);
@@ -72,13 +72,11 @@ class RegisterControllerTest {
   @Test
   void registerReturns409WhenEmailAlreadyExists() throws Exception {
     // given
-    var email = "john@example.com";
-    var password = "password123";
-    var request = new RegisterRequest(email, password);
-    var command = new RegisterCommand(email, password);
+    var request = new RegisterRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
+    var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
 
     when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);
-    when(registerUseCase.register(command)).thenThrow(new EmailAlreadyRegisteredException(email));
+    when(registerUseCase.register(command)).thenThrow(new EmailAlreadyRegisteredException(EMAIL_FIXTURE));
 
     // when & then
     mockMvc

@@ -3,5 +3,4 @@ package code.users.domain.model;
 import lombok.Value;
 
 @Value
-public class FriendId {
-}
+public class FriendId {}

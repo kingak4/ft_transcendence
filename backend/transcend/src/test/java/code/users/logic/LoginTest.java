@@ -1,4 +1,4 @@
-package code.users.services;
+package code.users.logic;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
@@ -25,12 +25,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig(LoginServiceTest.LoginServiceTestConfig.class)
+@SpringJUnitConfig(LoginTest.LoginServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-class LoginServiceTest {
+class LoginTest {
 
   @Configuration
-  @Import(LoginService.class)
+  @Import(Login.class)
   static class LoginServiceTestConfig {}
 
   private final LoginUseCase service;

@@ -1,4 +1,4 @@
-package code.users.services;
+package code.users.logic;
 
 import code.users.domain.exceptions.InvalidCredentialsException;
 import code.users.ports.in.LoginUseCase;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class LoginService implements LoginUseCase {
+class Login implements LoginUseCase {
   private final UserDao userDao;
   private final HashingService hashingService;
   private final AccessTokenProvider accessTokenProvider;

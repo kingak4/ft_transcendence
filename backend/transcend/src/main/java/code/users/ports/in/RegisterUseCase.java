@@ -1,11 +1,11 @@
 package code.users.ports.in;
 
+import code.users.domain.model.UserId;
 import code.users.infrastructure.validation.ValidPassword;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import java.util.UUID;
 
 public interface RegisterUseCase {
 
@@ -18,5 +18,5 @@ public interface RegisterUseCase {
           String email,
       @NotBlank(message = "Password cannot be blank") @ValidPassword String rawPassword) {}
 
-  record RegisteredUser(UUID id) {}
+  record RegisteredUser(UserId id) {}
 }

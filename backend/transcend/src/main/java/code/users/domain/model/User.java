@@ -1,17 +1,17 @@
 package code.users.domain.model;
 
-import java.util.UUID;
-
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import lombok.With;
 
 @Value
-@Builder
+@With
+@Builder(toBuilder = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
-  @EqualsAndHashCode.Include UUID id;
+  @EqualsAndHashCode.Include UserId id;
 
   String email;
   String password;

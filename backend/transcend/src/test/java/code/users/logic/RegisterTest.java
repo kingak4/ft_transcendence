@@ -1,4 +1,4 @@
-package code.users.services;
+package code.users.logic;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
@@ -27,12 +27,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-@SpringJUnitConfig(RegisterServiceTest.RegisterServiceTestConfig.class)
+@SpringJUnitConfig(RegisterTest.RegisterServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-class RegisterServiceTest {
+class RegisterTest {
 
   @Configuration
-  @Import(RegisterService.class)
+  @Import(Register.class)
   static class RegisterServiceTestConfig {
     @Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
