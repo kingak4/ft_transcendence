@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import code.users.domain.exceptions.UserNotFoundException;
 import code.users.ports.out.UserDao;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -55,11 +55,11 @@ class CustomUserDetailsServiceTest {
     // when
     var exception =
         assertThrows(
-            UsernameNotFoundException.class,
+            UserNotFoundException.class,
             () -> userDetailsService.loadUserByUsername(EMAIL_FIXTURE));
 
     // then
-    assertEquals("with email: " + EMAIL_FIXTURE, exception.getMessage());
+    assertEquals(UserNotFoundException.MESSAGE, exception.getMessage());
     verify(userDao).findByEmail(EMAIL_FIXTURE);
   }
 }

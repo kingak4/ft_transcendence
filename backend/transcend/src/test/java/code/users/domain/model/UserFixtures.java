@@ -8,10 +8,10 @@ public class UserFixtures {
   public static final String PASSWORD_FIXTURE = "password-fixture";
   public static final String HASH_FIXTURE = "hash-fixture";
   public static final String TOKEN_FIXTURE = "token-fixture";
-  public static final String USERNAME_FIXTURE = "Kinga";
+  public static final String DISPLAY_NAME_FIXTURE = "Kinga";
 
   public static User.UserBuilder aUser() {
-    UserDetails details = UserDetails.builder().displayName(USERNAME_FIXTURE).build();
+    UserDetails details = UserDetails.builder().displayName(DISPLAY_NAME_FIXTURE).build();
     return User.builder()
         .id(code.users.domain.model.UserId.of(ID_FIXTURE))
         .email(EMAIL_FIXTURE)

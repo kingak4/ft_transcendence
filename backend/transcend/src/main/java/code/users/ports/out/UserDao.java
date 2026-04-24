@@ -1,7 +1,6 @@
 package code.users.ports.out;
 
 import code.users.domain.model.User;
-import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import java.util.Optional;
 

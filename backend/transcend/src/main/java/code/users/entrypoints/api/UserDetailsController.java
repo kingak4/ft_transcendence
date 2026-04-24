@@ -27,8 +27,7 @@ public class UserDetailsController {
   @PatchMapping(UPDATE_DISPLAY_NAME_ENDPOINT)
   @Operation(summary = "Change the display name of the user (default User)")
   public ResponseEntity<Void> updateDisplayName(
-      @PathVariable UUID userId,
-      @Valid @RequestBody UpdateDisplayNameRequest request) {
+      @PathVariable UUID userId, @Valid @RequestBody UpdateDisplayNameRequest request) {
     updateDisplayNameUseCase.updateDisplayName(new UserId(userId), mapper.toCommand(request));
     return ResponseEntity.ok().build();
   }

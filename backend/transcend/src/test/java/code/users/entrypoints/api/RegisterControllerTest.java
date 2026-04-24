@@ -76,7 +76,8 @@ class RegisterControllerTest {
     var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
 
     when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);
-    when(registerUseCase.register(command)).thenThrow(new EmailAlreadyRegisteredException(EMAIL_FIXTURE));
+    when(registerUseCase.register(command))
+        .thenThrow(new EmailAlreadyRegisteredException(EMAIL_FIXTURE));
 
     // when & then
     mockMvc
@@ -89,7 +90,7 @@ class RegisterControllerTest {
         .andExpect(jsonPath("$.error").value("Conflict"))
         .andExpect(
             jsonPath("$.message")
-                .value(String.format(EmailAlreadyRegisteredException.MESSAGE, email)));
+                .value(String.format(EmailAlreadyRegisteredException.MESSAGE, EMAIL_FIXTURE)));
 
     verify(mapper).toCommand(request);
     verify(registerUseCase).register(command);
