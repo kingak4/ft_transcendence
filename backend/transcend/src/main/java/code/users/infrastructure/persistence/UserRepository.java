@@ -16,7 +16,9 @@ class UserRepository implements UserDao {
         new User(
             UUID.randomUUID(),
             "user@email.com",
-            "$2a$10$AXw0YvIyeQmI.HBhlXCIDOx.3bWg4M7/rwOm7U7m7wAuJvSi5FEhS");
+            "$2a$10$AXw0YvIyeQmI.HBhlXCIDOx.3bWg4M7/rwOm7U7m7wAuJvSi5FEhS",
+            null
+        );
     return Optional.ofNullable(user.email().equals(email) ? user : null);
   }
 

@@ -89,7 +89,7 @@ tasks {
    }
 
    pmd {
-      toolVersion = "7.4.0"
+      toolVersion = libs.versions.pmd.get()
       isConsoleOutput = false
       isIgnoreFailures = true
       rulesMinimumPriority = 5

@@ -17,20 +17,22 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(LoginServiceTest.LoginServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class LoginServiceTest {
 
-  @MockBean private UserDao userDao;
+  @MockitoBean
+  private UserDao userDao;
 
-  @MockBean private HashingService hashingService;
+  @MockitoBean private HashingService hashingService;
 
-  @MockBean private AccessTokenProvider accessTokenProvider;
+  @MockitoBean private AccessTokenProvider accessTokenProvider;
 
   private final LoginUseCase service;
 
@@ -42,7 +44,7 @@ class LoginServiceTest {
   void loginAuthenticatesAndReturnsBearerToken() {
     var email = "john@example.com";
     var command = new LoginCommand(email, "plain-password");
-    var user = new User(UUID.randomUUID(), email, "hashed-password");
+    var user = new User(UUID.randomUUID(), email, "hashed-password", null);
 
     when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
     when(hashingService.matches("plain-password", "hashed-password")).thenReturn(true);
@@ -71,7 +73,7 @@ class LoginServiceTest {
   void loginWithInvalidPasswordThrowsException() {
     var email = "john@example.com";
     var command = new LoginCommand(email, "plain-password");
-    var user = new User(UUID.randomUUID(), email, "hashed-password");
+    var user = new User(UUID.randomUUID(), email, "hashed-password", null);
 
     when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
     when(hashingService.matches("plain-password", "hashed-password")).thenReturn(false);

@@ -22,9 +22,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = RegisterController.class)
@@ -36,9 +37,9 @@ class RegisterControllerTest {
   private final MockMvc mockMvc;
   private final ObjectMapper objectMapper;
 
-  @MockBean private RegisterUseCase registerUseCase;
-  @MockBean private UsersApiMapper mapper;
-  @MockBean private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @MockitoBean private RegisterUseCase registerUseCase;
+  @MockitoBean private UsersApiMapper mapper;
+  @MockitoBean private JwtAuthenticationFilter jwtAuthenticationFilter;
 
   @Test
   void registerReturns200WithUserIdWhenSuccessful() throws Exception {

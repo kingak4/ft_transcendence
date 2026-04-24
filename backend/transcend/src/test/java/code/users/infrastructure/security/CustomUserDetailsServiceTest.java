@@ -12,18 +12,20 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(CustomUserDetailsServiceTest.CustomUserDetailsServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class CustomUserDetailsServiceTest {
 
-  @MockBean private UserDao userDao;
+  @MockitoBean
+  private UserDao userDao;
 
   private final UserDetailsService userDetailsService;
 
@@ -36,7 +38,7 @@ class CustomUserDetailsServiceTest {
     // given
     var email = "john@example.com";
     var encodedPassword = "encoded-password";
-    var user = new User(UUID.randomUUID(), email, encodedPassword);
+    var user = new User(UUID.randomUUID(), email, encodedPassword, null);
     when(userDao.findByEmail(email)).thenReturn(Optional.of(user));
 
     // when

@@ -9,8 +9,10 @@ import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 class RegisterService implements RegisterUseCase {
 
@@ -22,7 +24,7 @@ class RegisterService implements RegisterUseCase {
     String hash = hashingService.encode(command.rawPassword());
     if (userDao.findByEmail(command.email()).isPresent())
       throw new EmailAlreadyRegisteredException(command.email());
-    User newUser = new User(UUID.randomUUID(), command.email(), hash);
+    User newUser = new User(UUID.randomUUID(), command.email(), hash, null);
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.id());
   }
