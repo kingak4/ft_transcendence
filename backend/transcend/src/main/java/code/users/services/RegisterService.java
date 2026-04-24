@@ -27,6 +27,6 @@ class RegisterService implements RegisterUseCase {
     User newUser =
         User.builder().id(UUID.randomUUID()).email(command.email()).password(hash).build();
     userDao.createUser(newUser);
-    return new RegisteredUser(newUser.id());
+    return new RegisteredUser(newUser.getId());
   }
 }

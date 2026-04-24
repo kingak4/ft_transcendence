@@ -18,7 +18,7 @@ class UserRepository implements UserDao {
             .email("user@email.com")
             .password("$2a$10$AXw0YvIyeQmI.HBhlXCIDOx.3bWg4M7/rwOm7U7m7wAuJvSi5FEhS")
             .build();
-    return Optional.ofNullable(user.email().equals(email) ? user : null);
+    return Optional.ofNullable(user.getEmail().equals(email) ? user : null);
   }
 
   @Override

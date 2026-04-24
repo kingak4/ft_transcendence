@@ -11,11 +11,14 @@ public class UserFixtures {
   public static final String USERNAME_FIXTURE = "Kinga";
 
   public static User.UserBuilder aUser() {
+    UserDetails details = UserDetails.builder()
+        .username(USERNAME_FIXTURE)
+        .build();
     return User.builder()
         .id(ID_FIXTURE)
         .email(EMAIL_FIXTURE)
         .password(HASH_FIXTURE)
-        .details(new UserDetails(USERNAME_FIXTURE));
+        .details(details);
   }
 
   public static User aDefaultUser() {

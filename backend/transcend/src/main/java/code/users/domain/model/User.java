@@ -1,22 +1,19 @@
 package code.users.domain.model;
 
-import java.util.Objects;
 import java.util.UUID;
+
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
+@Value
 @Builder
-public record User(UUID id, String email, String password, UserDetails details) {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class User {
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    User user = (User) o;
-    return Objects.equals(id, user.id);
-  }
+  @EqualsAndHashCode.Include UUID id;
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(id);
-  }
+  String email;
+  String password;
+  UserDetails details;
 }

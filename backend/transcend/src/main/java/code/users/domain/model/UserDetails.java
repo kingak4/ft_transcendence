@@ -1,3 +1,11 @@
 package code.users.domain.model;
 
-public record UserDetails(String username) {}
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@Builder
+public class UserDetails {
+  String username;
+  ProfilePhoto photo;
+}

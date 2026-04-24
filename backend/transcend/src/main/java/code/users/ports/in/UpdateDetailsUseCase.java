@@ -1,3 +1,4 @@
 package code.users.ports.in;
 
-interface UpdateDetailsUseCase {}
+public interface UpdateDetailsUseCase {
+}

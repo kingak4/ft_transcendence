@@ -19,11 +19,11 @@ class LoginService implements LoginUseCase {
   public LoginResult login(LoginCommand command) {
     var user = userDao.findByEmail(command.email()).orElseThrow(InvalidCredentialsException::new);
 
-    if (!hashingService.matches(command.rawPassword(), user.password())) {
+    if (!hashingService.matches(command.rawPassword(), user.getPassword())) {
       throw new InvalidCredentialsException();
     }
 
-    String token = accessTokenProvider.generateToken(user.email());
+    String token = accessTokenProvider.generateToken(user.getEmail());
     return new LoginResult(token, "Bearer");
   }
 }
