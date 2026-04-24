@@ -8,6 +8,6 @@ import lombok.With;
 @Value
 @Builder
 public class UserDetails {
-  String username;
+  String displayName;
   ProfilePhoto photo;
 }

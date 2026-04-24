@@ -11,7 +11,7 @@ public class UserFixtures {
   public static final String USERNAME_FIXTURE = "Kinga";
 
   public static User.UserBuilder aUser() {
-    UserDetails details = UserDetails.builder().username(USERNAME_FIXTURE).build();
+    UserDetails details = UserDetails.builder().displayName(USERNAME_FIXTURE).build();
     return User.builder()
         .id(code.users.domain.model.UserId.of(ID_FIXTURE))
         .email(EMAIL_FIXTURE)

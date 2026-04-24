@@ -2,13 +2,13 @@ package code.users.entrypoints.api.mappers;
 
 import static code.users.entrypoints.api.LoginController.LoginRequest;
 import static code.users.entrypoints.api.RegisterController.RegisterRequest;
-import static code.users.entrypoints.api.UserDetailsController.UpdateUsernameRequest;
 import static code.users.ports.in.RegisterUseCase.RegisterCommand;
-import static code.users.ports.in.UpdateUsernameUseCase.UpdateUsernameCommand;
+import static code.users.ports.in.UpdateDisplayNameUseCase.UpdateDisplayNameCommand;
 
 import code.users.domain.model.UserId;
 import code.users.entrypoints.api.LoginController.LoginResponse;
 import code.users.entrypoints.api.RegisterController.RegisterResponse;
+import code.users.entrypoints.api.UserDetailsController;
 import code.users.ports.in.LoginUseCase.LoginCommand;
 import code.users.ports.in.LoginUseCase.LoginResult;
 import code.users.ports.in.RegisterUseCase.RegisteredUser;
@@ -36,5 +36,5 @@ public interface UsersApiMapper {
 
   RegisterResponse toResponse(RegisteredUser result);
 
-  UpdateUsernameCommand toCommand(UpdateUsernameRequest request);
+  UpdateDisplayNameCommand toCommand(UserDetailsController.UpdateDisplayNameRequest request);
 }
