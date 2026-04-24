@@ -1,6 +1,10 @@
 spring:
   main:
     banner-mode: off
+  allowed-profiles:
+    - local
+    - dev
+    - prod
 server:
   servlet:
     context-path: /
@@ -9,7 +13,7 @@ springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
-    path: /swagger-ui/
+    path: /swagger-ui
 
 security:
   jwt:
