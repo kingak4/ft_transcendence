@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping(LoginController.BASE_URL)
 @RequiredArgsConstructor
 public class LoginController {
+
+  public static final String BASE_URL = "users";
+  public static final String LOGIN_ENDPOINT = "login";
 
   private final LoginUseCase loginUseCase;
   private final UsersApiMapper mapper;
 
-  @PostMapping("login")
+  @PostMapping(LOGIN_ENDPOINT)
   @Operation(summary = "Authenticate and issue JWT")
   @SecurityRequirements
   public LoginResponse login(@Valid @RequestBody LoginRequest request) {

@@ -24,7 +24,8 @@ class RegisterService implements RegisterUseCase {
     String hash = hashingService.encode(command.rawPassword());
     if (userDao.findByEmail(command.email()).isPresent())
       throw new EmailAlreadyRegisteredException(command.email());
-    User newUser = new User(UUID.randomUUID(), command.email(), hash, null);
+    User newUser =
+        User.builder().id(UUID.randomUUID()).email(command.email()).password(hash).build();
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.id());
   }

@@ -1,12 +1,10 @@
 package code.shared.exceptions;
 
+import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,12 +26,13 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolationException(
       ConstraintViolationException ex) {
-    Map<String, String> errors = ex.getConstraintViolations().stream()
-        .collect(Collectors.toMap(
-            cv -> cv.getPropertyPath().toString(),
-            cv -> cv.getMessage(),
-            (existing, replacement) -> existing
-        ));
+    Map<String, String> errors =
+        ex.getConstraintViolations().stream()
+            .collect(
+                Collectors.toMap(
+                    cv -> cv.getPropertyPath().toString(),
+                    cv -> cv.getMessage(),
+                    (existing, replacement) -> existing));
     return buildErrorResponse(errors, HttpStatus.BAD_REQUEST);
   }
 

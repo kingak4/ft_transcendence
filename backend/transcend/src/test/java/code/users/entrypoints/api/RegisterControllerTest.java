@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -59,7 +58,7 @@ class RegisterControllerTest {
     // when & then
     mockMvc
         .perform(
-            post("/users/register")
+            post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
@@ -84,13 +83,15 @@ class RegisterControllerTest {
     // when & then
     mockMvc
         .perform(
-            post("/users/register")
+            post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.status").value(409))
         .andExpect(jsonPath("$.error").value("Conflict"))
-        .andExpect(jsonPath("$.message").value("Email john@example.com already registered."));
+        .andExpect(
+            jsonPath("$.message")
+                .value(String.format(EmailAlreadyRegisteredException.MESSAGE, email)));
 
     verify(mapper).toCommand(request);
     verify(registerUseCase).register(command);
