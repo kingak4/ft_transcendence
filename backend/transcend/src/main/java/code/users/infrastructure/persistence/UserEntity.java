@@ -1,4 +1,4 @@
-package code.infrastructure.users;
+package code.users.infrastructure.persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
