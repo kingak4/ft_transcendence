@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "spring.allowed-profiles",
+      "type": "java.lang.String[]",
+      "description": "Defines bootable application profiles."
+    }
+  ]
+}

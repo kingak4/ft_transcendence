@@ -21,7 +21,6 @@ dependencies {
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
-   implementation(libs.mapstruct)
    implementation(libs.spring.security)
    implementation(libs.spring.data.jpa)
    implementation(libs.jjwt.api)
@@ -32,10 +31,11 @@ dependencies {
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)
-   annotationProcessor(libs.bundles.mapstruct.annotation)
    testImplementation(libs.lombok)
    testAnnotationProcessor(libs.lombok)
+   annotationProcessor(libs.bundles.mapstruct.annotation)
    testAnnotationProcessor(libs.bundles.mapstruct.annotation)
+   implementation(libs.mapstruct)
 
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
@@ -51,6 +51,12 @@ java {
 tasks {
    compileJava {
       options.encoding = "UTF-8"
+      options.compilerArgs.addAll(listOf(
+         "-parameters",
+         "-Amapstruct.defaultComponentModel=spring",
+         "-Amapstruct.unmappedTargetPolicy=ERROR",
+         "-Amapstruct.suppressGeneratorTimestamp=true"
+      ))
    }
    compileTestJava {
       options.encoding = "UTF-8"
@@ -100,14 +106,28 @@ tasks {
    jacoco {
       jacocoTestReport {
          reports {
-            xml.required = false
-            csv.required = false
+            xml.required = true
+            csv.required = true
             html.outputLocation = layout.buildDirectory.dir("reports/jacoco")
          }
+         classDirectories.setFrom(
+            files(classDirectories.files.map {
+               fileTree(it) {
+                  exclude("**/*MapperImpl.class")
+                  exclude("**/config/**")
+                  exclude("**/*Exception.class")
+                  exclude("**/*ExceptionHandler.class")
+                  exclude("**/TranscendApp.class")
+                  exclude("**/HelloRestController.class")
+                  exclude("**/ValidProfileInitializer.class")
+               }
+            })
+         )
          doLast {
             val reportPath = layout.buildDirectory.file("reports/jacoco/index.html").get().asFile
             println("Jacoco report: file://${reportPath.toURI().path}")
          }
+
          dependsOn(test)
       }
    }

@@ -1,6 +1,10 @@
 spring:
   main:
     banner-mode: off
+  allowed-profiles:
+    - local
+    - dev
+    - prod
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres-db
     username: team
@@ -18,7 +22,7 @@ springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
-    path: /swagger-ui/
+    path: /swagger-ui
 
 security:
   jwt:
