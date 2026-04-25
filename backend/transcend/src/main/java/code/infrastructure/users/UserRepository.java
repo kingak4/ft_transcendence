@@ -1,6 +1,6 @@
 package code.infrastructure.users;
 
-import code.modules.users.domain.User;
+import code.modules.User;
 import code.modules.users.ports.out.UserDao;
 import java.util.Optional;
 import java.util.UUID;

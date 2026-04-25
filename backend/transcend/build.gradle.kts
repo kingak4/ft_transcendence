@@ -24,9 +24,9 @@ dependencies {
    implementation(libs.mapstruct)
    implementation(libs.spring.security)
    implementation(libs.spring.data.jpa)
+   implementation(libs.jjwt.api)
 
    runtimeOnly(libs.postgres)
-   implementation(libs.jjwt.api)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
 

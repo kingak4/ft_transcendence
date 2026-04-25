@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import code.modules.users.domain.User;
+import code.modules.User;
 import code.modules.users.ports.in.LoginUseCase.LoginCommand;
 import code.modules.users.ports.out.AccessTokenProvider;
 import code.modules.users.ports.out.HashingService;

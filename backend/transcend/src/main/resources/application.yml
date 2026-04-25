@@ -1,6 +1,15 @@
 spring:
   main:
     banner-mode: off
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres-db
+    username: team
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 server:
   servlet:
     context-path: /
