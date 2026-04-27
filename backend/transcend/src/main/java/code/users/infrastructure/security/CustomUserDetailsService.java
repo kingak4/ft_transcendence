@@ -1,5 +1,6 @@
 package code.users.infrastructure.security;
 
+import code.users.domain.exceptions.UserNotFoundException;
 import code.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +16,11 @@ class CustomUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    var user =
-        userDao
-            .findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("with email: " + email));
+    var user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
     return org.springframework.security.core.userdetails.User.builder()
-        .username(user.email())
-        .password(user.password())
+        .username(user.getEmail())
+        .password(user.getPassword())
         .build();
   }
 }

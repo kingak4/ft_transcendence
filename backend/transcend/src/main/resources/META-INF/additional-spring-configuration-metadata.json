@@ -4,6 +4,11 @@
       "name": "spring.allowed-profiles",
       "type": "java.lang.String[]",
       "description": "Defines bootable application profiles."
+    },
+    {
+      "name": "spring.security.validation.common-passwords",
+      "type": "java.lang.String",
+      "description": "Defines the path with a common-passwords file, used by Passay password validator."
     }
   ]
 }

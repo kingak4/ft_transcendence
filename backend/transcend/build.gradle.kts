@@ -22,6 +22,7 @@ dependencies {
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
    implementation(libs.spring.security)
+   implementation(libs.passay)
    implementation(libs.jjwt.api)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
@@ -89,7 +90,7 @@ tasks {
    }
 
    pmd {
-      toolVersion = "7.4.0"
+      toolVersion = libs.versions.pmd.get()
       isConsoleOutput = false
       isIgnoreFailures = true
       rulesMinimumPriority = 5

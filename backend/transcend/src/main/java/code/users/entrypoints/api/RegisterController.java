@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping(RegisterController.BASE_URL)
 @RequiredArgsConstructor
 public class RegisterController {
+
+  public static final String BASE_URL = "users";
+  public static final String REGISTER_ENDPOINT = "register";
 
   private final RegisterUseCase registerUseCase;
   private final UsersApiMapper mapper;
 
-  @PostMapping("register")
+  @PostMapping(REGISTER_ENDPOINT)
   @Operation(summary = "Register a new API user")
   @SecurityRequirements
   public RegisterResponse login(@Valid @RequestBody RegisterRequest request) {

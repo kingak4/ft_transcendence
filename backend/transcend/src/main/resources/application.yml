@@ -5,6 +5,9 @@ spring:
     - local
     - dev
     - prod
+  security:
+    validation:
+      common-passwords: classpath:validation/common-passwords.txt
 server:
   servlet:
     context-path: /
