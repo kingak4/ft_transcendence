@@ -1,5 +1,19 @@
 package code.users.domain.model;
 
-import java.util.UUID;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+import lombok.With;
 
-public record User(UUID id, String email, String password) {}
+@Value
+@With
+@Builder(toBuilder = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class User {
+
+  @EqualsAndHashCode.Include UserId id;
+
+  String email;
+  String password;
+  UserDetails details;
+}

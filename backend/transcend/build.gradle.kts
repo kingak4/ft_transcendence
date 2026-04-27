@@ -22,6 +22,7 @@ dependencies {
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
    implementation(libs.spring.security)
+   implementation(libs.passay)
    implementation(libs.spring.data.jpa)
    implementation(libs.jjwt.api)
 
@@ -83,23 +84,23 @@ tasks {
       dependsOn(jacocoTestReport)
    }
 
+   spotless {
+      java {
+         target("src/**/*.java")
+         googleJavaFormat()
+         removeUnusedImports()
+      }
+   }
+
    pmd {
-      toolVersion = "7.4.0"
+      toolVersion = libs.versions.pmd.get()
       isConsoleOutput = false
       isIgnoreFailures = true
       rulesMinimumPriority = 5
       ruleSets = listOf("category/java/errorprone.xml", "category/java/bestpractices.xml")
       pmdMain {
-         doLast {
-            val reportPath = layout.buildDirectory.file("reports/pmd/main.html").get().asFile
-            println("PmdMain report: file://${reportPath.toURI().path}")
-         }
       }
       pmdTest {
-         doLast {
-            val reportPath = layout.buildDirectory.file("reports/pmd/test.html").get().asFile
-            println("PmdTest report: file://${reportPath.toURI().path}")
-         }
       }
    }
 
@@ -130,5 +131,22 @@ tasks {
 
          dependsOn(test)
       }
+   }
+
+   register("report") {
+      doLast {
+         var reportPath = layout.buildDirectory.file("reports/jacoco/index.html").get().asFile
+         println("Jacoco report: file://${reportPath.toURI().path}")
+         reportPath = layout.buildDirectory.file("reports/pmd/main.html").get().asFile
+         println("PmdMain report: file://${reportPath.toURI().path}")
+         reportPath = layout.buildDirectory.file("reports/pmd/test.html").get().asFile
+         println("PmdTest report: file://${reportPath.toURI().path}")
+
+      }
+   }
+
+   javadoc {
+      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
+      options.encoding = "UTF-8"
    }
 }

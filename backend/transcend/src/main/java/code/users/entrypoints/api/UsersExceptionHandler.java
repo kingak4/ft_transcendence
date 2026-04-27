@@ -3,6 +3,7 @@ package code.users.entrypoints.api;
 import code.shared.exceptions.GlobalExceptionHandler;
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.exceptions.InvalidCredentialsException;
+import code.users.domain.exceptions.UserNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -23,5 +24,10 @@ public class UsersExceptionHandler {
   public ResponseEntity<Object> handleEmailAlreadyRegisteredException(
       EmailAlreadyRegisteredException ex) {
     return GlobalExceptionHandler.buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+    return GlobalExceptionHandler.buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 }

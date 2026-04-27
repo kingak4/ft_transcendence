@@ -5,6 +5,9 @@ spring:
     - local
     - dev
     - prod
+  security:
+    validation:
+      common-passwords: classpath:validation/common-passwords.txt
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres-db
     username: team

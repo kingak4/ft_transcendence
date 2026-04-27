@@ -1,18 +1,20 @@
-package code.users.services;
+package code.users.logic;
 
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.model.User;
+import code.users.domain.model.UserId;
 import code.users.ports.in.RegisterUseCase;
 import code.users.ports.out.HashingService;
 import code.users.ports.out.UserDao;
-import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @RequiredArgsConstructor
-class RegisterService implements RegisterUseCase {
+class Register implements RegisterUseCase {
 
   private final UserDao userDao;
   private final HashingService hashingService;
@@ -22,8 +24,9 @@ class RegisterService implements RegisterUseCase {
     String hash = hashingService.encode(command.rawPassword());
     if (userDao.findByEmail(command.email()).isPresent())
       throw new EmailAlreadyRegisteredException(command.email());
-    User newUser = new User(UUID.randomUUID(), command.email(), hash);
+    User newUser =
+        User.builder().id(UserId.generate()).email(command.email()).password(hash).build();
     userDao.createUser(newUser);
-    return new RegisteredUser(newUser.id());
+    return new RegisteredUser(newUser.getId());
   }
 }
