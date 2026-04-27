@@ -1,17 +1,19 @@
-package code.infrastructure.users;
+package code.users.infrastructure.persistence;
 
-import code.modules.User;
+import code.users.domain.model.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserEntityMapper {
-    public static User toDomain(UserEntity entity) {
+    public User toDomain(UserEntity entity) {
         return new User(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getPassword()
+                entity.getHash()
         );
     }
 
-    public static UserEntity toEntity(User user) {
+    public UserEntity toEntity(User user) {
         return new UserEntity(
                 user.email(),
                 user.password()

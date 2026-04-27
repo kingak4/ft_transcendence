@@ -8,6 +8,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 class UserRepository implements UserDao {
+  private final UserJpaRepository userJpaRepository;
+  private final UserEntityMapper userEntityMapper;
+
+  public UserRepository(UserJpaRepository userJpaRepository, UserEntityMapper userEntityMapper) {
+    this.userJpaRepository = userJpaRepository;
+    this.userEntityMapper = userEntityMapper;
+  }
 
   // Password for the fixture is 'plain-password'
   @Override
@@ -21,5 +28,13 @@ class UserRepository implements UserDao {
   }
 
   @Override
-  public void createUser(User user) {}
+  public void createUser(User user) {
+    UserEntity entity = userEntityMapper.toEntity(user);
+    userJpaRepository.save(entity);
+  }
+
+  @Override
+  public Optional<User> findById(UUID id) {
+    return userJpaRepository.findById(id).map(userEntityMapper::toDomain);
+  }
 }
