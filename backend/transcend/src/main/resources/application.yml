@@ -9,7 +9,7 @@ spring:
     validation:
       common-passwords: classpath:validation/common-passwords.txt
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres-db
+    url: jdbc:postgresql://localhost:5432/postgres_db
     username: team
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver

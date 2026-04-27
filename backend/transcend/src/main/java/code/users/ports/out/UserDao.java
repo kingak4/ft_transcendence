@@ -9,6 +9,7 @@ public interface UserDao {
   Optional<User> findById(UserId id);
 
   Optional<User> findByEmail(String email);
+
   void createUser(User user);
 
   void updateUser(User user);

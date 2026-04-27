@@ -1,11 +1,10 @@
 package code.users.infrastructure.persistence;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,18 +13,16 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserEntity {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id @GeneratedValue private UUID id;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+  @Column(unique = true, nullable = false)
+  private String email;
 
-    @Column(nullable = false)
-    private String hash;
+  @Column(nullable = false)
+  private String hash;
 
-    public UserEntity(String email, String hash) {
-        this.email = email;
-        this.hash = hash;
-    }
+  public UserEntity(String email, String hash) {
+    this.email = email;
+    this.hash = hash;
+  }
 }
