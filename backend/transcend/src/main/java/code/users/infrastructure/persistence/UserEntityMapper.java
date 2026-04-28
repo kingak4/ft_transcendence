@@ -2,20 +2,23 @@ package code.users.infrastructure.persistence;
 
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class UserEntityMapper {
-  public User toDomain(UserEntity entity) {
-    return User.builder()
-        .id(new UserId(entity.getId()))
-        .email(entity.getEmail())
-        .password(entity.getHash())
-        .details(null)
-        .build();
+@Mapper(componentModel = "spring")
+public interface UserEntityMapper {
+  @Mapping(source = "hash", target = "password")
+  @Mapping(target = "details", ignore = true)
+  User toDomain(UserEntity entity);
+
+  @Mapping(source = "password", target = "hash")
+  UserEntity toEntity(User user);
+
+  default UserId map(UserIdEntity id) {
+    return id == null ? null : UserId.of(id.value());
   }
 
-  public UserEntity toEntity(User user) {
-    return new UserEntity(user.getEmail(), user.getPassword());
+  default UserIdEntity map(UserId id) {
+    return id == null ? null : new UserIdEntity(id.getValue());
   }
 }
