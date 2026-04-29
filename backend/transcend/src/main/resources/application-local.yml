@@ -1,5 +1,15 @@
 spring:
   application:
     name: transcend-backend-local
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-local.sql
+  jpa:
+    properties:
+      hibernate:
+        default_schema: local
+    hibernate:
+      ddl-auto: create-drop
 server:
   port: 8080

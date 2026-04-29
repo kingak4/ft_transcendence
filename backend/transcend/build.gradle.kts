@@ -25,6 +25,7 @@ dependencies {
    implementation(libs.passay)
    implementation(libs.spring.data.jpa)
    implementation(libs.jjwt.api)
+   implementation(libs.liquibase)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
@@ -68,7 +69,6 @@ tasks {
    jar {
       enabled = false
    }
-
    test {
       useJUnitPlatform()
       testLogging {
