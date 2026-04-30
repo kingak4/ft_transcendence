@@ -12,3 +12,11 @@ format:
 
 lint:
 	$(GRADLE) pmdMain pmdTest
+
+test:
+	$(GRADLE) jacocoTestReport
+
+docs:
+	$(GRADLE) test --tests code.ModularityTest
+	$(GRADLE) javadoc
+	$(GRADLE) asciidoctor

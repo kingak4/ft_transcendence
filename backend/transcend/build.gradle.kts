@@ -5,6 +5,7 @@ plugins {
    alias(libs.plugins.spring.boot)
    alias(libs.plugins.spring.management)
    alias(libs.plugins.formatter)
+   id("org.asciidoctor.jvm.convert") version "4.0.2"
 }
 
 group = "code"
@@ -16,7 +17,11 @@ repositories {
    maven { url = uri("https://repo.spring.io/milestone") }
 }
 
+val asciidoctorExt by configurations.creating
+
 dependencies {
+   asciidoctorExt("org.asciidoctor:asciidoctorj-diagram:2.2.14")
+   
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
@@ -64,6 +69,42 @@ tasks {
    }
    jar {
       enabled = false
+   }
+
+   javadoc {
+      options.encoding = "UTF-8"
+      (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
+      isFailOnError = false
+   }
+
+   asciidoctor {
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
+      setOutputDir(layout.buildDirectory.dir("docs/asciidoc"))
+
+      resources {
+         from(layout.buildDirectory.dir("spring-modulith-docs"))
+      }
+
+      useIntermediateWorkDir()
+
+      baseDirFollowsSourceFile()
+      configurations("asciidoctorExt")
+      sources {
+         include("index.adoc")
+      }
+
+      asciidoctorj {
+         modules {
+            diagram.use()
+         }
+         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+         attributes(mapOf(
+            "toc" to "left",
+            "icons" to "font",
+            "projectdir" to projectDir.absolutePath,
+            "imagesdir" to "images"
+         ))
+      }
    }
 
    test {
@@ -140,10 +181,5 @@ tasks {
          println("PmdTest report: file://${reportPath.toURI().path}")
 
       }
-   }
-
-   javadoc {
-      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
-      options.encoding = "UTF-8"
    }
 }
