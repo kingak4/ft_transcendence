@@ -4,8 +4,8 @@
 :sectnums:
 :sectnumlevels: 3
 
+include::all-docs.adoc[opts=optional]
+
 == Documentation Links
 
 * link:../javadoc/index.html[JavaDoc API Reference]
-
-include::all-docs.adoc[opts=optional]

@@ -43,6 +43,7 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
+   testImplementation("de.elnarion.util:plantuml-generator-util:3.0.1")
 }
 
 java {
