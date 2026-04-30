@@ -1,6 +1,8 @@
 spring:
   application:
     name: transcend-backend-local
+  liquibase:
+    enabled: false
   sql:
     init:
       mode: always

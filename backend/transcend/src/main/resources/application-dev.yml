@@ -1,15 +1,20 @@
 spring:
   application:
     name: transcend-backend-dev
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data-dev.sql
+  liquibase:
+    enabled: true
+    change-log: classpath:changelog/db.changelog-master.yaml
+    default_schema: dev
   jpa:
+    defer-datasource-initialization: false
     properties:
       hibernate:
         default_schema: dev
     hibernate:
       ddl-auto: validate
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-dev.sql
 server:
   port: 8080
