@@ -8,7 +8,7 @@ spring:
       mode: always
       data-locations: classpath:data-local.sql
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres_db
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=local
   jpa:
     properties:
       hibernate:

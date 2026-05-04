@@ -9,7 +9,7 @@ databaseChangeLog:
             schemaName: dev
             columns:
               - column:
-                  name: value
+                  name: val
                   type: UUID
                   constraints:
                     primaryKey: true
