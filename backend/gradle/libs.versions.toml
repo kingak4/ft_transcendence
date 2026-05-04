@@ -25,6 +25,7 @@ postgres = "42.7.10"
 pmd = "7.4.0"
 # https://mvnrepository.com/artifact/org.passay/passay
 passay = "1.6.6"
+dotenv-java = "3.0.0"
 
 [libraries]
 spring-modulith = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
@@ -41,6 +42,8 @@ jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 passay = { module = "org.passay:passay", version.ref = "passay" }
 
+h2 = { module = "com.h2database:h2" }
+dotenv-java = {module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv-java" }
 liquibase = { module = "org.liquibase:liquibase-core" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }

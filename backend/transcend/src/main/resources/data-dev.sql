@@ -1,4 +1,4 @@
-INSERT INTO dev.users (value, email, hash)
+INSERT INTO dev.users (val, email, hash)
 VALUES (
    '22222222-2222-2222-2222-222222222222',
    'test@dev.com',

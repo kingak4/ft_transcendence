@@ -23,7 +23,7 @@ public interface UsersApiMapper {
     if (value == null) {
       return null;
     }
-    return value.getValue();
+    return value.getVal();
   }
 
   @Mapping(source = "password", target = "rawPassword")

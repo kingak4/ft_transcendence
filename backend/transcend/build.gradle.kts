@@ -26,10 +26,12 @@ dependencies {
    implementation(libs.spring.data.jpa)
    implementation(libs.jjwt.api)
    implementation(libs.liquibase)
+   implementation(libs.dotenv.java)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
+   runtimeOnly(libs.h2)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)

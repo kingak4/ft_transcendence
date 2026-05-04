@@ -5,4 +5,4 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Embeddable
-public record UserIdEntity(UUID value) implements Serializable {}
+public record UserIdEntity(UUID val) implements Serializable {}

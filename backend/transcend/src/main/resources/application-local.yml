@@ -7,6 +7,8 @@ spring:
     init:
       mode: always
       data-locations: classpath:data-local.sql
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres_db
   jpa:
     properties:
       hibernate:

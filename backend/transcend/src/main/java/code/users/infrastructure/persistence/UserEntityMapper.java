@@ -15,10 +15,10 @@ public interface UserEntityMapper {
   UserEntity toEntity(User user);
 
   default UserId map(UserIdEntity id) {
-    return id == null ? null : UserId.of(id.value());
+    return id == null ? null : UserId.of(id.val());
   }
 
   default UserIdEntity map(UserId id) {
-    return id == null ? null : new UserIdEntity(id.getValue());
+    return id == null ? null : new UserIdEntity(id.getVal());
   }
 }

@@ -1,4 +1,4 @@
-INSERT INTO local.users (value, email, hash)
+INSERT INTO local.users (val, email, hash)
 VALUES (
     '11111111-1111-1111-1111-111111111111',
     'test@local.com',
