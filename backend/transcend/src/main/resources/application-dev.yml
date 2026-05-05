@@ -5,6 +5,8 @@ spring:
     enabled: true
     change-log: classpath:changelog/db.changelog-master.yaml
     default_schema: dev
+    parameters:
+      schemaName: dev
   jpa:
     defer-datasource-initialization: false
     properties:

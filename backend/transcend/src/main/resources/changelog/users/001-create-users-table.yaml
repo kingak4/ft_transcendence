@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: users
-            schemaName: dev
             columns:
               - column:
                   name: val
@@ -27,6 +26,6 @@ databaseChangeLog:
 
         - addUniqueConstraint:
             tableName: users
-            schemaName: dev
+            schemaName: ${schemaName}
             columnNames: email
             constraintName: uq_users_email
