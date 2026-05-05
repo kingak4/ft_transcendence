@@ -15,5 +15,8 @@ spring:
         default_schema: local
     hibernate:
       ddl-auto: create-drop
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
 server:
   port: 8080

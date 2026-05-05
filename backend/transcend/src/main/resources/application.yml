@@ -16,6 +16,13 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: transcendence-hickari-pool
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      idle-timeout: 600000
   jpa:
     defer-datasource-initialization: true
     hibernate:
