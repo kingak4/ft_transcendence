@@ -8,8 +8,7 @@ import jakarta.validation.constraints.Size;
 
 public interface UpdateDisplayNameUseCase {
 
-  void updateDisplayName(
-      UserId userId, @Valid UpdateDisplayNameCommand command);
+  void updateDisplayName(UserId userId, @Valid UpdateDisplayNameCommand command);
 
   record UpdateDisplayNameCommand(
       @NotBlank(message = "DisplayName cannot be blank")

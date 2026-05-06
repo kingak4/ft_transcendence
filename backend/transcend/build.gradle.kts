@@ -108,7 +108,8 @@ tasks {
             "toc" to "left",
             "icons" to "font",
             "projectdir" to projectDir.absolutePath,
-            "imagesdir" to "images"
+            "imagesdir" to "images",
+            "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
    }
