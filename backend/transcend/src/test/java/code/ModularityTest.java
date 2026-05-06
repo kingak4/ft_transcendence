@@ -22,8 +22,17 @@ class ModularityTest {
   @Test
   void createModuleDocumentation() {
     new org.springframework.modulith.docs.Documenter(modules)
-            .writeDocumentation()
-            .writeIndividualModulesAsPlantUml();
+        .writeDocumentation()
+        .writeIndividualModulesAsPlantUml();
+    generateFileTreeDiagrams();
+    generateClassDiagrams();
+  }
+
+  private void generateClassDiagrams() {
+
+  }
+
+  private void generateFileTreeDiagrams() {
   }
 
   @Test
@@ -76,19 +85,3 @@ class ModularityTest {
                 to.startsWith("org.springframework.")) {
           return;
         }
-
-        plantUml.append(from)
-                .append(" --> ")
-                .append(to)
-                .append("\n");
-      });
-    });
-
-    plantUml.append("@enduml\n");
-
-    Path path = Paths.get("build/class-diagram.puml");
-    Files.writeString(path, plantUml.toString());
-
-    System.out.println("Diagram zapisany: " + path.toAbsolutePath());
-  }
-}

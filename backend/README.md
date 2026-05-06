@@ -1,23 +1,37 @@
 # Backend Developer Guide
 
-## Architecture Documentation (Spring Modulith)
+## Backend AsciiDoc Documentation
 
-This project uses Spring Modulith to verify and document modular architecture.
-
-The documentation (PlantUML component diagrams and AsciiDoc files) is automatically generated when running tests.
-
-**To generate the documentation:**
+**To generate documentation:**
 ```bash
-./gradlew test --tests code.ModularityTest
+make docs
 ```
 
-The generated files will be located in the `transcend/build/spring-modulith-docs/` directory.
+- **Documentation UI**: transcend/build/docs/asciidoc/index.html
 
 ## API Documentation (Swagger / OpenAPI)
 
-This project uses `springdoc-openapi` to generate API documentation.
-
 ### Documentation Endpoints
 
-- **Swagger UI (Visual Interface)**: [http://localhost:8080/swagger-ui](http://localhost:8080/swagger-ui/)
+**Run the application with**
+```bash
+make run
+```
+- **Swagger Interactive UI**: [http://localhost:8080/swagger-ui](http://localhost:8080/swagger-ui/)
 - **OpenAPI Raw JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
+
+
+## Test coverage
+**Run the tests**
+```bash
+make test
+```
+- **Test Coverage UI**: transcend/build/reports/jacoco/index.html
+
+## Linter
+**Run the linter**
+```bash
+make lint
+```
+- **PmdMain UI**: transcend/build/reports/pmd/main.html
+- **PmdTest UI**: transcend/build/reports/pmd/test.html

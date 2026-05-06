@@ -5,6 +5,7 @@ plugins {
    alias(libs.plugins.spring.boot)
    alias(libs.plugins.spring.management)
    alias(libs.plugins.formatter)
+   alias(libs.plugins.asciidoctor)
 }
 
 group = "code"
@@ -16,7 +17,10 @@ repositories {
    maven { url = uri("https://repo.spring.io/milestone") }
 }
 
+val asciidoctorExt by configurations.creating
+
 dependencies {
+   asciidoctorExt(libs.asciidoctorj.diagram)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
@@ -44,6 +48,7 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
+   testImplementation(libs.plantuml.generator.util)
 }
 
 java {
@@ -71,6 +76,43 @@ tasks {
    jar {
       enabled = false
    }
+
+   javadoc {
+      options.encoding = "UTF-8"
+      (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
+      isFailOnError = false
+   }
+
+   asciidoctor {
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
+      setOutputDir(layout.buildDirectory.dir("docs/asciidoc"))
+
+      resources {
+         from(layout.buildDirectory.dir("spring-modulith-docs"))
+      }
+
+      useIntermediateWorkDir()
+
+      baseDirFollowsSourceFile()
+      configurations("asciidoctorExt")
+      sources {
+         include("index.adoc")
+      }
+
+      asciidoctorj {
+         modules {
+            diagram.use()
+         }
+         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+         attributes(mapOf(
+            "toc" to "left",
+            "icons" to "font",
+            "projectdir" to projectDir.absolutePath,
+            "imagesdir" to "images"
+         ))
+      }
+   }
+
    test {
       useJUnitPlatform()
       testLogging {
@@ -143,7 +185,8 @@ tasks {
          println("PmdMain report: file://${reportPath.toURI().path}")
          reportPath = layout.buildDirectory.file("reports/pmd/test.html").get().asFile
          println("PmdTest report: file://${reportPath.toURI().path}")
-
+         reportPath = layout.buildDirectory.file("docs/asciidoc/index.html").get().asFile
+         println("Documentation: file://${reportPath.toURI().path}")
       }
    }
 
