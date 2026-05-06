@@ -3,4 +3,6 @@ package code.users.domain.model;
 import lombok.Value;
 
 @Value
-class ProfilePhoto {}
+public class ProfilePhoto {
+    String value;
+}

@@ -4,16 +4,26 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
+import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 
 @Value
-@With
 @Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@With
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
-  @EqualsAndHashCode.Include UserId id;
+  @EqualsAndHashCode.Include
+  @With
+  UserId id;
 
+  @With
   String email;
+
+  @With
   String password;
+
+  @With
   UserDetails details;
 }
