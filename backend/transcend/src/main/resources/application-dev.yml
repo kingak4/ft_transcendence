@@ -1,5 +1,25 @@
 spring:
   application:
     name: transcend-backend-dev
+  liquibase:
+    enabled: true
+    change-log: classpath:changelog/db.changelog-master.yaml
+    default_schema: dev
+    parameters:
+      schemaName: dev
+  jpa:
+    defer-datasource-initialization: false
+    properties:
+      hibernate:
+        default_schema: dev
+    hibernate:
+      ddl-auto: validate
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-dev.sql
+#  uncomment when backend is deployed in docker
+#  datasource:
+#    url: jdbc:postgresql://<container-host>:5432/$(POSTGRES_DB)?sslmode=disable&currentSchema=dev
 server:
   port: 8080
