@@ -4,18 +4,18 @@ import Link from "next/link";
 import React, { useState } from 'react';
 
 export default function SearchInput() {
-  const [loginValue, setLogin] = useState("");
+  const [emailValue, setLogin] = useState("");
   const [passwordValue, setPassword] = useState("");
 
   return (
     <div className='flex flex-col w-screen min-h-screen justify-center border items-center'>
-      <h1 className='font-bold text-3xl'>LOGIN</h1>
+      <h1 className='font-bold text-3xl'>REGISTER</h1>
       <div className='flex flex-col w-1/6 min-h-3/4 border p-2 rounded-md justify-center items-center'>
         <div className="flex flex-row gap-2 justify-center">
           <input
             id="user-name"
             type="text"
-            value={loginValue}
+            value={emailValue}
             onChange={(e) => setLogin(e.target.value)}
             placeholder="Login"
             className="border p-2 rounded-md w-3/4"
@@ -31,23 +31,23 @@ export default function SearchInput() {
             className="border p-2 rounded-md w-3/4"
           />
         </div>
-        <button onClick={() => login(loginValue, passwordValue)} className='border p-4 rounded-md cursor-pointer'>Login</button>
+        <button onClick={() => register(emailValue, passwordValue)} className='border p-4 rounded-md cursor-pointer'>Register</button>
       </div>
     </div>
   );
 
-  async function login(name: string, password: string) {
+  async function register(name: string, password: string) {
     const payload: CreateUserPayload = {
       email: name,
       password: password
     }
 
     const result = await postData<CreateUserResponse, CreateUserPayload>(
-      '/api/users/login',
+      '/api/users/register',
       payload
     );
 
-    console.log(`Result: token=${result.accessToken}, type=${result.tokenType}`);
+    console.log(`Result: token=${result.id}`);
   }
 
   interface CreateUserPayload {
@@ -56,8 +56,7 @@ export default function SearchInput() {
   }
 
   interface CreateUserResponse {
-    accessToken: string,
-    tokenType: string
+    id: string,
   }
 
   async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
