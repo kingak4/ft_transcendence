@@ -14,7 +14,7 @@ mapstruct = "1.6.3"
 # https://central.sonatype.com/artifact/org.projectlombok/lombok-mapstruct-binding/versions
 mapstruct-lombok = "0.2.0"
 # https://central.sonatype.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/versions
-spring-openapi = "2.5.0"
+spring-openapi = "2.7.0"
 # https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 jjwt = "0.13.0"
 # https://plugins.gradle.org/plugin/com.diffplug.spotless

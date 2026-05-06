@@ -1,4 +1,4 @@
-GRADLE := gradlew
+GRADLE := ./gradlew
 PROFILE := local
 
 run:
