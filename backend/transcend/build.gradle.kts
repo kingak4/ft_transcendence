@@ -77,6 +77,12 @@ tasks {
       enabled = false
    }
 
+   register<Copy>("copyJavadoc") {
+      dependsOn(javadoc)
+      from(layout.buildDirectory.dir("reports/javadoc"))
+      into(layout.buildDirectory.dir("docs/javadoc"))
+   }
+
    javadoc {
       options.encoding = "UTF-8"
       (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
@@ -112,6 +118,7 @@ tasks {
             "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
+      dependsOn("copyJavadoc")
    }
 
    test {
