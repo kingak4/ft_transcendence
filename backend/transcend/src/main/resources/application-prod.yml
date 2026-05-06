@@ -1,5 +1,11 @@
 spring:
   application:
     name: transcend-backend
+  jpa:
+    properties:
+      hibernate:
+        default_schema: prod
+    hibernate:
+      ddl-auto: validate
 server:
   port: 8000

@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users-table
+      author: ft_transcendence
+
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: val
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: users
+            schemaName: ${schemaName}
+            columnNames: email
+            constraintName: uq_users_email

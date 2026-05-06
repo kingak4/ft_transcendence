@@ -5,7 +5,7 @@ plugins {
    alias(libs.plugins.spring.boot)
    alias(libs.plugins.spring.management)
    alias(libs.plugins.formatter)
-   id("org.asciidoctor.jvm.convert") version "4.0.2"
+   alias(libs.plugins.asciidoctor)
 }
 
 group = "code"
@@ -20,17 +20,22 @@ repositories {
 val asciidoctorExt by configurations.creating
 
 dependencies {
-   asciidoctorExt("org.asciidoctor:asciidoctorj-diagram:2.2.14")
-   
+   asciidoctorExt(libs.asciidoctorj.diagram)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
    implementation(libs.spring.security)
    implementation(libs.passay)
+   implementation(libs.spring.data.jpa)
    implementation(libs.jjwt.api)
+   implementation(libs.liquibase)
+   implementation(libs.dotenv.java)
+
+   runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
+   runtimeOnly(libs.h2)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)
@@ -43,7 +48,7 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
-   testImplementation("de.elnarion.util:plantuml-generator-util:3.0.1")
+   testImplementation(libs.plantuml.generator.util)
 }
 
 java {
@@ -180,7 +185,13 @@ tasks {
          println("PmdMain report: file://${reportPath.toURI().path}")
          reportPath = layout.buildDirectory.file("reports/pmd/test.html").get().asFile
          println("PmdTest report: file://${reportPath.toURI().path}")
-
+         reportPath = layout.buildDirectory.file("docs/asciidoc/index.html").get().asFile
+         println("Documentation: file://${reportPath.toURI().path}")
       }
+   }
+
+   javadoc {
+      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
+      options.encoding = "UTF-8"
    }
 }
