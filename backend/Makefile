@@ -1,4 +1,4 @@
-GRADLE := ./gradlew
+include .env
 PROFILE := local
 
 run:

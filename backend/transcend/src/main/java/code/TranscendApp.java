@@ -1,6 +1,7 @@
 package code;
 
 import code.bootstrap.ValidProfileInitializer;
+import code.users.config.DotenvApplicationContextInitializer;
 import jakarta.annotation.PostConstruct;
 import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;

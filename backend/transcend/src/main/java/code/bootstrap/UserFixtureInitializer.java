@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.bootstrap;
 
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
@@ -19,7 +19,7 @@ public class UserFixtureInitializer implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) {
     String defaultEmail = "user@email.com";
-
+  
     boolean exists = userJpaRepository.findByEmail(defaultEmail).isPresent();
 
     if (!exists) {
