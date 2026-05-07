@@ -1,0 +1,203 @@
+5. My Skills Module
+6. Analytics Module
+7. AI Assistant Module
+8. Dashboard Module
+
+5.1 Skill & Project Limits
+Skills
+A user can initially add up to 5 skills
+The limit can be increased after achieving progress in an existing skill
+Projects
+A user can add projects related to skills
+Maximum number of projects: 15
+Project limit can also be increased after progres
+
+5.2 Skill Creation Form
+When adding a new skill, the user must define:
+Goal
+What the user wants to achieve
+Weekly Time Commitment
+How much time the user plans to spend per week
+Learning Preference
+Whether the user wants to learn regularly
+Regular Learning Scheduling
+
+If the user selects regular learning:
+User defines:
+Day (e.g., Monday)
+Time (e.g., 16:00)
+The system automatically:
+Creates recurring events
+Adds them to the user’s calendar
+Additional Options
+Enable or disable notifications
+Define a learning plan
+Example: where to start
+
+If a plan is provided:
+It is added to the event description in the calendar
+
+5.3 Calendar Integration
+Dedicated calendar view inside the module
+Displays:
+Scheduled learning sessions
+Completed sessions
+
+5.4 Learning Session Tracker
+Users can track learning in real time using a built-in timer.
+Features:
+Start session
+Pause session
+End session
+
+5.5 Post-Session Feedback Form
+After each session, the user must complete a feedback form.
+Required fields:
+What was done during the session
+How the user feels after the session
+Emotions during the session
+Notes about the session
+Conclusions / reflections
+Optional:
+Image upload
+
+5.6 Automatic Feedback Trigger
+If a session was scheduled in the calendar (e.g., 16:00–17:00)
+Entering that event triggers the same feedback form
+
+5.7 Skill & Project Evaluation
+After each session, the user evaluates:
+Session effectiveness (scale 1–10)
+Whether the planned time was used effectively
+For Projects:
+Similar evaluation applies:
+What was completed
+Progress status
+
+5.8 Gallery (Main Page Integration)
+Images uploaded in session feedback:
+Are displayed on the main page
+Visible in the “My Skills Gallery”
+
+5.9 Progress Analysis
+The system generates analysis based on session data:
+Learning consistency
+Time spent
+Self-evaluation scores
+Emotional patterns
+
+6.1 Goal Progress Tracking
+The system tracks progress toward each defined goal
+Displays:
+Remaining progress to achieve the goal
+Overall completion status
+
+6.2 Emotional Analysis
+Based on feedback forms, the system analyzes:
+How the user felt during learning sessions
+Emotional patterns over time
+
+The system identifies:
+What caused difficulties
+What had a positive impact on learning
+
+6.3 Time & Progress Metrics
+The system calculates:
+Total time spent on learning
+Remaining time relative to the declared goal
+Consistency of learning sessions
+
+6.4 Session-Based Statistics
+All analytics are based on data collected from:
+Session feedback forms
+Self-evaluation scores
+User notes and reflections
+
+6.5 Data Visualization
+The module generates charts based on collected data.
+Examples:
+Progress toward goals
+Emotional trends
+Session effectiveness (scale 1–10)
+Time spent over time
+
+6.6 Data Source
+All analytics are derived from:
+User-defined goals
+Calendar sessions
+Post-session feedback forms
+
+7.1 Core Functionality
+The AI Assistant can help users with:
+Personalized learning tips
+Progress analysis
+Daily motivation
+Smart study plans
+
+7.2 User Interaction
+The assistant is accessible via a chat interface
+Initial prompt example:
+“Hi! What can I help you with?”
+Users can freely interact with the assistant by asking questions or requesting support
+
+7.3 Supported Features
+Learning Support
+Suggests how to improve learning efficiency
+Recommends next steps based on progress
+Progress Insights
+Explains current progress
+Identifies strengths and weaknesses
+Study Planning
+Generates structured study plans
+Adjusts plans based on user performance
+Motivation
+Provides encouragement and reminders
+Helps maintain consistency
+
+7.5 Chat History
+All conversations are stored
+Users can:
+Return to previous chats
+Review past suggestions and guidance
+
+8.1 Welcome Section
+Displays a personalized greeting:
+Example: “Welcome back, {username}”
+
+8.2 Streak Counter
+Tracks consecutive days of user activity
+Displays current streak
+Encourages consistency
+
+8.3 Motivation Section
+Displays dynamic motivational cards
+Content rotates periodically
+Example messages:
+“Every small step counts”
+“Small steps every day lead to big results”
+“Consistency beats motivation”
+“Your future is built by what you do today”
+
+8.4 Skill Gallery Preview
+Displays images from user session feedback
+Automatically updates when new images are added
+Serves as a preview of the full gallery (from My Skills module)
+
+8.5 Progress Overview
+High-level summary of:
+Active skills
+Ongoing projects
+Goal progress
+
+8.6 Achievements System
+Displays user achievements
+Characteristics:
+Achievements are unlocked based on user activity
+Types and conditions are to be defined
+
+8.7 Key Purpose
+The dashboard is designed to:
+Provide quick insight into progress
+Reinforce consistency through streaks
+Maintain engagement through motivation
+Highlight user activity and achievements
