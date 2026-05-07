@@ -1,8 +1,7 @@
 package code;
 
-import code.bootstrap.UserFixtureInitializer;
 import code.bootstrap.ValidProfileInitializer;
-import code.users.config.DotenvApplicationContextInitializer;
+import code.bootstrap.DotenvInitializer;
 import jakarta.annotation.PostConstruct;
 import java.util.TimeZone;
 
@@ -13,8 +12,6 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.modulith.Modulithic;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -31,7 +28,7 @@ class TranscendApp extends SpringBootServletInitializer {
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(TranscendApp.class);
     app.addInitializers(new ValidProfileInitializer());
-    app.addInitializers(new DotenvApplicationContextInitializer());
+    app.addInitializers(new DotenvInitializer());
     app.run(args);
   }
 
