@@ -1,0 +1,28 @@
+Email Requirements
+
+Format: Must follow the standard pattern (e.g., user@example.com).
+Syntax: Must contain an @ symbol and at least one dot ..
+No Spaces: Whitespace is strictly forbidden (e.g., test @gmail.com is invalid).
+Uniqueness: One email address equals one account. No duplicates allowed.
+Verification: This is the most critical step. Send an activation link immediately. The account remains "unverified" until the user clicks the link.
+
+Password
+
+Length: Minimum 10 characters, maximum 60 characters.
+Complexity: Block "common" or simple passwords (e.g., 1234567890 or password123).
+Accessibility: * Enable "Paste": Do not block users from using password managers.
+Show Password: Include a "hidden/visible" toggle (the eye icon) so users can check their input.
+When forgotten, User can reset their password.
+
+Username
+
+Length: Between 3 and 20 characters.
+Allowed Characters:
+Letters (A–Z)
+Numbers (0–9)
+Underscores (_) or Periods (.)
+Prohibited: No special characters or symbols (e.g., !, @, #).
+
+ex. kinga_42 - Valid
+kinga!!! - Invalid Contains forbidden symbols (!)
+ki- Invalid Too short (minimum 3 characters).

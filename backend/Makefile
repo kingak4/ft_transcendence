@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+run: build
+	gradle bootRun
+
+build:
+	gradle build
+
+format:
+	gradle checkstyleApply
+=======
 include .env
 PROFILE := local
 
@@ -20,3 +30,4 @@ docs:
 	${GRADLE} test --tests code.ModularityTest
 	${GRADLE} javadoc
 	${GRADLE} asciidoctor
+>>>>>>> main
