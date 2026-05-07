@@ -24,7 +24,7 @@ import org.springframework.core.io.Resource;
 @Slf4j
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
-  @Value("${app.security.validation.common-passwords}")
+  @Value("${spring.security.validation.common-passwords:#{null}}")
   private Resource dictionaryResource;
 
   private PasswordValidator validator;

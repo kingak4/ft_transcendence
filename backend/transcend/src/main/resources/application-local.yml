@@ -14,5 +14,10 @@ spring:
 logging:
   level:
     com.zaxxer.hikari: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    code: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 server:
   port: 8080
