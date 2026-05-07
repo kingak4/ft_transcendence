@@ -1,6 +1,5 @@
 services:
   db:
-#    image: postgres:${POSTGRES_VERSION}
     build:
       args:
         POSTGRES_VERSION: ${POSTGRES_VERSION}
