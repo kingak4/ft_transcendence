@@ -1,22 +1,22 @@
-GRADLE := ./gradlew
+include .env
 PROFILE := local
 
 run:
-	$(GRADLE) bootRun --args='--spring.profiles.active=$(PROFILE)'
+	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'
 
 build:
-	$(GRADLE) build
+	${GRADLE} build
 
 format:
-	$(GRADLE) spotlessApply
+	${GRADLE} spotlessApply
 
 lint:
-	$(GRADLE) pmdMain pmdTest
+	${GRADLE} pmdMain pmdTest
 
 test:
-	$(GRADLE) jacocoTestReport
+	${GRADLE} jacocoTestReport
 
 docs:
-	$(GRADLE) test --tests code.ModularityTest
-	$(GRADLE) javadoc
-	$(GRADLE) asciidoctor
+	${GRADLE} test --tests code.ModularityTest
+	${GRADLE} javadoc
+	${GRADLE} asciidoctor

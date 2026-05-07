@@ -1,0 +1,30 @@
+package code.bootstrap;
+
+import code.users.domain.exceptions.EmailAlreadyRegisteredException;
+import code.users.ports.in.RegisterUseCase;
+import code.users.ports.in.RegisterUseCase.RegisterCommand;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@RequiredArgsConstructor
+@Component
+public class UserFixtureInitializer implements ApplicationRunner {
+  private final RegisterUseCase registerUseCase;
+
+  @Override
+  public void run(ApplicationArguments args) {
+    String defaultEmail = "user@email.com";
+    String defaultPassword = "plain-password";
+
+    try {
+      registerUseCase.register(new RegisterCommand(defaultEmail, defaultPassword));
+      log.info("Initialized default user fixture.");
+    } catch (EmailAlreadyRegisteredException e) {
+      log.debug("Default user fixture already exists.");
+    }
+  }
+}
