@@ -5,10 +5,10 @@ import lombok.Value;
 
 @Value
 public class UserId {
-  UUID value;
+  UUID val;
 
-  public static UserId of(UUID value) {
-    return new UserId(value);
+  public static UserId of(UUID val) {
+    return new UserId(val);
   }
 
   public static UserId generate() {

@@ -1,12 +1,14 @@
 services:
   db:
-    image: postgres:${POSTGRES_VERSION}
+#    image: postgres:${POSTGRES_VERSION}
+    build:
+      args:
+        POSTGRES_VERSION: ${POSTGRES_VERSION}
     container_name: postgres-db-container
     env_file:
       - .env
     volumes:
       - pgdata:/var/lib/postgresql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app_network
     ports:

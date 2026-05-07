@@ -8,6 +8,23 @@ spring:
   security:
     validation:
       common-passwords: classpath:validation/common-passwords.txt
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: transcendence-hikari-pool
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      idle-timeout: 600000
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 server:
   servlet:
     context-path: /

@@ -17,5 +17,14 @@ class ModularityTest {
     new org.springframework.modulith.docs.Documenter(modules)
         .writeDocumentation()
         .writeIndividualModulesAsPlantUml();
+    generateFileTreeDiagrams();
+    generateClassDiagrams();
+  }
+
+  private void generateClassDiagrams() {
+    
+  }
+
+  private void generateFileTreeDiagrams() {
   }
 }

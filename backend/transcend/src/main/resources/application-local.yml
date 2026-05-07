@@ -1,5 +1,23 @@
 spring:
   application:
     name: transcend-backend-local
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=local
+  jpa:
+    properties:
+      hibernate:
+        default_schema: local
+    hibernate:
+      ddl-auto: create-drop
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    code: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 server:
   port: 8080

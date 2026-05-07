@@ -1,5 +1,6 @@
 package code.users.infrastructure.validation;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.io.InputStreamReader;
@@ -24,10 +25,17 @@ import org.springframework.core.io.Resource;
 @Slf4j
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
-  @Value("${app.security.validation.common-passwords}")
+  @Value("${spring.security.validation.common-passwords:#{null}}")
   private Resource dictionaryResource;
 
   private PasswordValidator validator;
+
+  @PostConstruct
+  public void onBoot() {
+    if (dictionaryResource == null || !dictionaryResource.exists()) {
+      log.warn("Password dictionary is configured as null or does not exist. Dictionary validation will be disabled.");
+    }
+  }
 
   @Override
   public void initialize(ValidPassword constraintAnnotation) {

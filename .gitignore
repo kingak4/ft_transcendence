@@ -4,6 +4,7 @@
 *.iws
 *.ipr
 .idea/
+.DS_Store
 
 # Environment Variables
 .env
