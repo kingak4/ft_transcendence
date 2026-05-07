@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 
-public class DotenvInitializer
+public class DotEnvInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
   @Override
