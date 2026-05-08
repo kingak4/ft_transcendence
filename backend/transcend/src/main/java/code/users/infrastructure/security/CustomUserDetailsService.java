@@ -17,10 +17,12 @@ class CustomUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     var user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    String roleName = user.getRole() != null ? user.getRole().name() : "USER";
 
     return org.springframework.security.core.userdetails.User.builder()
         .username(user.getEmail())
         .password(user.getPassword())
+        .roles(roleName)
         .build();
   }
 }

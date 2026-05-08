@@ -33,7 +33,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
   @PostConstruct
   public void onBoot() {
     if (dictionaryResource == null || !dictionaryResource.exists()) {
-      log.warn("Password dictionary is configured as null or does not exist. Dictionary validation will be disabled.");
+      log.warn(
+          "Password dictionary is configured as null or does not exist. Dictionary validation will be disabled.");
     }
   }
 

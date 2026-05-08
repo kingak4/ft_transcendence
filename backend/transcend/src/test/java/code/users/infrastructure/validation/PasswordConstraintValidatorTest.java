@@ -11,24 +11,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-  import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @SpringJUnitConfig(PasswordConstraintValidatorTest.TestConfig.class)
-@TestPropertySource(properties = "spring.security.validation.common-passwords=classpath:validation/common-passwords.txt")
+@TestPropertySource(
+    properties =
+        "spring.security.validation.common-passwords=classpath:validation/common-passwords.txt")
 class PasswordConstraintValidatorTest {
 
   @Configuration
   @Import(PasswordConstraintValidator.class)
   static class TestConfig {}
 
-  @Autowired
-  private PasswordConstraintValidator validator;
+  @Autowired private PasswordConstraintValidator validator;
   private ConstraintValidatorContext context;
 
   @BeforeEach
