@@ -3,10 +3,6 @@ export default function PrivacyPolicy() {
     <main className="max-w-4xl mx-auto px-6 py-12 text-white">
       <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
 
-      <p className="mb-6">
-        Last updated: July 2025
-      </p>
-
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
         <p>
