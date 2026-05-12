@@ -6,6 +6,7 @@
   <img src="docs/ft_t.png" alt="Webserv Preview" width="200"/>
 </p>
 
+## 🔒 License
 This project is licensed under the GNU GPL v3 License.
 
 ➡️ [Read License](./LICENSE)
@@ -35,5 +36,4 @@ This project is licensed under the GNU GPL v3 License.
 
 ### Video Tutorials
 
-## 🔒 License
 
