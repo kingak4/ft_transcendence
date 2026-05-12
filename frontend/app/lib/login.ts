@@ -1,7 +1,9 @@
 "use server";
 
 import { cookies } from 'next/headers';
-import { postData } from './post';
+// import { postData } from './post';
+import { client } from './api-clients';
+import { errorToJSON } from 'next/dist/server/render';
 
 export async function login(name: string, password: string): Promise<ActionResponse> {
   const payload: CreateUserPayload = {
@@ -9,15 +11,35 @@ export async function login(name: string, password: string): Promise<ActionRespo
     password: password
   }
 
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
+  // const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
 
   try {
 
-    const result = await postData<CreateUserResponse, CreateUserPayload>(
-      backendUrl + "/users/login",
-      payload
-    );
-    const token = result.accessToken;
+    const { data, error, response } = await client.POST("/users/login", {
+      body: {
+        email: name,
+        password: password
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Login Error:", response.body);
+      const serverError = (error as unknown) as loginError;
+      return {
+        success: false,
+        status: serverError.status,
+        message: serverError.message
+      };
+    }
+
+    const token = data?.accessToken;
+
+    if (!token) {
+      return {
+        success: false,
+        message: "Otrzymano pusty token z serwera."
+      };
+    }
 
     const cookieStore = await cookies();
     cookieStore.set('auth_token', token, {
@@ -29,14 +51,19 @@ export async function login(name: string, password: string): Promise<ActionRespo
     return { success: true, status: 200 };
   }
   catch (error: any) {
-    console.error("Login Error:", error.message);
-
+    console.error("Network or Unexpected Error:", error);
     return {
       success: false,
-      status: error.status || 500,
-      message: error.message
+      status: 500,
+      message: "Problem z połączeniem lub błąd wewnętrzny aplikacji."
     };
   }
+}
+
+export interface loginError {
+  "status": number,
+  "error": string,
+  "message": string
 }
 
 export interface CreateUserPayload {
