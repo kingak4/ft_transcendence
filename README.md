@@ -9,7 +9,7 @@
 ## 🔒 License
 This project is licensed under the GNU GPL v3 License.
 
-➡️ [GNU GPL v3 License](LICENSE)
+➡️ [[GNU GPL v3 License](LICENSE.md)]
 
 ## 📌 Description
 
