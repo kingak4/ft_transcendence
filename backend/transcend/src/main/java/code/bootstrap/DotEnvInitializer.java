@@ -1,4 +1,4 @@
-package code.users.config;
+package code.bootstrap;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 
-public class DotenvApplicationContextInitializer
+public class DotEnvInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
   @Override

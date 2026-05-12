@@ -1,15 +1,16 @@
+include ../.env
 include .env
 
 up:
-	docker compose up -d
+	${COMPOSE} up -d
 
 down:
-	docker compose down -v
+	${COMPOSE} down -v
 
 reset: down up
 
 db:
-	docker exec -it postgres-db-container psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+	${DOCKER} exec -it postgres-db-container psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
 
 logs:
-	docker logs -f postgres-db-container
+	${DOCKER} logs -f postgres-db-container
