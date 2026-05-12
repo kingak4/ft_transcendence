@@ -1,53 +1,20 @@
-"use client";
+import { client } from "../lib/api-clients";
 
-import Link from "next/link";
-import React, { useState } from 'react';
+export default async function HomePage() {
+  try {
 
-export default function SearchInput() {
-  const [emailValue, setLogin] = useState("");
-  const [passwordValue, setPassword] = useState("");
-
-  return (
-    <div className='flex flex-col w-screen min-h-screen justify-center border items-center'>
-      <h1 className='font-bold text-3xl'>HOME</h1>
-    </div>
-  );
-
-  async function register(name: string, password: string) {
-    const payload: CreateUserPayload = {
-      email: name,
-      password: password
+    const { data, error, response } = await client.GET("/hello/user");
+    if (!response.ok) {
+      return <div>Błąd serwera: {response.status} {response.headers}</div>;
     }
 
-    const result = await postData<CreateUserResponse, CreateUserPayload>(
-      '/api/users/register',
-      payload
+    return (
+      <div className='flex flex-col w-screen min-h-screen justify-center items-center'>
+        <h1 className='font-bold text-3xl'>HOME</h1>
+        <label className="mt-4">{response.status}</label>
+      </div>
     );
-
-    console.log(`Result: token=${result.id}`);
-  }
-
-  interface CreateUserPayload {
-    email: string,
-    password: string
-  }
-
-  interface CreateUserResponse {
-    id: string,
-  }
-
-  async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok)
-      throw new Error(`HTTP error! status: ${response.status}`);
-
-    return await response.json() as TResponse;
+  } catch (error: any) {
+    return <div>Błąd połączenia</div>;
   }
 }
