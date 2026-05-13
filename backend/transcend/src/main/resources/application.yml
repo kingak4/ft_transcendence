@@ -25,6 +25,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  mvc:
+    problemdetails:
+      enabled: true
 server:
   servlet:
     context-path: /

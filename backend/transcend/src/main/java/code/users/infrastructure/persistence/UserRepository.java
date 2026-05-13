@@ -1,6 +1,6 @@
 package code.users.infrastructure.persistence;
 
-+import code.users.domain.model.Role;
+import code.users.domain.model.Role;
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;

@@ -87,9 +87,9 @@ class RegisterControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.status").value(409))
-        .andExpect(jsonPath("$.error").value("Conflict"))
+        .andExpect(jsonPath("$.title").value("Conflict"))
         .andExpect(
-            jsonPath("$.message")
+            jsonPath("$.detail")
                 .value(String.format(EmailAlreadyRegisteredException.MESSAGE, EMAIL_FIXTURE)));
 
     verify(mapper).toCommand(request);
