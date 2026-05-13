@@ -13,4 +13,8 @@ public interface UserDao {
   void createUser(User user);
 
   void updateUser(User user);
+
+  void saveAvatar(UserId userId, String filename, byte[] content);
+
+  byte[] getAvatar(UserId userId);
 }

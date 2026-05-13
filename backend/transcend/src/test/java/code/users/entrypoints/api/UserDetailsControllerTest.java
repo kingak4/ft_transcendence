@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import code.users.domain.model.UserId;
 import code.users.entrypoints.api.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
+import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import java.util.UUID;
@@ -28,6 +29,7 @@ class UserDetailsControllerTest {
 
   @MockitoBean private UpdateDisplayNameUseCase updateDisplayNameUseCase;
   @MockitoBean private UpdateAvatarUseCase updateAvatarUseCase;
+  @MockitoBean private GetProfileUseCase getProfileUseCase;
   @MockitoBean private UsersApiMapper mapper;
   @MockitoBean private JwtAuthenticationFilter jwtAuthenticationFilter;
 

@@ -40,4 +40,12 @@ class UserRepository implements UserDao {
 
   @Override
   public void updateUser(User user) {}
+
+  @Override
+  public void saveAvatar(UserId userId, String filename, byte[] content) {}
+
+  @Override
+  public byte[] getAvatar(UserId userId) {
+    return new byte[0];
+  }
 }

@@ -1,7 +1,9 @@
 package code.users.entrypoints.api;
 
+import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +29,12 @@ public class UserDetailsController {
 
   public static final String BASE_URL = "users";
   public static final String UPDATE_DISPLAY_NAME_ENDPOINT = "/{userId}/display-name";
-  public static final String UPDATE_AVATAR_ENDPOINT = "/{userId}/avatar";
+  public static final String AVATAR_ENDPOINT = "/{userId}/avatar";
+  public static final String DETAILS_ENDPOINT = "/{userId}/details";
 
   private final UpdateDisplayNameUseCase updateDisplayNameUseCase;
   private final UpdateAvatarUseCase updateAvatarUseCase;
+  private final GetProfileUseCase getProfileUseCase;
   private final UsersApiMapper mapper;
 
   @PatchMapping(UPDATE_DISPLAY_NAME_ENDPOINT)
@@ -40,7 +45,7 @@ public class UserDetailsController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping(value = UPDATE_AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "Upload a profile avatar")
   public ResponseEntity<Void> uploadAvatar(
       @PathVariable UUID userId, @RequestParam("file") MultipartFile file) throws IOException {
@@ -50,5 +55,22 @@ public class UserDetailsController {
     return ResponseEntity.ok().build();
   }
 
+  @GetMapping(value = AVATAR_ENDPOINT, produces = MediaType.IMAGE_JPEG_VALUE)
+  @Operation(summary = "Get the profile avatar of the user")
+  public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
+    byte[] avatar = getProfileUseCase.getAvatar(new UserId(userId));
+    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(avatar);
+  }
+
+  @GetMapping(DETAILS_ENDPOINT)
+  @Operation(summary = "Get the details of the user")
+  public ResponseEntity<UserDetailsResponse> getDetails(@PathVariable UUID userId) {
+    UserDetails details = getProfileUseCase.getDetails(new UserId(userId));
+    return ResponseEntity.ok(
+        new UserDetailsResponse(details.getDisplayName(), details.getPhoto().getUrl()));
+  }
+
   public record UpdateDisplayNameRequest(String displayName) {}
+
+  public record UserDetailsResponse(String displayName, String photoUrl) {}
 }

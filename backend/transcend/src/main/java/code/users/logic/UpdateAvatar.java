@@ -7,10 +7,6 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.out.UserDao;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +19,12 @@ public class UpdateAvatar implements UpdateAvatarUseCase {
 
   @Override
   public void updateAvatar(UserId userId, UpdateAvatarCommand command) {
-    
+    User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
+    String filename = UUID.randomUUID() + "-" + command.originalFilename();
+
+    userDao.saveAvatar(userId, filename, command.content());
+
+    UserDetails newDetails = user.getDetails().withPhoto(new ProfilePhoto("/avatars/" + filename));
+    userDao.updateUser(user.withDetails(newDetails));
   }
 }
