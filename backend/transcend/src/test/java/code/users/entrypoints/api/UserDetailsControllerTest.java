@@ -13,6 +13,8 @@ import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,9 +25,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = UserDetailsController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class UserDetailsControllerTest {
 
-  @Autowired private MockMvc mockMvc;
+  private final MockMvc mockMvc;
 
   @MockitoBean private UpdateDisplayNameUseCase updateDisplayNameUseCase;
   @MockitoBean private UpdateAvatarUseCase updateAvatarUseCase;
@@ -35,14 +38,17 @@ class UserDetailsControllerTest {
 
   @Test
   void uploadAvatarSuccessfully() throws Exception {
+    // given
     UUID userId = UUID.randomUUID();
     MockMultipartFile file =
         new MockMultipartFile("file", "test.png", "image/png", "test image".getBytes());
 
+    // when
     mockMvc
         .perform(multipart("/users/" + userId + "/avatar").file(file))
         .andExpect(status().isOk());
 
+    // then
     verify(updateAvatarUseCase)
         .updateAvatar(eq(new UserId(userId)), any(UpdateAvatarUseCase.UpdateAvatarCommand.class));
   }
