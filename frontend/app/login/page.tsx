@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState } from 'react';
+import { login } from "../lib/login";
 
 export default function SearchInput() {
   const [loginValue, setLogin] = useState("");
@@ -31,47 +32,23 @@ export default function SearchInput() {
             className="border p-2 rounded-md w-3/4"
           />
         </div>
-        <button onClick={() => login(loginValue, passwordValue)} className='border p-4 rounded-md cursor-pointer'>Login</button>
+        <button onClick={() => loginWrap(loginValue, passwordValue)} className='border p-4 rounded-md cursor-pointer'>Login</button>
       </div>
     </div>
   );
 
-  async function login(name: string, password: string) {
-    const payload: CreateUserPayload = {
-      email: name,
-      password: password
+  async function loginWrap(name: string, password: string) {
+    const response = await login(loginValue, passwordValue)
+
+    if (!response.success) {
+      if (response.status === 500) {
+        alert("Server error. Please try again later.");
+      } else {
+        alert(response.message || "An unknown error occurred.");
+      }
+      return;
     }
-
-    const result = await postData<CreateUserResponse, CreateUserPayload>(
-      '/api/users/login',
-      payload
-    );
-
-    console.log(`Result: token=${result.accessToken}, type=${result.tokenType}`);
-  }
-
-  interface CreateUserPayload {
-    email: string,
-    password: string
-  }
-
-  interface CreateUserResponse {
-    accessToken: string,
-    tokenType: string
-  }
-
-  async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok)
-      throw new Error(`HTTP error! status: ${response.status}`);
-
-    return await response.json() as TResponse;
+    alert("Succesfully logged in!");
+    window.location.href = "/home";
   }
 }
