@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState } from 'react';
+import { client } from "../lib/api-clients";
 
 export default function SearchInput() {
   const [emailValue, setLogin] = useState("");
@@ -42,12 +43,36 @@ export default function SearchInput() {
       password: password
     }
 
-    const result = await postData<CreateUserResponse, CreateUserPayload>(
-      '/api/users/register',
-      payload
-    );
+    const { data, error, response } = await client.POST("/users/register", {
+      body: {
+        email: name,
+        password: password
+      },
+    });
 
-    console.log(`Result: token=${result.id}`);
+    if (!response.ok) {
+      const serverError = (error as unknown) as RegisterError;
+      const status = serverError.status;
+      const message = serverError.message["register.command.email"] + "\n" + serverError.message["register.command.rawPassword"];
+      if (status == 400) {
+        window.alert(`${message}`);
+      }
+      else
+        window.alert(`Result: ID=${data?.id}`);
+    }
+    else {
+      window.alert(`Zarejestrowano pomślnie:\nlogin: ${name}\npassword: ${password}`);
+      window.location.href = "/login";
+    }
+  }
+
+  interface RegisterError {
+    status: number,
+    error: string,
+    message: {
+      "register.command.email"?: string;
+      "register.command.rawPassword"?: string;
+    }
   }
 
   interface CreateUserPayload {
@@ -59,18 +84,18 @@ export default function SearchInput() {
     id: string,
   }
 
-  async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+  // async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
+  //   const response = await fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(body),
+  //   });
 
-    if (!response.ok)
-      throw new Error(`HTTP error! status: ${response.status}`);
+  //   if (!response.ok)
+  //     throw new Error(`HTTP error! status: ${response.status}`);
 
-    return await response.json() as TResponse;
-  }
+  //   return await response.json() as TResponse;
+  // }
 }
