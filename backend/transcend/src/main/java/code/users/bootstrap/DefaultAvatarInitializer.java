@@ -1,10 +1,9 @@
 package code.users.bootstrap;
 
 import code.users.domain.model.Avatar;
-import code.users.domain.model.UserId;
+import code.users.domain.model.UserDetails;
 import code.users.ports.out.UserDao;
 import java.io.InputStream;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 public class DefaultAvatarInitializer implements CommandLineRunner {
 
   private final UserDao userDao;
-  public static final UserId DEFAULT_AVATAR_USER_ID = new UserId(new UUID(0, 0));
 
   @Override
   public void run(String... args) throws Exception {
@@ -26,10 +24,10 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
     if (resource.exists()) {
       try (InputStream is = resource.getInputStream()) {
         byte[] content = is.readAllBytes();
-        userDao.saveAvatar(DEFAULT_AVATAR_USER_ID, new Avatar(content));
+        userDao.saveAvatar(UserDetails.DEFAULT_AVATAR_USER_ID, new Avatar(content));
       }
     } else {
-      userDao.saveAvatar(DEFAULT_AVATAR_USER_ID, new Avatar(new byte[] {0}));
+      userDao.saveAvatar(UserDetails.DEFAULT_AVATAR_USER_ID, new Avatar(new byte[] {0}));
     }
   }
 }

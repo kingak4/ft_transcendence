@@ -24,7 +24,7 @@ public class UpdateAvatar implements UpdateAvatarUseCase {
 
     userDao.saveAvatar(userId, new Avatar(command.content()));
 
-    UserDetails newDetails = user.getDetails().withAvatarUrl("/avatars/" + filename);
+    UserDetails newDetails = user.getDetails().withAvatarUrl(UserDetails.AVATARS_BASE_URL + filename);
     userDao.updateUser(user.withDetails(newDetails));
   }
 }

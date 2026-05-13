@@ -30,7 +30,7 @@ class Register implements RegisterUseCase {
             .id(UserId.generate())
             .email(command.email())
             .password(hash)
-            .details(UserDetails.builder().avatarUrl("/avatars/default.png").build())
+            .details(UserDetails.builder().avatarUrl(UserDetails.DEFAULT_AVATAR_URL).build())
             .build();
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.getId());
