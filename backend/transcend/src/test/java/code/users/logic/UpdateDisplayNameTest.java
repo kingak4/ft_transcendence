@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
-import code.users.ports.in.UpdateAvatarUseCase;
-import code.users.ports.in.UpdateAvatarUseCase.UpdateAvatarCommand;
+import code.users.ports.in.UpdateDisplayNameUseCase;
+import code.users.ports.in.UpdateDisplayNameUseCase.UpdateDisplayNameCommand;
 import code.users.ports.out.UserDao;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,49 +23,47 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig(UpdateAvatarTest.UpdateAvatarTestConfig.class)
+@SpringJUnitConfig(UpdateDisplayNameTest.UpdateDisplayNameTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-class UpdateAvatarTest {
+class UpdateDisplayNameTest {
 
   @Configuration
-  @Import(UpdateAvatar.class)
-  static class UpdateAvatarTestConfig {}
+  @Import(UpdateDisplayName.class)
+  static class UpdateDisplayNameTestConfig {}
 
-  private final UpdateAvatarUseCase service;
+  private final UpdateDisplayNameUseCase service;
 
   @MockitoBean private UserDao userDao;
 
   @Test
-  void updatesAvatarSuccessfully() {
+  void updatesDisplayNameSuccessfully() {
     // given
     var userId = new UserId(ID_FIXTURE);
     var user = aDefaultUser();
     when(userDao.findById(userId)).thenReturn(Optional.of(user));
 
-    var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});
+    var command = new UpdateDisplayNameCommand("New Name");
 
     // when
-    service.updateAvatar(userId, command);
+    service.updateDisplayName(userId, command);
 
     // then
     ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
     verify(userDao).updateUser(captor.capture());
 
     var savedUser = captor.getValue();
-    assertThat(savedUser.getDetails().getAvatarUrl()).isNotNull();
-    assertThat(savedUser.getDetails().getAvatarUrl()).startsWith("/avatars/");
-    assertThat(savedUser.getDetails().getAvatarUrl()).endsWith("test.png");
+    assertThat(savedUser.getDetails().getDisplayName()).isEqualTo("New Name");
   }
 
   @Test
   void throwsUserNotFoundException() {
     // given
     var userId = new UserId(ID_FIXTURE);
-    var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});
+    var command = new UpdateDisplayNameCommand("New Name");
 
     when(userDao.findById(userId)).thenReturn(Optional.empty());
 
     // when & then
-    assertThrows(UserNotFoundException.class, () -> service.updateAvatar(userId, command));
+    assertThrows(UserNotFoundException.class, () -> service.updateDisplayName(userId, command));
   }
 }

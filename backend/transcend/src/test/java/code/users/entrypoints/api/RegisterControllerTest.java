@@ -20,7 +20,6 @@ import code.users.ports.in.RegisterUseCase;
 import code.users.ports.in.RegisterUseCase.RegisterCommand;
 import code.users.ports.in.RegisterUseCase.RegisteredUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ class RegisterControllerTest {
   @MockitoBean private RegisterUseCase registerUseCase;
   @MockitoBean private UsersApiMapper mapper;
   @MockitoBean private JwtAuthenticationFilter jwtAuthenticationFilter;
-
+public static final String BASE_URL = "users";
   @Test
   void registerReturns200WithUserIdWhenSuccessful() throws Exception {
     // given
@@ -63,7 +62,7 @@ class RegisterControllerTest {
             post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value(uuid.toString()));
 
     verify(mapper).toCommand(request);

@@ -39,5 +39,6 @@ public interface UsersApiMapper {
 
   UpdateDisplayNameCommand toCommand(UserDetailsController.UpdateDisplayNameRequest request);
 
+  @Mapping(source = "online", target = "isOnline")
   UserDetailsController.GetUserDetailsResponse toResponse(UserDetails details);
 }

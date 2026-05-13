@@ -10,4 +10,5 @@ import lombok.With;
 public class UserDetails {
   String displayName;
   String avatarUrl;
+  @Builder.Default boolean online = false;
 }

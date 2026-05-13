@@ -1,10 +1,14 @@
 package code.users.infrastructure.persistence;
 
 import code.users.domain.model.Avatar;
+import code.users.domain.model.FriendId;
 import code.users.domain.model.Role;
 import code.users.domain.model.User;
+import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -48,5 +52,16 @@ class UserRepository implements UserDao {
   @Override
   public Avatar getAvatar(UserId userId) {
     return new Avatar(new byte[0]);
+  }
+
+  @Override
+  public void addFriend(UserId userId, UserId friendId) {}
+
+  @Override
+  public void removeFriend(UserId userId, UserId friendId) {}
+
+  @Override
+  public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
+    return Collections.emptyMap();
   }
 }

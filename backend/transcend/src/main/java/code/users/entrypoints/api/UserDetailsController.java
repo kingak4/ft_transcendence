@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,5 +71,5 @@ public class UserDetailsController {
 
   public record UpdateDisplayNameRequest(String displayName) {}
 
-  public record GetUserDetailsResponse(String displayName, String avatarUrl) {}
+  public record GetUserDetailsResponse(String displayName, String avatarUrl, boolean isOnline) {}
 }

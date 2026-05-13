@@ -13,8 +13,6 @@ import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +48,7 @@ class UserDetailsControllerTest {
 
     // then
     verify(updateAvatarUseCase)
-        .updateAvatar(eq(new UserId(ID_FIXTURE)), any(UpdateAvatarUseCase.UpdateAvatarCommand.class));
+        .updateAvatar(
+            eq(new UserId(ID_FIXTURE)), any(UpdateAvatarUseCase.UpdateAvatarCommand.class));
   }
 }
