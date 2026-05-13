@@ -1,6 +1,6 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.User;
-import code.users.domain.model.UserId;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateAvatarUseCase.UpdateAvatarCommand;
 import code.users.ports.out.UserDao;
@@ -38,14 +37,13 @@ class UpdateAvatarTest {
   @Test
   void updatesAvatarSuccessfully() {
     // given
-    var userId = new UserId(ID_FIXTURE);
     var user = aDefaultUser();
-    when(userDao.findById(userId)).thenReturn(Optional.of(user));
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.of(user));
 
     var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});
 
     // when
-    service.updateAvatar(userId, command);
+    service.updateAvatar(USER_ID_FIXTURE, command);
 
     // then
     ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
@@ -60,12 +58,11 @@ class UpdateAvatarTest {
   @Test
   void throwsUserNotFoundException() {
     // given
-    var userId = new UserId(ID_FIXTURE);
     var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});
 
-    when(userDao.findById(userId)).thenReturn(Optional.empty());
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.empty());
 
     // when & then
-    assertThrows(UserNotFoundException.class, () -> service.updateAvatar(userId, command));
+    assertThrows(UserNotFoundException.class, () -> service.updateAvatar(USER_ID_FIXTURE, command));
   }
 }

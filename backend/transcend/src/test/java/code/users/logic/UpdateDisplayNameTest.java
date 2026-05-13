@@ -1,6 +1,7 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.NAME_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.User;
-import code.users.domain.model.UserId;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase.UpdateDisplayNameCommand;
 import code.users.ports.out.UserDao;
@@ -38,32 +38,31 @@ class UpdateDisplayNameTest {
   @Test
   void updatesDisplayNameSuccessfully() {
     // given
-    var userId = new UserId(ID_FIXTURE);
     var user = aDefaultUser();
-    when(userDao.findById(userId)).thenReturn(Optional.of(user));
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.of(user));
 
-    var command = new UpdateDisplayNameCommand("New Name");
+    var command = new UpdateDisplayNameCommand(NAME_FIXTURE);
 
     // when
-    service.updateDisplayName(userId, command);
+    service.updateDisplayName(USER_ID_FIXTURE, command);
 
     // then
     ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
     verify(userDao).updateUser(captor.capture());
 
     var savedUser = captor.getValue();
-    assertThat(savedUser.getDetails().getDisplayName()).isEqualTo("New Name");
+    assertThat(savedUser.getDetails().getDisplayName()).isEqualTo(NAME_FIXTURE);
   }
 
   @Test
   void throwsUserNotFoundException() {
     // given
-    var userId = new UserId(ID_FIXTURE);
-    var command = new UpdateDisplayNameCommand("New Name");
+    var command = new UpdateDisplayNameCommand(NAME_FIXTURE);
 
-    when(userDao.findById(userId)).thenReturn(Optional.empty());
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.empty());
 
     // when & then
-    assertThrows(UserNotFoundException.class, () -> service.updateDisplayName(userId, command));
+    assertThrows(
+        UserNotFoundException.class, () -> service.updateDisplayName(USER_ID_FIXTURE, command));
   }
 }

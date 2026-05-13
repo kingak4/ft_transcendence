@@ -3,6 +3,7 @@ package code.users.entrypoints.api;
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
+import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +43,7 @@ class RegisterControllerTest {
   @MockitoBean private RegisterUseCase registerUseCase;
   @MockitoBean private UsersApiMapper mapper;
   @MockitoBean private JwtAuthenticationFilter jwtAuthenticationFilter;
-public static final String BASE_URL = "users";
+
   @Test
   void registerReturns200WithUserIdWhenSuccessful() throws Exception {
     // given
@@ -59,7 +60,7 @@ public static final String BASE_URL = "users";
     // when & then
     mockMvc
         .perform(
-            post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
+            post(buildUrl(RegisterController.BASE_URL, RegisterController.REGISTER_ENDPOINT))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
@@ -83,7 +84,7 @@ public static final String BASE_URL = "users";
     // when & then
     mockMvc
         .perform(
-            post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
+            post(buildUrl(RegisterController.BASE_URL, RegisterController.REGISTER_ENDPOINT))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isConflict())

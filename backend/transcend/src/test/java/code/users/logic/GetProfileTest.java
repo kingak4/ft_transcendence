@@ -1,6 +1,6 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.Avatar;
-import code.users.domain.model.UserId;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.out.UserDao;
 import java.util.Optional;
@@ -35,12 +34,11 @@ class GetProfileTest {
   @Test
   void getDetailsSuccessfully() {
     // given
-    var userId = new UserId(ID_FIXTURE);
     var user = aDefaultUser();
-    when(userDao.findById(userId)).thenReturn(Optional.of(user));
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.of(user));
 
     // when
-    var result = service.getDetails(userId);
+    var result = service.getDetails(USER_ID_FIXTURE);
 
     // then
     assertThat(result).isNotNull();
@@ -51,29 +49,27 @@ class GetProfileTest {
   @Test
   void getDetailsThrowsUserNotFoundException() {
     // given
-    var userId = new UserId(ID_FIXTURE);
 
-    when(userDao.findById(userId)).thenReturn(Optional.empty());
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.empty());
 
     // when & then
-    assertThrows(UserNotFoundException.class, () -> service.getDetails(userId));
+    assertThrows(UserNotFoundException.class, () -> service.getDetails(USER_ID_FIXTURE));
   }
-  
+
   @Test
   void getAvatarSuccessfully() {
     // given
-    var userId = new UserId(ID_FIXTURE);
     var user = aDefaultUser();
-    when(userDao.findById(userId)).thenReturn(Optional.of(user));
+    when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.of(user));
 
-    var expectedAvatar = new Avatar(new byte[]{1, 2, 3});
-    when(userDao.getAvatar(userId)).thenReturn(expectedAvatar);
+    var expectedAvatar = new Avatar(new byte[] {1, 2, 3});
+    when(userDao.getAvatar(USER_ID_FIXTURE)).thenReturn(expectedAvatar);
 
     // when
-    var result = service.getAvatar(userId);
+    var result = service.getAvatar(USER_ID_FIXTURE);
 
     // then
     assertThat(result).isNotNull();
-    assertThat(result.content()).containsExactly(new byte[]{1, 2, 3});
+    assertThat(result.content()).containsExactly(new byte[] {1, 2, 3});
   }
 }

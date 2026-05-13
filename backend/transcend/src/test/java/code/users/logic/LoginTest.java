@@ -4,6 +4,7 @@ import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
+import static code.users.domain.model.UserFixtures.WRONG_PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -76,10 +77,10 @@ class LoginTest {
   @Test
   void loginWithInvalidPasswordThrowsException() {
     // given
-    var command = new LoginCommand(EMAIL_FIXTURE, "wrong-password");
+    var command = new LoginCommand(EMAIL_FIXTURE, WRONG_PASSWORD_FIXTURE);
     var user = aDefaultUser();
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
-    when(hashingService.matches("wrong-password", PASSWORD_FIXTURE)).thenReturn(false);
+    when(hashingService.matches(WRONG_PASSWORD_FIXTURE, PASSWORD_FIXTURE)).thenReturn(false);
 
     // when & then
     assertThrows(InvalidCredentialsException.class, () -> service.login(command));
