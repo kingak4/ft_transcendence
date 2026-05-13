@@ -1,6 +1,5 @@
 package code.users.infrastructure.security;
 
-import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
@@ -59,8 +58,7 @@ class CustomUserDetailsServiceTest {
     // when
     var exception =
         assertThrows(
-            UserNotFoundException.class,
-            () -> userDetailsService.loadUserByUsername(idStr));
+            UserNotFoundException.class, () -> userDetailsService.loadUserByUsername(idStr));
 
     // then
     assertEquals(UserNotFoundException.MESSAGE, exception.getMessage());
