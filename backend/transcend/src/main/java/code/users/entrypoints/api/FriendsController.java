@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(FRIENDS_ENDPOINT)
 @RequiredArgsConstructor
-@Tag(name = "Friends", description = "Endpoints for managing user friends")
 public class FriendsController {
   public static final String FRIENDS_ENDPOINT = "/users/{userId}/friends";
   public static final String FRIEND_ENDPOINT = "/{friendId}";
