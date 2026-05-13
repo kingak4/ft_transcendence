@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.stream.Stream;
+
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,13 +23,14 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @TestPropertySource(
     properties =
         "spring.security.validation.common-passwords=classpath:validation/common-passwords.txt")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class PasswordConstraintValidatorTest {
 
   @Configuration
   @Import(PasswordConstraintValidator.class)
   static class TestConfig {}
 
-  @Autowired private PasswordConstraintValidator validator;
+  private final PasswordConstraintValidator validator;
   private ConstraintValidatorContext context;
 
   @BeforeEach
