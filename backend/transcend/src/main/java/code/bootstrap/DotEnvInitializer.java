@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DotEnvInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 

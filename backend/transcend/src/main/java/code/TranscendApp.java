@@ -1,7 +1,5 @@
 package code;
 
-import code.bootstrap.DotEnvInitializer;
-import code.bootstrap.ValidProfileInitializer;
 import jakarta.annotation.PostConstruct;
 import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +23,6 @@ class TranscendApp extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(TranscendApp.class);
-    app.addInitializers(new ValidProfileInitializer());
-    app.addInitializers(new DotEnvInitializer());
     app.run(args);
   }
 

@@ -22,7 +22,7 @@ public class GetProfile implements GetProfileUseCase {
   }
 
   @Override
-  public byte[] getAvatar(UserId userId) {
+  public code.users.domain.model.Avatar getAvatar(UserId userId) {
     if (userDao.findById(userId).isEmpty()) {
       throw new UserNotFoundException();
     }

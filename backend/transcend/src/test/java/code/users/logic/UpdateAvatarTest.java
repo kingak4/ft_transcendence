@@ -41,9 +41,9 @@ class UpdateAvatarTest {
     verify(userDao).updateUser(captor.capture());
 
     User savedUser = captor.getValue();
-    assertThat(savedUser.getDetails().getPhoto()).isNotNull();
-    assertThat(savedUser.getDetails().getPhoto().getUrl()).startsWith("/avatars/");
-    assertThat(savedUser.getDetails().getPhoto().getUrl()).endsWith("test.png");
+    assertThat(savedUser.getDetails().getAvatarUrl()).isNotNull();
+    assertThat(savedUser.getDetails().getAvatarUrl()).startsWith("/avatars/");
+    assertThat(savedUser.getDetails().getAvatarUrl()).endsWith("test.png");
   }
 
   @Test

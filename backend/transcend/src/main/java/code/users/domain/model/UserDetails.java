@@ -9,5 +9,5 @@ import lombok.With;
 @Builder
 public class UserDetails {
   String displayName;
-  ProfilePhoto photo;
+  String avatarUrl;
 }

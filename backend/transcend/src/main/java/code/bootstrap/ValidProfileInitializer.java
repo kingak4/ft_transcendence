@@ -6,7 +6,9 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidProfileInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 

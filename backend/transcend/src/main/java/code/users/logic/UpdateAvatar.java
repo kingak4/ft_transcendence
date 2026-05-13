@@ -1,7 +1,7 @@
 package code.users.logic;
 
 import code.users.domain.exceptions.UserNotFoundException;
-import code.users.domain.model.ProfilePhoto;
+import code.users.domain.model.Avatar;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
@@ -22,9 +22,9 @@ public class UpdateAvatar implements UpdateAvatarUseCase {
     User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
     String filename = UUID.randomUUID() + "-" + command.originalFilename();
 
-    userDao.saveAvatar(userId, filename, command.content());
+    userDao.saveAvatar(userId, new Avatar(command.content()));
 
-    UserDetails newDetails = user.getDetails().withPhoto(new ProfilePhoto("/avatars/" + filename));
+    UserDetails newDetails = user.getDetails().withAvatarUrl("/avatars/" + filename);
     userDao.updateUser(user.withDetails(newDetails));
   }
 }

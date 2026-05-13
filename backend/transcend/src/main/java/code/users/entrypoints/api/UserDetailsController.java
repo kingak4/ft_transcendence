@@ -58,7 +58,7 @@ public class UserDetailsController {
   @GetMapping(value = AVATAR_ENDPOINT, produces = MediaType.IMAGE_JPEG_VALUE)
   @Operation(summary = "Get the profile avatar of the user")
   public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
-    byte[] avatar = getProfileUseCase.getAvatar(new UserId(userId));
+    byte[] avatar = getProfileUseCase.getAvatar(new UserId(userId)).content();
     return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(avatar);
   }
 
@@ -67,10 +67,10 @@ public class UserDetailsController {
   public ResponseEntity<UserDetailsResponse> getDetails(@PathVariable UUID userId) {
     UserDetails details = getProfileUseCase.getDetails(new UserId(userId));
     return ResponseEntity.ok(
-        new UserDetailsResponse(details.getDisplayName(), details.getPhoto().getUrl()));
+        new UserDetailsResponse(details.getDisplayName(), details.getAvatarUrl()));
   }
 
   public record UpdateDisplayNameRequest(String displayName) {}
 
-  public record UserDetailsResponse(String displayName, String photoUrl) {}
+  public record UserDetailsResponse(String displayName, String avatarUrl) {}
 }

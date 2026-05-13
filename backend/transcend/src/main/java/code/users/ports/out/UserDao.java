@@ -1,5 +1,6 @@
 package code.users.ports.out;
 
+import code.users.domain.model.Avatar;
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface UserDao {
 
   void updateUser(User user);
 
-  void saveAvatar(UserId userId, String filename, byte[] content);
+  void saveAvatar(UserId userId, Avatar avatar);
 
-  byte[] getAvatar(UserId userId);
+  Avatar getAvatar(UserId userId);
 }

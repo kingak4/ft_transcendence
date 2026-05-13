@@ -1,7 +1,6 @@
 package code.users.logic;
 
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
-import code.users.domain.model.ProfilePhoto;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
@@ -31,7 +30,7 @@ class Register implements RegisterUseCase {
             .id(UserId.generate())
             .email(command.email())
             .password(hash)
-            .details(UserDetails.builder().photo(ProfilePhoto.defaultPhoto()).build())
+            .details(UserDetails.builder().avatarUrl("/avatars/default.png").build())
             .build();
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.getId());
