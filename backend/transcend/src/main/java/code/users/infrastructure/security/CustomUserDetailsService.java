@@ -15,12 +15,15 @@ class CustomUserDetailsService implements UserDetailsService {
   private final UserDao userDao;
 
   @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    var user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
+  public UserDetails loadUserByUsername(String idStr) throws UsernameNotFoundException {
+    var user =
+        userDao
+            .findById(code.users.domain.model.UserId.of(java.util.UUID.fromString(idStr)))
+            .orElseThrow(UserNotFoundException::new);
     String roleName = user.getRole() != null ? user.getRole().name() : "USER";
 
     return org.springframework.security.core.userdetails.User.builder()
-        .username(user.getEmail())
+        .username(idStr)
         .password(user.getPassword())
         .roles(roleName)
         .build();

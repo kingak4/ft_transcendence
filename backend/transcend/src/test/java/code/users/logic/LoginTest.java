@@ -47,7 +47,7 @@ class LoginTest {
 
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
     when(hashingService.matches(PASSWORD_FIXTURE, HASH_FIXTURE)).thenReturn(true);
-    when(accessTokenProvider.generateToken(EMAIL_FIXTURE)).thenReturn(TOKEN_FIXTURE);
+    when(accessTokenProvider.generateToken(user.getId().getVal().toString())).thenReturn(TOKEN_FIXTURE);
 
     // when
     var result = service.login(command);
@@ -57,7 +57,7 @@ class LoginTest {
     assertEquals("Bearer", result.tokenType());
     verify(userDao).findByEmail(EMAIL_FIXTURE);
     verify(hashingService).matches(PASSWORD_FIXTURE, HASH_FIXTURE);
-    verify(accessTokenProvider).generateToken(EMAIL_FIXTURE);
+    verify(accessTokenProvider).generateToken(user.getId().getVal().toString());
   }
 
   @Test

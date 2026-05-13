@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(LoginController.BASE_URL)
 @RequiredArgsConstructor
-@PermitAll
 public class LoginController {
 
   public static final String BASE_URL = "users";
@@ -27,6 +26,7 @@ public class LoginController {
   @PostMapping(LOGIN_ENDPOINT)
   @Operation(summary = "Authenticate and issue JWT")
   @SecurityRequirements()
+  @PermitAll
   public LoginResponse login(@RequestBody LoginRequest request) {
     LoginResult result = loginUseCase.login(mapper.toCommand(request));
     return mapper.toResponse(result);

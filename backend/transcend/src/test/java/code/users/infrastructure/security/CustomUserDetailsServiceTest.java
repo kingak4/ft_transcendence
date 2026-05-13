@@ -2,6 +2,7 @@ package code.users.infrastructure.security;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,30 +37,33 @@ class CustomUserDetailsServiceTest {
   void loadUserByUsernameReturnsUserDetailsWhenUserExists() {
     // given
     var user = aDefaultUser();
-    when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
+    String idStr = user.getId().getVal().toString();
+    when(userDao.findById(user.getId())).thenReturn(Optional.of(user));
 
     // when
-    var userDetails = userDetailsService.loadUserByUsername(EMAIL_FIXTURE);
+    var userDetails = userDetailsService.loadUserByUsername(idStr);
 
     // then
-    assertEquals(EMAIL_FIXTURE, userDetails.getUsername());
+    assertEquals(idStr, userDetails.getUsername());
     assertEquals(HASH_FIXTURE, userDetails.getPassword());
-    verify(userDao).findByEmail(EMAIL_FIXTURE);
+    verify(userDao).findById(user.getId());
   }
 
   @Test
   void loadUserByUsernameThrowsWhenUserDoesNotExist() {
     // given
-    when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.empty());
+    String idStr = ID_FIXTURE.toString();
+    var userId = code.users.domain.model.UserId.of(ID_FIXTURE);
+    when(userDao.findById(userId)).thenReturn(Optional.empty());
 
     // when
     var exception =
         assertThrows(
             UserNotFoundException.class,
-            () -> userDetailsService.loadUserByUsername(EMAIL_FIXTURE));
+            () -> userDetailsService.loadUserByUsername(idStr));
 
     // then
     assertEquals(UserNotFoundException.MESSAGE, exception.getMessage());
-    verify(userDao).findByEmail(EMAIL_FIXTURE);
+    verify(userDao).findById(userId);
   }
 }
