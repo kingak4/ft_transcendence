@@ -19,6 +19,7 @@ public class UserFixtureInitializer implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) {
+    log.info("Initializing default user fixture");
     String defaultEmail = "user@email.com";
     String defaultPassword = "plain-password";
     try {

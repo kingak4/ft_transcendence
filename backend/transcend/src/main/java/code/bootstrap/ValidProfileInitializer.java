@@ -1,20 +1,21 @@
 package code.bootstrap;
 
 import code.bootstrap.exceptions.IllegalProfileException;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.stereotype.Component;
 
-@Component
+import java.util.List;
+
+@Slf4j
 public class ValidProfileInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
   @Override
   public void initialize(ConfigurableApplicationContext context) {
-
+    log.info("Initializing application profile validator");
     ConfigurableEnvironment env = context.getEnvironment();
 
     String[] allowed =
