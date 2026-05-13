@@ -56,6 +56,7 @@ class LoginTest {
     // then
     assertEquals(TOKEN_FIXTURE, result.accessToken());
     assertEquals("Bearer", result.tokenType());
+    assertEquals(user.getId().getVal().toString(), result.userId());
     verify(userDao).findByEmail(EMAIL_FIXTURE);
     verify(hashingService).matches(PASSWORD_FIXTURE, HASH_FIXTURE);
     verify(accessTokenProvider).generateToken(user.getId().getVal().toString());

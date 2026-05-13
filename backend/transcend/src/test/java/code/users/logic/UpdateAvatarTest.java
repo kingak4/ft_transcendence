@@ -1,5 +1,7 @@
 package code.users.logic;
 
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -38,8 +40,8 @@ class UpdateAvatarTest {
   @Test
   void updatesAvatarSuccessfully() {
     // given
-    var userId = new UserId(UUID.randomUUID());
-    var user = User.builder().id(userId).details(UserDetails.builder().build()).build();
+    var userId = new UserId(ID_FIXTURE);
+    var user = aDefaultUser();
     when(userDao.findById(userId)).thenReturn(Optional.of(user));
 
     var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});
@@ -60,7 +62,7 @@ class UpdateAvatarTest {
   @Test
   void throwsUserNotFoundException() {
     // given
-    var userId = new UserId(UUID.randomUUID());
+    var userId = new UserId(ID_FIXTURE);
     var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});
     
     when(userDao.findById(userId)).thenReturn(Optional.empty());

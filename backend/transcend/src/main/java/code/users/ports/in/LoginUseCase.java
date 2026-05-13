@@ -6,5 +6,5 @@ public interface LoginUseCase {
 
   record LoginCommand(String email, String rawPassword) {}
 
-  record LoginResult(String accessToken, String tokenType) {}
+  record LoginResult(String accessToken, String tokenType, String userId) {}
 }

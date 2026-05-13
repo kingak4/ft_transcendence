@@ -1,5 +1,6 @@
 package code.users.infrastructure.persistence;
 
+import code.users.domain.model.Avatar;
 import code.users.domain.model.Role;
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
@@ -42,10 +43,10 @@ class UserRepository implements UserDao {
   public void updateUser(User user) {}
 
   @Override
-  public void saveAvatar(UserId userId, code.users.domain.model.Avatar avatar) {}
+  public void saveAvatar(UserId userId, Avatar avatar) {}
 
   @Override
-  public code.users.domain.model.Avatar getAvatar(UserId userId) {
-    return new code.users.domain.model.Avatar(new byte[0]);
+  public Avatar getAvatar(UserId userId) {
+    return new Avatar(new byte[0]);
   }
 }

@@ -1,5 +1,6 @@
 package code.users.entrypoints.api;
 
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -39,17 +40,16 @@ class UserDetailsControllerTest {
   @Test
   void uploadAvatarSuccessfully() throws Exception {
     // given
-    UUID userId = UUID.randomUUID();
     MockMultipartFile file =
         new MockMultipartFile("file", "test.png", "image/png", "test image".getBytes());
 
     // when
     mockMvc
-        .perform(multipart("/users/" + userId + "/avatar").file(file))
+        .perform(multipart("/users/" + ID_FIXTURE + "/avatar").file(file))
         .andExpect(status().isOk());
 
     // then
     verify(updateAvatarUseCase)
-        .updateAvatar(eq(new UserId(userId)), any(UpdateAvatarUseCase.UpdateAvatarCommand.class));
+        .updateAvatar(eq(new UserId(ID_FIXTURE)), any(UpdateAvatarUseCase.UpdateAvatarCommand.class));
   }
 }

@@ -64,13 +64,13 @@ public class UserDetailsController {
 
   @GetMapping(DETAILS_ENDPOINT)
   @Operation(summary = "Get the details of the user")
-  public ResponseEntity<UserDetailsResponse> getDetails(@PathVariable UUID userId) {
+  public ResponseEntity<GetUserDetailsResponse> getDetails(@PathVariable UUID userId) {
     UserDetails details = getProfileUseCase.getDetails(new UserId(userId));
     return ResponseEntity.ok(
-        new UserDetailsResponse(details.getDisplayName(), details.getAvatarUrl()));
+        new GetUserDetailsResponse(details.getDisplayName(), details.getAvatarUrl()));
   }
 
   public record UpdateDisplayNameRequest(String displayName) {}
 
-  public record UserDetailsResponse(String displayName, String avatarUrl) {}
+  public record GetUserDetailsResponse(String displayName, String avatarUrl) {}
 }

@@ -1,6 +1,7 @@
 package code.users.entrypoints.api;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import code.shared.exceptions.GlobalExceptionHandler;
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
+import code.users.domain.model.UserId;
 import code.users.entrypoints.api.RegisterController.RegisterRequest;
 import code.users.entrypoints.api.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
@@ -47,8 +49,8 @@ class RegisterControllerTest {
     // given
     var request = new RegisterRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
     var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var uuid = UUID.randomUUID();
-    var registeredUser = new RegisteredUser(code.users.domain.model.UserId.of(uuid));
+    var uuid = ID_FIXTURE;
+    var registeredUser = new RegisteredUser(UserId.of(uuid));
     var response = new RegisterController.RegisterResponse(uuid);
 
     when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);

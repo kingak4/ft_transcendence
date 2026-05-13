@@ -34,5 +34,5 @@ public class LoginController {
 
   public record LoginRequest(String email, String password) {}
 
-  public record LoginResponse(String accessToken, String tokenType) {}
+  public record LoginResponse(String accessToken, String tokenType, String userId) {}
 }
