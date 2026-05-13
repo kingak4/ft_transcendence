@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +29,9 @@ public class LoginController {
   @Operation(summary = "Authenticate and issue JWT")
   @SecurityRequirements()
   @PermitAll
-  public LoginResponse login(@RequestBody LoginRequest request) {
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
     LoginResult result = loginUseCase.login(mapper.toCommand(request));
-    return mapper.toResponse(result);
+    return ResponseEntity.status(HttpStatus.OK).body(mapper.toResponse(result));
   }
 
   public record LoginRequest(String email, String password) {}

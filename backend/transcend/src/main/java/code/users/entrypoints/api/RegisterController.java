@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.annotation.security.PermitAll;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +29,9 @@ public class RegisterController {
   @Operation(summary = "Register a new API user")
   @SecurityRequirements()
   @PermitAll
-  public RegisterResponse register(@RequestBody RegisterRequest request) {
+  public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
     var result = registerUseCase.register(mapper.toCommand(request));
-    return mapper.toResponse(result);
+    return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(result));
   }
 
   public record RegisterRequest(String email, String password) {}

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,15 +60,14 @@ public class UserDetailsController {
   @Operation(summary = "Get the profile avatar of the user")
   public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
     byte[] avatar = getProfileUseCase.getAvatar(new UserId(userId)).content();
-    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(avatar);
+    return ResponseEntity.ok(avatar);
   }
 
   @GetMapping(DETAILS_ENDPOINT)
   @Operation(summary = "Get the details of the user")
   public ResponseEntity<GetUserDetailsResponse> getDetails(@PathVariable UUID userId) {
     UserDetails details = getProfileUseCase.getDetails(new UserId(userId));
-    return ResponseEntity.ok(
-        new GetUserDetailsResponse(details.getDisplayName(), details.getAvatarUrl()));
+    return ResponseEntity.ok(mapper.toResponse(details));
   }
 
   public record UpdateDisplayNameRequest(String displayName) {}

@@ -1,8 +1,11 @@
 package code.users.ports.out;
 
 import code.users.domain.model.Avatar;
+import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
+import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserDao {
@@ -18,4 +21,10 @@ public interface UserDao {
   void saveAvatar(UserId userId, Avatar avatar);
 
   Avatar getAvatar(UserId userId);
+
+  void addFriend(UserId userId, UserId friendId);
+
+  void removeFriend(UserId userId, UserId friendId);
+
+  Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);
 }
