@@ -36,14 +36,13 @@ class CustomUserDetailsServiceTest {
   void loadUserByUsernameReturnsUserDetailsWhenUserExists() {
     // given
     var user = aDefaultUser();
-    String idStr = user.getId().getVal().toString();
     when(userDao.findById(user.getId())).thenReturn(Optional.of(user));
 
     // when
-    var userDetails = userDetailsService.loadUserByUsername(idStr);
+    var userDetails = userDetailsService.loadUserByUsername(ID_FIXTURE.toString());
 
     // then
-    assertEquals(idStr, userDetails.getUsername());
+    assertEquals(ID_FIXTURE.toString(), userDetails.getUsername());
     assertEquals(HASH_FIXTURE, userDetails.getPassword());
     verify(userDao).findById(user.getId());
   }
