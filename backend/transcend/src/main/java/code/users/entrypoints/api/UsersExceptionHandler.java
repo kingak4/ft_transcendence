@@ -20,8 +20,7 @@ public class UsersExceptionHandler {
   }
 
   @ExceptionHandler(EmailAlreadyRegisteredException.class)
-  public ProblemDetail handleEmailAlreadyRegisteredException(
-      EmailAlreadyRegisteredException ex) {
+  public ProblemDetail handleEmailAlreadyRegisteredException(EmailAlreadyRegisteredException ex) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
   }
 

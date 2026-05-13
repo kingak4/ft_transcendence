@@ -1,15 +1,11 @@
 package code.users.entrypoints.api;
 
-import org.springframework.http.ProblemDetail;
 import code.users.entrypoints.api.mappers.UsersApiMapper;
 import code.users.ports.in.LoginUseCase;
 import code.users.ports.in.LoginUseCase.LoginResult;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(LoginController.BASE_URL)
 @RequiredArgsConstructor
+@PermitAll
 public class LoginController {
 
   public static final String BASE_URL = "users";
@@ -29,7 +26,7 @@ public class LoginController {
 
   @PostMapping(LOGIN_ENDPOINT)
   @Operation(summary = "Authenticate and issue JWT")
-  @SecurityRequirements
+  @SecurityRequirements()
   public LoginResponse login(@RequestBody LoginRequest request) {
     LoginResult result = loginUseCase.login(mapper.toCommand(request));
     return mapper.toResponse(result);

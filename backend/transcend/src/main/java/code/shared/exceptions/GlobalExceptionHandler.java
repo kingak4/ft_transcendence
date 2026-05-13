@@ -24,12 +24,12 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ProblemDetail handleGlobalException(Exception ex) {
-    return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+    return ProblemDetail.forStatusAndDetail(
+        HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
-  public ProblemDetail handleConstraintViolationException(
-      ConstraintViolationException ex) {
+  public ProblemDetail handleConstraintViolationException(ConstraintViolationException ex) {
     Map<String, String> errors =
         ex.getConstraintViolations().stream()
             .collect(
@@ -37,7 +37,8 @@ public class GlobalExceptionHandler {
                     cv -> cv.getPropertyPath().toString(),
                     cv -> cv.getMessage(),
                     (existing, replacement) -> existing));
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error");
+    ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error");
     problemDetail.setProperty("message", errors);
     return problemDetail;
   }

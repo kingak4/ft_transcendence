@@ -12,6 +12,7 @@ import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import jakarta.annotation.security.PermitAll;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -32,13 +33,16 @@ import org.springframework.http.ProblemDetail;
     description = "Call /users/login with fixture credentials: user@email.com / plain-password")
 public class OpenApiConfig {
   private static final String PROBLEM_DETAIL_SCHEMA_NAME = "ProblemDetail";
-  private static final String PROBLEM_DETAIL_SCHEMA_REF = "#/components/schemas/" + PROBLEM_DETAIL_SCHEMA_NAME;
+  private static final String PROBLEM_DETAIL_SCHEMA_REF =
+      "#/components/schemas/" + PROBLEM_DETAIL_SCHEMA_NAME;
 
   @Bean
   public OpenApiCustomizer problemDetailSchemaCustomizer() {
     return openApi -> {
-      Schema<?> problemSchema = ModelConverters.getInstance()
-          .resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class)).schema;
+      Schema<?> problemSchema =
+          ModelConverters.getInstance()
+              .resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class))
+              .schema;
 
       if (openApi.getComponents() == null) {
         openApi.setComponents(new Components());
@@ -54,15 +58,19 @@ public class OpenApiConfig {
       ApiResponses apiResponses = operation.getResponses();
 
       addErrorResponseIfMissing(apiResponses, HttpStatus.BAD_REQUEST, "Bad Request");
-      addErrorResponseIfMissing(apiResponses, HttpStatus.UNAUTHORIZED, "Unauthorized");
-      addErrorResponseIfMissing(apiResponses, HttpStatus.FORBIDDEN, "Forbidden");
-      addErrorResponseIfMissing(apiResponses, HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+      if (!handlerMethod.hasMethodAnnotation(PermitAll.class)) {
+        addErrorResponseIfMissing(apiResponses, HttpStatus.UNAUTHORIZED, "Unauthorized");
+        addErrorResponseIfMissing(apiResponses, HttpStatus.FORBIDDEN, "Forbidden");
+      }
+      addErrorResponseIfMissing(
+          apiResponses, HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
 
       return operation;
     };
   }
 
-  private void addErrorResponseIfMissing(ApiResponses apiResponses, HttpStatus status, String description) {
+  private void addErrorResponseIfMissing(
+      ApiResponses apiResponses, HttpStatus status, String description) {
     String statusCode = String.valueOf(status.value());
 
     if (!apiResponses.containsKey(statusCode)) {
@@ -71,12 +79,12 @@ public class OpenApiConfig {
   }
 
   private ApiResponse createProblemDetailResponse(String description) {
-    var mediaType = new io.swagger.v3.oas.models.media.MediaType().schema(new Schema<>().$ref(PROBLEM_DETAIL_SCHEMA_REF));
+    var mediaType =
+        new io.swagger.v3.oas.models.media.MediaType()
+            .schema(new Schema<>().$ref(PROBLEM_DETAIL_SCHEMA_REF));
 
-    Content content = new Content().addMediaType(
-        MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-        mediaType
-    );
+    Content content =
+        new Content().addMediaType(MediaType.APPLICATION_PROBLEM_JSON_VALUE, mediaType);
 
     return new ApiResponse().description(description).content(content);
   }

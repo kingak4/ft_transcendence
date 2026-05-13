@@ -5,6 +5,8 @@ import code.users.ports.in.RegisterUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import java.util.UUID;
+
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(RegisterController.BASE_URL)
 @RequiredArgsConstructor
+@PermitAll
 public class RegisterController {
 
   public static final String BASE_URL = "users";
@@ -24,7 +27,7 @@ public class RegisterController {
 
   @PostMapping(REGISTER_ENDPOINT)
   @Operation(summary = "Register a new API user")
-  @SecurityRequirements
+  @SecurityRequirements()
   public RegisterResponse login(@RequestBody RegisterRequest request) {
     var result = registerUseCase.register(mapper.toCommand(request));
     return mapper.toResponse(result);

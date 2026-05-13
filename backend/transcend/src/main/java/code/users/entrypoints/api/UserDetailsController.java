@@ -1,14 +1,9 @@
 package code.users.entrypoints.api;
 
-import org.springframework.http.ProblemDetail;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.api.mappers.UsersApiMapper;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
