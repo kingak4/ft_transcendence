@@ -77,12 +77,6 @@ tasks {
       enabled = false
    }
 
-   register<Copy>("copyJavadoc") {
-      dependsOn(javadoc)
-      from(layout.buildDirectory.dir("reports/javadoc"))
-      into(layout.buildDirectory.dir("docs/javadoc"))
-   }
-
    javadoc {
       options.encoding = "UTF-8"
       (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
@@ -90,17 +84,17 @@ tasks {
    }
 
    asciidoctor {
-      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
-      setOutputDir(layout.buildDirectory.dir("docs/asciidoc"))
+      dependsOn("check")
+      dependsOn("javadoc")
+      dependsOn("asciidoctorModulith")
 
-      resources {
-         from(layout.buildDirectory.dir("spring-modulith-docs"))
-      }
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
+      setOutputDir(layout.buildDirectory.dir("reports"))
 
       useIntermediateWorkDir()
-
       baseDirFollowsSourceFile()
       configurations("asciidoctorExt")
+
       sources {
          include("index.adoc")
       }
@@ -115,10 +109,38 @@ tasks {
             "icons" to "font",
             "projectdir" to projectDir.absolutePath,
             "imagesdir" to "images",
+            "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
             "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
-      dependsOn("copyJavadoc")
+   }
+
+   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
+      description = "Generate AsciiDoc for modulith diagrams"
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/modulith"))
+      setOutputDir(layout.buildDirectory.dir("reports/modulith"))
+
+      baseDirFollowsSourceFile()
+      configurations("asciidoctorExt")
+
+      sources {
+         include("index.adoc")
+      }
+
+      asciidoctorj {
+         modules {
+            diagram.use()
+         }
+         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+         attributes(mapOf(
+            "toc" to "left",
+            "icons" to "font",
+            "projectdir" to projectDir.absolutePath,
+            "imagesdir" to "images",
+            "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+            "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
+         ))
+      }
    }
 
    test {

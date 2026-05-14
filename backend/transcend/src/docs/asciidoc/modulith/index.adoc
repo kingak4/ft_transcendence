@@ -1,0 +1,8 @@
+= Modulith Diagrams
+:toc: left
+
+== Component Map
+plantuml::{modulith-docs}/components.puml[format=svg]
+
+== Module Details
+include::{modulith-docs}/all-docs.adoc[]

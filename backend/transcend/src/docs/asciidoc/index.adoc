@@ -4,8 +4,14 @@
 :sectnums:
 :sectnumlevels: 3
 
-include::all-docs.adoc[opts=optional]
+Documentation Links
 
-== Documentation Links
+* link:javadoc/index.html[JavaDoc API Reference]
+* link:modulith/index.html[Spring Modulith Diagrams]
 
-* link:../javadoc/index.html[JavaDoc API Reference]
+Reports
+
+* link:jacoco/index.html[Code Coverage (JaCoCo)]
+* link:pmd/main.html[PMD Main Report]
+* link:pmd/test.html[PMD Test Report]
+* link:tests/test/index.html[Tests Report]
