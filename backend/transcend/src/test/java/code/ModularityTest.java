@@ -81,11 +81,16 @@ public class ModularityTest {
         new PlantUMLClassDiagramConfigBuilder(scanPackages)
             .withJPAAnnotations(true)
             .withValidationAnnotations(true)
-            .withUseSmetana(true)
+            .withUseSmetana(false)
             .withUseShortClassNames(true)
             .withUseShortClassNamesInFieldsAndMethods(true)
             .build();
     var diagram = new PlantUMLClassDiagramGenerator(config).generateDiagramText();
+    if (!diagram.contains("left to right direction")) {
+      diagram =
+          diagram.replace(
+              "@startuml", "@startuml" + System.lineSeparator() + "left to right direction");
+    }
     Files.writeString(outputFile, diagram);
   }
 
