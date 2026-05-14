@@ -77,6 +77,12 @@ tasks {
       enabled = false
    }
 
+   register("docs") {
+      dependsOn("javadoc");
+      dependsOn("check")
+      dependsOn("asciidoctor");
+   }
+
    javadoc {
       options.encoding = "UTF-8"
       (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
@@ -84,8 +90,6 @@ tasks {
    }
 
    asciidoctor {
-      dependsOn("check")
-      dependsOn("javadoc")
       dependsOn("asciidoctorModulith")
 
       setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
@@ -115,33 +119,37 @@ tasks {
       }
    }
 
-   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
-      description = "Generate AsciiDoc for modulith diagrams"
-      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/modulith"))
-      setOutputDir(layout.buildDirectory.dir("reports/modulith"))
+register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
+   description = "Generate AsciiDoc for modulith diagrams"
+   dependsOn(test)
 
-      baseDirFollowsSourceFile()
-      configurations("asciidoctorExt")
+   setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/modulith"))
+   setOutputDir(layout.buildDirectory.dir("reports/modulith"))
+   setBaseDir(layout.buildDirectory.dir("tmp/modulith").get().asFile)
 
-      sources {
-         include("index.adoc")
-      }
-
-      asciidoctorj {
-         modules {
-            diagram.use()
-         }
-         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
-         attributes(mapOf(
-            "toc" to "left",
-            "icons" to "font",
-            "projectdir" to projectDir.absolutePath,
-            "imagesdir" to "images",
-            "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
-            "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
-         ))
-      }
+   sources {
+      include("index.adoc")
    }
+   doFirst {
+      layout.buildDirectory.dir("reports/modulith/images").get().asFile.mkdirs()
+   }
+   asciidoctorj {
+      modules {
+         diagram.use()
+      }
+      setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+
+      attributes(mapOf(
+         "toc" to "left",
+         "icons" to "font",
+         "projectdir" to projectDir.absolutePath,
+         "imagesdir" to "images",
+         "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+         "imagesoutdir" to layout.buildDirectory.dir("reports/modulith/images").get().asFile.absolutePath,
+         "plantumlconfig" to layout.projectDirectory.file("src/docs/asciidoc/plantuml.cfg").asFile.absolutePath
+      ))
+   }
+}
 
    test {
       useJUnitPlatform()
@@ -208,6 +216,7 @@ tasks {
    }
 
    register("report") {
+      description = "Reports paths to Html documentation files"
       doLast {
          var reportPath = layout.buildDirectory.file("reports/jacoco/index.html").get().asFile
          println("Jacoco report: file://${reportPath.toURI().path}")
