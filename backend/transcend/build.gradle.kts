@@ -1,3 +1,4 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
 plugins {
    application
    pmd
@@ -21,6 +22,7 @@ val asciidoctorExt by configurations.creating
 
 dependencies {
    asciidoctorExt(libs.asciidoctorj.diagram)
+
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
@@ -83,6 +85,15 @@ tasks {
       dependsOn("asciidoctor");
    }
 
+   withType<AsciidoctorTask>().configureEach {
+      jvm {
+         jvmArgs(
+            "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens", "java.base/java.io=ALL-UNNAMED"
+         )
+      }
+   }
+
    javadoc {
       options.encoding = "UTF-8"
       (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
@@ -91,6 +102,7 @@ tasks {
 
    asciidoctor {
       dependsOn("asciidoctorModulith")
+      dependsOn("asciidoctorElnarion")
 
       setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
       setOutputDir(layout.buildDirectory.dir("reports"))
@@ -114,42 +126,80 @@ tasks {
             "projectdir" to projectDir.absolutePath,
             "imagesdir" to "images",
             "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+            "elnarion-docs" to layout.buildDirectory.dir("tmp/elnarion").get().asFile.absolutePath,
             "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
    }
 
-register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
-   description = "Generate AsciiDoc for modulith diagrams"
-   dependsOn(test)
+   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
+      description = "Generate AsciiDoc for modulith diagrams"
+      dependsOn(test)
 
-   setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/modulith"))
-   setOutputDir(layout.buildDirectory.dir("reports/modulith"))
-   setBaseDir(layout.buildDirectory.dir("tmp/modulith").get().asFile)
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/modulith"))
+      setOutputDir(layout.buildDirectory.dir("reports/modulith"))
+      setBaseDir(layout.buildDirectory.dir("tmp/modulith").get().asFile)
 
-   sources {
-      include("index.adoc")
-   }
-   doFirst {
-      layout.buildDirectory.dir("reports/modulith/images").get().asFile.mkdirs()
-   }
-   asciidoctorj {
-      modules {
-         diagram.use()
+      sources {
+         include("index.adoc")
       }
-      setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+      doFirst {
+         layout.buildDirectory.dir("reports/modulith/images").get().asFile.mkdirs()
+      }
+      asciidoctorj {
+         modules {
+            diagram.use()
+         }
+         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
 
-      attributes(mapOf(
-         "toc" to "left",
-         "icons" to "font",
-         "projectdir" to projectDir.absolutePath,
-         "imagesdir" to "images",
-         "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
-         "imagesoutdir" to layout.buildDirectory.dir("reports/modulith/images").get().asFile.absolutePath,
-         "plantumlconfig" to layout.projectDirectory.file("src/docs/asciidoc/plantuml.cfg").asFile.absolutePath
-      ))
+         attributes(mapOf(
+            "toc" to "left",
+            "icons" to "font",
+            "projectdir" to projectDir.absolutePath,
+            "imagesdir" to "images",
+            "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+            "imagesoutdir" to layout.buildDirectory.dir("reports/modulith/images").get().asFile.absolutePath,
+            "plantumlconfig" to layout.projectDirectory.file("src/docs/asciidoc/plantuml.cfg").asFile.absolutePath
+         ))
+      }
    }
-}
+
+   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorElnarion") {
+      description = "Generate AsciiDoc for Elnarion class diagrams"
+      dependsOn(test)
+
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/elnarion"))
+      setOutputDir(layout.buildDirectory.dir("reports/elnarion"))
+      setBaseDir(layout.buildDirectory.dir("tmp/elnarion").get().asFile)
+      outputs.upToDateWhen { false }
+
+      configurations("asciidoctorExt")
+
+      sources {
+         include("index.adoc")
+      }
+
+      doFirst {
+         layout.buildDirectory.dir("reports/elnarion/images").get().asFile.mkdirs()
+      }
+
+      asciidoctorj {
+         modules {
+            diagram.use()
+         }
+         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+
+         attributes(mapOf(
+            "toc" to "left",
+            "icons" to "font",
+            "projectdir" to projectDir.absolutePath,
+            "imagesdir" to "images",
+            "elnarion-docs" to layout.buildDirectory.dir("tmp/elnarion").get().asFile.absolutePath,
+            "imagesoutdir" to layout.buildDirectory.dir("reports/elnarion/images").get().asFile.absolutePath,
+            "plantumlconfig" to layout.projectDirectory.file("src/docs/asciidoc/plantuml.cfg").asFile.absolutePath
+         ))
+      }
+   }
 
    test {
       useJUnitPlatform()
