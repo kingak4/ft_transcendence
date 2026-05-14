@@ -2,8 +2,10 @@ package code.users.logic;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
+import static code.users.domain.model.UserFixtures.WRONG_PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,7 +49,8 @@ class LoginTest {
 
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
     when(hashingService.matches(PASSWORD_FIXTURE, HASH_FIXTURE)).thenReturn(true);
-    when(accessTokenProvider.generateToken(EMAIL_FIXTURE)).thenReturn(TOKEN_FIXTURE);
+    when(accessTokenProvider.generateToken(ID_FIXTURE.toString()))
+        .thenReturn(TOKEN_FIXTURE);
 
     // when
     var result = service.login(command);
@@ -55,9 +58,10 @@ class LoginTest {
     // then
     assertEquals(TOKEN_FIXTURE, result.accessToken());
     assertEquals("Bearer", result.tokenType());
+    assertEquals(ID_FIXTURE.toString(), result.userId());
     verify(userDao).findByEmail(EMAIL_FIXTURE);
     verify(hashingService).matches(PASSWORD_FIXTURE, HASH_FIXTURE);
-    verify(accessTokenProvider).generateToken(EMAIL_FIXTURE);
+    verify(accessTokenProvider).generateToken(ID_FIXTURE.toString());
   }
 
   @Test
@@ -74,10 +78,10 @@ class LoginTest {
   @Test
   void loginWithInvalidPasswordThrowsException() {
     // given
-    var command = new LoginCommand(EMAIL_FIXTURE, "wrong-password");
+    var command = new LoginCommand(EMAIL_FIXTURE, WRONG_PASSWORD_FIXTURE);
     var user = aDefaultUser();
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
-    when(hashingService.matches("wrong-password", PASSWORD_FIXTURE)).thenReturn(false);
+    when(hashingService.matches(WRONG_PASSWORD_FIXTURE, PASSWORD_FIXTURE)).thenReturn(false);
 
     // when & then
     assertThrows(InvalidCredentialsException.class, () -> service.login(command));

@@ -17,7 +17,7 @@ make docs
 ```bash
 make run
 ```
-- **Swagger Interactive UI**: [http://localhost:8080/swagger-ui](http://localhost:8080/swagger-ui/)
+- **Swagger Interactive UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI Raw JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
 
 

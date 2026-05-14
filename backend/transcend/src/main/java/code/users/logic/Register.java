@@ -2,6 +2,7 @@ package code.users.logic;
 
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.model.User;
+import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.RegisterUseCase;
 import code.users.ports.out.HashingService;
@@ -25,7 +26,12 @@ class Register implements RegisterUseCase {
     if (userDao.findByEmail(command.email()).isPresent())
       throw new EmailAlreadyRegisteredException(command.email());
     User newUser =
-        User.builder().id(UserId.generate()).email(command.email()).password(hash).build();
+        User.builder()
+            .id(UserId.generate())
+            .email(command.email())
+            .password(hash)
+            .details(UserDetails.builder().avatarUrl(UserDetails.DEFAULT_AVATAR_URL).build())
+            .build();
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.getId());
   }

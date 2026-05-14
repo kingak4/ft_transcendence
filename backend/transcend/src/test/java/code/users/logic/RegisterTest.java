@@ -2,7 +2,9 @@ package code.users.logic;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
+import static code.users.domain.model.UserFixtures.INVALID_EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
+import static code.users.domain.model.UserFixtures.WRONG_PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,6 +18,7 @@ import code.users.ports.in.RegisterUseCase;
 import code.users.ports.in.RegisterUseCase.RegisterCommand;
 import code.users.ports.out.HashingService;
 import code.users.ports.out.UserDao;
+import jakarta.validation.ConstraintViolationException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -80,9 +83,8 @@ class RegisterTest {
   @Test
   void registerThrowsWhenCommandIsInvalid() {
     // given
-    var command = new RegisterCommand("invalid-email", "short");
+    var command = new RegisterCommand(INVALID_EMAIL_FIXTURE, WRONG_PASSWORD_FIXTURE);
     // when & then
-    assertThrows(
-        jakarta.validation.ConstraintViolationException.class, () -> service.register(command));
+    assertThrows(ConstraintViolationException.class, () -> service.register(command));
   }
 }

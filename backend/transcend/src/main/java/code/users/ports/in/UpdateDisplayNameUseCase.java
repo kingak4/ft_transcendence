@@ -5,11 +5,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface UpdateDisplayNameUseCase {
 
-  void updateDisplayName(
-      UserId userId, @Valid UpdateDisplayNameCommand command);
+  @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSameUser(authentication, #userId)")
+  void updateDisplayName(UserId userId, @Valid UpdateDisplayNameCommand command);
 
   record UpdateDisplayNameCommand(
       @NotBlank(message = "DisplayName cannot be blank")

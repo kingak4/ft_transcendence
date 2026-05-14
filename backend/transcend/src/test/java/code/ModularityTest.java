@@ -21,10 +21,7 @@ class ModularityTest {
     generateClassDiagrams();
   }
 
-  private void generateClassDiagrams() {
-    
-  }
+  private void generateClassDiagrams() {}
 
-  private void generateFileTreeDiagrams() {
-  }
+  private void generateFileTreeDiagrams() {}
 }
