@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "5001:5000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - HOST=postgres-db-container
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+networks:
+  default:
+    external: true
+    name: transcend-network
