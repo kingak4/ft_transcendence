@@ -5,6 +5,7 @@ import static code.users.entrypoints.api.RegisterController.RegisterRequest;
 import static code.users.ports.in.RegisterUseCase.RegisterCommand;
 import static code.users.ports.in.UpdateDisplayNameUseCase.UpdateDisplayNameCommand;
 
+import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.api.LoginController.LoginResponse;
 import code.users.entrypoints.api.RegisterController.RegisterResponse;
@@ -37,4 +38,7 @@ public interface UsersApiMapper {
   RegisterResponse toResponse(RegisteredUser result);
 
   UpdateDisplayNameCommand toCommand(UserDetailsController.UpdateDisplayNameRequest request);
+
+  @Mapping(source = "online", target = "isOnline")
+  UserDetailsController.GetUserDetailsResponse toResponse(UserDetails details);
 }

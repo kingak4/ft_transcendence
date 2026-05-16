@@ -1,5 +1,10 @@
 package code.users.entrypoints.api;
 
+import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
+import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
+import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,12 +41,11 @@ class LoginControllerTest {
   @Test
   void loginReturnsJwtWhenCredentialsAreValid() throws Exception {
     // given
-    var email = "user@email.com";
-    var password = "plain-password";
-    var loginRequest = new LoginController.LoginRequest(email, password);
-    var loginCommand = new LoginCommand(email, password);
-    var loginResult = new LoginResult("jwt-token", "Bearer");
-    var loginResponse = new LoginController.LoginResponse("jwt-token", "Bearer");
+    var loginRequest = new LoginController.LoginRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
+    var loginCommand = new LoginCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
+    var loginResult = new LoginResult(TOKEN_FIXTURE, "Bearer", ID_FIXTURE.toString());
+    var loginResponse =
+        new LoginController.LoginResponse(TOKEN_FIXTURE, "Bearer", ID_FIXTURE.toString());
 
     when(loginMapper.toCommand(loginRequest)).thenReturn(loginCommand);
     when(loginUseCase.login(loginCommand)).thenReturn(loginResult);
@@ -50,12 +54,13 @@ class LoginControllerTest {
     // when
     mockMvc
         .perform(
-            post("/" + LoginController.BASE_URL + "/" + LoginController.LOGIN_ENDPOINT)
+            post(buildUrl(LoginController.BASE_URL, LoginController.LOGIN_ENDPOINT))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.accessToken").value("jwt-token"))
-        .andExpect(jsonPath("$.tokenType").value("Bearer"));
+        .andExpect(jsonPath("$.accessToken").value(TOKEN_FIXTURE))
+        .andExpect(jsonPath("$.tokenType").value("Bearer"))
+        .andExpect(jsonPath("$.userId").value(ID_FIXTURE.toString()));
 
     // then
     verify(loginMapper).toCommand(loginRequest);

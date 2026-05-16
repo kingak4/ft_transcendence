@@ -1,7 +1,9 @@
 package code.users.entrypoints.api;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
+import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
+import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import code.shared.exceptions.GlobalExceptionHandler;
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
+import code.users.domain.model.UserId;
 import code.users.entrypoints.api.RegisterController.RegisterRequest;
 import code.users.entrypoints.api.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
@@ -18,7 +21,6 @@ import code.users.ports.in.RegisterUseCase;
 import code.users.ports.in.RegisterUseCase.RegisterCommand;
 import code.users.ports.in.RegisterUseCase.RegisteredUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +49,8 @@ class RegisterControllerTest {
     // given
     var request = new RegisterRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
     var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var uuid = UUID.randomUUID();
-    var registeredUser = new RegisteredUser(code.users.domain.model.UserId.of(uuid));
+    var uuid = ID_FIXTURE;
+    var registeredUser = new RegisteredUser(UserId.of(uuid));
     var response = new RegisterController.RegisterResponse(uuid);
 
     when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);
@@ -58,10 +60,10 @@ class RegisterControllerTest {
     // when & then
     mockMvc
         .perform(
-            post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
+            post(buildUrl(RegisterController.BASE_URL, RegisterController.REGISTER_ENDPOINT))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value(uuid.toString()));
 
     verify(mapper).toCommand(request);
@@ -82,14 +84,14 @@ class RegisterControllerTest {
     // when & then
     mockMvc
         .perform(
-            post("/" + RegisterController.BASE_URL + "/" + RegisterController.REGISTER_ENDPOINT)
+            post(buildUrl(RegisterController.BASE_URL, RegisterController.REGISTER_ENDPOINT))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.status").value(409))
-        .andExpect(jsonPath("$.error").value("Conflict"))
+        .andExpect(jsonPath("$.title").value("Conflict"))
         .andExpect(
-            jsonPath("$.message")
+            jsonPath("$.detail")
                 .value(String.format(EmailAlreadyRegisteredException.MESSAGE, EMAIL_FIXTURE)));
 
     verify(mapper).toCommand(request);

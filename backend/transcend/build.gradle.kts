@@ -192,6 +192,7 @@ tasks {
          classDirectories.setFrom(
             files(classDirectories.files.map {
                fileTree(it) {
+                  exclude("**/*Mapper.class")
                   exclude("**/*MapperImpl.class")
                   exclude("**/config/**")
                   exclude("**/*Exception.class")

@@ -5,8 +5,10 @@ import code.users.ports.in.LoginUseCase;
 import code.users.ports.in.LoginUseCase.LoginResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
-import jakarta.validation.Valid;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +27,14 @@ public class LoginController {
 
   @PostMapping(LOGIN_ENDPOINT)
   @Operation(summary = "Authenticate and issue JWT")
-  @SecurityRequirements
-  public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+  @SecurityRequirements()
+  @PermitAll
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
     LoginResult result = loginUseCase.login(mapper.toCommand(request));
-    return mapper.toResponse(result);
+    return ResponseEntity.status(HttpStatus.OK).body(mapper.toResponse(result));
   }
 
   public record LoginRequest(String email, String password) {}
 
-  public record LoginResponse(String accessToken, String tokenType) {}
+  public record LoginResponse(String accessToken, String tokenType, String userId) {}
 }

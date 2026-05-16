@@ -7,24 +7,34 @@ import static org.mockito.Mockito.mock;
 
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.stream.Stream;
+
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@SpringJUnitConfig(PasswordConstraintValidatorTest.TestConfig.class)
+@TestPropertySource(
+    properties =
+        "spring.security.validation.common-passwords=classpath:validation/common-passwords.txt")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class PasswordConstraintValidatorTest {
 
-  private PasswordConstraintValidator validator;
+  @Configuration
+  @Import(PasswordConstraintValidator.class)
+  static class TestConfig {}
+
+  private final PasswordConstraintValidator validator;
   private ConstraintValidatorContext context;
 
   @BeforeEach
   void setUp() {
-    validator = new PasswordConstraintValidator();
-    String dict = "1234567890\nletmein123\npassword123\nqwertyuiop\niloveyou123\n";
-    ReflectionTestUtils.setField(
-        validator, "dictionaryResource", new ByteArrayResource(dict.getBytes()));
     validator.initialize(null);
     context = mock(ConstraintValidatorContext.class, RETURNS_DEEP_STUBS);
   }
@@ -53,6 +63,6 @@ class PasswordConstraintValidatorTest {
         "1234567890",
         "qwertyuiop", // Dictionary matches
         "letmein123",
-        "iloveyou123");
+        "welcome123");
   }
 }

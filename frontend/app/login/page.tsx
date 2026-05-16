@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState } from 'react';
+import { login } from "../lib/login";
 
 export default function SearchInput() {
   const [loginValue, setLogin] = useState("");
@@ -31,8 +32,23 @@ export default function SearchInput() {
             className="border p-2 rounded-md w-3/4"
           />
         </div>
-        <button onClick={() => alert(`login=${loginValue}, password=${passwordValue}`)} className='border p-4 rounded-md cursor-pointer'>Login</button>
+        <button onClick={() => loginWrap(loginValue, passwordValue)} className='border p-4 rounded-md cursor-pointer'>Login</button>
       </div>
     </div>
   );
+
+  async function loginWrap(name: string, password: string) {
+    const response = await login(loginValue, passwordValue)
+
+    if (!response.success) {
+      if (response.status === 500) {
+        alert("Server error. Please try again later.");
+      } else {
+        alert(response.message || "An unknown error occurred.");
+      }
+      return;
+    }
+    alert("Succesfully logged in!");
+    window.location.href = "/home";
+  }
 }

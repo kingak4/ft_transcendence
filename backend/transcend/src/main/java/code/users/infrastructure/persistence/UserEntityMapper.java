@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface UserEntityMapper {
   @Mapping(source = "hash", target = "password")
   @Mapping(target = "details", ignore = true)
+  @Mapping(target = "role", ignore = true)
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")

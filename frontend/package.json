@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.4",
+    "next": "^16.2.6",
+    "openapi-fetch": "^0.17.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -24,9 +25,10 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-tailwindcss": "^3.18.3",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

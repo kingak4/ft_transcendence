@@ -1,31 +1,35 @@
 package code.shared.exceptions;
 
 import jakarta.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
-    return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ProblemDetail handleIllegalArgumentException(IllegalArgumentException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ProblemDetail handleNoResourceFoundException(NoResourceFoundException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<Object> handleGlobalException() {
-    return buildErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+  public ProblemDetail handleGlobalException(Exception ex) {
+    return ProblemDetail.forStatusAndDetail(
+        HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<Object> handleConstraintViolationException(
-      ConstraintViolationException ex) {
+  public ProblemDetail handleConstraintViolationException(ConstraintViolationException ex) {
     Map<String, String> errors =
         ex.getConstraintViolations().stream()
             .collect(
@@ -33,16 +37,9 @@ public class GlobalExceptionHandler {
                     cv -> cv.getPropertyPath().toString(),
                     cv -> cv.getMessage(),
                     (existing, replacement) -> existing));
-    return buildErrorResponse(errors, HttpStatus.BAD_REQUEST);
-  }
-
-  public static ResponseEntity<Object> buildErrorResponse(Object message, HttpStatus status) {
-    Map<String, Object> body = new LinkedHashMap<>();
-    body.put("timestamp", LocalDateTime.now());
-    body.put("status", status.value());
-    body.put("error", status.getReasonPhrase());
-    body.put("message", message);
-
-    return new ResponseEntity<>(body, status);
+    ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error");
+    problemDetail.setProperty("message", errors);
+    return problemDetail;
   }
 }

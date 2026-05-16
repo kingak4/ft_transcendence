@@ -8,6 +8,10 @@ RESET       = \033[0m
 
 all: dev
 
+certificate:
+	mkdir -p certificates
+	~/.cache/mkcert/mkcert-v1.4.4-linux-amd64 -key-file ./certificates/localhost-key.pem -cert-file ./certificates/localhost.pem localhost 127.0.0.1 ::1
+
 install:
 	@echo "$(BLUE)Installing npm dependencies...$(RESET)"
 	@npm install
