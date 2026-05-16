@@ -1,6 +1,6 @@
 package code;
 
-import code.archgen.ClassDiagramGenerator;
+import code.archgen.StructurizrModuleExporter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,23 +38,20 @@ public class ModularityTest {
   }
 
   private void generateClassDiagrams() {
-    log.info("Generating class diagrams via ArchUnit");
+    log.info("Generating diagrams via Structurizr");
     try {
       Path basePath = Paths.get("build/tmp/classUtil");
       Files.createDirectories(basePath);
 
-      List<ApplicationModule> sortedModules =
-          modules.stream()
-              .sorted(Comparator.comparing(module -> module.getIdentifier().toString()))
-              .toList();
+      StructurizrModuleExporter exporter = new StructurizrModuleExporter(modules);
+      exporter.export(basePath);
 
-      var generator = ClassDiagramGenerator.create(sortedModules);
-      generator.generateAll(basePath);
+      generateAsciidocIndex(
+          modules.stream().sorted(Comparator.comparing(m -> m.getIdentifier().toString())).toList(),
+          basePath);
 
-      generateAsciidocIndex(sortedModules, basePath);
-
-    } catch (IOException e) {
-      log.error("Failed to generate diagrams: {}", e.getMessage());
+    } catch (Exception e) {
+      log.error("Failed to generate diagrams: {}", e.getMessage(), e);
     }
   }
 

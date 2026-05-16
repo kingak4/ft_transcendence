@@ -24,6 +24,11 @@ val asciidoctorExt by configurations.creating
 dependencies {
    asciidoctorExt(libs.asciidoctorj.diagram)
 
+
+   // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-core
+   implementation("com.structurizr:structurizr-core:6.2.0")
+   // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-export
+   implementation("com.structurizr:structurizr-export:6.2.0")
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
