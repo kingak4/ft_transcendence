@@ -1,4 +1,4 @@
-package code.archgen;
+package code.archgen.model;
 
 import com.structurizr.Workspace;
 import com.structurizr.model.Component;
@@ -8,17 +8,19 @@ import com.tngtech.archunit.core.domain.Dependency;
 import com.tngtech.archunit.core.domain.JavaClass;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import lombok.Getter;
 import org.springframework.modulith.core.ApplicationModule;
 import org.springframework.modulith.core.ApplicationModules;
 
 @Getter
-class ModelProvider {
+public class ModelProvider {
 
   private final ApplicationModules modules;
   private final Workspace workspace;
   private final Container container;
   private final Map<String, Component> classToComponentMap = new HashMap<>();
+  private final ModuleColorPalette colorPalette = new ModuleColorPalette();
 
   public ModelProvider(ApplicationModules modules) {
     this.modules = modules;
@@ -32,6 +34,7 @@ class ModelProvider {
 
   private void buildModel() {
     for (ApplicationModule module : modules) {
+      colorPalette.getColorForModule(module.getIdentifier().toString());
       processModuleClasses(module);
     }
     resolveDependencies();
@@ -39,19 +42,49 @@ class ModelProvider {
 
   private void processModuleClasses(ApplicationModule module) {
     Iterable<JavaClass> classes = module.getBasePackage().getClasses();
+    String moduleId = module.getIdentifier().toString();
+    Set<String> moduleClassNames = new java.util.HashSet<>();
 
     for (JavaClass javaClass : classes) {
       if (isIgnorable(javaClass)) continue;
 
       Component component = createComponent(module, javaClass);
+      moduleClassNames.add(javaClass.getName());
 
       component.setGroup(calculateGroupName(module, javaClass));
-      component.addTags(module.getIdentifier().toString());
-      component.addTags(module.isExposed(javaClass) ? "Open" : "Closed");
+
+      // Add module identification tag with color
+      String moduleTag = ArchgenTags.TAG_MODULE_PREFIX + moduleId;
+      component.addTags(moduleTag);
+
+      // Add open/closed tag (modulith context)
+      component.addTags(
+          module.isExposed(javaClass) ? ArchgenTags.TAG_OPEN : ArchgenTags.TAG_CLOSED);
+
+      // Add Java type tag
+      String typeTag = ComponentTypeDetector.detectType(javaClass);
+      component.addTags(typeTag);
+
+      // Add visibility tag
+      String visibilityTag = ComponentVisibilityDetector.detectVisibility(javaClass);
+      component.addTags(visibilityTag);
+
+      // Add package tag (first-level subpackage)
+      String pkgTag =
+          PackageTagExtractor.extractPackageTag(
+              module.getBasePackage().getName(), javaClass.getName());
+      if (pkgTag != null) {
+        component.addTags(pkgTag);
+      }
 
       classToComponentMap.put(javaClass.getName(), component);
     }
+
+    // Store module class names for internal/external context detection later
+    MODULE_CLASS_REGISTRY.put(moduleId, moduleClassNames);
   }
+
+  private static final Map<String, Set<String>> MODULE_CLASS_REGISTRY = new HashMap<>();
 
   private Component createComponent(ApplicationModule module, JavaClass javaClass) {
     String name = javaClass.getSimpleName();

@@ -1,5 +1,8 @@
 package code.archgen;
 
+import code.archgen.model.ArchgenTags;
+import code.archgen.model.ModelProvider;
+import code.archgen.model.StyleConfig;
 import com.structurizr.model.Component;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ViewSet;
@@ -33,7 +36,8 @@ public class StructurizrModuleExporter {
     this.renderer = renderer;
     this.model = model;
     this.asciidocGenerator = asciidocGenerator;
-    StyleConfig.configureStyles(model.getWorkspace().getViews().getConfiguration().getStyles());
+    StyleConfig.configureStyles(
+        model.getWorkspace().getViews().getConfiguration().getStyles(), model.getColorPalette());
   }
 
   @SneakyThrows
@@ -62,7 +66,7 @@ public class StructurizrModuleExporter {
             "API Overview",
             v ->
                 model.getContainer().getComponents().stream()
-                    .filter(c -> c.getTags().contains("Open"))
+                    .filter(c -> c.getTags().contains(ArchgenTags.TAG_OPEN))
                     .forEach(v::add));
     renderer.writeView(view, basePath.resolve(viewId + ".puml"));
   }
