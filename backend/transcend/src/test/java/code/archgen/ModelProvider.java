@@ -23,46 +23,61 @@ class ModelProvider {
   public ModelProvider(ApplicationModules modules) {
     this.modules = modules;
     this.workspace = new Workspace("Modulith", "Module Diagrams");
+
     Model model = workspace.getModel();
     this.container = model.addSoftwareSystem("Backend").addContainer("Transcend");
-    populateModel();
+
+    buildModel();
+  }
+
+  private void buildModel() {
+    for (ApplicationModule module : modules) {
+      processModuleClasses(module);
+    }
     resolveDependencies();
   }
 
-  private void populateModel() {
-    for (ApplicationModule module : modules) {
-      String basePkgName = module.getBasePackage().getName();
-      Iterable<JavaClass> classes = (Iterable<JavaClass>) module.getBasePackage().getClasses();
+  private void processModuleClasses(ApplicationModule module) {
+    Iterable<JavaClass> classes = module.getBasePackage().getClasses();
 
-      for (JavaClass javaClass : classes) {
-        String simpleName = javaClass.getSimpleName();
-        if (simpleName.equals("package-info") || simpleName.isEmpty()) continue;
+    for (JavaClass javaClass : classes) {
+      if (isIgnorable(javaClass)) continue;
 
-        String componentName = simpleName;
-        if (container.getComponentWithName(componentName) != null) {
-          componentName = javaClass.getName();
-        }
+      Component component = createComponent(module, javaClass);
 
-        Component c = container.addComponent(componentName, javaClass.getName());
-        c.setTechnology("Java Class");
+      component.setGroup(calculateGroupName(module, javaClass));
+      component.addTags(module.getIdentifier().toString());
+      component.addTags(module.isExposed(javaClass) ? "Open" : "Closed");
 
-        String pkgName = javaClass.getPackageName();
-        String groupName = module.getDisplayName();
-
-        if (pkgName.startsWith(basePkgName + ".")) {
-          String relativePkg = pkgName.substring(basePkgName.length() + 1);
-          int firstDot = relativePkg.indexOf('.');
-          String subFolder = (firstDot == -1) ? relativePkg : relativePkg.substring(0, firstDot);
-
-          groupName = String.format("%s [%s]", module.getDisplayName(), subFolder);
-        }
-        c.setGroup(groupName);
-
-        classToComponentMap.put(javaClass.getName(), c);
-        c.addTags(module.getIdentifier().toString());
-        c.addTags(module.isExposed(javaClass) ? "Open" : "Closed");
-      }
+      classToComponentMap.put(javaClass.getName(), component);
     }
+  }
+
+  private Component createComponent(ApplicationModule module, JavaClass javaClass) {
+    String name = javaClass.getSimpleName();
+
+    if (container.getComponentWithName(name) != null) {
+      name = javaClass.getName();
+    }
+
+    Component c = container.addComponent(name, javaClass.getName());
+    c.setTechnology("Java Class");
+    return c;
+  }
+
+  private String calculateGroupName(ApplicationModule module, JavaClass javaClass) {
+    String basePkg = module.getBasePackage().getName();
+    String pkgName = javaClass.getPackageName();
+
+    if (pkgName.startsWith(basePkg + ".")) {
+      String relativePkg = pkgName.substring(basePkg.length() + 1);
+      int firstDot = relativePkg.indexOf('.');
+      String subFolder = (firstDot == -1) ? relativePkg : relativePkg.substring(0, firstDot);
+
+      return String.format("%s [%s]", module.getDisplayName(), subFolder);
+    }
+
+    return module.getDisplayName();
   }
 
   private void resolveDependencies() {
@@ -75,11 +90,17 @@ class ModelProvider {
 
         for (Dependency dep : javaClass.getDirectDependenciesFromSelf()) {
           Component target = classToComponentMap.get(dep.getTargetClass().getName());
+
           if (target != null && !source.equals(target)) {
             source.uses(target, "");
           }
         }
       }
     }
+  }
+
+  private boolean isIgnorable(JavaClass javaClass) {
+    String simpleName = javaClass.getSimpleName();
+    return simpleName.equals("package-info") || simpleName.isEmpty();
   }
 }

@@ -1,40 +1,29 @@
 package code.archgen;
 
-import com.structurizr.export.plantuml.StructurizrPlantUMLExporter;
-import com.structurizr.view.ComponentView;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.springframework.modulith.core.ApplicationModule;
+import org.springframework.modulith.core.ApplicationModules;
 
-class DiagramRenderer {
-  private final StructurizrPlantUMLExporter exporter = new StructurizrPlantUMLExporter();
+/** Generates an Asciidoc index referencing generated PlantUML diagrams. */
+class AsciidocGenerator {
 
   @SneakyThrows
-  public void writeView(ComponentView view, Path file) {
-    String puml = exporter.export(view).getDefinition();
-
-    puml = puml.replace("left to right direction", "");
-
-    String layoutSettings =
-        """
-            @startuml
-            left to right direction
-            skinparam ranksep 100
-            skinparam nodesep 40
-            skinparam linetype ortho
-            skinparam autoproxy true
-            """;
-
-    puml = puml.replace("@startuml", layoutSettings);
-
-    Files.writeString(file, puml);
+  public void generateIndex(ApplicationModules modules, Path basePath) {
+    generateIndex((Iterable<ApplicationModule>) modules, basePath);
   }
 
   @SneakyThrows
-  public void generateAsciidocIndex(List<ApplicationModule> modules, Path basePath) {
+  public void generateIndex(Iterable<ApplicationModule> modules, Path basePath) {
+    List<ApplicationModule> list = new ArrayList<>();
+    for (ApplicationModule m : modules) list.add(m);
+
+    list.sort(Comparator.comparing(m -> m.getIdentifier().toString()));
+
     List<String> lines = new ArrayList<>();
     lines.add("== Module Class Diagrams");
 
@@ -42,7 +31,7 @@ class DiagramRenderer {
     lines.add("=== Packages Overview");
     lines.add("plantuml::{structurizr-docs}/packages-overview.puml[format=svg]");
 
-    for (ApplicationModule module : modules) {
+    for (ApplicationModule module : list) {
       lines.add("");
       lines.add("=== " + module.getDisplayName());
 
