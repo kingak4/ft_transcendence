@@ -9,9 +9,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.modulith.core.ApplicationModule;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
 
@@ -41,42 +41,39 @@ public class ModularityTest {
   private void generateClassDiagrams() {
     log.info("Generating class diagrams");
     try {
-      Path elnarionPath = Paths.get("build/tmp/elnarion");
-      Files.createDirectories(elnarionPath);
+      Path basePath = Paths.get("build/tmp/elnarion");
+      Files.createDirectories(basePath);
 
-      var sortedModules =
-          modules.stream()
+      List<ApplicationModule> modules =
+          this.modules.stream()
               .sorted(Comparator.comparing(module -> module.getIdentifier().toString()))
               .toList();
-      var modulePackages =
-          sortedModules.stream().map(module -> module.getBasePackage().getName()).toList();
 
-      writeDiagram(elnarionPath.resolve("components.puml"), modulePackages);
+      generateComponentsDiagram(modules, basePath);
+      generateModuleDiagrams(modules, basePath);
+      generateAsciidocIndex(modules, basePath);
 
-      var docs = new ArrayList<String>();
-      docs.add("== Module Class Diagrams");
-
-      for (var module : sortedModules) {
-        var moduleName = module.getIdentifier().toString();
-        var fileName = "components-" + sanitizeFileName(moduleName) + ".puml";
-        writeDiagram(elnarionPath.resolve(fileName), List.of(module.getBasePackage().getName()));
-
-        docs.add("");
-        docs.add("=== " + module.getDisplayName());
-        docs.add("plantuml::{elnarion-docs}/" + fileName + "[format=svg]");
-      }
-
-      Files.writeString(
-          elnarionPath.resolve("all-docs.adoc"),
-          String.join(System.lineSeparator(), docs) + System.lineSeparator());
     } catch (IOException e) {
-      e.printStackTrace();
-    }
-    {
+      log.error("Failed to generate diagrams: {}", e.getMessage());
     }
   }
 
-  private static void writeDiagram(Path outputFile, List<String> scanPackages) throws IOException {
+  private void generateModuleDiagrams(List<ApplicationModule> modules, Path basePath)
+      throws IOException {
+    for (ApplicationModule module : modules) {
+      String fileName = getDiagramFileName(module);
+      String diagramText = generatePlantUmlDiagram(List.of(module.getBasePackage().getName()));
+      Files.writeString(basePath.resolve(fileName), diagramText);
+    }
+  }
+
+  private void generateComponentsDiagram(List<ApplicationModule> modules, Path basePath)
+      throws IOException {
+    List<String> allPackages = modules.stream().map(m -> m.getBasePackage().getName()).toList();
+    Files.writeString(basePath.resolve("components.puml"), generatePlantUmlDiagram(allPackages));
+  }
+
+  private String generatePlantUmlDiagram(List<String> scanPackages) {
     var config =
         new PlantUMLClassDiagramConfigBuilder(scanPackages)
             .withJPAAnnotations(true)
@@ -85,25 +82,31 @@ public class ModularityTest {
             .withUseShortClassNames(true)
             .withUseShortClassNamesInFieldsAndMethods(true)
             .build();
-    var diagram = new PlantUMLClassDiagramGenerator(config).generateDiagramText();
-    if (!diagram.contains("left to right direction")) {
-      diagram =
-          diagram.replace(
-              "@startuml", "@startuml" + System.lineSeparator() + "left to right direction");
+
+    return new PlantUMLClassDiagramGenerator(config).generateDiagramText();
+  }
+
+  private void generateAsciidocIndex(List<ApplicationModule> modules, Path basePath)
+      throws IOException {
+    var docs = new ArrayList<String>();
+    docs.add("== Module Class Diagrams");
+
+    for (ApplicationModule module : modules) {
+      docs.add("");
+      docs.add("=== " + module.getDisplayName());
+      docs.add("plantuml::{elnarion-docs}/" + getDiagramFileName(module) + "[format=svg]");
     }
-    Files.writeString(outputFile, diagram);
+
+    String asciidocContent = String.join(System.lineSeparator(), docs) + System.lineSeparator();
+    Files.writeString(basePath.resolve("all-docs.adoc"), asciidocContent);
+  }
+
+  private String getDiagramFileName(ApplicationModule module) {
+    String moduleName = module.getIdentifier().toString();
+    return "components-" + sanitizeFileName(moduleName) + ".puml";
   }
 
   private static String sanitizeFileName(String rawName) {
-    return rawName
-        .chars()
-        .mapToObj(
-            character -> {
-              if (Character.isLetterOrDigit(character) || character == '-' || character == '_') {
-                return String.valueOf((char) character);
-              }
-              return "-";
-            })
-        .collect(Collectors.joining(""));
+    return rawName.replaceAll("[^a-zA-Z0-9\\-_]", "-");
   }
 }
