@@ -51,7 +51,6 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
-   testImplementation(libs.plantuml.generator.util)
 }
 
 java {
@@ -82,7 +81,7 @@ tasks {
 
    register("docs") {
       dependsOn("check")
-      dependsOn("asciidoctorElnarion")
+      dependsOn("asciidoctorClassUtil")
       dependsOn("asciidoctorModulith")
       dependsOn("asciidoctor");
    }
@@ -105,7 +104,7 @@ tasks {
             "projectdir" to projectDir.absolutePath,
             "imagesdir" to "images",
             "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
-            "elnarion-docs" to layout.buildDirectory.dir("tmp/elnarion").get().asFile.absolutePath,
+            "classUtil-docs" to layout.buildDirectory.dir("tmp/classUtil").get().asFile.absolutePath,
             "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
@@ -129,13 +128,13 @@ tasks {
       setOutputDir(layout.buildDirectory.dir("reports"))
    }
 
-   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorElnarion") {
-      description = "Generate AsciiDoc for Elnarion class diagrams"
+   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorClassUtil") {
+      description = "Generate AsciiDoc for ClassUtil class diagrams"
       dependsOn(test)
 
-      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/elnarion"))
-      setOutputDir(layout.buildDirectory.dir("reports/elnarion"))
-      setBaseDir(layout.buildDirectory.dir("tmp/elnarion").get().asFile)
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/classUtil"))
+      setOutputDir(layout.buildDirectory.dir("reports/classUtil"))
+      setBaseDir(layout.buildDirectory.dir("tmp/classUtil").get().asFile)
    }
 
    register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {

@@ -28,7 +28,6 @@ passay = "1.6.6"
 dotenv-java = "3.0.0"
 asciidoctor-plugin = "4.0.2"
 asciidoctorj-diagram = "2.2.14"
-plantuml-generator-util = "3.0.1"
 
 [libraries]
 spring-modulith = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
@@ -59,7 +58,6 @@ junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
 sprint-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 sprint-modulith-test = { module = "org.springframework.modulith:spring-modulith-starter-test", version.ref = "spring-modulith" }
 asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", version.ref = "asciidoctorj-diagram" }
-plantuml-generator-util = { module = "de.elnarion.util:plantuml-generator-util", version.ref = "plantuml-generator-util" }
 
 [bundles]
 mapstruct-annotation = ["mapstruct-processor", "mapstruct-lombok"]

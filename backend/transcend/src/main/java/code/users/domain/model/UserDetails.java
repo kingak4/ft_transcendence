@@ -1,9 +1,9 @@
 package code.users.domain.model;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
-import java.util.UUID;
 
 @With
 @Value

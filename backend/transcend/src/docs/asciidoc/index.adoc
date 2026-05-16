@@ -8,7 +8,7 @@ Documentation Links
 
 * link:javadoc/index.html[JavaDoc API Reference]
 * link:modulith/index.html[Spring Modulith Diagrams]
-* link:elnarion/index.html[Elnarion Class Diagrams]
+* link:classUtil/index.html[classUtil Class Diagrams]
 
 Reports
 

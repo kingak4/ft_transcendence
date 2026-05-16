@@ -1,4 +1,4 @@
-package code.users.config;
+package code.users.infrastructure.security.config;
 
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import lombok.SneakyThrows;

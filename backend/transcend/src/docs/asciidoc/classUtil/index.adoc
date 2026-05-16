@@ -1,0 +1,7 @@
+= ClassUtil Class Diagrams
+:toc: left
+
+== Component Map
+plantuml::{classUtil-docs}/components.puml[format=svg]
+
+include::{classUtil-docs}/all-docs.adoc[]

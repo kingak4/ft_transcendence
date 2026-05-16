@@ -1,5 +1,4 @@
 = Modulith Diagrams
 :toc: left
 
-== Module Details
 include::{modulith-docs}/all-docs.adoc[]

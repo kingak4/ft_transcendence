@@ -1,7 +1,0 @@
-= Elnarion Class Diagrams
-:toc: left
-
-== Component Map
-plantuml::{elnarion-docs}/components.puml[format=svg]
-
-include::{elnarion-docs}/all-docs.adoc[]

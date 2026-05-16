@@ -1,14 +1,21 @@
 package code;
 
-import de.elnarion.util.plantuml.generator.classdiagram.PlantUMLClassDiagramGenerator;
-import de.elnarion.util.plantuml.generator.classdiagram.config.PlantUMLClassDiagramConfigBuilder;
+import com.tngtech.archunit.core.domain.Dependency;
+import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModule;
@@ -33,77 +40,115 @@ public class ModularityTest {
   }
 
   private void generateModuleDiagram() {
-    log.info("Generating module diagrams");
+    log.info("Generating module diagrams with Modulith");
     var options = Documenter.Options.defaults().withOutputFolder("build/tmp/modulith");
     new Documenter(modules, options).writeDocumentation().writeIndividualModulesAsPlantUml();
   }
 
   private void generateClassDiagrams() {
-    log.info("Generating class diagrams");
+    log.info("Generating class diagrams via ArchUnit");
     try {
-      Path basePath = Paths.get("build/tmp/elnarion");
+      Path basePath = Paths.get("build/tmp/classUtil");
       Files.createDirectories(basePath);
 
-      List<ApplicationModule> modules =
-          this.modules.stream()
+      List<ApplicationModule> sortedModules =
+          modules.stream()
               .sorted(Comparator.comparing(module -> module.getIdentifier().toString()))
               .toList();
 
-      generateComponentsDiagram(modules, basePath);
-      generateModuleDiagrams(modules, basePath);
-      generateAsciidocIndex(modules, basePath);
+      generateComponentsDiagram(sortedModules, basePath);
+      for (ApplicationModule module : sortedModules) {
+        generateModuleDiagram(module, basePath);
+      }
+      generateAsciidocIndex(sortedModules, basePath);
 
     } catch (IOException e) {
       log.error("Failed to generate diagrams: {}", e.getMessage());
     }
   }
 
-  private void generateModuleDiagrams(List<ApplicationModule> modules, Path basePath)
-      throws IOException {
-    for (ApplicationModule module : modules) {
-      String fileName = getDiagramFileName(module);
-      String diagramText = generatePlantUmlDiagram(List.of(module.getBasePackage().getName()));
-      Files.writeString(basePath.resolve(fileName), diagramText);
-    }
-  }
-
   private void generateComponentsDiagram(List<ApplicationModule> modules, Path basePath)
       throws IOException {
-    List<String> allPackages = modules.stream().map(m -> m.getBasePackage().getName()).toList();
-    Files.writeString(basePath.resolve("components.puml"), generatePlantUmlDiagram(allPackages));
+    String[] packages =
+        modules.stream().map(m -> m.getBasePackage().getName()).toArray(String[]::new);
+
+    JavaClasses allContextClasses =
+        new ClassFileImporter()
+            .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+            .importPackages(packages);
+
+    String diagramText = renderPlantUml(allContextClasses);
+    Files.writeString(basePath.resolve("components.puml"), diagramText);
   }
 
-  private String generatePlantUmlDiagram(List<String> scanPackages) {
-    var config =
-        new PlantUMLClassDiagramConfigBuilder(scanPackages)
-            .withJPAAnnotations(true)
-            .withValidationAnnotations(true)
-            .withUseSmetana(false)
-            .withUseShortClassNames(true)
-            .withUseShortClassNamesInFieldsAndMethods(true)
-            .build();
+  private void generateModuleDiagram(ApplicationModule module, Path basePath) throws IOException {
+    JavaClasses moduleClasses =
+        new ClassFileImporter()
+            .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+            .importPackages(module.getBasePackage().getName());
+    String diagramText = renderPlantUml(moduleClasses);
+    String fileName = getDiagramFileName(module);
+    Files.writeString(basePath.resolve(fileName), diagramText);
+  }
 
-    return new PlantUMLClassDiagramGenerator(config).generateDiagramText();
+  private String renderPlantUml(JavaClasses classes) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("@startuml").append(System.lineSeparator());
+    sb.append("left to right direction").append(System.lineSeparator());
+    sb.append("hide methods").append(System.lineSeparator());
+    sb.append("hide fields").append(System.lineSeparator());
+    sb.append("skinparam packageStyle folder").append(System.lineSeparator());
+
+    // 1. Group Classes by Package for visual grouping
+    Map<String, List<JavaClass>> grouped =
+        classes.stream().collect(Collectors.groupingBy(JavaClass::getPackageName));
+
+    for (Map.Entry<String, List<JavaClass>> entry : grouped.entrySet()) {
+      sb.append("package \"").append(entry.getKey()).append("\" {").append(System.lineSeparator());
+      for (JavaClass clazz : entry.getValue()) {
+        String type = clazz.isInterface() ? "interface" : (clazz.isEnum() ? "enum" : "class");
+        // Use unique alias (replace dots with underscores) to avoid PlantUML parsing errors
+        String alias = clazz.getName().replace(".", "_");
+        sb.append(String.format("  %s \"%s\" as %s", type, clazz.getSimpleName(), alias))
+            .append(System.lineSeparator());
+      }
+      sb.append("}").append(System.lineSeparator());
+    }
+
+    Set<String> relations = new HashSet<>();
+    for (JavaClass clazz : classes) {
+      String sourceAlias = clazz.getName().replace(".", "_");
+      for (Dependency dep : clazz.getDirectDependenciesFromSelf()) {
+        JavaClass target = dep.getTargetClass();
+        if (classes.contain(target.getName()) && !clazz.equals(target)) {
+          String targetAlias = target.getName().replace(".", "_");
+          relations.add(String.format("%s --> %s", sourceAlias, targetAlias));
+        }
+      }
+    }
+
+    relations.forEach(r -> sb.append(r).append(System.lineSeparator()));
+    sb.append("@enduml");
+    return sb.toString();
   }
 
   private void generateAsciidocIndex(List<ApplicationModule> modules, Path basePath)
       throws IOException {
-    var docs = new ArrayList<String>();
-    docs.add("== Module Class Diagrams");
+    List<String> lines = new ArrayList<>();
+    lines.add("== Module Class Diagrams");
 
     for (ApplicationModule module : modules) {
-      docs.add("");
-      docs.add("=== " + module.getDisplayName());
-      docs.add("plantuml::{elnarion-docs}/" + getDiagramFileName(module) + "[format=svg]");
+      lines.add("");
+      lines.add("=== " + module.getDisplayName());
+      lines.add("plantuml::{classUtil-docs}/" + getDiagramFileName(module) + "[format=svg]");
     }
 
-    String asciidocContent = String.join(System.lineSeparator(), docs) + System.lineSeparator();
-    Files.writeString(basePath.resolve("all-docs.adoc"), asciidocContent);
+    Files.writeString(
+        basePath.resolve("all-docs.adoc"), String.join(System.lineSeparator(), lines));
   }
 
   private String getDiagramFileName(ApplicationModule module) {
-    String moduleName = module.getIdentifier().toString();
-    return "components-" + sanitizeFileName(moduleName) + ".puml";
+    return "components-" + sanitizeFileName(module.getIdentifier().toString()) + ".puml";
   }
 
   private static String sanitizeFileName(String rawName) {

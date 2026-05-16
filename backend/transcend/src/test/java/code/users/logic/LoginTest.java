@@ -49,8 +49,7 @@ class LoginTest {
 
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
     when(hashingService.matches(PASSWORD_FIXTURE, HASH_FIXTURE)).thenReturn(true);
-    when(accessTokenProvider.generateToken(ID_FIXTURE.toString()))
-        .thenReturn(TOKEN_FIXTURE);
+    when(accessTokenProvider.generateToken(ID_FIXTURE.toString())).thenReturn(TOKEN_FIXTURE);
 
     // when
     var result = service.login(command);
