@@ -86,7 +86,7 @@ tasks {
 
    register("docs") {
       dependsOn("check")
-      dependsOn("asciidoctorClassUtil")
+      dependsOn("asciidoctorStructurizr")
       dependsOn("asciidoctorModulith")
       dependsOn("asciidoctor");
    }
@@ -109,7 +109,7 @@ tasks {
             "projectdir" to projectDir.absolutePath,
             "imagesdir" to "images",
             "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
-            "classUtil-docs" to layout.buildDirectory.dir("tmp/classUtil").get().asFile.absolutePath,
+            "structurizr-docs" to layout.buildDirectory.dir("tmp/structurizr").get().asFile.absolutePath,
             "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
@@ -133,13 +133,13 @@ tasks {
       setOutputDir(layout.buildDirectory.dir("reports"))
    }
 
-   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorClassUtil") {
-      description = "Generate AsciiDoc for ClassUtil class diagrams"
+   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorStructurizr") {
+      description = "Generate AsciiDoc for Structurizr class diagrams"
       dependsOn(test)
 
-      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/classUtil"))
-      setOutputDir(layout.buildDirectory.dir("reports/classUtil"))
-      setBaseDir(layout.buildDirectory.dir("tmp/classUtil").get().asFile)
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/structurizr"))
+      setOutputDir(layout.buildDirectory.dir("reports/structurizr"))
+      setBaseDir(layout.buildDirectory.dir("tmp/structurizr").get().asFile)
    }
 
    register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {

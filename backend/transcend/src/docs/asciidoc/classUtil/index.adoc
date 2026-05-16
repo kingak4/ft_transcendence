@@ -1,4 +1,4 @@
-= ClassUtil Class Diagrams
+= Structurizr Class Diagrams
 :toc: left
 
-include::{classUtil-docs}/all-docs.adoc[]
+include::{structurizr-docs}/all-docs.adoc[]

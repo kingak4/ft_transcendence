@@ -40,7 +40,7 @@ public class ModularityTest {
   private void generateClassDiagrams() {
     log.info("Generating diagrams via Structurizr");
     try {
-      Path basePath = Paths.get("build/tmp/classUtil");
+      Path basePath = Paths.get("build/tmp/structurizr");
       Files.createDirectories(basePath);
 
       StructurizrModuleExporter exporter = new StructurizrModuleExporter(modules);
@@ -62,7 +62,7 @@ public class ModularityTest {
 
     lines.add("");
     lines.add("=== Packages Overview");
-    lines.add("plantuml::{classUtil-docs}/packages-overview.puml[format=svg]");
+    lines.add("plantuml::{structurizr-docs}/packages-overview.puml[format=svg]");
 
     for (ApplicationModule module : modules) {
       lines.add("");
@@ -74,7 +74,7 @@ public class ModularityTest {
             .map(p -> p.getFileName().toString())
             .filter(name -> name.startsWith(prefix))
             .sorted()
-            .forEach(name -> lines.add("plantuml::{classUtil-docs}/" + name + "[format=svg]"));
+            .forEach(name -> lines.add("plantuml::{structurizr-docs}/" + name + "[format=svg]"));
       }
     }
 
