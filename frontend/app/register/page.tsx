@@ -50,18 +50,19 @@ export default function SearchInput() {
       },
     });
 
-    if (!response.ok) {
-      const serverError = (error as unknown) as RegisterError;
-      const status = serverError.status;
-      const message = serverError.message["register.command.email"] + "\n" + serverError.message["register.command.rawPassword"];
+    if (!response.ok && error) {
+      const status = error.status;
+      const email_msg = error.message?.["register.command.email"];
+      const passwrd_msg = error.message?.["register.command.rawPassword"];
+      const message = `${error.detail}: ${email_msg}\n ${passwrd_msg}`;
       if (status == 400) {
         window.alert(`${message}`);
       }
       else
-        window.alert(`Result: ID=${data?.id}`);
+        window.alert(`Result: error ${error.status}`);
     }
     else {
-      window.alert(`Zarejestrowano pomślnie:\nlogin: ${name}\npassword: ${password}`);
+      window.alert(`Zarejestrowano pomślnie:\nUser ID ${data?.id}`);
       window.location.href = "/login";
     }
   }
@@ -83,19 +84,4 @@ export default function SearchInput() {
   interface CreateUserResponse {
     id: string,
   }
-
-  // async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
-  //   const response = await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(body),
-  //   });
-
-  //   if (!response.ok)
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-
-  //   return await response.json() as TResponse;
-  // }
 }

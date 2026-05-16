@@ -23,12 +23,10 @@ export async function login(name: string, password: string): Promise<ActionRespo
     });
 
     if (!response.ok) {
-      console.error("Login Error:", response.body);
-      const serverError = (error as unknown) as loginError;
       return {
         success: false,
-        status: serverError.status,
-        message: serverError.message
+        status: error?.status,
+        message: error?.detail
       };
     }
 
@@ -58,12 +56,6 @@ export async function login(name: string, password: string): Promise<ActionRespo
       message: "Problem z połączeniem lub błąd wewnętrzny aplikacji."
     };
   }
-}
-
-export interface loginError {
-  "status": number,
-  "error": string,
-  "message": string
 }
 
 export interface CreateUserPayload {
