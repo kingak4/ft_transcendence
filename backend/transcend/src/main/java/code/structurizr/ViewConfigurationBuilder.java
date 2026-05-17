@@ -5,6 +5,7 @@ import com.structurizr.model.Container;
 import com.structurizr.model.Model;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.model.Tags;
+import com.structurizr.view.AutomaticLayout;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ContainerView;
 import com.structurizr.view.SystemContextView;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ViewConfigurationBuilder {
 
@@ -39,19 +41,26 @@ public class ViewConfigurationBuilder {
         views.createSystemContextView(system, "SystemContext", "System Context");
     contextView.addAllSoftwareSystems();
     contextView.addAllPeople();
-    contextView.enableAutomaticLayout();
+    contextView.enableAutomaticLayout(
+      AutomaticLayout.RankDirection.LeftRight, 300, 300, 300, false);
 
     ContainerView containerView =
         views.createContainerView(system, "Containers", "Container Diagram");
     containerView.addAllContainers();
-    containerView.enableAutomaticLayout();
+    containerView.enableAutomaticLayout(
+      AutomaticLayout.RankDirection.LeftRight, 300, 300, 300, false);
   }
 
   private void createComponentViews(ViewSet views, Container backendApi) {
     ComponentView allComponentsView =
-        views.createComponentView(backendApi, "Components", "Component Diagram");
+      views.createComponentView(
+        backendApi,
+        "Components_All",
+        "All backend components with inferred relationships");
+    allComponentsView.setTitle("All Components");
     allComponentsView.addAllComponents();
-    allComponentsView.enableAutomaticLayout();
+    allComponentsView.enableAutomaticLayout(
+      AutomaticLayout.RankDirection.LeftRight, 350, 300, 300, false);
 
     Map<String, List<com.structurizr.model.Component>> byTopLevelPackage =
         groupByTopLevelPackage(backendApi);
@@ -67,20 +76,24 @@ public class ViewConfigurationBuilder {
       ComponentView packageView =
           views.createComponentView(
               backendApi,
-              "Components_" + sanitizeKey(topLevelPackage),
-              "Component dependencies centered on package: " + topLevelPackage);
+              "Package_" + sanitizeKey(topLevelPackage),
+              "Package view focused on "
+                  + topLevelPackage
+                  + " and nearest neighboring components");
+      packageView.setTitle("Package: " + topLevelPackage);
 
       for (com.structurizr.model.Component component : components) {
         packageView.add(component);
         packageView.addNearestNeighbours(component);
       }
-      packageView.enableAutomaticLayout();
+        packageView.enableAutomaticLayout(
+          AutomaticLayout.RankDirection.LeftRight, 500, 350, 300, false);
     }
   }
 
   private Map<String, List<com.structurizr.model.Component>> groupByTopLevelPackage(
       Container container) {
-    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage = new LinkedHashMap<>();
+    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage = new TreeMap<>();
 
     for (com.structurizr.model.Component component : container.getComponents()) {
       String group = component.getGroup();
