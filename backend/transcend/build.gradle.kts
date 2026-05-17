@@ -88,7 +88,8 @@ tasks {
    register("docs") {
       dependsOn("check")
       dependsOn("asciidoctorModulith")
-      dependsOn("asciidoctor");
+      dependsOn("asciidoctor")
+      dependsOn("generateStructurizr")
    }
 
    withType<AsciidoctorTask>().configureEach {
