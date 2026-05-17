@@ -1,20 +1,24 @@
 package code.structurizr;
 
 import com.structurizr.Workspace;
+import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Model;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.model.Tags;
-import com.structurizr.view.AutomaticLayout;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ContainerView;
+import com.structurizr.view.Dimensions;
+import com.structurizr.view.PaperSize;
 import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
+
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class ViewConfigurationBuilder {
 
@@ -41,71 +45,114 @@ public class ViewConfigurationBuilder {
         views.createSystemContextView(system, "SystemContext", "System Context");
     contextView.addAllSoftwareSystems();
     contextView.addAllPeople();
-    contextView.enableAutomaticLayout(
-      AutomaticLayout.RankDirection.LeftRight, 300, 300, 300, false);
+    contextView.setPaperSize(PaperSize.A1_Landscape);
 
     ContainerView containerView =
         views.createContainerView(system, "Containers", "Container Diagram");
     containerView.addAllContainers();
-    containerView.enableAutomaticLayout(
-      AutomaticLayout.RankDirection.LeftRight, 300, 300, 300, false);
+    containerView.setPaperSize(PaperSize.A1_Landscape);
+
   }
 
   private void createComponentViews(ViewSet views, Container backendApi) {
-    ComponentView allComponentsView =
-      views.createComponentView(
-        backendApi,
-        "Components_All",
-        "All backend components with inferred relationships");
-    allComponentsView.setTitle("All Components");
-    allComponentsView.addAllComponents();
-    allComponentsView.enableAutomaticLayout(
-      AutomaticLayout.RankDirection.LeftRight, 350, 300, 300, false);
+//    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage =
+//        groupByPackageDepth(backendApi, 1);
 
-    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage =
-        groupByTopLevelPackage(backendApi);
+//    createPackageComponentViews(views, backendApi, byTopLevelPackage, false);
 
-    for (Map.Entry<String, List<com.structurizr.model.Component>> entry :
-        byTopLevelPackage.entrySet()) {
-      String topLevelPackage = entry.getKey();
-      List<com.structurizr.model.Component> components = entry.getValue();
-      if (components.isEmpty()) {
+    Map<String, List<com.structurizr.model.Component>> byFirstNestedPackage =
+        groupByPackageDepth(backendApi, 2);
+
+    createPackageComponentViews(views, backendApi, byFirstNestedPackage, false);
+  }
+
+  private void createPackageComponentViews(
+      ViewSet views,
+      Container backendApi,
+      Map<String, List<Component>> byPackage,
+      boolean nestedPackagesOnly) {
+    for (Map.Entry<String, List<Component>> entry : byPackage.entrySet()) {
+      String packageName = entry.getKey();
+      List<Component> components = entry.getValue();
+      if (components.isEmpty() || nestedPackagesOnly && !packageName.contains(".")) {
         continue;
       }
 
-      ComponentView packageView =
-          views.createComponentView(
-              backendApi,
-              "Package_" + sanitizeKey(topLevelPackage),
-              "Package view focused on "
-                  + topLevelPackage
-                  + " and nearest neighboring components");
-      packageView.setTitle("Package: " + topLevelPackage);
-
-      for (com.structurizr.model.Component component : components) {
-        packageView.add(component);
-        packageView.addNearestNeighbours(component);
-      }
-        packageView.enableAutomaticLayout(
-          AutomaticLayout.RankDirection.LeftRight, 500, 350, 300, false);
+      createPackageComponentView(
+          views,
+          backendApi,
+          "Package_" + sanitizeKey(packageName),
+          "Package components: " + packageName,
+          "Components in package \""
+              + packageName
+              + "\" plus directly connected components",
+          components);
     }
   }
 
-  private Map<String, List<com.structurizr.model.Component>> groupByTopLevelPackage(
-      Container container) {
-    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage = new TreeMap<>();
+  private void createPackageComponentView(
+      ViewSet views,
+      Container backendApi,
+      String key,
+      String title,
+      String description,
+      List<com.structurizr.model.Component> components) {
+    ComponentView packageView = views.createComponentView(backendApi, key, description);
+    packageView.setTitle(title);
+    addComponentsWithDirectNeighbours(packageView, backendApi, components);
+    packageView.setDimensions(new Dimensions(1000, 1000));
+  }
 
-    for (com.structurizr.model.Component component : container.getComponents()) {
-      String group = component.getGroup();
-      String topLevelPackage = "default";
-      if (group != null && !group.isBlank()) {
-        int separator = group.indexOf('.');
-        topLevelPackage = separator < 0 ? group : group.substring(0, separator);
-      }
-      byTopLevelPackage.computeIfAbsent(topLevelPackage, key -> new ArrayList<>()).add(component);
+  private void addComponentsWithDirectNeighbours(
+      ComponentView view,
+      Container container,
+      List<com.structurizr.model.Component> selectedComponents) {
+    Set<com.structurizr.model.Component> selected = Set.copyOf(selectedComponents);
+
+    for (com.structurizr.model.Component component : selectedComponents) {
+      view.add(component);
     }
 
-    return byTopLevelPackage;
+    for (com.structurizr.model.Component sourceComponent : container.getComponents()) {
+      for (var relationship : sourceComponent.getRelationships()) {
+        if (!(relationship.getDestination() instanceof com.structurizr.model.Component targetComponent)) {
+          continue;
+        }
+
+        boolean outgoingFromSelected = selected.contains(sourceComponent);
+        boolean incomingToSelected = selected.contains(targetComponent);
+
+        if (outgoingFromSelected || incomingToSelected) {
+          view.add(sourceComponent);
+          view.add(targetComponent);
+        }
+      }
+    }
+  }
+
+  private Map<String, List<com.structurizr.model.Component>> groupByPackageDepth(
+      Container container, int depth) {
+    Map<String, List<com.structurizr.model.Component>> byPackage = new TreeMap<>();
+
+    for (com.structurizr.model.Component component : container.getComponents()) {
+      String packageName = packagePrefix(component.getGroup(), depth);
+      byPackage.computeIfAbsent(packageName, key -> new ArrayList<>()).add(component);
+    }
+
+    return byPackage;
+  }
+
+  private String packagePrefix(String group, int depth) {
+    if (group == null || group.isBlank()) {
+      return "default";
+    }
+
+    String[] parts = group.split("\\.");
+    int limit = Math.min(depth, parts.length);
+
+    return java.util.Arrays.stream(parts)
+        .limit(limit)
+        .collect(Collectors.joining("."));
   }
 
   private void configureStyles(ViewSet views) {

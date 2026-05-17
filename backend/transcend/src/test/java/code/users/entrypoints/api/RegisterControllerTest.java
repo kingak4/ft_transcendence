@@ -97,4 +97,24 @@ class RegisterControllerTest {
     verify(mapper).toCommand(request);
     verify(registerUseCase).register(command);
   }
+
+  @Test
+  void registerReturns400WhenValidationFails() throws Exception {
+    // given
+    var request = new RegisterRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
+    var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
+
+    when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);
+    when(registerUseCase.register(command))
+        .thenThrow(new jakarta.validation.ConstraintViolationException("Validation error", java.util.Collections.emptySet()));
+
+    // when & then
+    mockMvc
+        .perform(
+            post(buildUrl(RegisterController.BASE_URL, RegisterController.REGISTER_ENDPOINT))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.properties").exists());
+  }
 }

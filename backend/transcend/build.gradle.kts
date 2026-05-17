@@ -152,7 +152,6 @@ tasks {
    }
 
    register<JavaExec>("generateStructurizr") {
-      group = "documentation"
       description = "Generate structurizr/workspace.json by scanning application classes"
       classpath = sourceSets.main.get().runtimeClasspath
       mainClass.set("code.StructurizrGenerator")
