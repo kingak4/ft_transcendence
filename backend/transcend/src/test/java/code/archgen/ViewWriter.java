@@ -18,9 +18,10 @@ class ViewWriter {
     String layoutSettings =
         """
             @startuml
-            left to right direction
-            skinparam ranksep 100
-            skinparam nodesep 40
+            top to bottom direction
+            skinparam maxWidth 1200
+            skinparam ranksep 200
+            skinparam nodesep 60
             skinparam linetype ortho
             skinparam autoproxy true
             """;

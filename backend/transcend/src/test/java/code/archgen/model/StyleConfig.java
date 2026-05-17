@@ -12,7 +12,7 @@ public class StyleConfig {
   private static final String COLOR_VISIBILITY_PROTECTED = "#666666";
   private static final String COLOR_VISIBILITY_PRIVATE = "#CCCCCC";
   private static final String COLOR_VISIBILITY_PACKAGE = "#999999";
-  private static final String COLOR_MODULE_TEXT = "#FFFFFF";
+  private static final String COLOR_MODULE_TEXT = "#000000";
 
   public static void configureStyles(Styles styles, PackageColorPalette packageColorPalette) {
     // Open/Closed visibility (modulith context)
@@ -54,24 +54,7 @@ public class StyleConfig {
     for (Map.Entry<String, String> entry : packageColorPalette.getPackageColorMap().entrySet()) {
       String packageTag = entry.getKey();
       String color = entry.getValue();
-      styles
-          .addElementStyle(packageTag)
-          .background(color)
-          .color(COLOR_MODULE_TEXT)
-          .stroke(darkenColor(color));
+      styles.addElementStyle(packageTag).background(color).color(COLOR_MODULE_TEXT).stroke(color);
     }
-  }
-
-  public static void configureStyles(Styles styles) {
-    configureStyles(styles, new PackageColorPalette());
-  }
-
-  private static String darkenColor(String hexColor) {
-    // Simple darkening: reduce each component by 20%
-    String hex = hexColor.substring(1);
-    int r = (int) (Integer.parseInt(hex.substring(0, 2), 16) * 0.8);
-    int g = (int) (Integer.parseInt(hex.substring(2, 4), 16) * 0.8);
-    int b = (int) (Integer.parseInt(hex.substring(4, 6), 16) * 0.8);
-    return String.format("#%02X%02X%02X", r, g, b);
   }
 }

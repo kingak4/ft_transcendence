@@ -151,6 +151,25 @@ tasks {
       setBaseDir(layout.buildDirectory.dir("tmp/modulith").get().asFile)
    }
 
+   register<Exec>("generateIlographHtmlDocker") {
+      description = "Converts generated IDL to interactive HTML using the Ilograph Docker API"
+
+      val inputPath = "/build/tmp/structurizr/workspace.idl"
+      val outputPath = "/build/reports/ilograph/index.html"
+
+      doFirst {
+         file("${projectDir}/build/reports/ilograph").mkdirs()
+      }
+
+      commandLine(
+         "docker", "run", "--rm",
+         "-v", "${projectDir.absolutePath}:/build",
+         "ilograph/export-api",
+         inputPath,
+         "--output", outputPath
+      )
+   }
+
    test {
       useJUnitPlatform()
       testLogging {

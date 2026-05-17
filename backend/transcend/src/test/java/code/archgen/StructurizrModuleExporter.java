@@ -1,12 +1,13 @@
 package code.archgen;
 
-import code.archgen.model.ArchgenTags;
 import code.archgen.model.ModelProvider;
 import code.archgen.model.StyleConfig;
+import com.structurizr.export.ilograph.IlographExporter;
 import com.structurizr.model.Component;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ViewSet;
 import com.tngtech.archunit.core.domain.JavaClass;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
@@ -43,33 +44,15 @@ public class StructurizrModuleExporter {
 
   @SneakyThrows
   public void export(Path basePath) {
-    exportOverview(basePath);
+    asciidocGenerator.clearDiagramEntries();
     exportInternalPackageViews(basePath);
+    exportInteractiveWorkspace(basePath);
     asciidocGenerator.generateIndex(model.getModules(), basePath);
-  }
-
-  @SneakyThrows
-  public void exportOverview(Path basePath) {
-    createOverviewView(model.getWorkspace().getViews(), basePath);
   }
 
   @SneakyThrows
   public void exportInternalPackageViews(Path basePath) {
     createInternalPackageViews(model.getWorkspace().getViews(), basePath);
-  }
-
-  private void createOverviewView(ViewSet views, Path basePath) {
-    String viewId = "packages-overview";
-    ComponentView view =
-        createComponentView(
-            views,
-            viewId,
-            "API Overview",
-            v ->
-                model.getContainer().getComponents().stream()
-                    .filter(c -> c.getTags().contains(ArchgenTags.TAG_OPEN))
-                    .forEach(v::add));
-    renderer.writeView(view, basePath.resolve(viewId + ".puml"));
   }
 
   private void createInternalPackageViews(ViewSet views, Path basePath) {
@@ -81,17 +64,31 @@ public class StructurizrModuleExporter {
 
         ComponentView view =
             createComponentView(
-                views, viewId, "Internal Pkg: " + pkgName, v -> addComponentsInPackage(v, pkgName));
+                views,
+                viewId,
+                "Internal Pkg: " + pkgName,
+                false,
+                v -> addComponentsInPackage(v, pkgName));
         renderer.writeView(view, basePath.resolve(viewId + ".puml"));
+
+        String packageShortName = extractPackageShortName(pkgName);
+        asciidocGenerator.addDiagramEntry(
+            module.getDisplayName(), packageShortName, viewId + ".puml");
       }
     }
   }
 
   private ComponentView createComponentView(
-      ViewSet views, String id, String description, Consumer<ComponentView> initializer) {
+      ViewSet views,
+      String id,
+      String description,
+      boolean includeNeighbors,
+      Consumer<ComponentView> initializer) {
     ComponentView view = views.createComponentView(model.getContainer(), id, description);
     initializer.accept(view);
-    addNeighbors(view);
+    if (includeNeighbors) {
+      addNeighbors(view);
+    }
     return view;
   }
 
@@ -139,5 +136,19 @@ public class StructurizrModuleExporter {
     for (Component c : componentsInView) {
       view.addNearestNeighbours(c);
     }
+  }
+
+  private String extractPackageShortName(String fullPackageName) {
+    int lastDot = fullPackageName.lastIndexOf('.');
+    return (lastDot == -1) ? fullPackageName : fullPackageName.substring(lastDot + 1);
+  }
+
+  @SneakyThrows
+  private void exportInteractiveWorkspace(Path basePath) {
+    IlographExporter ilographExporter = new IlographExporter();
+    var workspaceExport = ilographExporter.export(model.getWorkspace());
+    Files.writeString(
+        basePath.resolve("workspace." + workspaceExport.getFileExtension()),
+        workspaceExport.getDefinition());
   }
 }

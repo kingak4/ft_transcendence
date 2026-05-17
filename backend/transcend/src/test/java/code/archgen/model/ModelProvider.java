@@ -45,11 +45,11 @@ public class ModelProvider {
     for (JavaClass javaClass : classes) {
       if (isIgnorable(javaClass)) continue;
 
-      Component component = createComponent(module, javaClass);
+      Component component = createComponent(javaClass);
 
       component.setGroup(calculateGroupName(module, javaClass));
 
-      // Add module identification tag (no color)
+      // Add module identification tag
       String moduleTag = ArchgenTags.TAG_MODULE_PREFIX + moduleId;
       component.addTags(moduleTag);
 
@@ -71,7 +71,6 @@ public class ModelProvider {
               module.getBasePackage().getName(), javaClass.getName());
       if (pkgTag != null) {
         component.addTags(pkgTag);
-        // Assign color to this package
         packageColorPalette.getColorForPackage(pkgTag);
       }
 
@@ -79,7 +78,7 @@ public class ModelProvider {
     }
   }
 
-  private Component createComponent(ApplicationModule module, JavaClass javaClass) {
+  private Component createComponent(JavaClass javaClass) {
     String name = javaClass.getSimpleName();
 
     if (container.getComponentWithName(name) != null) {

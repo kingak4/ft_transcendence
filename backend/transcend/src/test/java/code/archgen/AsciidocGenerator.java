@@ -1,16 +1,20 @@
 package code.archgen;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.SneakyThrows;
 import org.springframework.modulith.core.ApplicationModule;
 import org.springframework.modulith.core.ApplicationModules;
 
 /** Generates an Asciidoc index referencing generated PlantUML diagrams. */
 class AsciidocGenerator {
+  private final Map<String, List<DiagramEntry>> diagramEntriesByModule = new LinkedHashMap<>();
+
+  private record DiagramEntry(String packageShortName, String pumlFileName) {}
 
   @SneakyThrows
   public void generateIndex(ApplicationModules modules, Path basePath) {
@@ -27,26 +31,32 @@ class AsciidocGenerator {
     List<String> lines = new ArrayList<>();
     lines.add("== Module Class Diagrams");
 
-    lines.add("");
-    lines.add("=== Packages Overview");
-    lines.add("plantuml::{structurizr-docs}/packages-overview.puml[format=svg]");
-
     for (ApplicationModule module : list) {
       lines.add("");
       lines.add("=== " + module.getDisplayName());
 
-      String prefix =
-          "components-" + DiagramUtils.sanitize(module.getIdentifier().toString()) + "-";
-      try (var stream = Files.list(basePath)) {
-        stream
-            .map(p -> p.getFileName().toString())
-            .filter(name -> name.startsWith(prefix))
-            .sorted()
-            .forEach(name -> lines.add("plantuml::{structurizr-docs}/" + name + "[format=svg]"));
+      List<DiagramEntry> entries =
+          new ArrayList<>(diagramEntriesByModule.getOrDefault(module.getDisplayName(), List.of()));
+      entries.sort(Comparator.comparing(DiagramEntry::packageShortName));
+
+      for (DiagramEntry entry : entries) {
+        lines.add("");
+        lines.add("==== " + entry.packageShortName());
+        lines.add("plantuml::{structurizr-docs}/" + entry.pumlFileName() + "[format=svg]");
       }
     }
 
-    Files.writeString(
+    java.nio.file.Files.writeString(
         basePath.resolve("all-docs.adoc"), String.join(System.lineSeparator(), lines));
+  }
+
+  public void addDiagramEntry(String moduleName, String packageShortName, String pumlFileName) {
+    diagramEntriesByModule
+        .computeIfAbsent(moduleName, key -> new ArrayList<>())
+        .add(new DiagramEntry(packageShortName, pumlFileName));
+  }
+
+  public void clearDiagramEntries() {
+    diagramEntriesByModule.clear();
   }
 }
