@@ -17,6 +17,4 @@ test:
 	${GRADLE} jacocoTestReport
 
 docs:
-	${GRADLE} test --tests code.ModularityTest
-	${GRADLE} javadoc
-	${GRADLE} asciidoctor
+	${GRADLE} docs

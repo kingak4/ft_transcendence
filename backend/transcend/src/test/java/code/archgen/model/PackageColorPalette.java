@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Generates a consistent color palette for modules. Ensures same module always gets same color
+ * Generates a consistent color palette for packages. Ensures same package always gets same color
  * across diagrams.
  */
-public class ModuleColorPalette {
+public class PackageColorPalette {
 
   // Color palette (12 distinct colors)
   private static final String COLOR_RED = "#FF6B6B";
@@ -38,15 +38,15 @@ public class ModuleColorPalette {
     COLOR_LAVENDER
   };
 
-  private final Map<String, String> moduleToColor = new HashMap<>();
+  private final Map<String, String> packageToColor = new HashMap<>();
 
-  /** Get a color for the given module identifier. Returns the same color consistently. */
-  public void getColorForModule(String moduleIdentifier) {
-    moduleToColor.computeIfAbsent(
-        moduleIdentifier, key -> COLORS[moduleToColor.size() % COLORS.length]);
+  /** Get a color for the given package name. Returns the same color consistently. */
+  public String getColorForPackage(String packageName) {
+    return packageToColor.computeIfAbsent(
+        packageName, key -> COLORS[packageToColor.size() % COLORS.length]);
   }
 
-  public Map<String, String> getModuleColorMap() {
-    return new HashMap<>(moduleToColor);
+  public Map<String, String> getPackageColorMap() {
+    return new HashMap<>(packageToColor);
   }
 }

@@ -8,7 +8,6 @@ import com.tngtech.archunit.core.domain.Dependency;
 import com.tngtech.archunit.core.domain.JavaClass;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import lombok.Getter;
 import org.springframework.modulith.core.ApplicationModule;
 import org.springframework.modulith.core.ApplicationModules;
@@ -20,7 +19,7 @@ public class ModelProvider {
   private final Workspace workspace;
   private final Container container;
   private final Map<String, Component> classToComponentMap = new HashMap<>();
-  private final ModuleColorPalette colorPalette = new ModuleColorPalette();
+  private final PackageColorPalette packageColorPalette = new PackageColorPalette();
 
   public ModelProvider(ApplicationModules modules) {
     this.modules = modules;
@@ -34,7 +33,6 @@ public class ModelProvider {
 
   private void buildModel() {
     for (ApplicationModule module : modules) {
-      colorPalette.getColorForModule(module.getIdentifier().toString());
       processModuleClasses(module);
     }
     resolveDependencies();
@@ -43,17 +41,15 @@ public class ModelProvider {
   private void processModuleClasses(ApplicationModule module) {
     Iterable<JavaClass> classes = module.getBasePackage().getClasses();
     String moduleId = module.getIdentifier().toString();
-    Set<String> moduleClassNames = new java.util.HashSet<>();
 
     for (JavaClass javaClass : classes) {
       if (isIgnorable(javaClass)) continue;
 
       Component component = createComponent(module, javaClass);
-      moduleClassNames.add(javaClass.getName());
 
       component.setGroup(calculateGroupName(module, javaClass));
 
-      // Add module identification tag with color
+      // Add module identification tag (no color)
       String moduleTag = ArchgenTags.TAG_MODULE_PREFIX + moduleId;
       component.addTags(moduleTag);
 
@@ -69,22 +65,19 @@ public class ModelProvider {
       String visibilityTag = ComponentVisibilityDetector.detectVisibility(javaClass);
       component.addTags(visibilityTag);
 
-      // Add package tag (first-level subpackage)
+      // Add package tag (first-level subpackage) with color
       String pkgTag =
           PackageTagExtractor.extractPackageTag(
               module.getBasePackage().getName(), javaClass.getName());
       if (pkgTag != null) {
         component.addTags(pkgTag);
+        // Assign color to this package
+        packageColorPalette.getColorForPackage(pkgTag);
       }
 
       classToComponentMap.put(javaClass.getName(), component);
     }
-
-    // Store module class names for internal/external context detection later
-    MODULE_CLASS_REGISTRY.put(moduleId, moduleClassNames);
   }
-
-  private static final Map<String, Set<String>> MODULE_CLASS_REGISTRY = new HashMap<>();
 
   private Component createComponent(ApplicationModule module, JavaClass javaClass) {
     String name = javaClass.getSimpleName();

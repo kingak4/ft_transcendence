@@ -37,7 +37,8 @@ public class StructurizrModuleExporter {
     this.model = model;
     this.asciidocGenerator = asciidocGenerator;
     StyleConfig.configureStyles(
-        model.getWorkspace().getViews().getConfiguration().getStyles(), model.getColorPalette());
+        model.getWorkspace().getViews().getConfiguration().getStyles(),
+        model.getPackageColorPalette());
   }
 
   @SneakyThrows

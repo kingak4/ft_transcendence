@@ -12,14 +12,9 @@ public class StyleConfig {
   private static final String COLOR_VISIBILITY_PROTECTED = "#666666";
   private static final String COLOR_VISIBILITY_PRIVATE = "#CCCCCC";
   private static final String COLOR_VISIBILITY_PACKAGE = "#999999";
-  private static final String COLOR_JAVA_INTERFACE = "#005f6b";
-  private static final String COLOR_JAVA_ENUM = "#FF6B35";
-  private static final String COLOR_JAVA_ANNOTATION = "#990000";
-  private static final String COLOR_JAVA_ABSTRACT = "#006600";
-  private static final String COLOR_JAVA_CLASS = "#333333";
   private static final String COLOR_MODULE_TEXT = "#FFFFFF";
 
-  public static void configureStyles(Styles styles, ModuleColorPalette colorPalette) {
+  public static void configureStyles(Styles styles, PackageColorPalette packageColorPalette) {
     // Open/Closed visibility (modulith context)
     styles.addElementStyle(ArchgenTags.TAG_OPEN).opacity(100);
     styles.addElementStyle(ArchgenTags.TAG_CLOSED).opacity(70);
@@ -48,28 +43,19 @@ public class StyleConfig {
         .stroke(COLOR_VISIBILITY_PACKAGE)
         .strokeWidth(1);
 
-    // Java type styling (stroke, width, and type hints)
-    styles
-        .addElementStyle(ArchgenTags.TAG_JAVA_INTERFACE)
-        .stroke(COLOR_JAVA_INTERFACE)
-        .strokeWidth(3);
-    styles.addElementStyle(ArchgenTags.TAG_JAVA_ENUM).stroke(COLOR_JAVA_ENUM).strokeWidth(2);
-    styles
-        .addElementStyle(ArchgenTags.TAG_JAVA_ANNOTATION)
-        .stroke(COLOR_JAVA_ANNOTATION)
-        .strokeWidth(2);
-    styles
-        .addElementStyle(ArchgenTags.TAG_JAVA_ABSTRACT)
-        .stroke(COLOR_JAVA_ABSTRACT)
-        .strokeWidth(2);
-    styles.addElementStyle(ArchgenTags.TAG_JAVA_CLASS).stroke(COLOR_JAVA_CLASS).strokeWidth(1);
+    // Java type styling (stroke width only, no color - differentiated by width)
+    styles.addElementStyle(ArchgenTags.TAG_JAVA_INTERFACE).strokeWidth(3);
+    styles.addElementStyle(ArchgenTags.TAG_JAVA_ENUM).strokeWidth(2);
+    styles.addElementStyle(ArchgenTags.TAG_JAVA_ANNOTATION).strokeWidth(2);
+    styles.addElementStyle(ArchgenTags.TAG_JAVA_ABSTRACT).strokeWidth(2);
+    styles.addElementStyle(ArchgenTags.TAG_JAVA_CLASS).strokeWidth(1);
 
-    // Dynamic module colors (background color per module)
-    for (Map.Entry<String, String> entry : colorPalette.getModuleColorMap().entrySet()) {
-      String moduleId = entry.getKey();
+    // Dynamic package colors (background color per package)
+    for (Map.Entry<String, String> entry : packageColorPalette.getPackageColorMap().entrySet()) {
+      String packageTag = entry.getKey();
       String color = entry.getValue();
       styles
-          .addElementStyle(ArchgenTags.TAG_MODULE_PREFIX + moduleId)
+          .addElementStyle(packageTag)
           .background(color)
           .color(COLOR_MODULE_TEXT)
           .stroke(darkenColor(color));
@@ -77,7 +63,7 @@ public class StyleConfig {
   }
 
   public static void configureStyles(Styles styles) {
-    configureStyles(styles, new ModuleColorPalette());
+    configureStyles(styles, new PackageColorPalette());
   }
 
   private static String darkenColor(String hexColor) {
