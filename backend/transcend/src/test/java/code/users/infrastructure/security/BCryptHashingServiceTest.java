@@ -31,7 +31,6 @@ class BCryptHashingServiceTest {
 
     // when
     var encoded = hashingService.encode(rawPassword);
-    System.out.println(encoded);
 
     // then
     assertNotEquals(rawPassword, encoded);
