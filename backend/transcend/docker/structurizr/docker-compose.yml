@@ -1,0 +1,20 @@
+services:
+  structurizr:
+    image: structurizr/structurizr:${STRUCTURIZR_VERSION}
+    user: "0:0"
+    container_name: structurizr
+    env_file:
+      - .env
+    ports:
+      - "${STRUCTURIZR_PORT}:8080"
+    volumes:
+      - ./data:/usr/local/structurizr
+    restart: unless-stopped
+    environment:
+      ENCRYPTION_PASSPHRASE: ${ENCRYPTION_PASSPHRASE}
+      STRUCTURIZR_REMOTE: true
+      STRUCTURIZR_DEBUG: false
+    command: ${STRUCTURIZR_MODE}
+
+volumes:
+  structurizr_data:

@@ -8,7 +8,6 @@ Documentation Links
 
 * link:javadoc/index.html[JavaDoc API Reference]
 * link:modulith/index.html[Spring Modulith Diagrams]
-* link:structurizr/index.html[Structurizr Class Diagrams]
 
 Reports
 

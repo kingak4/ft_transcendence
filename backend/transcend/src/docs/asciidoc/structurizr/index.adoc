@@ -1,4 +1,0 @@
-= Structurizr Class Diagrams
-:toc: left
-
-include::{structurizr-docs}/all-docs.adoc[]

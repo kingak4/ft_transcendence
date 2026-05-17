@@ -15,7 +15,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
    mavenCentral()
-   maven { url = uri("https://repo.spring.io/release") }
+//   maven { url = uri("https://repo.spring.io/release") }
    maven { url = uri("https://repo.spring.io/milestone") }
 }
 
@@ -24,11 +24,12 @@ val asciidoctorExt by configurations.creating
 dependencies {
    asciidoctorExt(libs.asciidoctorj.diagram)
 
-
-   // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-core
-   implementation("com.structurizr:structurizr-core:6.2.0")
+   implementation("com.structurizr:structurizr-core:6.2.1")
+   implementation("com.structurizr:structurizr-analysis:1.3.5")
    // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-export
-   implementation("com.structurizr:structurizr-export:6.2.0")
+   implementation("com.structurizr:structurizr-export:6.2.1")
+   // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-client
+   implementation("com.structurizr:structurizr-client:6.2.1")
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
@@ -86,7 +87,6 @@ tasks {
 
    register("docs") {
       dependsOn("check")
-      dependsOn("asciidoctorStructurizr")
       dependsOn("asciidoctorModulith")
       dependsOn("asciidoctor");
    }
@@ -125,21 +125,13 @@ tasks {
       options.encoding = "UTF-8"
       (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
       isFailOnError = false
+      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
    }
 
    asciidoctor {
       dependsOn("javadoc");
       setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
       setOutputDir(layout.buildDirectory.dir("reports"))
-   }
-
-   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorStructurizr") {
-      description = "Generate AsciiDoc for Structurizr class diagrams"
-      dependsOn(test)
-
-      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/structurizr"))
-      setOutputDir(layout.buildDirectory.dir("reports/structurizr"))
-      setBaseDir(layout.buildDirectory.dir("tmp/structurizr").get().asFile)
    }
 
    register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
@@ -151,30 +143,19 @@ tasks {
       setBaseDir(layout.buildDirectory.dir("tmp/modulith").get().asFile)
    }
 
-   register<Exec>("generateIlographHtmlDocker") {
-      description = "Converts generated IDL to interactive HTML using the Ilograph Docker API"
-
-      val inputPath = "/build/tmp/structurizr/workspace.idl"
-      val outputPath = "/build/reports/ilograph/index.html"
-
-      doFirst {
-         file("${projectDir}/build/reports/ilograph").mkdirs()
-      }
-
-      commandLine(
-         "docker", "run", "--rm",
-         "-v", "${projectDir.absolutePath}:/build",
-         "ilograph/export-api",
-         inputPath,
-         "--output", outputPath
-      )
-   }
-
    test {
       useJUnitPlatform()
       testLogging {
          events("passed", "skipped", "failed")
       }
+   }
+
+   register<JavaExec>("generateStructurizr") {
+      group = "documentation"
+      description = "Generate structurizr/workspace.json by scanning application classes"
+      classpath = sourceSets.main.get().runtimeClasspath
+      mainClass.set("code.StructurizrGenerator")
+      args = listOf("code")
    }
 
    check {
@@ -233,24 +214,5 @@ tasks {
 
          dependsOn(test)
       }
-   }
-
-   register("report") {
-      description = "Reports paths to Html documentation files"
-      doLast {
-         var reportPath = layout.buildDirectory.file("reports/jacoco/index.html").get().asFile
-         println("Jacoco report: file://${reportPath.toURI().path}")
-         reportPath = layout.buildDirectory.file("reports/pmd/main.html").get().asFile
-         println("PmdMain report: file://${reportPath.toURI().path}")
-         reportPath = layout.buildDirectory.file("reports/pmd/test.html").get().asFile
-         println("PmdTest report: file://${reportPath.toURI().path}")
-         reportPath = layout.buildDirectory.file("docs/asciidoc/index.html").get().asFile
-         println("Documentation: file://${reportPath.toURI().path}")
-      }
-   }
-
-   javadoc {
-      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
-      options.encoding = "UTF-8"
    }
 }
