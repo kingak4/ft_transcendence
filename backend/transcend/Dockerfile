@@ -7,7 +7,6 @@ COPY settings.gradle.kts ./
 COPY transcend/src ./src
 
 RUN gradle bootJar --no-daemon
-RUN ls -la /gradle/build/libs/
 
 FROM eclipse-temurin:21-jre-alpine-3.23
 WORKDIR /backend
