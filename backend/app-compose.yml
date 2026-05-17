@@ -1,6 +1,6 @@
 services:
   backend:
-    container_name: transcend
+    container_name: transcend-backend
     build:
       context: .
       dockerfile: transcend/Dockerfile
