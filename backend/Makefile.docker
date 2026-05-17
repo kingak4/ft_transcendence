@@ -8,4 +8,7 @@ up:
 	docker compose -f app-compose.yml up -d
 
 down:
+	docker compose -f app-compose.yml down
+
+drop:
 	docker compose -f app-compose.yml down -v
