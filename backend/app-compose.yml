@@ -4,14 +4,13 @@ services:
     build:
       context: .
       dockerfile: transcend/Dockerfile
+    env_file:
+      - transcend/.env
     ports:
       - "5001:5000"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - HOST=${HOST}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    restart: unless-stopped
 
 networks:
   default:
