@@ -1,8 +1,6 @@
 services:
   structurizr:
-    build:
-      context: .
-      dockerfile: Dockerfile.volume
+    image: structurizr/structurizr:${STRUCTURIZR_VERSION}
     user: "0:0"
     container_name: structurizr
     env_file:
@@ -14,6 +12,6 @@ services:
       - ./data:/usr/local/structurizr
     environment:
       ENCRYPTION_PASSPHRASE: ${ENCRYPTION_PASSPHRASE}
-      STRUCTURIZR_REMOTE: ${STRUCTURIZR_REMOTE}
+      STRUCTURIZR_REMOTE: true
       STRUCTURIZR_DEBUG: true
     command: ${STRUCTURIZR_MODE}

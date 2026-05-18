@@ -106,7 +106,9 @@ class RegisterControllerTest {
 
     when(mapper.toCommand(any(RegisterRequest.class))).thenReturn(command);
     when(registerUseCase.register(command))
-        .thenThrow(new jakarta.validation.ConstraintViolationException("Validation error", java.util.Collections.emptySet()));
+        .thenThrow(
+            new jakarta.validation.ConstraintViolationException(
+                "Validation error", java.util.Collections.emptySet()));
 
     // when & then
     mockMvc

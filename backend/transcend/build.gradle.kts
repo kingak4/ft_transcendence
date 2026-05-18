@@ -1,4 +1,5 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.gradle.kotlin.dsl.implementation
 
 plugins {
    application
@@ -22,14 +23,9 @@ repositories {
 val asciidoctorExt by configurations.creating
 
 dependencies {
+   implementation(libs.bundles.structurizr)
    asciidoctorExt(libs.asciidoctorj.diagram)
 
-   implementation("com.structurizr:structurizr-core:6.2.1")
-   implementation("com.structurizr:structurizr-analysis:1.3.5")
-   // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-export
-   implementation("com.structurizr:structurizr-export:6.2.1")
-   // Source: https://mvnrepository.com/artifact/com.structurizr/structurizr-client
-   implementation("com.structurizr:structurizr-client:6.2.1")
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
@@ -58,12 +54,12 @@ dependencies {
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
 }
-
 java {
    toolchain {
       languageVersion.set(JavaLanguageVersion.of(21))
    }
 }
+
 
 tasks {
    compileJava {
@@ -90,6 +86,10 @@ tasks {
       dependsOn("asciidoctorModulith")
       dependsOn("asciidoctor")
       dependsOn("generateStructurizr")
+      doLast {
+         val reportPath = layout.buildDirectory.file("reports/index.html").get().asFile
+         println("Report index: file://${reportPath.toURI().path}")
+      }
    }
 
    withType<AsciidoctorTask>().configureEach {

@@ -12,7 +12,6 @@ import com.structurizr.view.Dimensions;
 import com.structurizr.view.PaperSize;
 import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,14 +50,13 @@ public class ViewConfigurationBuilder {
         views.createContainerView(system, "Containers", "Container Diagram");
     containerView.addAllContainers();
     containerView.setPaperSize(PaperSize.A1_Landscape);
-
   }
 
   private void createComponentViews(ViewSet views, Container backendApi) {
-//    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage =
-//        groupByPackageDepth(backendApi, 1);
+    //    Map<String, List<com.structurizr.model.Component>> byTopLevelPackage =
+    //        groupByPackageDepth(backendApi, 1);
 
-//    createPackageComponentViews(views, backendApi, byTopLevelPackage, false);
+    //    createPackageComponentViews(views, backendApi, byTopLevelPackage, false);
 
     Map<String, List<com.structurizr.model.Component>> byFirstNestedPackage =
         groupByPackageDepth(backendApi, 2);
@@ -83,9 +81,7 @@ public class ViewConfigurationBuilder {
           backendApi,
           "Package_" + sanitizeKey(packageName),
           "Package components: " + packageName,
-          "Components in package \""
-              + packageName
-              + "\" plus directly connected components",
+          "Components in package \"" + packageName + "\" plus directly connected components",
           components);
     }
   }
@@ -115,7 +111,8 @@ public class ViewConfigurationBuilder {
 
     for (com.structurizr.model.Component sourceComponent : container.getComponents()) {
       for (var relationship : sourceComponent.getRelationships()) {
-        if (!(relationship.getDestination() instanceof com.structurizr.model.Component targetComponent)) {
+        if (!(relationship.getDestination()
+            instanceof com.structurizr.model.Component targetComponent)) {
           continue;
         }
 
@@ -150,9 +147,7 @@ public class ViewConfigurationBuilder {
     String[] parts = group.split("\\.");
     int limit = Math.min(depth, parts.length);
 
-    return java.util.Arrays.stream(parts)
-        .limit(limit)
-        .collect(Collectors.joining("."));
+    return java.util.Arrays.stream(parts).limit(limit).collect(Collectors.joining("."));
   }
 
   private void configureStyles(ViewSet views) {
