@@ -1,0 +1,18 @@
+services:
+  backend:
+    container_name: transcend-backend
+    build:
+      context: .
+      dockerfile: transcend/Dockerfile
+    env_file:
+      - transcend/.env
+    ports:
+      - "5001:5000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: postgres_app_network

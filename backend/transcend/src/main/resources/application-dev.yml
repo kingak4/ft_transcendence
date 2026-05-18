@@ -14,8 +14,7 @@ spring:
         default_schema: dev
     hibernate:
       ddl-auto: validate
-#  uncomment when backend is deployed in docker
-#  datasource:
-#    url: jdbc:postgresql://<container-host>:5432/$(POSTGRES_DB)?sslmode=disable&currentSchema=dev
+  datasource:
+    url: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=dev
 server:
-  port: 8080
+  port: 5000

@@ -1,5 +1,8 @@
+.PHONY: run build format lint test docs
 include .env
 PROFILE := local
+
+.PHONY: run build format lint test docs
 
 run:
 	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'

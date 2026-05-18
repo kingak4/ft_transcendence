@@ -3,7 +3,7 @@ services:
     build:
       args:
         POSTGRES_VERSION: ${POSTGRES_VERSION}
-    container_name: postgres-db-container
+    container_name: postgres-db
     env_file:
       - .env
     volumes:

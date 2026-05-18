@@ -22,8 +22,6 @@ spring:
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
-    hibernate:
-      ddl-auto: update
     show-sql: true
   mvc:
     problemdetails:
