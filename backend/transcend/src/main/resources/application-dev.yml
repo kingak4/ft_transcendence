@@ -15,6 +15,6 @@ spring:
     hibernate:
       ddl-auto: validate
   datasource:
-    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=dev
+    url: jdbc:postgresql://postgres-db-container:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=dev
 server:
   port: 5000
