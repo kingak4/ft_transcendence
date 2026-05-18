@@ -1,3 +1,4 @@
+.PHONY: run build format lint test docs
 include .env
 PROFILE := local
 

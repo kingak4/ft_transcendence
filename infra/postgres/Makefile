@@ -1,8 +1,10 @@
 include ../.env
 include .env
 
+.PHONY: up down reset db logs
+
 up:
-	${COMPOSE} up -d
+	${COMPOSE} up
 
 down:
 	${COMPOSE} down -v

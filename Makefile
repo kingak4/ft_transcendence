@@ -1,4 +1,4 @@
-.PHONY: all run backend frontend
+.PHONY: all run backend frontend webclient
 
 all: run
 
