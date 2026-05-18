@@ -1,0 +1,11 @@
+services:
+  frontend:
+    build: .
+    container_name: transcend-frontend
+    ports:
+      - "3000:3000"
+
+networks:
+  default:
+    external: true
+    name: postgres_app_network
