@@ -10,7 +10,7 @@ public class StructurizrGenerator {
   public static void main(String[] args) {
     try {
       String basePackage = args.length > 0 ? args[0] : "code";
-      File file = new File("docker/structurizr/data/workspace.json");
+      File file = new File("structurizr/data/workspace.json");
 
       StructurizrWorkspaceGenerator generator = new StructurizrWorkspaceGenerator();
       generator.generate(basePackage, file);
