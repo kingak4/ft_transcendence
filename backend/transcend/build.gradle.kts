@@ -28,6 +28,7 @@ dependencies {
 
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
+   implementation(libs.spring.sockets)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
    implementation(libs.spring.security)
