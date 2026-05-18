@@ -1,0 +1,22 @@
+package code;
+
+import code.structurizr.StructurizrWorkspaceGenerator;
+import java.io.File;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class StructurizrGenerator {
+
+  public static void main(String[] args) {
+    try {
+      String basePackage = args.length > 0 ? args[0] : "code";
+      File file = new File("structurizr/data/workspace.json");
+
+      StructurizrWorkspaceGenerator generator = new StructurizrWorkspaceGenerator();
+      generator.generate(basePackage, file);
+      log.info("Workspace exported to: {}", file.getAbsolutePath());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}

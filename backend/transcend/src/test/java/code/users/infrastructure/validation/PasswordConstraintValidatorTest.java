@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.stream.Stream;
-
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

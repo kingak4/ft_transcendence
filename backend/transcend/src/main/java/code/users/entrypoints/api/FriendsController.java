@@ -7,7 +7,6 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ManageFriendsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

@@ -1,3 +1,6 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
    application
    pmd
@@ -13,14 +16,16 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
    mavenCentral()
-   maven { url = uri("https://repo.spring.io/release") }
+//   maven { url = uri("https://repo.spring.io/release") }
    maven { url = uri("https://repo.spring.io/milestone") }
 }
 
 val asciidoctorExt by configurations.creating
 
 dependencies {
+   implementation(libs.bundles.structurizr)
    asciidoctorExt(libs.asciidoctorj.diagram)
+
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.validation)
@@ -48,14 +53,13 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
-   testImplementation(libs.plantuml.generator.util)
 }
-
 java {
    toolchain {
       languageVersion.set(JavaLanguageVersion.of(21))
    }
 }
+
 
 tasks {
    compileJava {
@@ -77,28 +81,24 @@ tasks {
       enabled = false
    }
 
-   javadoc {
-      options.encoding = "UTF-8"
-      (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
-      isFailOnError = false
+   register("docs") {
+      dependsOn("check")
+      dependsOn("asciidoctorModulith")
+      dependsOn("asciidoctor")
+      dependsOn("generateStructurizr")
+      doLast {
+         val reportPath = layout.buildDirectory.file("reports/index.html").get().asFile
+         println("Report index: file://${reportPath.toURI().path}")
+      }
    }
 
-   asciidoctor {
-      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
-      setOutputDir(layout.buildDirectory.dir("docs/asciidoc"))
-
-      resources {
-         from(layout.buildDirectory.dir("spring-modulith-docs"))
-      }
-
-      useIntermediateWorkDir()
-
+   withType<AsciidoctorTask>().configureEach {
       baseDirFollowsSourceFile()
+      useIntermediateWorkDir()
       configurations("asciidoctorExt")
       sources {
          include("index.adoc")
       }
-
       asciidoctorj {
          modules {
             diagram.use()
@@ -108,9 +108,40 @@ tasks {
             "toc" to "left",
             "icons" to "font",
             "projectdir" to projectDir.absolutePath,
-            "imagesdir" to "images"
+            "imagesdir" to "images",
+            "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+            "structurizr-docs" to layout.buildDirectory.dir("tmp/structurizr").get().asFile.absolutePath,
+            "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
          ))
       }
+      jvm {
+         jvmArgs(
+            "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens", "java.base/java.io=ALL-UNNAMED"
+         )
+      }
+   }
+
+   javadoc {
+      options.encoding = "UTF-8"
+      (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
+      isFailOnError = false
+      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
+   }
+
+   asciidoctor {
+      dependsOn("javadoc");
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc"))
+      setOutputDir(layout.buildDirectory.dir("reports"))
+   }
+
+   register<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctorModulith") {
+      description = "Generate AsciiDoc for modulith diagrams"
+      dependsOn(test)
+
+      setSourceDir(layout.projectDirectory.dir("src/docs/asciidoc/modulith"))
+      setOutputDir(layout.buildDirectory.dir("reports/modulith"))
+      setBaseDir(layout.buildDirectory.dir("tmp/modulith").get().asFile)
    }
 
    test {
@@ -118,6 +149,13 @@ tasks {
       testLogging {
          events("passed", "skipped", "failed")
       }
+   }
+
+   register<JavaExec>("generateStructurizr") {
+      description = "Generate structurizr/workspace.json by scanning application classes"
+      classpath = sourceSets.main.get().runtimeClasspath
+      mainClass.set("code.StructurizrGenerator")
+      args = listOf("code")
    }
 
    check {
@@ -176,23 +214,5 @@ tasks {
 
          dependsOn(test)
       }
-   }
-
-   register("report") {
-      doLast {
-         var reportPath = layout.buildDirectory.file("reports/jacoco/index.html").get().asFile
-         println("Jacoco report: file://${reportPath.toURI().path}")
-         reportPath = layout.buildDirectory.file("reports/pmd/main.html").get().asFile
-         println("PmdMain report: file://${reportPath.toURI().path}")
-         reportPath = layout.buildDirectory.file("reports/pmd/test.html").get().asFile
-         println("PmdTest report: file://${reportPath.toURI().path}")
-         reportPath = layout.buildDirectory.file("docs/asciidoc/index.html").get().asFile
-         println("Documentation: file://${reportPath.toURI().path}")
-      }
-   }
-
-   javadoc {
-      setDestinationDir(file(layout.buildDirectory.dir("reports/javadoc")))
-      options.encoding = "UTF-8"
    }
 }

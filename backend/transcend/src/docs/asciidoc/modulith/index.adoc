@@ -1,0 +1,4 @@
+= Modulith Diagrams
+:toc: left
+
+include::{modulith-docs}/all-docs.adoc[]

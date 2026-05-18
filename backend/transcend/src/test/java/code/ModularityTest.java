@@ -1,9 +1,12 @@
 package code;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
+import org.springframework.modulith.docs.Documenter;
 
-class ModularityTest {
+@Slf4j
+public class ModularityTest {
 
   final ApplicationModules modules = ApplicationModules.of(TranscendApp.class);
 
@@ -13,15 +16,8 @@ class ModularityTest {
   }
 
   @Test
-  void createModuleDocumentation() {
-    new org.springframework.modulith.docs.Documenter(modules)
-        .writeDocumentation()
-        .writeIndividualModulesAsPlantUml();
-    generateFileTreeDiagrams();
-    generateClassDiagrams();
+  void generateModulithDocumentation() {
+    var options = Documenter.Options.defaults().withOutputFolder("build/tmp/modulith");
+    new Documenter(modules, options).writeDocumentation().writeIndividualModulesAsPlantUml();
   }
-
-  private void generateClassDiagrams() {}
-
-  private void generateFileTreeDiagrams() {}
 }

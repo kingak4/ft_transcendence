@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
                     (existing, replacement) -> existing));
     ProblemDetail problemDetail =
         ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error");
-    problemDetail.setProperty("message", errors);
+    problemDetail.setProperty("properties", errors);
     return problemDetail;
   }
 }

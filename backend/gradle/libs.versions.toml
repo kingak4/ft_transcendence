@@ -28,9 +28,17 @@ passay = "1.6.6"
 dotenv-java = "3.0.0"
 asciidoctor-plugin = "4.0.2"
 asciidoctorj-diagram = "2.2.14"
-plantuml-generator-util = "3.0.1"
+# https://mvnrepository.com/artifact/com.structurizr/structurizr-core
+structurizr = "6.2.1"
+#https://mvnrepository.com/artifact/com.structurizr/structurizr-analysis
+structurizr-analysis = "1.3.5"
 
 [libraries]
+structurizr-core = {module = "com.structurizr:structurizr-core", version.ref = "structurizr"}
+structurizr-export = {module = "com.structurizr:structurizr-export", version.ref = "structurizr"}
+structurizr-client = {module = "com.structurizr:structurizr-client", version.ref = "structurizr"}
+structurizr-analysis = {module = "com.structurizr:structurizr-client", version.ref = "structurizr-analysis"}
+
 spring-modulith = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
 spring-openapi = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-openapi"}
 
@@ -59,9 +67,9 @@ junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
 sprint-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 sprint-modulith-test = { module = "org.springframework.modulith:spring-modulith-starter-test", version.ref = "spring-modulith" }
 asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", version.ref = "asciidoctorj-diagram" }
-plantuml-generator-util = { module = "de.elnarion.util:plantuml-generator-util", version.ref = "plantuml-generator-util" }
 
 [bundles]
+structurizr = ["structurizr-core", "structurizr-export", "structurizr-client", "structurizr-analysis"]
 mapstruct-annotation = ["mapstruct-processor", "mapstruct-lombok"]
 spring-test = ["sprint-test", "sprint-modulith-test"]
 
