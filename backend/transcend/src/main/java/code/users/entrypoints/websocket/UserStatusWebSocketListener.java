@@ -20,17 +20,10 @@ class UserStatusWebSocketListener {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String sessionId = headerAccessor.getSessionId();
 
-    // In a real application, the principal comes from the authenticated user
     Principal principal = headerAccessor.getUser();
-    String username = (principal != null) ? principal.getName() : "anonymous-" + sessionId;
 
-    // Fallback to checking headers if principal is not available (useful for simple testing)
-    if (principal == null && headerAccessor.containsNativeHeader("username")) {
-      username = headerAccessor.getFirstNativeHeader("username");
-    }
-
-    if (sessionId != null && username != null) {
-      updateUserStatusUseCase.setUserOnline(username, sessionId);
+    if (sessionId != null && principal != null && principal.getName() != null) {
+      updateUserStatusUseCase.setUserOnline(principal.getName(), sessionId);
     }
   }
 

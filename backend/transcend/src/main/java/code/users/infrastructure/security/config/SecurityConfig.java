@@ -35,7 +35,8 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/users/**",
-                        "springwolf/**")
+                        "/ws/**",
+                        "/springwolf/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

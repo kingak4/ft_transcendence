@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import code.shared.exceptions.GlobalExceptionHandler;
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.model.UserId;
+import code.users.entrypoints.UsersExceptionHandler;
 import code.users.entrypoints.http.RegisterController.RegisterRequest;
 import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;

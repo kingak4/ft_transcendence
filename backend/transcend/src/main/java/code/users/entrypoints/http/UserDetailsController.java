@@ -7,10 +7,15 @@ import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(UserDetailsController.BASE_URL)
 @RequiredArgsConstructor
+@ApiResponses(
+    value = {
+      @ApiResponse(
+          responseCode = "404",
+          content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
 public class UserDetailsController {
 
   public static final String BASE_URL = "users";
