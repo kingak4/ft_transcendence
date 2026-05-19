@@ -1,0 +1,68 @@
+package code.users.infrastructure.security.config;
+
+import code.users.infrastructure.security.JwtTokenService;
+import io.jsonwebtoken.JwtException;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class SocketJwtInterceptor implements ChannelInterceptor {
+
+  private final JwtTokenService jwtTokenService;
+  private final UserDetailsService userDetailsService;
+
+  private static final String AUTHORIZATION_HEADER = "Authorization";
+  private static final String BEARER_PREFIX = "Bearer ";
+
+  @Override
+  public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
+    StompHeaderAccessor accessor =
+        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
+    if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
+      Optional<String> jwtToken = extractJwtToken(accessor);
+      jwtToken.ifPresent(token -> handleToken(token, accessor));
+    }
+    return message;
+  }
+
+  private void handleToken(String token, StompHeaderAccessor accessor) {
+    try {
+      String username = jwtTokenService.extractUsername(token);
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (jwtTokenService.isTokenValid(token, userDetails)) {
+          UsernamePasswordAuthenticationToken authToken =
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+          accessor.setUser(authToken);
+          log.info("User '{}' authenticated for WebSocket session.", username);
+        }
+      }
+    } catch (JwtException | UsernameNotFoundException e) {
+      log.error("WebSocket authentication failed: {}", e.getMessage());
+    }
+  }
+
+  private Optional<String> extractJwtToken(StompHeaderAccessor accessor) {
+    return Optional.ofNullable(accessor.getFirstNativeHeader(AUTHORIZATION_HEADER))
+        .filter(header -> header.startsWith(BEARER_PREFIX))
+        .map(header -> header.substring(BEARER_PREFIX.length()));
+  }
+}
