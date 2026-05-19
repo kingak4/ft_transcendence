@@ -1,6 +1,6 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
-import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.ports.in.RegisterUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;

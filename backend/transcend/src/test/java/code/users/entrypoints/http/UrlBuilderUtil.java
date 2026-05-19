@@ -1,4 +1,4 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import org.springframework.web.util.UriComponentsBuilder;
 

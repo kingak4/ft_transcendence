@@ -1,8 +1,8 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;

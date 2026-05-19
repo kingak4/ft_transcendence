@@ -33,6 +33,8 @@ structurizr = "6.2.1"
 #https://mvnrepository.com/artifact/com.structurizr/structurizr-analysis
 structurizr-analysis = "1.3.5"
 
+
+
 [libraries]
 structurizr-core = {module = "com.structurizr:structurizr-core", version.ref = "structurizr"}
 structurizr-export = {module = "com.structurizr:structurizr-export", version.ref = "structurizr"}

@@ -1,17 +1,17 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
-import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
+import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.LoginUseCase;
 import code.users.ports.in.LoginUseCase.LoginCommand;

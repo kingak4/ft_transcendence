@@ -1,6 +1,6 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
-import static code.users.entrypoints.api.FriendsController.FRIENDS_ENDPOINT;
+import static code.users.entrypoints.http.FriendsController.FRIENDS_ENDPOINT;
 
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;

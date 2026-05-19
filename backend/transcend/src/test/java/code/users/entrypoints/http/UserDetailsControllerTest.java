@@ -1,4 +1,4 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import static code.users.domain.model.UserFixtures.AVATAR_URL_FIXTURE;
 import static code.users.domain.model.UserFixtures.DISPLAY_NAME_FIXTURE;
@@ -6,7 +6,7 @@ import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.NAME_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
-import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
+import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import code.users.domain.model.Avatar;
 import code.users.domain.model.UserDetails;
-import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;

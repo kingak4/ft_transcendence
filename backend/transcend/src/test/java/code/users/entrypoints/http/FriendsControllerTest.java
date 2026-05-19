@@ -1,9 +1,9 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
-import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
+import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

@@ -1,4 +1,4 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.exceptions.InvalidCredentialsException;
