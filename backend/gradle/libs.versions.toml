@@ -14,7 +14,7 @@ mapstruct = "1.6.3"
 # https://central.sonatype.com/artifact/org.projectlombok/lombok-mapstruct-binding/versions
 mapstruct-lombok = "0.2.0"
 # https://central.sonatype.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/versions
-spring-openapi = "2.8.5"
+spring-openapi = "2.8.14"
 # https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 jjwt = "0.13.0"
 # https://plugins.gradle.org/plugin/com.diffplug.spotless
@@ -32,14 +32,19 @@ asciidoctorj-diagram = "2.2.14"
 structurizr = "6.2.1"
 #https://mvnrepository.com/artifact/com.structurizr/structurizr-analysis
 structurizr-analysis = "1.3.5"
-
-
+# Source: https://mvnrepository.com/artifact/io.github.springwolf
+springwolf = "2.3.0"
 
 [libraries]
 structurizr-core = {module = "com.structurizr:structurizr-core", version.ref = "structurizr"}
 structurizr-export = {module = "com.structurizr:structurizr-export", version.ref = "structurizr"}
 structurizr-client = {module = "com.structurizr:structurizr-client", version.ref = "structurizr"}
 structurizr-analysis = {module = "com.structurizr:structurizr-client", version.ref = "structurizr-analysis"}
+
+springwolf-core = {module = "io.github.springwolf:springwolf-core", version.ref = "springwolf" }
+springwolf-ui = {module = "io.github.springwolf:springwolf-ui", version.ref = "springwolf" }
+springwolf-stomp-binding = {module = "io.github.springwolf:springwolf-stomp-binding", version.ref = "springwolf" }
+springwolf-stomp = {module = "io.github.springwolf:springwolf-stomp", version.ref = "springwolf" }
 
 spring-modulith = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
 spring-openapi = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-openapi"}
@@ -75,6 +80,7 @@ asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", versio
 structurizr = ["structurizr-core", "structurizr-export", "structurizr-client", "structurizr-analysis"]
 mapstruct-annotation = ["mapstruct-processor", "mapstruct-lombok"]
 spring-test = ["sprint-test", "sprint-modulith-test"]
+springwolf = ["springwolf-core", "springwolf-stomp-binding", "springwolf-stomp"]
 
 [plugins]
 asciidoctor = {id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugin"}

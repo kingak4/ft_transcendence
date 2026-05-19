@@ -9,3 +9,11 @@ spring:
       ddl-auto: validate
 server:
   port: 8000
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+springwolf:
+  enabled: false 

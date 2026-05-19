@@ -18,7 +18,7 @@ import org.springframework.modulith.Modulithic;
 @Modulithic
 @SpringBootApplication
 @ConfigurationPropertiesScan
-class TranscendApp extends SpringBootServletInitializer {
+public class TranscendApp extends SpringBootServletInitializer {
 
   @Value("${spring.datasource.url}")
   private String dbUrl;

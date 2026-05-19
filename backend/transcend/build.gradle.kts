@@ -25,6 +25,8 @@ val asciidoctorExt by configurations.creating
 dependencies {
    implementation(libs.bundles.structurizr)
    asciidoctorExt(libs.asciidoctorj.diagram)
+   implementation(libs.bundles.springwolf) { exclude(group = "org.springframework.boot") }
+   implementation(libs.springwolf.ui) { exclude(group = "org.springframework.boot") }
 
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)

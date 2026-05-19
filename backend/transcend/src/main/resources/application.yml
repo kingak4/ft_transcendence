@@ -36,6 +36,14 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+springwolf:
+  docket:
+    base-package: code
+    info:
+      title: Transcendence AsyncAPI
+      version: 1.0.0
+      description: Documentation
+
 security:
   jwt:
     secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=

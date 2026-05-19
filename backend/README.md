@@ -19,6 +19,8 @@ make run
 ```
 - **Swagger Interactive UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI Raw JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
+- **Springwolf UI**: [http://localhost:8080/springwolf/asyncapi-ui.html](http://localhost:8080/springwolf/asyncapi-ui.html)
+- **AsyncAPI Raw JSON**: [http://localhost:8080/springwolf/docs](http://localhost:8080/springwolf/docs)
 
 
 ## Test coverage
