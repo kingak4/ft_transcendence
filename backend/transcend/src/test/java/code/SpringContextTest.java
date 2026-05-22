@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = TranscendApp.class)
 @ActiveProfiles("test")
-class ContextRunsTest {
+class SpringContextTest {
 
   @Test
   void should_load() {}

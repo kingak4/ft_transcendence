@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-class UserStatusService implements UpdateUserStatusUseCase {
+class UpdateUserStatus implements UpdateUserStatusUseCase {
   private final Map<String, String> sessionToUserMap = new ConcurrentHashMap<>();
 
   @Override

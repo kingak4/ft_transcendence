@@ -1,5 +1,6 @@
 package code.users.infrastructure.persistence;
 
+import code.shared.exceptions.NotImplementedException;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.Role;
@@ -7,7 +8,6 @@ import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,10 @@ class UserRepository implements UserDao {
         .findByEmail(email)
         .map(userEntityMapper::toDomain)
         .map(
-            user ->
-                user.withRole(email.contains("admin") ? Role.ADMIN : Role.USER)); // mock ADMIN role
+            user -> {
+              // TODO: Replace role mocking with actual role retrieval from database
+              return user.withRole(email.contains("admin") ? Role.ADMIN : Role.USER);
+            });
   }
 
   @Override
@@ -40,28 +42,40 @@ class UserRepository implements UserDao {
     return userJpaRepository
         .findById(userEntityMapper.map(id))
         .map(userEntityMapper::toDomain)
-        .map(user -> user.withRole(Role.USER)); // Mock role assignment
+        .map(
+            user -> {
+              // TODO: Replace role mocking with actual role retrieval from database
+              return user.withRole(Role.USER);
+            });
   }
 
   @Override
-  public void updateUser(User user) {}
+  public void updateUser(User user) {
+    throw new NotImplementedException();
+  }
 
   @Override
-  public void saveAvatar(UserId userId, Avatar avatar) {}
+  public void saveAvatar(UserId userId, Avatar avatar) {
+    throw new NotImplementedException();
+  }
 
   @Override
   public Avatar getAvatar(UserId userId) {
-    return new Avatar(new byte[0]);
+    throw new NotImplementedException();
   }
 
   @Override
-  public void addFriend(UserId userId, UserId friendId) {}
+  public void addFriend(UserId userId, UserId friendId) {
+    throw new NotImplementedException();
+  }
 
   @Override
-  public void removeFriend(UserId userId, UserId friendId) {}
+  public void removeFriend(UserId userId, UserId friendId) {
+    throw new NotImplementedException();
+  }
 
   @Override
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    return Collections.emptyMap();
+    throw new NotImplementedException();
   }
 }

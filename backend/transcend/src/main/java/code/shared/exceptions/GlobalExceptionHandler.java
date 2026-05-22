@@ -47,4 +47,9 @@ public class GlobalExceptionHandler {
     problemDetail.setProperty("properties", errors);
     return problemDetail;
   }
+
+  @ExceptionHandler(NotImplementedException.class)
+  public ProblemDetail handleNotImplementedException(NotImplementedException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_IMPLEMENTED, ex.getMessage());
+  }
 }
