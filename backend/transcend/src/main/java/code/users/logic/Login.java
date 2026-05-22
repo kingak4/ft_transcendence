@@ -8,6 +8,8 @@ import code.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
+
 @Service
 @RequiredArgsConstructor
 class Login implements LoginUseCase {
@@ -25,6 +27,6 @@ class Login implements LoginUseCase {
 
     String userIdStr = user.getId().val().toString();
     String token = accessTokenProvider.generateToken(userIdStr);
-    return new LoginResult(token, "Bearer", userIdStr);
+    return new LoginResult(token, TOKEN_TYPE, userIdStr);
   }
 }

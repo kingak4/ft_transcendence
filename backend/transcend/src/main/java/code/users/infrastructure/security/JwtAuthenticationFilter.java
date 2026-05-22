@@ -18,12 +18,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
+import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-  private static final String AUTHORIZATION_HEADER = "Authorization";
-  private static final String BEARER_PREFIX = "Bearer ";
 
   private final JwtTokenService jwtTokenService;
   private final UserDetailsService userDetailsService;

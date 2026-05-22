@@ -1,5 +1,6 @@
 package code.users.entrypoints.http;
 
+import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
@@ -43,9 +44,9 @@ class LoginControllerTest {
     // given
     var loginRequest = new LoginController.LoginRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
     var loginCommand = new LoginCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var loginResult = new LoginResult(TOKEN_FIXTURE, "Bearer", ID_FIXTURE.toString());
+    var loginResult = new LoginResult(TOKEN_FIXTURE, TOKEN_TYPE, ID_FIXTURE.toString());
     var loginResponse =
-        new LoginController.LoginResponse(TOKEN_FIXTURE, "Bearer", ID_FIXTURE.toString());
+        new LoginController.LoginResponse(TOKEN_FIXTURE, TOKEN_TYPE, ID_FIXTURE.toString());
 
     when(loginMapper.toCommand(loginRequest)).thenReturn(loginCommand);
     when(loginUseCase.login(loginCommand)).thenReturn(loginResult);
@@ -59,7 +60,7 @@ class LoginControllerTest {
                 .content(objectMapper.writeValueAsString(loginRequest)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.accessToken").value(TOKEN_FIXTURE))
-        .andExpect(jsonPath("$.tokenType").value("Bearer"))
+        .andExpect(jsonPath("$.tokenType").value(TOKEN_TYPE))
         .andExpect(jsonPath("$.userId").value(ID_FIXTURE.toString()));
 
     // then

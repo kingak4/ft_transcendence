@@ -1,5 +1,7 @@
 package code.users.entrypoints.websocket;
 
+import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
+import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_ENDPOINT;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -94,7 +96,7 @@ class UserStatusTest {
   void shouldReportUserOnlineAndOffline() throws Exception {
     String url = "ws://localhost:" + port + SOCKET_ENDPOINT;
     StompHeaders connectHeaders = new StompHeaders();
-    connectHeaders.add("Authorization", "Bearer " + UserFixtures.TOKEN_FIXTURE);
+    connectHeaders.add(AUTHORIZATION_HEADER, BEARER_PREFIX + UserFixtures.TOKEN_FIXTURE);
 
     StompSession session =
         stompClient

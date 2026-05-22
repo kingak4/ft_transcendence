@@ -19,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
+import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -26,9 +29,6 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
 
   private final JwtTokenService jwtTokenService;
   private final UserDetailsService userDetailsService;
-
-  private static final String AUTHORIZATION_HEADER = "Authorization";
-  private static final String BEARER_PREFIX = "Bearer ";
 
   @Override
   public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
