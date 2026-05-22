@@ -1,38 +1,43 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 import React, { useState } from 'react';
-import { client } from "../lib/api-clients";
+import { client } from '../lib/api-clients';
 
 export default function SearchInput() {
-  const [emailValue, setLogin] = useState("");
-  const [passwordValue, setPassword] = useState("");
+  const [emailValue, setLogin] = useState('');
+  const [passwordValue, setPassword] = useState('');
 
   return (
-    <div className='flex flex-col w-screen min-h-screen justify-center border items-center'>
-      <h1 className='font-bold text-3xl'>REGISTER</h1>
-      <div className='flex flex-col w-1/6 min-h-3/4 border p-2 rounded-md justify-center items-center'>
-        <div className="flex flex-row gap-2 justify-center">
+    <div className="flex min-h-screen w-screen flex-col items-center justify-center border">
+      <h1 className="text-3xl font-bold">REGISTER</h1>
+      <div className="min-h-3/4 flex w-1/6 flex-col items-center justify-center rounded-md border p-2">
+        <div className="flex flex-row justify-center gap-2">
           <input
             id="user-name"
             type="text"
             value={emailValue}
             onChange={(e) => setLogin(e.target.value)}
             placeholder="Login"
-            className="border p-2 rounded-md w-3/4"
+            className="w-3/4 rounded-md border p-2"
           />
         </div>
-        <div className='flex flex-row items-center gap-2 justify-center'>
+        <div className="flex flex-row items-center justify-center gap-2">
           <input
             id="user-password"
             type="password"
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password..."
-            className="border p-2 rounded-md w-3/4"
+            className="w-3/4 rounded-md border p-2"
           />
         </div>
-        <button onClick={() => register(emailValue, passwordValue)} className='border p-4 rounded-md cursor-pointer'>Register</button>
+        <button
+          onClick={() => register(emailValue, passwordValue)}
+          className="cursor-pointer rounded-md border p-4"
+        >
+          Register
+        </button>
       </div>
     </div>
   );
@@ -40,48 +45,50 @@ export default function SearchInput() {
   async function register(name: string, password: string) {
     const payload: CreateUserPayload = {
       email: name,
-      password: password
-    }
+      password: password,
+    };
 
-    const { data, error, response } = await client.POST("/users/register", {
+    const { data, error, response } = await client.POST('/users/register', {
       body: {
         email: name,
-        password: password
+        password: password,
       },
     });
 
     if (!response.ok) {
-      const serverError = (error as unknown) as RegisterError;
+      const serverError = error as unknown as RegisterError;
       const status = serverError.status;
-      const message = serverError.message["register.command.email"] + "\n" + serverError.message["register.command.rawPassword"];
+      const message =
+        serverError.properties['register.command.email'] +
+        '\n' +
+        serverError.properties['register.command.rawPassword'];
       if (status == 400) {
         window.alert(`${message}`);
-      }
-      else
-        window.alert(`Result: ID=${data?.id}`);
-    }
-    else {
-      window.alert(`Zarejestrowano pomślnie:\nlogin: ${name}\npassword: ${password}`);
-      window.location.href = "/login";
+      } else window.alert(`Result: ID=${data?.id}`);
+    } else {
+      window.alert(
+        `Zarejestrowano pomślnie:\nlogin: ${name}\npassword: ${password}`,
+      );
+      window.location.href = '/login';
     }
   }
 
   interface RegisterError {
-    status: number,
-    error: string,
-    message: {
-      "register.command.email"?: string;
-      "register.command.rawPassword"?: string;
-    }
+    status: number;
+    error: string;
+    properties: {
+      'register.command.email'?: string;
+      'register.command.rawPassword'?: string;
+    };
   }
 
   interface CreateUserPayload {
-    email: string,
-    password: string
+    email: string;
+    password: string;
   }
 
   interface CreateUserResponse {
-    id: string,
+    id: string;
   }
 
   // async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
