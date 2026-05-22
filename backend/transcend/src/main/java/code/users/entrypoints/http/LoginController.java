@@ -35,6 +35,9 @@ public class LoginController {
   @ApiResponses(
       value = {
         @ApiResponse(
+            responseCode = "401",
+            content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+        @ApiResponse(
             responseCode = "404",
             content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
       })
