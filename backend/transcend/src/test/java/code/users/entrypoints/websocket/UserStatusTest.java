@@ -1,7 +1,6 @@
 package code.users.entrypoints.websocket;
 
 import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_ENDPOINT;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -80,14 +79,12 @@ class UserStatusTest {
     stompClient = new WebSocketStompClient(sockJsClient);
     stompClient.setMessageConverter(new StringMessageConverter());
 
+    String userIdString = UserFixtures.ID_FIXTURE.toString();
     UserDetails userDetails =
-        User.withUsername(UserFixtures.NAME_FIXTURE)
-            .password(UserFixtures.PASSWORD_FIXTURE)
-            .build();
+        User.withUsername(userIdString).password(UserFixtures.PASSWORD_FIXTURE).build();
 
-    when(jwtTokenService.extractUsername(UserFixtures.TOKEN_FIXTURE))
-        .thenReturn(UserFixtures.NAME_FIXTURE);
-    when(userDetailsService.loadUserByUsername(UserFixtures.NAME_FIXTURE)).thenReturn(userDetails);
+    when(jwtTokenService.extractUsername(UserFixtures.TOKEN_FIXTURE)).thenReturn(userIdString);
+    when(userDetailsService.loadUserByUsername(userIdString)).thenReturn(userDetails);
     when(jwtTokenService.isTokenValid(
             eq(UserFixtures.TOKEN_FIXTURE), Mockito.any(UserDetails.class)))
         .thenReturn(true);
@@ -109,9 +106,10 @@ class UserStatusTest {
             .get(5, TimeUnit.SECONDS);
 
     Mockito.verify(updateUserStatusUseCase, Mockito.timeout(2000))
-        .setUserOnline(eq(UserFixtures.NAME_FIXTURE), anyString());
+        .setUserOnline(Mockito.any(UpdateUserStatusUseCase.SetUserOnlineCommand.class));
 
     session.disconnect();
-    Mockito.verify(updateUserStatusUseCase, Mockito.timeout(2000)).setUserOffline(anyString());
+    Mockito.verify(updateUserStatusUseCase, Mockito.timeout(2000))
+        .setUserOffline(Mockito.any(UpdateUserStatusUseCase.SetUserOfflineCommand.class));
   }
 }

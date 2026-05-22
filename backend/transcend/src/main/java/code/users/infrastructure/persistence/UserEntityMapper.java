@@ -10,6 +10,7 @@ public interface UserEntityMapper {
   @Mapping(source = "hash", target = "password")
   @Mapping(target = "details", ignore = true)
   @Mapping(target = "role", ignore = true)
+  @Mapping(target = "sessions", ignore = true)
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")
@@ -20,6 +21,6 @@ public interface UserEntityMapper {
   }
 
   default UserIdEntity map(UserId id) {
-    return id == null ? null : new UserIdEntity(id.getVal());
+    return id == null ? null : new UserIdEntity(id.val());
   }
 }

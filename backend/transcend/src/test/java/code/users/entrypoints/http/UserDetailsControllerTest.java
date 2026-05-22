@@ -96,8 +96,7 @@ class UserDetailsControllerTest {
     // given
     UserDetails details = aDefaultUser().getDetails();
     var response =
-        new UserDetailsController.GetUserDetailsResponse(
-            DISPLAY_NAME_FIXTURE, AVATAR_URL_FIXTURE, false);
+        new UserDetailsController.GetUserDetailsResponse(DISPLAY_NAME_FIXTURE, AVATAR_URL_FIXTURE);
 
     when(getProfileUseCase.getDetails(USER_ID_FIXTURE)).thenReturn(details);
     when(mapper.toResponse(details)).thenReturn(response);
@@ -112,8 +111,7 @@ class UserDetailsControllerTest {
                     ID_FIXTURE)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.displayName").value(DISPLAY_NAME_FIXTURE))
-        .andExpect(jsonPath("$.avatarUrl").value(AVATAR_URL_FIXTURE))
-        .andExpect(jsonPath("$.isOnline").value(false));
+        .andExpect(jsonPath("$.avatarUrl").value(AVATAR_URL_FIXTURE));
   }
 
   @Test

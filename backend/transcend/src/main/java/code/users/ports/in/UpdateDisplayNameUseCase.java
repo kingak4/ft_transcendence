@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface UpdateDisplayNameUseCase {
 
-  @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSameUser(authentication, #userId)")
+  @PreAuthorize("hasRole('ADMIN') or @ownershipValidator.isSameUser(authentication, #userId)")
   void updateDisplayName(UserId userId, @Valid UpdateDisplayNameCommand command);
 
   record UpdateDisplayNameCommand(

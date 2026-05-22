@@ -1,5 +1,6 @@
 package code.users.domain.model;
 
+import java.util.Set;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -17,4 +18,5 @@ public class User {
   String password;
   Role role;
   UserDetails details;
+  Set<Session> sessions;
 }

@@ -24,7 +24,7 @@ public interface UsersApiMapper {
     if (value == null) {
       return null;
     }
-    return value.getVal();
+    return value.val();
   }
 
   @Mapping(source = "password", target = "rawPassword")
@@ -39,6 +39,5 @@ public interface UsersApiMapper {
 
   UpdateDisplayNameCommand toCommand(UserDetailsController.UpdateDisplayNameRequest request);
 
-  @Mapping(source = "online", target = "isOnline")
   UserDetailsController.GetUserDetailsResponse toResponse(UserDetails details);
 }

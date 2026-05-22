@@ -82,5 +82,5 @@ public class UserDetailsController {
 
   public record UpdateDisplayNameRequest(String displayName) {}
 
-  public record GetUserDetailsResponse(String displayName, String avatarUrl, boolean isOnline) {}
+  public record GetUserDetailsResponse(String displayName, String avatarUrl) {}
 }

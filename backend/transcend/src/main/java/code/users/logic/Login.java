@@ -23,7 +23,7 @@ class Login implements LoginUseCase {
       throw new InvalidCredentialsException();
     }
 
-    String userIdStr = user.getId().getVal().toString();
+    String userIdStr = user.getId().val().toString();
     String token = accessTokenProvider.generateToken(userIdStr);
     return new LoginResult(token, "Bearer", userIdStr);
   }

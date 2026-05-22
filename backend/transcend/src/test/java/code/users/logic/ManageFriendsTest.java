@@ -67,7 +67,6 @@ class ManageFriendsTest {
             UserDetails.builder()
                 .displayName(AVATAR_NAME_FIXTURE)
                 .avatarUrl(AVATAR_URL_FIXTURE)
-                .online(true)
                 .build());
     when(userDao.getFriendList(USER_ID_FIXTURE, 0, 10)).thenReturn(expectedFriends);
 
