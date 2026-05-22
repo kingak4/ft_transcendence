@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { client } from '../lib/api-clients';
+import { register } from '../lib/register';
 
 export default function SearchInput() {
   const [emailValue, setLogin] = useState('');
@@ -33,7 +34,7 @@ export default function SearchInput() {
           />
         </div>
         <button
-          onClick={() => register(emailValue, passwordValue)}
+          onClick={() => registerWrap(emailValue, passwordValue)}
           className="cursor-pointer rounded-md border p-4"
         >
           Register
@@ -42,35 +43,19 @@ export default function SearchInput() {
     </div>
   );
 
-  async function register(name: string, password: string) {
-    const payload: CreateUserPayload = {
-      email: name,
-      password: password,
-    };
+  async function registerWrap(name: string, password: string) {
+    const response = await register(name, password);
 
-    const { data, error, response } = await client.POST('/users/register', {
-      body: {
-        email: name,
-        password: password,
-      },
-    });
-
-    if (!response.ok) {
-      const serverError = error as unknown as RegisterError;
-      const status = serverError.status;
-      const message =
-        serverError.properties['register.command.email'] +
-        '\n' +
-        serverError.properties['register.command.rawPassword'];
-      if (status == 400) {
-        window.alert(`${message}`);
-      } else window.alert(`Result: ID=${data?.id}`);
-    } else {
-      window.alert(
-        `Zarejestrowano pomślnie:\nlogin: ${name}\npassword: ${password}`,
-      );
-      window.location.href = '/login';
+    if (!response.success) {
+      if (response.status === 500) {
+        alert('Server error. Please try again later.');
+      } else {
+        alert(response.message || 'An unknown error occurred.');
+      }
+      return;
     }
+    alert(`Succesfully registered!\n${response.message}`);
+    window.location.href = '/home';
   }
 
   interface RegisterError {
@@ -90,19 +75,4 @@ export default function SearchInput() {
   interface CreateUserResponse {
     id: string;
   }
-
-  // async function postData<TResponse, TBody>(url: string, body: TBody): Promise<TResponse> {
-  //   const response = await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(body),
-  //   });
-
-  //   if (!response.ok)
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-
-  //   return await response.json() as TResponse;
-  // }
 }
