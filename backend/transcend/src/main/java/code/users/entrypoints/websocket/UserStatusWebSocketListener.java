@@ -1,8 +1,8 @@
 package code.users.entrypoints.websocket;
 
-import code.users.ports.in.UpdateUserStatusUseCase;
-import code.users.ports.in.UpdateUserStatusUseCase.SetUserOfflineCommand;
-import code.users.ports.in.UpdateUserStatusUseCase.SetUserOnlineCommand;
+import code.users.ports.in.UpdatePresenceUseCase;
+import code.users.ports.in.UpdatePresenceUseCase.SetUserOfflineCommand;
+import code.users.ports.in.UpdatePresenceUseCase.SetUserOnlineCommand;
 import java.security.Principal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Slf4j
 class UserStatusWebSocketListener {
 
-  private final UpdateUserStatusUseCase updateUserStatusUseCase;
+  private final UpdatePresenceUseCase updatePresenceUseCase;
 
   @EventListener
   public void handleWebSocketConnectListener(SessionConnectEvent event) {
@@ -32,7 +32,7 @@ class UserStatusWebSocketListener {
         String deviceInfo = extractDeviceInfo(headerAccessor);
 
         SetUserOnlineCommand command = new SetUserOnlineCommand(sessionId, userId, deviceInfo);
-        updateUserStatusUseCase.setUserOnline(command);
+        updatePresenceUseCase.setUserOnline(command);
       } catch (IllegalArgumentException ignored) {
       }
     }
@@ -47,7 +47,7 @@ class UserStatusWebSocketListener {
     if (sessionId != null && principal != null) {
       UUID userId = UUID.fromString(principal.getName());
       SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
-      updateUserStatusUseCase.setUserOffline(command);
+      updatePresenceUseCase.setUserOffline(command);
     }
   }
 

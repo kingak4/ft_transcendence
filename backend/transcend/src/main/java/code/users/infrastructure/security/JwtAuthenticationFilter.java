@@ -1,5 +1,8 @@
 package code.users.infrastructure.security;
 
+import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
+import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
+
 import code.users.domain.exceptions.UserNotFoundException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -17,9 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
-import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 
 @Component
 @RequiredArgsConstructor

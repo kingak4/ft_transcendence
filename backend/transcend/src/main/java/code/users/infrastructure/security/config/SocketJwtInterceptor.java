@@ -1,5 +1,8 @@
 package code.users.infrastructure.security.config;
 
+import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
+import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
+
 import code.users.infrastructure.security.JwtTokenService;
 import io.jsonwebtoken.JwtException;
 import java.util.Optional;
@@ -18,9 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
-import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 
 @Slf4j
 @Component

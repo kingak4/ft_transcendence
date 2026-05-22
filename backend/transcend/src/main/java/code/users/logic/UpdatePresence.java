@@ -1,35 +1,39 @@
 package code.users.logic;
 
-import code.users.ports.in.UpdateUserStatusUseCase;
+import code.users.domain.model.Session;
+import code.users.domain.model.SessionId;
+import code.users.domain.model.UserId;
+import code.users.ports.in.UpdatePresenceUseCase;
 import code.users.ports.out.PresenceDao;
-import java.util.UUID;
-
-import jakarta.persistence.Id;
+import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-class UpdateUserStatus implements UpdateUserStatusUseCase {
+class UpdatePresence implements UpdatePresenceUseCase {
 
   private final PresenceDao presenceDao;
 
   @Override
   public void setUserOnline(SetUserOnlineCommand command) {
-    UUID userId = command.userId();
-    String sessionId = command.sessionId();
-    String deviceInfo = command.deviceInfo();
+    Session session =
+        Session.builder()
+            .id(SessionId.of(command.sessionId()))
+            .userId(new UserId(command.userId()))
+            .deviceInfo(command.deviceInfo())
+            .createdAt(OffsetDateTime.now())
+            .build();
 
-    presenceDao.setSessionOnline(userId, sessionId, deviceInfo);
+    presenceDao.setSessionOnline(session);
   }
 
   @Override
   public void setUserOffline(SetUserOfflineCommand command) {
-    UUID userId = command.userId();
-    String sessionId = command.sessionId();
+    UserId userId = UserId.of(command.userId());
+    SessionId sessionId = SessionId.of(command.sessionId());
     presenceDao.removeSession(userId, sessionId);
   }
 }

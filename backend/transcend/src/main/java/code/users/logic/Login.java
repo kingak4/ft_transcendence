@@ -1,5 +1,7 @@
 package code.users.logic;
 
+import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
+
 import code.users.domain.exceptions.InvalidCredentialsException;
 import code.users.ports.in.LoginUseCase;
 import code.users.ports.out.AccessTokenProvider;
@@ -7,8 +9,6 @@ import code.users.ports.out.HashingService;
 import code.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
 
 @Service
 @RequiredArgsConstructor

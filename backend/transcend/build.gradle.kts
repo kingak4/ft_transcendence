@@ -39,6 +39,8 @@ dependencies {
    implementation(libs.jjwt.api)
    implementation(libs.liquibase)
    implementation(libs.dotenv.java)
+   implementation(libs.spring.cache)
+   implementation(libs.spring.redis)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)

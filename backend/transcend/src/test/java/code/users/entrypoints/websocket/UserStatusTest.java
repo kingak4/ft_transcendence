@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import code.users.domain.model.UserFixtures;
 import code.users.infrastructure.security.JwtTokenService;
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
-import code.users.ports.in.UpdateUserStatusUseCase;
+import code.users.ports.in.UpdatePresenceUseCase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -68,7 +68,7 @@ class UserStatusTest {
   })
   static class MinimalSocketWebConfig {}
 
-  @MockitoBean private UpdateUserStatusUseCase updateUserStatusUseCase;
+  @MockitoBean private UpdatePresenceUseCase updatePresenceUseCase;
   @MockitoBean private JwtTokenService jwtTokenService;
   @MockitoBean private UserDetailsService userDetailsService;
 
@@ -107,11 +107,11 @@ class UserStatusTest {
                 new StompSessionHandlerAdapter() {})
             .get(5, TimeUnit.SECONDS);
 
-    Mockito.verify(updateUserStatusUseCase, Mockito.timeout(2000))
-        .setUserOnline(Mockito.any(UpdateUserStatusUseCase.SetUserOnlineCommand.class));
+    Mockito.verify(updatePresenceUseCase, Mockito.timeout(2000))
+        .setUserOnline(Mockito.any(UpdatePresenceUseCase.SetUserOnlineCommand.class));
 
     session.disconnect();
-    Mockito.verify(updateUserStatusUseCase, Mockito.timeout(2000))
-        .setUserOffline(Mockito.any(UpdateUserStatusUseCase.SetUserOfflineCommand.class));
+    Mockito.verify(updatePresenceUseCase, Mockito.timeout(2000))
+        .setUserOffline(Mockito.any(UpdatePresenceUseCase.SetUserOfflineCommand.class));
   }
 }

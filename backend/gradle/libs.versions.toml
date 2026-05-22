@@ -46,6 +46,9 @@ springwolf-ui = {module = "io.github.springwolf:springwolf-ui", version.ref = "s
 springwolf-stomp-binding = {module = "io.github.springwolf:springwolf-stomp-binding", version.ref = "springwolf" }
 springwolf-stomp = {module = "io.github.springwolf:springwolf-stomp", version.ref = "springwolf" }
 
+spring-cache =  {module = "org.springframework.boot:spring-boot-starter-cache"}
+spring-redis = {module = "org.springframework.boot:spring-boot-starter-data-redis"}
+
 spring-modulith = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
 spring-openapi = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-openapi"}
 
