@@ -22,9 +22,10 @@ repositories {
 val asciidoctorExt by configurations.creating
 
 dependencies {
-   implementation(libs.bundles.structurizr)
    asciidoctorExt(libs.asciidoctorj.diagram)
-   implementation(libs.bundles.springwolf) { exclude(group = "org.springframework.boot") }
+
+   implementation(libs.commons.lang3)
+   testImplementation(libs.commons.lang3)
 
    // Source: https://mvnrepository.com/artifact/com.redis.testcontainers/testcontainers-redis
    testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
@@ -32,13 +33,14 @@ dependencies {
    testImplementation("org.testcontainers:junit-jupiter:1.19.8")
    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
    testImplementation("org.springframework.boot:spring-boot-testcontainers")
-   // Embedded Redis for tests (in-JVM)
+   // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
    testImplementation("com.github.kstyrc:embedded-redis:0.6")
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.sockets)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
+   implementation(libs.bundles.springwolf) { exclude(group = "org.springframework.boot") }
    implementation(libs.spring.security)
    implementation(libs.passay)
    implementation(libs.spring.data.jpa)
@@ -47,6 +49,7 @@ dependencies {
    implementation(libs.dotenv.java)
    implementation(libs.spring.cache)
    implementation(libs.spring.redis)
+   implementation(libs.bundles.structurizr)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
@@ -65,6 +68,7 @@ dependencies {
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
 }
+
 java {
    toolchain {
       languageVersion.set(JavaLanguageVersion.of(21))

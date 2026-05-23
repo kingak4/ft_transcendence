@@ -49,8 +49,7 @@ springwolf:
   docket:
     base-package: code
     info:
-      title: Transcendence AsyncAPI
-      version: 1.0.0
+      title: Transcend AsyncAPI
       description: Documentation
 
 security:

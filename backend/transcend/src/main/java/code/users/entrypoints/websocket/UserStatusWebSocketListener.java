@@ -3,6 +3,9 @@ package code.users.entrypoints.websocket;
 import code.users.ports.in.UpdatePresenceUseCase;
 import code.users.ports.in.UpdatePresenceUseCase.SetUserOfflineCommand;
 import code.users.ports.in.UpdatePresenceUseCase.SetUserOnlineCommand;
+import io.github.springwolf.core.asyncapi.annotations.AsyncListener;
+import io.github.springwolf.core.asyncapi.annotations.AsyncMessage;
+import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
 import java.security.Principal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,19 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@AsyncListener(
+    operation =
+        @AsyncOperation(
+            channelName = "user.status.events",
+            description =
+                "Internal system events for WebSocket connection lifecycle. "
+                    + "Published automatically when authenticated users connect or disconnect from the WebSocket endpoint. "
+                    + "Secured with JWT bearer token. Only authenticated users can trigger these events.",
+            message =
+                @AsyncMessage(
+                    name = "UserStatusEvent",
+                    description =
+                        "Emitted on session connect/disconnect with user ID and session information")))
 class UserStatusWebSocketListener {
 
   private final UpdatePresenceUseCase updatePresenceUseCase;
@@ -33,6 +49,7 @@ class UserStatusWebSocketListener {
 
         SetUserOnlineCommand command = new SetUserOnlineCommand(sessionId, userId, deviceInfo);
         updatePresenceUseCase.setUserOnline(command);
+        log.info("User {} connected from device: {}", userId, deviceInfo);
       } catch (IllegalArgumentException ignored) {
       }
     }
@@ -48,6 +65,7 @@ class UserStatusWebSocketListener {
       UUID userId = UUID.fromString(principal.getName());
       SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
       updatePresenceUseCase.setUserOffline(command);
+      log.info("User {} disconnected", userId);
     }
   }
 

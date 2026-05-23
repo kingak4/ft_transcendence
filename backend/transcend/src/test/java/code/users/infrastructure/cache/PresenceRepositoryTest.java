@@ -11,6 +11,7 @@ import code.users.domain.model.SessionId;
 import code.users.domain.model.UserFixtures;
 import code.users.domain.model.UserId;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
@@ -19,11 +20,12 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 @DataRedisTest
 @Import(PresenceRepository.class)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class PresenceRepositoryTest extends RedisTestSupport {
 
-  @Autowired private StringRedisTemplate redisTemplate;
+  private final StringRedisTemplate redisTemplate;
 
-  @Autowired private PresenceRepository dao;
+  private final PresenceRepository dao;
 
   @Test
   void setSessionOnline_StoresAndSetsTTL() {
