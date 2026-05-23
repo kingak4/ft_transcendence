@@ -61,6 +61,10 @@ mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
 mapstruct-lombok = { module = "org.projectlombok:lombok-mapstruct-binding", version.ref = "mapstruct-lombok" }
 
+spring-test-containers = { module = "org.springframework.boot:spring-boot-testcontainers"}
+jupiter-test-containers = { module = "org.testcontainers:junit-jupiter" }
+postgresql-test-containers = { module = "org.testcontainers:postgresql" }
+
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
 
