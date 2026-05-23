@@ -1,5 +1,4 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
-import org.gradle.kotlin.dsl.implementation
 
 plugins {
    application
@@ -26,8 +25,13 @@ dependencies {
    implementation(libs.bundles.structurizr)
    asciidoctorExt(libs.asciidoctorj.diagram)
    implementation(libs.bundles.springwolf) { exclude(group = "org.springframework.boot") }
-   implementation(libs.springwolf.ui) { exclude(group = "org.springframework.boot") }
 
+   // Source: https://mvnrepository.com/artifact/com.redis.testcontainers/testcontainers-redis
+   testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
+   // Source: https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter
+   testImplementation("org.testcontainers:junit-jupiter:1.19.8")
+   // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
+   testImplementation("org.springframework.boot:spring-boot-testcontainers")
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.sockets)
@@ -154,6 +158,11 @@ tasks {
       testLogging {
          events("passed", "skipped", "failed")
       }
+
+      jvmArgs(
+         "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+         "--add-opens", "java.base/java.io=ALL-UNNAMED"
+      )
    }
 
    register<JavaExec>("generateStructurizr") {

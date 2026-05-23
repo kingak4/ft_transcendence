@@ -83,7 +83,7 @@ asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", versio
 structurizr = ["structurizr-core", "structurizr-export", "structurizr-client", "structurizr-analysis"]
 mapstruct-annotation = ["mapstruct-processor", "mapstruct-lombok"]
 spring-test = ["sprint-test", "sprint-modulith-test"]
-springwolf = ["springwolf-core", "springwolf-stomp-binding", "springwolf-stomp"]
+springwolf = ["springwolf-core", "springwolf-stomp-binding", "springwolf-stomp", "springwolf-ui"]
 
 [plugins]
 asciidoctor = {id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugin"}

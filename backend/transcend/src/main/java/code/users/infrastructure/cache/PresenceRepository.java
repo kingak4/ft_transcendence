@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class RedisPresenceDao implements PresenceDao {
+public class PresenceRepository implements PresenceDao {
 
   private final StringRedisTemplate redisTemplate;
   private static final Duration SESSION_TTL = Duration.ofSeconds(60);
@@ -53,7 +53,7 @@ public class RedisPresenceDao implements PresenceDao {
 
   @Override
   public void removeSession(UserId userId, SessionId sessionId) {
-    String sessionStr = sessionId.toString();
+    String sessionStr = sessionId.val();
     String sessionsKey = sessionsKey(userId.toString());
     String sessionInfoKey = sessionInfoKey(sessionStr);
 
@@ -83,11 +83,11 @@ public class RedisPresenceDao implements PresenceDao {
     return activeSessionsCount != null && activeSessionsCount > 0;
   }
 
-  private static String sessionsKey(String userId) {
+  public static String sessionsKey(String userId) {
     return String.format(SESSIONS_KEY_FMT, userId);
   }
 
-  private static String sessionInfoKey(String sessionId) {
+  public static String sessionInfoKey(String sessionId) {
     return String.format(SESSION_INFO_KEY_FMT, sessionId);
   }
 }
