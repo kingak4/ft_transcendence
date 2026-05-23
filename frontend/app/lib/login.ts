@@ -1,34 +1,35 @@
-"use server";
+'use server';
 
 import { cookies } from 'next/headers';
 // import { postData } from './post';
 import { client } from './api-clients';
 import { errorToJSON } from 'next/dist/server/render';
 
-export async function login(name: string, password: string): Promise<ActionResponse> {
+export async function login(
+  name: string,
+  password: string,
+): Promise<ActionResponse> {
   const payload: CreateUserPayload = {
     email: name,
-    password: password
-  }
+    password: password,
+  };
 
   // const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
 
   try {
-
-    const { data, error, response } = await client.POST("/users/login", {
+    const { data, error, response } = await client.POST('/users/login', {
       body: {
         email: name,
-        password: password
+        password: password,
       },
     });
 
     if (!response.ok) {
-      console.error("Login Error:", response.body);
-      const serverError = (error as unknown) as loginError;
+      console.error('Login Error:', response.body);
       return {
         success: false,
-        status: serverError.status,
-        message: serverError.message
+        status: error?.status,
+        message: error?.detail,
       };
     }
 
@@ -37,7 +38,7 @@ export async function login(name: string, password: string): Promise<ActionRespo
     if (!token) {
       return {
         success: false,
-        message: "Otrzymano pusty token z serwera."
+        message: 'Recieved empty token from server.',
       };
     }
 
@@ -49,31 +50,30 @@ export async function login(name: string, password: string): Promise<ActionRespo
       path: '/',
     });
     return { success: true, status: 200 };
-  }
-  catch (error: any) {
-    console.error("Network or Unexpected Error:", error);
+  } catch (error: any) {
+    console.error('Network or Unexpected Error:', error);
     return {
       success: false,
       status: 500,
-      message: "Problem z połączeniem lub błąd wewnętrzny aplikacji."
+      message: 'Server error.',
     };
   }
 }
 
 export interface loginError {
-  "status": number,
-  "error": string,
-  "message": string
+  status: number;
+  error: string;
+  message: string;
 }
 
 export interface CreateUserPayload {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface CreateUserResponse {
-  accessToken: string,
-  tokenType: string
+  accessToken: string;
+  tokenType: string;
 }
 
 export type ActionResponse = {
