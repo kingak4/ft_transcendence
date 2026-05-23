@@ -3,6 +3,7 @@ package code.users.entrypoints.websocket;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
 import io.github.springwolf.bindings.stomp.annotations.StompAsyncOperationBinding;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -10,12 +11,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import java.util.UUID;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-class PresenceWebSocketController {
+public class PresenceWebSocketController {
 
   @StompAsyncOperationBinding
   @MessageMapping("/presence/check")
