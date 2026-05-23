@@ -32,6 +32,8 @@ dependencies {
    testImplementation("org.testcontainers:junit-jupiter:1.19.8")
    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+   // Embedded Redis for tests (in-JVM)
+   testImplementation("com.github.kstyrc:embedded-redis:0.6")
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.sockets)

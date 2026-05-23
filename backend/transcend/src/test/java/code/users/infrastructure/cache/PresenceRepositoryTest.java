@@ -1,36 +1,37 @@
 package code.users.infrastructure.cache;
 
-import code.users.domain.model.Session;
-import code.users.domain.model.SessionId;
-import code.users.domain.model.UserFixtures;
-import code.users.domain.model.UserId;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
-import org.springframework.data.redis.core.StringRedisTemplate;
-
-import java.util.Map;
-
 import static code.users.domain.model.UserFixtures.SESSION_FIXTURE;
 import static code.users.infrastructure.cache.PresenceRepository.sessionInfoKey;
 import static code.users.infrastructure.cache.PresenceRepository.sessionsKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import code.bootstrap.config.RedisTestSupport;
+import code.users.domain.model.Session;
+import code.users.domain.model.SessionId;
+import code.users.domain.model.UserFixtures;
+import code.users.domain.model.UserId;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
 @DataRedisTest
-class PresenceRepositoryTest {
+@Import(PresenceRepository.class)
+class PresenceRepositoryTest extends RedisTestSupport {
 
-  @Autowired
-  private StringRedisTemplate redisTemplate;
+  @Autowired private StringRedisTemplate redisTemplate;
 
-  @Autowired
-  private PresenceRepository dao;
+  @Autowired private PresenceRepository dao;
 
   @Test
   void setSessionOnline_StoresAndSetsTTL() {
     // given
     UserId userId = UserFixtures.USER_ID_FIXTURE;
     String sessionId = SESSION_FIXTURE;
-    Session session = Session.builder().id(SessionId.of(sessionId)).userId(userId).deviceInfo("mobile").build();
+    Session session =
+        Session.builder().id(SessionId.of(sessionId)).userId(userId).deviceInfo("mobile").build();
 
     // when
     dao.setSessionOnline(session);
@@ -40,7 +41,9 @@ class PresenceRepositoryTest {
     assertThat(score).isGreaterThan(System.currentTimeMillis());
 
     Map<Object, Object> info = redisTemplate.opsForHash().entries(sessionInfoKey(sessionId));
-    assertThat(info).containsEntry("userId", userId.toString()).containsEntry("deviceInfo", "mobile");
+    assertThat(info)
+        .containsEntry("userId", userId.toString())
+        .containsEntry("deviceInfo", "mobile");
 
     assertThat(redisTemplate.getExpire(sessionsKey(String.valueOf(userId)))).isPositive();
   }
