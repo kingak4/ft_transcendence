@@ -1,7 +1,7 @@
 package code.users.logic;
 
 import code.users.domain.model.UserId;
-import code.users.ports.in.ReadOnlineStatusUseCase;
+import code.users.ports.in.ReadPresenceUseCase;
 import code.users.ports.out.PresenceDao;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +20,19 @@ class ReadPresenceTest {
   @Import(ReadPresence.class)
   static class ReadPresenceTestConfig {}
 
-  private final ReadOnlineStatusUseCase readOnlineStatusUseCase;
+  private final ReadPresenceUseCase readPresenceUseCase;
 
   @MockitoBean private PresenceDao presenceDao;
 
   @Test
   void returnsOnlineStatusWhenUserIsOnline() {
     UserId userId = UserId.of(new UUID(0, 1));
-    boolean result = readOnlineStatusUseCase.isOnline(userId);
+    boolean result = readPresenceUseCase.isOnline(userId);
   }
 
   @Test
   void returnsOfflineStatusWhenUserIsNotOnline() {
     UserId userId = UserId.of(new UUID(0, 2));
-    boolean result = readOnlineStatusUseCase.isOnline(userId);
+    boolean result = readPresenceUseCase.isOnline(userId);
   }
 }

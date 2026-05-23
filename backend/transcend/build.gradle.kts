@@ -25,16 +25,8 @@ dependencies {
    asciidoctorExt(libs.asciidoctorj.diagram)
 
    implementation(libs.commons.lang3)
-   testImplementation(libs.commons.lang3)
-
-   // Source: https://mvnrepository.com/artifact/com.redis.testcontainers/testcontainers-redis
-   testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
-   // Source: https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter
-   testImplementation("org.testcontainers:junit-jupiter:1.19.8")
-   // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
-   testImplementation("org.springframework.boot:spring-boot-testcontainers")
-   // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
-   testImplementation("com.github.kstyrc:embedded-redis:0.6")
+   testImplementation(libs.embedded.redis)
+   testImplementation(libs.bundles.testcontainers)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
    implementation(libs.spring.sockets)

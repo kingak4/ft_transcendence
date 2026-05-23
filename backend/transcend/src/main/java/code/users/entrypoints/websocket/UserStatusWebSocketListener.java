@@ -6,8 +6,10 @@ import code.users.ports.in.UpdatePresenceUseCase.SetUserOnlineCommand;
 import io.github.springwolf.core.asyncapi.annotations.AsyncListener;
 import io.github.springwolf.core.asyncapi.annotations.AsyncMessage;
 import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
+
 import java.security.Principal;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -19,23 +21,17 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@AsyncListener(
-    operation =
-        @AsyncOperation(
-            channelName = "user.status.events",
-            description =
-                "Internal system events for WebSocket connection lifecycle. "
-                    + "Published automatically when authenticated users connect or disconnect from the WebSocket endpoint. "
-                    + "Secured with JWT bearer token. Only authenticated users can trigger these events.",
-            message =
-                @AsyncMessage(
-                    name = "UserStatusEvent",
-                    description =
-                        "Emitted on session connect/disconnect with user ID and session information")))
 class UserStatusWebSocketListener {
 
   private final UpdatePresenceUseCase updatePresenceUseCase;
 
+  @AsyncListener(
+      operation =
+      @AsyncOperation(
+          channelName = "user.presence.events",
+          description = "User connected to WebSocket. Triggered when an authenticated user establishes a WebSocket session.",
+          message = @AsyncMessage(
+              description = "Event payload containing the user ID, session ID, and device information.")))
   @EventListener
   public void handleWebSocketConnectListener(SessionConnectEvent event) {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
@@ -55,6 +51,13 @@ class UserStatusWebSocketListener {
     }
   }
 
+  @AsyncListener(
+      operation =
+      @AsyncOperation(
+          channelName = "user.presence.events",
+          description = "User disconnected from WebSocket. Triggered when a user's WebSocket session ends.",
+          message = @AsyncMessage(
+              description = "Event payload containing the user ID and session ID.")))
   @EventListener
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
