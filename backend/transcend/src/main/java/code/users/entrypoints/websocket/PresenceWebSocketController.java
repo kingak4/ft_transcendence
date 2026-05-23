@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -16,16 +16,20 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 public class PresenceWebSocketController {
 
+  public static final String PRESENCE_CHECK = "/presence/check";
+
   @StompAsyncOperationBinding
-  @MessageMapping("/presence/check")
-  @SendTo("/topic/user/{userId}/presence")
-  public PresenceStatusResponse checkPresence(@Payload CheckPresenceRequest request) {
+  @MessageMapping(PRESENCE_CHECK)
+  public void checkPresence(@Payload CheckPresenceRequest request) {
     UserId userId = UserId.of(request.userId());
     boolean isOnline = readPresenceUseCase.isOnline(userId);
-    return new PresenceStatusResponse(request.userId(), isOnline);
+    messagingTemplate.convertAndSend(
+        WebSocketConfiguration.userPresenceTopic(userId.val()),
+        new PresenceStatusResponse(userId.val(), isOnline));
   }
 
   private final ReadPresenceUseCase readPresenceUseCase;
+  private final SimpMessagingTemplate messagingTemplate;
 
   public record CheckPresenceRequest(UUID userId) {}
 

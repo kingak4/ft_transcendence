@@ -1,6 +1,7 @@
 package code.users.entrypoints.websocket;
 
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -20,6 +21,12 @@ class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
   public static final String SOCKET_PATH = "/transcend";
   public static final String SOCKET_TOPIC = "/topic";
   public static final String SOCKET_QUEUE = "/queue";
+  public static final String USER_PRESENCE_TOPIC_PREFIX = SOCKET_TOPIC + "/user/";
+  public static final String USER_PRESENCE_TOPIC_SUFFIX = "/presence";
+
+  public static String userPresenceTopic(UUID userId) {
+    return USER_PRESENCE_TOPIC_PREFIX + userId + USER_PRESENCE_TOPIC_SUFFIX;
+  }
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {

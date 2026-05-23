@@ -1,0 +1,112 @@
+package code.users.entrypoints.websocket;
+
+import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
+import static code.users.entrypoints.websocket.PresenceWebSocketController.*;
+import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_ENDPOINT;
+import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_PATH;
+import static code.users.entrypoints.websocket.WebSocketConfiguration.userPresenceTopic;
+import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.connectWithToken;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+
+import code.users.ports.in.ReadPresenceUseCase;
+import code.users.ports.in.UpdatePresenceUseCase;
+import java.lang.reflect.Type;
+import java.time.Duration;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = {
+      WebSocketTestAutoConfig.class,
+      PresenceWebSocketController.class,
+      UserStatusWebSocketListener.class
+    })
+class PresenceFeatureTest extends WebSocketTestAutoConfig {
+
+  private static final Duration TIMEOUT = Duration.ofSeconds(10);
+
+  @LocalServerPort private int port;
+
+  @MockitoBean private ReadPresenceUseCase readPresenceUseCase;
+  @MockitoBean private UpdatePresenceUseCase updatePresenceUseCase;
+
+  @Test
+  void shouldBroadcastPresenceEventsWhenUserConnectsAndDisconnects() throws Exception {
+    // Given
+    String wsUrl = "ws://localhost:" + port + SOCKET_ENDPOINT;
+    given(readPresenceUseCase.isOnline(USER_ID_FIXTURE)).willReturn(true);
+
+    BlockingQueue<PresenceStatusResponse> events = new LinkedBlockingQueue<>();
+
+    // 1. Observer starts listening for presence updates
+    StompSession observerSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
+    observerSession.subscribe(
+        userPresenceTopic(USER_ID_FIXTURE.val()),
+        new QueueingFrameHandler<>(PresenceStatusResponse.class, events));
+
+    // 2. Actor connects and triggers a presence check
+    StompSession actorSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
+
+    // When
+    actorSession.send(
+        SOCKET_PATH + PRESENCE_CHECK, new CheckPresenceRequest(USER_ID_FIXTURE.val()));
+
+    // Then: Should receive Online event
+    await()
+        .atMost(TIMEOUT)
+        .untilAsserted(
+            () -> {
+              assertThat(events).anyMatch(PresenceStatusResponse::isOnline);
+            });
+
+    // When: Actor disconnects
+    actorSession.disconnect();
+
+    // Then: Should receive Offline event
+    await()
+        .atMost(TIMEOUT)
+        .untilAsserted(
+            () -> {
+              assertThat(events).anyMatch(res -> !res.isOnline());
+            });
+
+    // Final Verifications
+    verify(updatePresenceUseCase, atLeastOnce())
+        .setUserOnline(any(UpdatePresenceUseCase.SetUserOnlineCommand.class));
+    verify(updatePresenceUseCase, atLeastOnce())
+        .setUserOffline(any(UpdatePresenceUseCase.SetUserOfflineCommand.class));
+    assertThat(events)
+        .extracting(PresenceStatusResponse::userId)
+        .containsOnly(USER_ID_FIXTURE.val());
+
+    observerSession.disconnect();
+  }
+
+  private record QueueingFrameHandler<T>(Class<T> payloadType, BlockingQueue<T> queue)
+      implements StompFrameHandler {
+    @Override
+    public Type getPayloadType(StompHeaders headers) {
+      return payloadType;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void handleFrame(StompHeaders headers, Object payload) {
+      queue.add((T) payload);
+    }
+  }
+}

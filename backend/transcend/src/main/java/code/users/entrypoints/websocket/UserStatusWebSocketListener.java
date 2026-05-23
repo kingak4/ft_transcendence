@@ -11,6 +11,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
@@ -22,6 +23,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 class UserStatusWebSocketListener {
 
   private final UpdatePresenceUseCase updatePresenceUseCase;
+  private final SimpMessagingTemplate messagingTemplate;
 
   @AsyncListener(
       operation =
@@ -46,6 +48,9 @@ class UserStatusWebSocketListener {
 
         SetUserOnlineCommand command = new SetUserOnlineCommand(sessionId, userId, deviceInfo);
         updatePresenceUseCase.setUserOnline(command);
+        messagingTemplate.convertAndSend(
+            WebSocketConfiguration.userPresenceTopic(userId),
+            new PresenceWebSocketController.PresenceStatusResponse(userId, true));
         log.info("User {} connected from device: {}", userId, deviceInfo);
       } catch (IllegalArgumentException ignored) {
       }
@@ -71,6 +76,9 @@ class UserStatusWebSocketListener {
       UUID userId = UUID.fromString(principal.getName());
       SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
       updatePresenceUseCase.setUserOffline(command);
+      messagingTemplate.convertAndSend(
+          WebSocketConfiguration.userPresenceTopic(userId),
+          new PresenceWebSocketController.PresenceStatusResponse(userId, false));
       log.info("User {} disconnected", userId);
     }
   }
