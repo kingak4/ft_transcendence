@@ -2,6 +2,8 @@ services:
   frontend:
     build: .
     container_name: transcend-frontend
+    env_file:
+      - .env.dev
     ports:
       - "3000:3000"
 
