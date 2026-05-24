@@ -12,7 +12,7 @@ down:
 reset: down up
 
 db:
-	${DOCKER} exec -it postgres-db-container psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+	${DOCKER} exec -it postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
 
 logs:
 	${DOCKER} logs -f postgres-db-container
