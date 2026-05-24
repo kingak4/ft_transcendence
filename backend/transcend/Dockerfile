@@ -6,7 +6,7 @@ COPY transcend/build.gradle.kts ./
 COPY settings.gradle.kts ./
 COPY transcend/src ./src
 
-RUN gradle build -no-daemon
+RUN gradle build --no-daemon -x test
 
 FROM eclipse-temurin:21-jre-alpine-3.23
 WORKDIR /backend

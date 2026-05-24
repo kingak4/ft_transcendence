@@ -1,0 +1,7 @@
+FROM gradle:8.5-jdk21
+WORKDIR /gradle
+COPY gradle/ ./gradle
+COPY transcend/build.gradle.kts ./
+COPY settings.gradle.kts ./
+COPY transcend/src ./src
+CMD ["gradle", "test", "--no-daemon"]
