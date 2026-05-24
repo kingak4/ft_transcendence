@@ -27,8 +27,8 @@ frontend:
 
 webclient:
 	@echo "Waiting for backend OpenAPI docs to be available..."
-		@until curl --output /dev/null --silent --head --fail http://localhost:8080/api-docs; do \
+		@until curl --output /dev/null --silent --head --fail http://localhost:5001/api-docs; do \
 			echo "Waiting for backend..."; \
 			sleep 2; \
 	done
-	npx openapi-typescript http://localhost:8080/api-docs -o ./frontend/app/types/api.d.ts
+	npx openapi-typescript http://localhost:5001/api-docs -o ./frontend/app/types/api.d.ts
