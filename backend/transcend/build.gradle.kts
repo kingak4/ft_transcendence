@@ -42,6 +42,10 @@ dependencies {
    runtimeOnly(libs.jjwt.jackson)
    runtimeOnly(libs.h2)
 
+   testImplementation(libs.spring.test.containers)
+   testImplementation(libs.jupiter.test.containers)
+   testImplementation(libs.postgresql.test.containers)
+
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)
    testImplementation(libs.lombok)

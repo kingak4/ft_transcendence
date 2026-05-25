@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
-class UserRepository implements UserDao {
+public class UserRepository implements UserDao {
   private final UserJpaRepository userJpaRepository;
   private final UserEntityMapper userEntityMapper;
 
