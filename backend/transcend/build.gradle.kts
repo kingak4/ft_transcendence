@@ -28,6 +28,7 @@ dependencies {
    testImplementation(libs.bundles.testcontainers)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
+   implementation(libs.spring.actuator)
    implementation(libs.spring.sockets)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
