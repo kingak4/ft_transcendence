@@ -15,6 +15,9 @@ public abstract class RedisTestSupport {
 
   @BeforeAll
   public static void startRedis() throws IOException {
+    if (System.getenv("REDIS_HOST") != null) {
+      return;
+    }
     try (ServerSocket socket = new ServerSocket(0)) {
       redisPort = socket.getLocalPort();
     }
@@ -24,14 +27,26 @@ public abstract class RedisTestSupport {
 
   @AfterAll
   public static void stopRedis() {
-    if (redisServer != null) {
+    if (redisServer != null && System.getenv("REDIS_HOST") == null) {
       redisServer.stop();
     }
   }
 
   @DynamicPropertySource
   public static void redisProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.redis.host", () -> "localhost");
-    registry.add("spring.redis.port", () -> redisPort);
+    String host = System.getenv().getOrDefault("REDIS_HOST", "localhost");
+    if (!host.equals("localhost")) {
+      int port = Integer.parseInt(System.getenv().getOrDefault("REDIS_PORT", "6379"));
+      registry.add("spring.data.redis.host", () -> host);
+      registry.add("spring.data.redis.port", () -> port);
+      // Also set the old ones just in case
+      registry.add("spring.redis.host", () -> host);
+      registry.add("spring.redis.port", () -> port);
+    } else {
+      registry.add("spring.data.redis.host", () -> "localhost");
+      registry.add("spring.data.redis.port", () -> redisPort);
+      registry.add("spring.redis.host", () -> "localhost");
+      registry.add("spring.redis.port", () -> redisPort);
+    }
   }
 }

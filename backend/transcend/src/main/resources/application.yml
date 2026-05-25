@@ -23,18 +23,19 @@ spring:
     open-in-view: false
     defer-datasource-initialization: true
     show-sql: true
-  redis:
-    timeout: 10000
-    lettuce:
-      pool:
-        max-active: 10
-        max-idle: 5
-        min-idle: 2
-        max-wait: -1ms
-      shutdown-timeout: 2000ms
   mvc:
     problemdetails:
       enabled: true
+  data:
+    redis:
+      lettuce:
+        shutdown-timeout: 2000ms
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
+          max-wait: -1ms
+      timeout: 10000
 server:
   servlet:
     context-path: /

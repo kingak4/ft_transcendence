@@ -8,3 +8,4 @@
 
 # Environment Variables
 .env
+.env.dev

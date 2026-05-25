@@ -2,6 +2,7 @@
 
 ## API Documentation (Swagger / OpenAPI)
 
+`Ensure the infra is running before runnning the application or tests`
 **Run the application locally with**
 ```bash
 make run

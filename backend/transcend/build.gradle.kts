@@ -41,7 +41,7 @@ dependencies {
    implementation(libs.spring.cache)
    implementation(libs.spring.redis)
    implementation(libs.bundles.structurizr)
-   testImplementation(libs.embedded.redis)
+   implementation(libs.embedded.redis)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
