@@ -1,8 +1,8 @@
 include ./infra/.env
 
-.PHONY: up down reset infra-up backend-up frontend-up
+.PHONY: up down re infra-up backend-up frontend-up nginx-up
 
-up: infra-up backend-up frontend-up
+up: infra-up backend-up frontend-up nginx-up
 
 infra-up:
 	${COMPOSE} up -d --wait db redis
@@ -13,7 +13,10 @@ backend-up:
 frontend-up:
 	${COMPOSE} up -d frontend
 
+nginx-up:
+	${COMPOSE} up -d nginx
+
 down:
 	${COMPOSE} down -v
 
-reset: down up
+re: down up

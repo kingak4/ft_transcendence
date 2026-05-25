@@ -1,7 +1,7 @@
 include ../.env
 include .env
 
-.PHONY: up down reset redis logs
+.PHONY: up down re redis logs
 
 up:
 	${COMPOSE} up -d
@@ -9,7 +9,7 @@ up:
 down:
 	${COMPOSE} down -v
 
-reset: down up
+re: down up
 
 redis:
 	${DOCKER} exec -it redis-db redis-cli

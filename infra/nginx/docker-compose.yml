@@ -1,0 +1,13 @@
+services:
+  nginx:
+    build:
+      context: .
+    container_name: nginx
+    ports:
+      - "8443:443"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: transcend-net
+    driver: bridge

@@ -12,8 +12,8 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
-      interval: 10s
-      timeout: 5s
+      interval: 5s
+      timeout: 10s
       retries: 5
     restart: unless-stopped
 

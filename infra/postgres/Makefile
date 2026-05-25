@@ -1,7 +1,7 @@
 include ../.env
 include .env
 
-.PHONY: up down reset db logs
+.PHONY: up down re db logs
 
 up:
 	${COMPOSE} up -d
@@ -9,7 +9,7 @@ up:
 down:
 	${COMPOSE} down -v
 
-reset: down up
+re: down up
 
 db:
 	${DOCKER} exec -it postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
