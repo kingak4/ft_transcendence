@@ -5,15 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-@Component("userSecurity")
+@Component("ownershipValidator")
 @RequiredArgsConstructor
-public class UserSecurity {
+public class OwnershipValidator {
 
   public boolean isSameUser(Authentication authentication, UserId userId) {
     if (authentication == null || authentication.getName() == null) {
       return false;
     }
     String userIdFromAuth = authentication.getName();
-    return userIdFromAuth.equals(userId.getVal().toString());
+    return userIdFromAuth.equals(userId.val().toString());
   }
 }

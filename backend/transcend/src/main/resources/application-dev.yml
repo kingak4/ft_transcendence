@@ -7,6 +7,9 @@ spring:
     default_schema: dev
     parameters:
       schemaName: dev
+  redis:
+    host: redis-db
+    port: 6379
   jpa:
     defer-datasource-initialization: false
     properties:

@@ -1,5 +1,7 @@
 package code.users.logic;
 
+import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
+
 import code.users.domain.exceptions.InvalidCredentialsException;
 import code.users.ports.in.LoginUseCase;
 import code.users.ports.out.AccessTokenProvider;
@@ -23,8 +25,8 @@ class Login implements LoginUseCase {
       throw new InvalidCredentialsException();
     }
 
-    String userIdStr = user.getId().getVal().toString();
+    String userIdStr = user.getId().val().toString();
     String token = accessTokenProvider.generateToken(userIdStr);
-    return new LoginResult(token, "Bearer", userIdStr);
+    return new LoginResult(token, TOKEN_TYPE, userIdStr);
   }
 }

@@ -1,16 +1,21 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(UserDetailsController.BASE_URL)
 @RequiredArgsConstructor
+@ApiResponses(
+    value = {
+      @ApiResponse(
+          responseCode = "404",
+          content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
 public class UserDetailsController {
 
   public static final String BASE_URL = "users";
@@ -71,5 +82,5 @@ public class UserDetailsController {
 
   public record UpdateDisplayNameRequest(String displayName) {}
 
-  public record GetUserDetailsResponse(String displayName, String avatarUrl, boolean isOnline) {}
+  public record GetUserDetailsResponse(String displayName, String avatarUrl) {}
 }

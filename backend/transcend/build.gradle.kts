@@ -1,5 +1,4 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
-import org.gradle.kotlin.dsl.implementation
 
 plugins {
    application
@@ -23,28 +22,33 @@ repositories {
 val asciidoctorExt by configurations.creating
 
 dependencies {
-   implementation(libs.bundles.structurizr)
    asciidoctorExt(libs.asciidoctorj.diagram)
 
+   implementation(libs.commons.lang3)
+   testImplementation(libs.bundles.testcontainers)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
+   implementation(libs.spring.sockets)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
+   implementation(libs.bundles.springwolf) { exclude(group = "org.springframework.boot") }
    implementation(libs.spring.security)
    implementation(libs.passay)
    implementation(libs.spring.data.jpa)
    implementation(libs.jjwt.api)
    implementation(libs.liquibase)
    implementation(libs.dotenv.java)
+   implementation(libs.spring.cache)
+   implementation(libs.spring.redis)
+   implementation(libs.bundles.structurizr)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
    runtimeOnly(libs.h2)
 
-   testImplementation(libs.spring.test.containers)
-   testImplementation(libs.jupiter.test.containers)
-   testImplementation(libs.postgresql.test.containers)
+   testImplementation(libs.spring.testcontainers)
+   testImplementation(libs.jupiter.testcontainers)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)
@@ -58,6 +62,7 @@ dependencies {
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
 }
+
 java {
    toolchain {
       languageVersion.set(JavaLanguageVersion.of(21))
@@ -153,6 +158,11 @@ tasks {
       testLogging {
          events("passed", "skipped", "failed")
       }
+
+      jvmArgs(
+         "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+         "--add-opens", "java.base/java.io=ALL-UNNAMED"
+      )
    }
 
    register<JavaExec>("generateStructurizr") {

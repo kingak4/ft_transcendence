@@ -1,15 +1,15 @@
-package code.users.entrypoints.api.mappers;
+package code.users.entrypoints.http.mappers;
 
-import static code.users.entrypoints.api.LoginController.LoginRequest;
-import static code.users.entrypoints.api.RegisterController.RegisterRequest;
+import static code.users.entrypoints.http.LoginController.LoginRequest;
+import static code.users.entrypoints.http.RegisterController.RegisterRequest;
 import static code.users.ports.in.RegisterUseCase.RegisterCommand;
 import static code.users.ports.in.UpdateDisplayNameUseCase.UpdateDisplayNameCommand;
 
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import code.users.entrypoints.api.LoginController.LoginResponse;
-import code.users.entrypoints.api.RegisterController.RegisterResponse;
-import code.users.entrypoints.api.UserDetailsController;
+import code.users.entrypoints.http.LoginController.LoginResponse;
+import code.users.entrypoints.http.RegisterController.RegisterResponse;
+import code.users.entrypoints.http.UserDetailsController;
 import code.users.ports.in.LoginUseCase.LoginCommand;
 import code.users.ports.in.LoginUseCase.LoginResult;
 import code.users.ports.in.RegisterUseCase.RegisteredUser;
@@ -24,7 +24,7 @@ public interface UsersApiMapper {
     if (value == null) {
       return null;
     }
-    return value.getVal();
+    return value.val();
   }
 
   @Mapping(source = "password", target = "rawPassword")
@@ -39,6 +39,5 @@ public interface UsersApiMapper {
 
   UpdateDisplayNameCommand toCommand(UserDetailsController.UpdateDisplayNameRequest request);
 
-  @Mapping(source = "online", target = "isOnline")
   UserDetailsController.GetUserDetailsResponse toResponse(UserDetails details);
 }

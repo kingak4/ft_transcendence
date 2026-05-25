@@ -4,7 +4,7 @@ include .env
 .PHONY: up down reset db logs
 
 up:
-	${COMPOSE} up
+	${COMPOSE} up -d
 
 down:
 	${COMPOSE} down -v
@@ -15,4 +15,4 @@ db:
 	${DOCKER} exec -it postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
 
 logs:
-	${DOCKER} logs -f postgres-db-container
+	${DOCKER} logs -f postgres-db

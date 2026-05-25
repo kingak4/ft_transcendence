@@ -1,5 +1,7 @@
 package code.users.infrastructure.security;
 
+import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
+import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
@@ -41,7 +43,7 @@ class JwtAuthenticationFilterTest {
   @Test
   void doesNotAuthenticateIfNoAuthorizationHeader() throws ServletException, IOException {
     // given
-    when(request.getHeader("Authorization")).thenReturn(null);
+    when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn(null);
 
     // when
     filter.doFilterInternal(request, response, filterChain);
@@ -54,7 +56,7 @@ class JwtAuthenticationFilterTest {
   @Test
   void doesNotAuthenticateIfHeaderDoesNotStartWithBearer() throws ServletException, IOException {
     // given
-    when(request.getHeader("Authorization")).thenReturn("Basic token");
+    when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn("Basic token");
 
     // when
     filter.doFilterInternal(request, response, filterChain);
@@ -69,7 +71,7 @@ class JwtAuthenticationFilterTest {
     // given
     String token = "valid-token";
     String username = "user@example.com";
-    when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+    when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER_PREFIX + token);
     when(jwtTokenService.extractUsername(token)).thenReturn(username);
     UserDetails userDetails = mock(UserDetails.class);
     when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
@@ -88,7 +90,7 @@ class JwtAuthenticationFilterTest {
     // given
     String token = "invalid-token";
     String username = "user@example.com";
-    when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+    when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER_PREFIX + token);
     when(jwtTokenService.extractUsername(token)).thenReturn(username);
     UserDetails userDetails = mock(UserDetails.class);
     when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);

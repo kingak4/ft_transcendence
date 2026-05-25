@@ -1,9 +1,9 @@
-package code.users.entrypoints.api;
+package code.users.entrypoints.http;
 
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
-import static code.users.entrypoints.api.UrlBuilderUtil.buildUrl;
+import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,8 +14,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import code.shared.exceptions.GlobalExceptionHandler;
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.model.UserId;
-import code.users.entrypoints.api.RegisterController.RegisterRequest;
-import code.users.entrypoints.api.mappers.UsersApiMapper;
+import code.users.entrypoints.UsersExceptionHandler;
+import code.users.entrypoints.http.RegisterController.RegisterRequest;
+import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.RegisterUseCase;
 import code.users.ports.in.RegisterUseCase.RegisterCommand;

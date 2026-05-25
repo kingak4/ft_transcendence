@@ -1,5 +1,6 @@
 package code.users.logic;
 
+import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
@@ -56,7 +57,7 @@ class LoginTest {
 
     // then
     assertEquals(TOKEN_FIXTURE, result.accessToken());
-    assertEquals("Bearer", result.tokenType());
+    assertEquals(TOKEN_TYPE, result.tokenType());
     assertEquals(ID_FIXTURE.toString(), result.userId());
     verify(userDao).findByEmail(EMAIL_FIXTURE);
     verify(hashingService).matches(PASSWORD_FIXTURE, HASH_FIXTURE);

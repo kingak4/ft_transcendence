@@ -1,0 +1,28 @@
+services:
+  redis:
+    build:
+      args:
+        REDIS_VERSION: ${REDIS_VERSION}
+    container_name: redis-db
+    env_file:
+      - .env
+    volumes:
+      - redisdata:/data
+    networks:
+      - app_network
+    ports:
+      - "6380:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  redisdata:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
