@@ -1,22 +1,21 @@
-# Makefile to bring up the infrastructure (docker containers)
-
 .PHONY: all up down restart logs ps clean
-COMPOSE_PG = postgres/docker-compose.yml
-COMPOSE_REDIS = redis/docker-compose.yml
-
 
 all: up
 
 up:
-	docker compose -f $(COMPOSE_PG) -f $(COMPOSE_REDIS) up -d --build
+	$(MAKE) -C postgres up
+	$(MAKE) -C redis up
 
 down:
-	docker compose -f $(COMPOSE_PG) -f $(COMPOSE_REDIS) down
+	$(MAKE) -C postgres down
+	$(MAKE) -C redis down
 
 restart: down up
 
 ps:
-	docker compose -f $(COMPOSE_PG) -f $(COMPOSE_REDIS) ps
+	$(MAKE) -C postgres ps
+	$(MAKE) -C redis ps
 
 clean:
-	docker compose -f $(COMPOSE_PG) -f $(COMPOSE_REDIS) down -v
+	$(MAKE) -C postgres clean
+	$(MAKE) -C redis clean

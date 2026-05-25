@@ -19,3 +19,5 @@ logs:
 
 clean:
 	docker compose down -v
+ps:
+	${COMPOSE} ps
