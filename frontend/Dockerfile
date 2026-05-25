@@ -1,6 +1,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /build
 
+ARG BACKEND_URL
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
