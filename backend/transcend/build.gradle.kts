@@ -41,11 +41,11 @@ dependencies {
    implementation(libs.spring.cache)
    implementation(libs.spring.redis)
    implementation(libs.bundles.structurizr)
+   testImplementation(libs.embedded.redis)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
-   runtimeOnly(libs.h2)
 
    testImplementation(libs.spring.testcontainers)
    testImplementation(libs.jupiter.testcontainers)

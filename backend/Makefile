@@ -1,5 +1,6 @@
 .PHONY: run build format lint test docs
-include .env
+include ./../.env
+include ./env
 PROFILE := local
 
 run:
@@ -10,9 +11,6 @@ build:
 
 format:
 	${GRADLE} spotlessApply
-
-lint:
-	${GRADLE} pmdMain pmdTest
 
 test:
 	${GRADLE} jacocoTestReport

@@ -16,3 +16,6 @@ db:
 
 logs:
 	${DOCKER} logs -f postgres-db
+
+clean:
+	docker compose down -v

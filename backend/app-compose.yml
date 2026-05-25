@@ -28,5 +28,5 @@ services:
 
 networks:
   default:
-    external: true
-    name: postgres_app_network
+    name: transcend-net
+    driver: bridge

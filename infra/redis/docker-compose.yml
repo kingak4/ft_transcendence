@@ -8,8 +8,6 @@ services:
       - .env
     volumes:
       - redisdata:/data
-    networks:
-      - app_network
     ports:
       - "6380:6379"
     restart: unless-stopped
@@ -24,5 +22,6 @@ volumes:
     driver: local
 
 networks:
-  app_network:
+  default:
+    name: transcend-net
     driver: bridge

@@ -1,14 +1,5 @@
 # Backend Developer Guide
 
-## Backend AsciiDoc Documentation
-
-**To generate documentation:**
-```bash
-make docs
-```
-
-- **Documentation UI**: transcend/build/docs/asciidoc/index.html
-
 ## API Documentation (Swagger / OpenAPI)
 
 ### Documentation Endpoints
@@ -22,18 +13,18 @@ make run
 - **Springwolf UI**: [http://localhost:8080/springwolf/asyncapi-ui.html](http://localhost:8080/springwolf/asyncapi-ui.html)
 - **AsyncAPI Raw JSON**: [http://localhost:8080/springwolf/docs](http://localhost:8080/springwolf/docs)
 
-
-## Test coverage
-**Run the tests**
+## Backend AsciiDoc Documentation
+**Generate the docs**
 ```bash
 make test
 ```
-- **Test Coverage UI**: transcend/build/reports/jacoco/index.html
+- **Documentation UI**: transcend/build/docs/asciidoc/index.html
 
-## Linter
-**Run the linter**
+## Test coverage and Linter
+**Run the tests**
 ```bash
-make lint
+make check
 ```
+- **Test Coverage UI**: transcend/build/reports/jacoco/index.html
 - **PmdMain UI**: transcend/build/reports/pmd/main.html
 - **PmdTest UI**: transcend/build/reports/pmd/test.html

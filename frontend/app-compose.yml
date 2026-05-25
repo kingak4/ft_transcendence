@@ -6,8 +6,9 @@ services:
       - .env.dev
     ports:
       - "3000:3000"
+    restart: unless-stopped
 
 networks:
   default:
-    external: true
-    name: postgres_app_network
+    name: transcend-net
+    driver: bridge

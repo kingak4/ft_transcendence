@@ -13,9 +13,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import code.bootstrap.DotEnvInitializer;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@ContextConfiguration(initializers = DotEnvInitializer.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({UserRepository.class, UserEntityMapperImpl.class})
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
