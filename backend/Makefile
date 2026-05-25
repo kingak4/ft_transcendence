@@ -1,6 +1,5 @@
-.PHONY: run build format lint test docs
-include ./../.env
-include ./env
+.PHONY: run build format test docs
+include ./.env
 PROFILE := local
 
 run:

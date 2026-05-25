@@ -12,7 +12,7 @@ make up
 make down
 ```
 
-**View aggregated logs**
+**View logs**
 ```bash
 make logs
 ```

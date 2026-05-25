@@ -2,12 +2,15 @@
 
 ## API Documentation (Swagger / OpenAPI)
 
-### Documentation Endpoints
-
-**Run the application with**
+**Run the application locally with**
 ```bash
 make run
 ```
+**or run in docker**
+```bash
+make -f Makefile.dev build up
+```
+
 - **Swagger Interactive UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI Raw JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
 - **Springwolf UI**: [http://localhost:8080/springwolf/asyncapi-ui.html](http://localhost:8080/springwolf/asyncapi-ui.html)
@@ -28,3 +31,8 @@ make check
 - **Test Coverage UI**: transcend/build/reports/jacoco/index.html
 - **PmdMain UI**: transcend/build/reports/pmd/main.html
 - **PmdTest UI**: transcend/build/reports/pmd/test.html
+
+**Run tests in docker**
+```bash
+make -f Makefile.dev test
+```

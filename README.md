@@ -11,8 +11,25 @@ This project is licensed under the GNU GPL v3 License.
 
 ## 📌 Description
 
-## 🛠️ Instructions
-### Compilation
+## ⚙️ Setup
+
+Create and configure the environment files before running the project:
+
+- [infra/.env](infra/.env) and [infra/.env.example](infra/.env.example)
+- [infra/postgres/.env](infra/postgres/.env) and [infra/postgres/.env.example](infra/postgres/.env.example)
+- [infra/redis/.env](infra/redis/.env) and [infra/redis/.env.example](infra/redis/.env.example)
+- [backend/.env](backend/.env) and [backend/.env.example](backend/.env.example)
+- [backend/transcend/.env](backend/transcend/.env) and [backend/transcend/.env.example](backend/transcend/.env.example)
+
+Supporting documentation:
+
+- [Infrastructure README](infra/README.md)
+- [Backend README](backend/README.md)
+- [Frontend README](frontend/README.md)
+
+## ▶️ Run the Project
+
+From the repository root, start the stack on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders.
 
 ## 👥 Team Information
 
