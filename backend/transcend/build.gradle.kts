@@ -25,7 +25,6 @@ dependencies {
    asciidoctorExt(libs.asciidoctorj.diagram)
 
    implementation(libs.commons.lang3)
-   testImplementation(libs.embedded.redis)
    testImplementation(libs.bundles.testcontainers)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
@@ -47,6 +46,9 @@ dependencies {
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
    runtimeOnly(libs.h2)
+
+   testImplementation(libs.spring.testcontainers)
+   testImplementation(libs.jupiter.testcontainers)
 
    compileOnly(libs.lombok)
    annotationProcessor(libs.lombok)
