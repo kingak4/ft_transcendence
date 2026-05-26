@@ -1,7 +1,10 @@
 .PHONY: build up down clean
 include .env
 include ./../infra/.env
+<<<<<<< HEAD
+=======
 VERSION = 1.0.0
+>>>>>>> main
 
 build:
 	${COMPOSE} -f app-compose.yml build --no-cache

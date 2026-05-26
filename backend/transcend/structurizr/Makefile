@@ -2,7 +2,7 @@ NAME        = structurizr-lite
 COMPOSE_DIR = .
 COMPOSE_CMD = docker-compose -f $(COMPOSE_DIR)/docker-compose.yml
 
-.PHONY: up down logs rebuild ps
+.PHONY: up down logs re ps
 
 up:
 	$(COMPOSE_CMD) up -d

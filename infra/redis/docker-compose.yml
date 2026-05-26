@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 5
 

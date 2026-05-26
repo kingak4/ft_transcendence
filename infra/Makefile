@@ -1,4 +1,4 @@
-.PHONY: all up down restart logs ps clean
+.PHONY: all up down re logs ps clean
 
 all: up
 
@@ -10,7 +10,7 @@ down:
 	$(MAKE) -C postgres down
 	$(MAKE) -C redis down
 
-restart: down up
+re: down up
 
 ps:
 	$(MAKE) -C postgres ps
