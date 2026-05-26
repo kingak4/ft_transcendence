@@ -31,6 +31,8 @@ Supporting documentation:
 
 From the repository root, start the stack on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders.
 
+Application will be available via nginx proxy on port 8443.
+
 ## 👥 Team Information
 
 ## 📊 Project Management
