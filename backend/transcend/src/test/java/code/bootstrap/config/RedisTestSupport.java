@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import redis.embedded.RedisServer;
 
 public abstract class RedisTestSupport {
@@ -27,11 +25,5 @@ public abstract class RedisTestSupport {
     if (redisServer != null) {
       redisServer.stop();
     }
-  }
-
-  @DynamicPropertySource
-  public static void redisProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.redis.host", () -> "localhost");
-    registry.add("spring.redis.port", () -> redisPort);
   }
 }

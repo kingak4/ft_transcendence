@@ -1,39 +1,39 @@
 # Backend Developer Guide
 
-## Backend AsciiDoc Documentation
-
-**To generate documentation:**
-```bash
-make docs
-```
-
-- **Documentation UI**: transcend/build/docs/asciidoc/index.html
-
 ## API Documentation (Swagger / OpenAPI)
 
-### Documentation Endpoints
-
-**Run the application with**
+`Ensure the infra is running before runnning the application or tests`
+**Run the application locally with**
 ```bash
 make run
 ```
+**or run in docker**
+```bash
+make -f Makefile.dev build up
+```
+
 - **Swagger Interactive UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI Raw JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
 - **Springwolf UI**: [http://localhost:8080/springwolf/asyncapi-ui.html](http://localhost:8080/springwolf/asyncapi-ui.html)
 - **AsyncAPI Raw JSON**: [http://localhost:8080/springwolf/docs](http://localhost:8080/springwolf/docs)
 
-
-## Test coverage
-**Run the tests**
+## Backend AsciiDoc Documentation
+**Generate the docs**
 ```bash
 make test
 ```
-- **Test Coverage UI**: transcend/build/reports/jacoco/index.html
+- **Documentation UI**: transcend/build/docs/asciidoc/index.html
 
-## Linter
-**Run the linter**
+## Test coverage and Linter
+**Run the tests**
 ```bash
-make lint
+make check
 ```
+- **Test Coverage UI**: transcend/build/reports/jacoco/index.html
 - **PmdMain UI**: transcend/build/reports/pmd/main.html
 - **PmdTest UI**: transcend/build/reports/pmd/test.html
+
+**Run tests in docker**
+```bash
+make -f Makefile.dev test
+```

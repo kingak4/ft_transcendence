@@ -10,6 +10,11 @@ services:
       - "5001:5000"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   backend-test:
@@ -20,13 +25,13 @@ services:
     env_file:
       - transcend/.env
     environment:
-      - SPRING_PROFILES_ACTIVE=test
+      - SPRING_PROFILES_ACTIVE=test,dev
       - POSTGRES_HOST=postgres-db
-    command: ["sh", "-c", "sleep 5 && gradle test --no-daemon"]
+    command: ["sh", "-c", "gradle test --no-daemon"]
     profiles:
       - test
 
 networks:
   default:
-    external: true
-    name: postgres_app_network
+    name: transcend-net
+    driver: bridge

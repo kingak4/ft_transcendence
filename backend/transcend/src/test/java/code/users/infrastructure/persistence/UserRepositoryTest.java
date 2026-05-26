@@ -2,6 +2,7 @@ package code.users.infrastructure.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import code.bootstrap.DotEnvInitializer;
 import code.users.domain.model.User;
 import code.users.domain.model.UserFixtures;
 import code.users.ports.out.UserDao;
@@ -13,9 +14,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@ContextConfiguration(initializers = DotEnvInitializer.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({UserRepository.class, UserEntityMapperImpl.class})
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})

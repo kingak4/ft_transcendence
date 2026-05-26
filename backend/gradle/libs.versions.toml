@@ -63,6 +63,7 @@ spring-modulith = { module = "org.springframework.modulith:spring-modulith-start
 spring-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-openapi" }
 
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-sockets = { module = "org.springframework.boot:spring-boot-starter-websocket" }
 spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-security = { module = "org.springframework.boot:spring-boot-starter-security" }

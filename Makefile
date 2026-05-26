@@ -1,34 +1,19 @@
-.PHONY: all run backend frontend webclient
+include ./infra/.env
 
-all: run
+.PHONY: up down reset infra-up backend-up frontend-up
 
-run:
-	@echo "Starting both backend and frontend..."
-	npx concurrently \
-		-n "BACKEND,FRONTEND, WEBCLIENT" \
-		-c "bgBlue.bold,bgMagenta.bold, bgGreen" \
-		"$(MAKE) -C backend" \
-		"$(MAKE) -C frontend" \
-		"$(MAKE) webclient"
+up: infra-up backend-up frontend-up
 
-backend:
-	@echo "Starting backend..."
-	npx concurrently \
-		-n "BACKEND" \
-		-c "bgBlue.bold"\
-		"$(MAKE) -C backend"
+infra-up:
+	${COMPOSE} up -d --wait db redis
 
-frontend:
-	@echo "Starting frontend..."
-	npx concurrently \
-		-n "FRONTEND" \
-		-c "bgMagenta.bold"\
-		"$(MAKE) -C frontend"
+backend-up:
+	${COMPOSE} up -d --wait backend
 
-webclient:
-	@echo "Waiting for backend OpenAPI docs to be available..."
-		@until curl --output /dev/null --silent --head --fail http://localhost:5001/api-docs; do \
-			echo "Waiting for backend..."; \
-			sleep 2; \
-	done
-	npx openapi-typescript http://localhost:5001/api-docs -o ./frontend/app/types/api.d.ts
+frontend-up:
+	${COMPOSE} up -d frontend
+
+down:
+	${COMPOSE} down -v
+
+reset: down up

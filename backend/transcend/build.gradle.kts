@@ -28,6 +28,7 @@ dependencies {
    testImplementation(libs.bundles.testcontainers)
    implementation(libs.spring.modulith)
    implementation(libs.spring.web)
+   implementation(libs.spring.actuator)
    implementation(libs.spring.sockets)
    implementation(libs.spring.validation)
    implementation(libs.spring.openapi)
@@ -41,11 +42,11 @@ dependencies {
    implementation(libs.spring.cache)
    implementation(libs.spring.redis)
    implementation(libs.bundles.structurizr)
+   implementation(libs.embedded.redis)
 
    runtimeOnly(libs.postgres)
    runtimeOnly(libs.jjwt.impl)
    runtimeOnly(libs.jjwt.jackson)
-   runtimeOnly(libs.h2)
 
    testImplementation(libs.spring.testcontainers)
    testImplementation(libs.jupiter.testcontainers)
