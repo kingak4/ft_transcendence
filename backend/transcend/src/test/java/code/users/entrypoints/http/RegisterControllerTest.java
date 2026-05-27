@@ -65,7 +65,7 @@ class RegisterControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value(uuid.toString()));
+        .andExpect(jsonPath("$.messageId").value(uuid.toString()));
 
     verify(mapper).toCommand(request);
     verify(registerUseCase).register(command);

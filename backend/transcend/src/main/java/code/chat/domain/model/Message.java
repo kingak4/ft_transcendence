@@ -15,6 +15,7 @@ public class Message {
     @EqualsAndHashCode.Include
     MessageId id;
     UserId senderId;
+    String content;
 
     OffsetDateTime createdAt;
 }

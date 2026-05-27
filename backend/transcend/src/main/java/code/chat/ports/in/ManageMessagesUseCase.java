@@ -10,5 +10,5 @@ public interface ManageMessagesUseCase {
 
     record SendMessageCommand(UserId sender, ChatId chatId, String content) {}
 
-    record DeleteMessageCommand(UserId sender, ChatId chatId, MessageId id) {}
+    record DeleteMessageCommand(UserId sender, MessageId messageId) {}
 }

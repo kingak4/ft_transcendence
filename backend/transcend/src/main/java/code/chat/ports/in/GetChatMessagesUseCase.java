@@ -6,7 +6,5 @@ import code.chat.domain.model.Message;
 import java.util.List;
 
 public interface GetChatMessagesUseCase {
-    List<Message> getChatMessages(GetMessagesRequest request);
-
-    record GetMessagesRequest(ChatId chatId, int page, int size) { }
+    List<Message> getChatMessages(ChatId chatId, int page, int size);
 }
