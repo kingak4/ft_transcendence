@@ -1,4 +1,3 @@
 package code.chat.domain.exception;
 
-public class ChatNotFoundException extends RuntimeException {
-}
+public class ChatNotFoundException extends RuntimeException {}

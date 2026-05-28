@@ -5,8 +5,9 @@ import code.chat.domain.model.UserId;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface StartChatUseCase {
-    @PreAuthorize("hasRole('ADMIN') or @ownershipValidator.isSameUser(authentication, #command.initiator())")
-    ChatId startChat(StartChatCommand command);
+  @PreAuthorize(
+      "hasRole('ADMIN') or @ownershipValidator.isSameUser(authentication, #command.initiator())")
+  ChatId startChat(StartChatCommand command);
 
-    record StartChatCommand(UserId initiator, UserId recipient) {}
+  record StartChatCommand(UserId initiator, UserId recipient) {}
 }
