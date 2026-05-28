@@ -17,7 +17,6 @@ public class StartChat implements StartChatUseCase {
 
     @Override
     public ChatId startChat(StartChatCommand command) {
-        // TODO examine chat with yourself scenario
         Optional<ChatId> id = chatDao.findChat(command.initiator(), command.recipient());
         if (id.isPresent()) return id.get();
         Chat chat = Chat.builder()

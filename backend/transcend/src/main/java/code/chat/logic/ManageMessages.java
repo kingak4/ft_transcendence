@@ -10,6 +10,7 @@ import code.chat.domain.model.MessageId;
 import code.chat.ports.in.ManageMessagesUseCase;
 import code.chat.ports.out.ChatDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -23,9 +24,8 @@ public class ManageMessages implements ManageMessagesUseCase {
     @Override
     public void sendMessage(SendMessageCommand command) {
         if (command.content().isBlank()) throw new EmptyMessageException();
-        Optional<Chat> id = dao.getChat(command.chatId());
-        if (id.isEmpty()) throw new ChatNotFoundException();
-        // TODO validate if user in token belongs to the chat.
+        Optional<Chat> chat = dao.getChat(command.chatId());
+        if (chat.isEmpty()) throw new ChatNotFoundException();
         Message message = Message.builder().id(MessageId.generate())
                 .senderId(command.sender())
                 .createdAt(OffsetDateTime.now())
@@ -36,7 +36,6 @@ public class ManageMessages implements ManageMessagesUseCase {
 
     @Override
     public void deleteMessage(DeleteMessageCommand command) {
-        // TODO validate if user in token belongs to the chat.
         Optional<Message> message = dao.getMessage(command.messageId());
         if (message.isEmpty()) throw new MessageNotFoundException();
         if (!message.get().getSenderId().equals(command.sender())) throw new NotMessageOwnerException();
