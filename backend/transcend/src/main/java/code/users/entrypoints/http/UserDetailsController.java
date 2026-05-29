@@ -40,7 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserDetailsController {
 
   public static final String BASE_URL = "users";
-  public static final String UPDATE_DISPLAY_NAME_ENDPOINT = "/{userId}/display-name";
+  public static final String UPDATE_DISPLAY_NAME_ENDPOINT = "/display-name";
+  public static final String UPDATE_AVATAR_ENDPOINT = "/avatar";
   public static final String AVATAR_ENDPOINT = "/{userId}/avatar";
   public static final String DETAILS_ENDPOINT = "/{userId}/details";
 
@@ -58,7 +59,7 @@ public class UserDetailsController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping(value = AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = UPDATE_AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "Upload a profile avatar")
   public ResponseEntity<Void> uploadAvatar(
       Authentication authentication, @RequestParam("file") MultipartFile file) throws IOException {

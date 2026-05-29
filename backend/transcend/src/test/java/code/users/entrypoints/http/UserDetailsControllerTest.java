@@ -66,8 +66,7 @@ class UserDetailsControllerTest {
             multipart(
                     buildUrl(
                         UserDetailsController.BASE_URL,
-                        UserDetailsController.AVATAR_ENDPOINT,
-                        AUTH_USER_ID))
+                        UserDetailsController.UPDATE_AVATAR_ENDPOINT))
                 .file(file)
                 .principal(authentication()))
         .andExpect(status().isOk());
@@ -135,8 +134,7 @@ class UserDetailsControllerTest {
             patch(
                     buildUrl(
                         UserDetailsController.BASE_URL,
-                        UserDetailsController.UPDATE_DISPLAY_NAME_ENDPOINT,
-                        AUTH_USER_ID))
+                        UserDetailsController.UPDATE_DISPLAY_NAME_ENDPOINT))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
                 .principal(authentication()))
