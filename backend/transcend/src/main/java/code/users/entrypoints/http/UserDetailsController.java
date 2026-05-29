@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +52,8 @@ public class UserDetailsController {
   @PatchMapping(UPDATE_DISPLAY_NAME_ENDPOINT)
   @Operation(summary = "Change the display name of the user")
   public ResponseEntity<Void> updateDisplayName(
-      @PathVariable UUID userId, @RequestBody UpdateDisplayNameRequest request) {
+      Authentication authentication, @RequestBody UpdateDisplayNameRequest request) {
+    UUID userId = UUID.fromString(authentication.getName());
     updateDisplayNameUseCase.updateDisplayName(UserId.of(userId), mapper.toCommand(request));
     return ResponseEntity.ok().build();
   }
@@ -59,7 +61,8 @@ public class UserDetailsController {
   @PostMapping(value = AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "Upload a profile avatar")
   public ResponseEntity<Void> uploadAvatar(
-      @PathVariable UUID userId, @RequestParam("file") MultipartFile file) throws IOException {
+      Authentication authentication, @RequestParam("file") MultipartFile file) throws IOException {
+    UUID userId = UUID.fromString(authentication.getName());
     updateAvatarUseCase.updateAvatar(
         UserId.of(userId),
         new UpdateAvatarUseCase.UpdateAvatarCommand(file.getOriginalFilename(), file.getBytes()));

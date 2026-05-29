@@ -40,7 +40,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class ChatControllerTest {
 
-  private static final UUID AUTH_USER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+  private static final UUID AUTH_USER_ID = UUID.randomUUID();
 
   private final MockMvc mockMvc;
 

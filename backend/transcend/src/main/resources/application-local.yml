@@ -5,15 +5,16 @@ spring:
     enabled: false
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=local
-  redis:
-    host: localhost
-    port: 6380
   jpa:
     properties:
       hibernate:
         default_schema: local
     hibernate:
       ddl-auto: create-drop
+  data:
+    redis:
+      host: localhost
+      port: 6380
 logging:
   level:
     com.zaxxer.hikari: INFO
