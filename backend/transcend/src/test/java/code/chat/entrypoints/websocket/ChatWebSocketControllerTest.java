@@ -1,26 +1,29 @@
 package code.chat.entrypoints.websocket;
 
-import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_DELETE;
-import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_SEND;
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.SOCKET_PATH;
-import static code.shared.WebSocketConfig.WS_HOST;
-import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.connectWithToken;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
-
+import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.domain.model.WebSocketFixtures;
 import code.chat.domain.model.ChatFixtures;
+import code.chat.entrypoints.websocket.ChatWebSocketController.DeleteMessageRequest;
 import code.chat.entrypoints.websocket.ChatWebSocketController.SendMessageRequest;
 import code.chat.ports.in.ManageMessagesUseCase;
-import code.users.entrypoints.websocket.WebSocketTestAutoConfig;
-import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.time.Duration;
+
+import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
+import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_DELETE;
+import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_SEND;
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.SOCKET_PATH;
+import static code.shared.WebSocketConfig.WS_HOST;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -43,7 +46,7 @@ class ChatWebSocketControllerTest extends WebSocketTestAutoConfig {
         .when(manageMessagesUseCase)
         .deleteMessage(any(ManageMessagesUseCase.DeleteMessageCommand.class));
 
-    StompSession session = connectWithToken(stompClient, wsUrl, ChatFixtures.TOKEN_FIXTURE);
+    StompSession session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
 
     // When
     deleteMessage(session, messageId);
@@ -66,7 +69,7 @@ class ChatWebSocketControllerTest extends WebSocketTestAutoConfig {
         .when(manageMessagesUseCase)
         .sendMessage(any(ManageMessagesUseCase.SendMessageCommand.class));
 
-    StompSession session = connectWithToken(stompClient, wsUrl, ChatFixtures.TOKEN_FIXTURE);
+    StompSession session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
 
     // When
     sendMessage(session, chatId, messageContent);
@@ -84,6 +87,7 @@ class ChatWebSocketControllerTest extends WebSocketTestAutoConfig {
   }
 
   private void deleteMessage(StompSession session, String messageId) {
-    session.send(SOCKET_PATH + MESSAGE_DELETE.replace("{messageId}", messageId), "");
+    session.send(
+        SOCKET_PATH + MESSAGE_DELETE.replace("{messageId}", messageId), new DeleteMessageRequest());
   }
 }

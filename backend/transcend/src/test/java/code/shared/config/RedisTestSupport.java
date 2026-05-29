@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.shared.config;
 
 import java.io.IOException;
 import java.net.ServerSocket;

@@ -1,4 +1,4 @@
-package code.users.entrypoints.websocket.util;
+package code.shared.util;
 
 import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
 import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
@@ -41,6 +41,12 @@ public final class WebSocketSecurityUtil {
     when(jwtTokenService.isTokenValid(
             ArgumentMatchers.eq(token), ArgumentMatchers.any(UserDetails.class)))
         .thenReturn(true);
+    when(jwtTokenService.buildAuthentication(ArgumentMatchers.any(UserDetails.class)))
+        .thenAnswer(invocation -> {
+          UserDetails ud = invocation.getArgument(0);
+          return new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+            ud, null, ud.getAuthorities());
+        });
   }
 
   public static WebSocketStompClient createStompClient() {

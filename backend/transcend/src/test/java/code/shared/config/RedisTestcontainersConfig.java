@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.shared.config;
 
 import com.redis.testcontainers.RedisContainer;
 import org.springframework.boot.test.context.TestConfiguration;

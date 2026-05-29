@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Service
 public class JwtTokenService implements AccessTokenProvider {
@@ -47,5 +48,9 @@ public class JwtTokenService implements AccessTokenProvider {
 
   private Claims extractAllClaims(String token) {
     return Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token).getPayload();
+  }
+
+  public UsernamePasswordAuthenticationToken buildAuthentication(UserDetails userDetails) {
+    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
 }

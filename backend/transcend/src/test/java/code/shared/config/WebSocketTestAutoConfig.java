@@ -1,9 +1,10 @@
-package code.users.entrypoints.websocket;
+package code.shared.config;
 
-import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.createStompClient;
+import static code.shared.util.WebSocketSecurityUtil.createStompClient;
 
-import code.users.domain.model.UserFixtures;
-import code.users.entrypoints.websocket.util.WebSocketSecurityUtil;
+import code.shared.domain.model.WebSocketFixtures;
+import code.shared.util.WebSocketSecurityUtil;
+import code.users.entrypoints.websocket.UserWebSocketConfig;
 import code.users.infrastructure.security.JwtTokenService;
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
 import org.junit.jupiter.api.AfterEach;
@@ -51,9 +52,9 @@ public class WebSocketTestAutoConfig {
     WebSocketSecurityUtil.mockAuth(
         jwtTokenService,
         userDetailsService,
-        UserFixtures.TOKEN_FIXTURE,
-        UserFixtures.ID_FIXTURE,
-        UserFixtures.PASSWORD_FIXTURE);
+      WebSocketFixtures.TOKEN_FIXTURE,
+      WebSocketFixtures.ID_FIXTURE,
+      WebSocketFixtures.PASSWORD_FIXTURE);
   }
 
   @AfterEach

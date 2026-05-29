@@ -6,6 +6,8 @@ import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 import code.users.infrastructure.security.JwtTokenService;
 import io.jsonwebtoken.JwtException;
 import java.util.Optional;
+
+import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -48,9 +50,7 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (jwtTokenService.isTokenValid(token, userDetails)) {
-          UsernamePasswordAuthenticationToken authToken =
-              new UsernamePasswordAuthenticationToken(
-                  userDetails, null, userDetails.getAuthorities());
+          var authToken = jwtTokenService.buildAuthentication(userDetails);
           accessor.setUser(authToken);
           log.info("User '{}' authenticated for WebSocket session.", username);
         }

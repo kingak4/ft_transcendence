@@ -1,27 +1,29 @@
 package code.users.entrypoints.websocket;
 
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.SOCKET_PATH;
-import static code.shared.WebSocketConfig.WS_HOST;
-import static code.users.entrypoints.websocket.PresenceWebSocketController.PRESENCE_CHECK;
-import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
-import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.connectWithToken;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-
-import code.users.domain.model.UserFixtures;
+import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.domain.model.WebSocketFixtures;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
-import java.lang.reflect.Type;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.lang.reflect.Type;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.SOCKET_PATH;
+import static code.shared.WebSocketConfig.WS_HOST;
+import static code.users.entrypoints.websocket.PresenceWebSocketController.PRESENCE_CHECK;
+import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -37,11 +39,11 @@ class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
   @Test
   void shouldReturnPresenceStatusWhenChecked() throws Exception {
     // Given
-    UserId userId = UserFixtures.USER_ID_FIXTURE;
+    UserId userId = UserId.of(WebSocketFixtures.ID_FIXTURE);
     given(readPresenceUseCase.isOnline(userId)).willReturn(true);
 
     session =
-        connectWithToken(stompClient, WS_HOST + port + SOCKET_ENDPOINT, UserFixtures.TOKEN_FIXTURE);
+        connectWithToken(stompClient, WS_HOST + port + SOCKET_ENDPOINT, WebSocketFixtures.TOKEN_FIXTURE);
     CompletableFuture<PresenceWebSocketController.PresenceStatusResponse> resultKeeper =
         subscribe(
             userPresenceTopic(userId.val()),
@@ -52,7 +54,7 @@ class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
 
     // Then
     var response = resultKeeper.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-    assertThat(response.userId()).isEqualTo(UserFixtures.ID_FIXTURE);
+    assertThat(response.userId()).isEqualTo(WebSocketFixtures.ID_FIXTURE);
     assertThat(response.isOnline()).isTrue();
     verify(readPresenceUseCase).isOnline(userId);
   }

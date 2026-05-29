@@ -1,9 +1,10 @@
 package code.users.entrypoints.websocket;
 
+import static code.shared.domain.model.WebSocketFixtures.ID_FIXTURE;
+import static code.shared.domain.model.WebSocketFixtures.SESSION_FIXTURE;
 import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
 import static org.mockito.Mockito.verify;
 
-import code.users.domain.model.UserFixtures;
 import code.users.ports.in.UpdatePresenceUseCase;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,8 @@ class UserStatusWebSocketListenerTest {
 
   @Test
   void shouldBroadcastPresenceOnConnectAndDisconnect() {
-    UUID userId = UserFixtures.ID_FIXTURE;
-    String sessionId = UserFixtures.SESSION_FIXTURE;
+    UUID userId = ID_FIXTURE;
+    String sessionId = SESSION_FIXTURE;
 
     listener.handleWebSocketConnectListener(connectEvent(sessionId, userId, "test-agent"));
     verify(updatePresenceUseCase)

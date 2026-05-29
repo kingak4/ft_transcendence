@@ -5,7 +5,7 @@ import static code.users.infrastructure.cache.PresenceRepository.sessionInfoKey;
 import static code.users.infrastructure.cache.PresenceRepository.sessionsKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import code.bootstrap.config.RedisTestSupport;
+import code.shared.config.RedisTestSupport;
 import code.users.domain.model.Session;
 import code.users.domain.model.SessionId;
 import code.users.domain.model.UserFixtures;
