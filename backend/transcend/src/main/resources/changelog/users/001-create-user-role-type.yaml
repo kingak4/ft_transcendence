@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-user-role-type
+      author: ft_transcendence
+      sql:
+        sql: CREATE TYPE user_role AS ENUM('USER', 'ADMIN')

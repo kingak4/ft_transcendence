@@ -1,7 +1,10 @@
 package code.users.infrastructure.persistence;
 
+import code.users.domain.model.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -18,4 +21,9 @@ public class UserEntity {
 
   @Column(nullable = false)
   private String hash;
+
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.OTHER)
+  @Column(columnDefinition = "user_role", nullable = false)
+  private Role role;
 }

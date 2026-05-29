@@ -6,8 +6,7 @@ up:
 	${COMPOSE} -f app-compose.yml up -d
 
 build:
-	${COMPOSE} -f app-compose.yml build --no-cache
-
+	${COMPOSE} -f app-compose.yml build
 
 down:
 	${COMPOSE} -f app-compose.yml down
