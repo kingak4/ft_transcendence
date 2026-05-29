@@ -1,6 +1,6 @@
 package code.bootstrap;
 
-import code.bootstrap.exceptions.IllegalProfileException;
+import code.shared.exceptions.IllegalProfileException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.Binder;
