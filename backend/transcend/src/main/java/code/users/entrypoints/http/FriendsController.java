@@ -32,14 +32,14 @@ public class FriendsController {
   @PostMapping(FRIEND_ENDPOINT)
   @Operation(summary = "Add a friend")
   public ResponseEntity<Void> addFriend(@PathVariable UUID userId, @PathVariable UUID friendId) {
-    manageFriendsUseCase.addFriend(new UserId(userId), new UserId(friendId));
+    manageFriendsUseCase.addFriend(UserId.of(userId), FriendId.of(friendId));
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @DeleteMapping(FRIEND_ENDPOINT)
   @Operation(summary = "Remove a friend")
   public ResponseEntity<Void> removeFriend(@PathVariable UUID userId, @PathVariable UUID friendId) {
-    manageFriendsUseCase.removeFriend(new UserId(userId), new UserId(friendId));
+    manageFriendsUseCase.removeFriend(UserId.of(userId), FriendId.of(friendId));
     return ResponseEntity.noContent().build();
   }
 
@@ -50,7 +50,7 @@ public class FriendsController {
       @RequestParam(value = "page", defaultValue = "0") int page,
       @RequestParam(value = "size", defaultValue = "10") int size) {
     Map<FriendId, UserDetails> friends =
-        manageFriendsUseCase.getFriendList(new UserId(userId), page, size);
+        manageFriendsUseCase.getFriendList(UserId.of(userId), page, size);
     return ResponseEntity.ok(friends);
   }
 }

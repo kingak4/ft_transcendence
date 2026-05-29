@@ -10,7 +10,7 @@ public class UserFixtures {
   public static final String HASH_FIXTURE = "hash-fixture";
   public static final String TOKEN_FIXTURE = "token-fixture";
   public static final String DISPLAY_NAME_FIXTURE = "Kinga";
-  public static final UserId USER_ID_FIXTURE = new UserId(ID_FIXTURE);
+  public static final UserId USER_ID_FIXTURE = UserId.of(ID_FIXTURE);
   public static final String AVATAR_URL_FIXTURE = "/avatars/1";
   public static final String AVATAR_NAME_FIXTURE = "Friend 1";
   public static final String NAME_FIXTURE = "NAME_FIXTURE";

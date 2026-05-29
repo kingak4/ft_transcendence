@@ -1,6 +1,7 @@
 package code.users.entrypoints.websocket;
 
-import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.WS_HOST;
 import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.connectWithToken;
 
 import code.users.domain.model.UserFixtures;
@@ -25,7 +26,7 @@ class UserStatusTest extends WebSocketTestAutoConfig {
 
   @Test
   void shouldReportUserOnlineAndOffline() throws Exception {
-    String url = "ws://localhost:" + port + SOCKET_ENDPOINT;
+    String url = WS_HOST + port + SOCKET_ENDPOINT;
     StompSession session = connectWithToken(stompClient, url, UserFixtures.TOKEN_FIXTURE);
 
     Mockito.verify(updatePresenceUseCase, Mockito.timeout(TIMEOUT_SECONDS * 1000L))

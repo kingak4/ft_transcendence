@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
-import code.users.domain.model.UserId;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.ManageFriendsUseCase;
 import java.util.Map;
@@ -53,7 +52,7 @@ class FriendsControllerTest {
                     friendId)))
         .andExpect(status().isCreated());
 
-    verify(manageFriendsUseCase).addFriend(USER_ID_FIXTURE, new UserId(friendId));
+    verify(manageFriendsUseCase).addFriend(USER_ID_FIXTURE, FriendId.of(friendId));
   }
 
   @Test
@@ -72,13 +71,13 @@ class FriendsControllerTest {
                     friendId)))
         .andExpect(status().isNoContent());
 
-    verify(manageFriendsUseCase).removeFriend(USER_ID_FIXTURE, new UserId(friendId));
+    verify(manageFriendsUseCase).removeFriend(USER_ID_FIXTURE, FriendId.of(friendId));
   }
 
   @Test
   void getFriendListSuccessfully() throws Exception {
     // given
-    FriendId friendId = new FriendId();
+    FriendId friendId = FriendId.of(UUID.randomUUID());
     UserDetails friendDetails = aDefaultUser().getDetails();
 
     Map<FriendId, UserDetails> friendsMap = Map.of(friendId, friendDetails);

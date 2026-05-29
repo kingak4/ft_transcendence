@@ -34,7 +34,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
   WebSocketMessagingAutoConfiguration.class,
   WebSocketServletAutoConfiguration.class
 })
-@Import({WebSocketConfiguration.class, SocketJwtInterceptor.class})
+@Import({UserWebSocketConfig.class, SocketJwtInterceptor.class})
 public class WebSocketTestAutoConfig {
 
   protected WebSocketStompClient stompClient;

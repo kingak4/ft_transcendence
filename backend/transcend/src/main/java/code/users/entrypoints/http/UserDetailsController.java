@@ -52,7 +52,7 @@ public class UserDetailsController {
   @Operation(summary = "Change the display name of the user")
   public ResponseEntity<Void> updateDisplayName(
       @PathVariable UUID userId, @RequestBody UpdateDisplayNameRequest request) {
-    updateDisplayNameUseCase.updateDisplayName(new UserId(userId), mapper.toCommand(request));
+    updateDisplayNameUseCase.updateDisplayName(UserId.of(userId), mapper.toCommand(request));
     return ResponseEntity.ok().build();
   }
 
@@ -61,7 +61,7 @@ public class UserDetailsController {
   public ResponseEntity<Void> uploadAvatar(
       @PathVariable UUID userId, @RequestParam("file") MultipartFile file) throws IOException {
     updateAvatarUseCase.updateAvatar(
-        new UserId(userId),
+        UserId.of(userId),
         new UpdateAvatarUseCase.UpdateAvatarCommand(file.getOriginalFilename(), file.getBytes()));
     return ResponseEntity.ok().build();
   }
@@ -69,14 +69,14 @@ public class UserDetailsController {
   @GetMapping(value = AVATAR_ENDPOINT, produces = MediaType.IMAGE_JPEG_VALUE)
   @Operation(summary = "Get the profile avatar of the user")
   public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
-    byte[] avatar = getProfileUseCase.getAvatar(new UserId(userId)).content();
+    byte[] avatar = getProfileUseCase.getAvatar(UserId.of(userId)).content();
     return ResponseEntity.ok(avatar);
   }
 
   @GetMapping(DETAILS_ENDPOINT)
   @Operation(summary = "Get the details of the user")
   public ResponseEntity<GetUserDetailsResponse> getDetails(@PathVariable UUID userId) {
-    UserDetails details = getProfileUseCase.getDetails(new UserId(userId));
+    UserDetails details = getProfileUseCase.getDetails(UserId.of(userId));
     return ResponseEntity.ok(mapper.toResponse(details));
   }
 

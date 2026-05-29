@@ -65,12 +65,12 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  public void addFriend(UserId userId, UserId friendId) {
+  public void addFriend(UserId userId, FriendId friendId) {
     throw new NotImplementedException();
   }
 
   @Override
-  public void removeFriend(UserId userId, UserId friendId) {
+  public void removeFriend(UserId userId, FriendId friendId) {
     throw new NotImplementedException();
   }
 

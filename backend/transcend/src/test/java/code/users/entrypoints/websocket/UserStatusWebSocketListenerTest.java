@@ -1,6 +1,6 @@
 package code.users.entrypoints.websocket;
 
-import static code.users.entrypoints.websocket.WebSocketConfiguration.userPresenceTopic;
+import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
 import static org.mockito.Mockito.verify;
 
 import code.users.domain.model.UserFixtures;

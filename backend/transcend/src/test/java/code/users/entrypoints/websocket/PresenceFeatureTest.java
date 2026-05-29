@@ -1,11 +1,14 @@
 package code.users.entrypoints.websocket;
 
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.SOCKET_PATH;
+import static code.shared.WebSocketConfig.WS_HOST;
 import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static code.users.entrypoints.websocket.PresenceWebSocketController.*;
-import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_ENDPOINT;
-import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_PATH;
-import static code.users.entrypoints.websocket.WebSocketConfiguration.userPresenceTopic;
+import static code.users.entrypoints.websocket.PresenceWebSocketController.CheckPresenceRequest;
+import static code.users.entrypoints.websocket.PresenceWebSocketController.PRESENCE_CHECK;
+import static code.users.entrypoints.websocket.PresenceWebSocketController.PresenceStatusResponse;
+import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
 import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.connectWithToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -47,18 +50,16 @@ class PresenceFeatureTest extends WebSocketTestAutoConfig {
   @Test
   void shouldBroadcastPresenceEventsWhenUserConnectsAndDisconnects() throws Exception {
     // Given
-    String wsUrl = "ws://localhost:" + port + SOCKET_ENDPOINT;
+    String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
     given(readPresenceUseCase.isOnline(USER_ID_FIXTURE)).willReturn(true);
 
     BlockingQueue<PresenceStatusResponse> events = new LinkedBlockingQueue<>();
 
-    // 1. Observer starts listening for presence updates
     StompSession observerSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
     observerSession.subscribe(
         userPresenceTopic(USER_ID_FIXTURE.val()),
         new QueueingFrameHandler<>(PresenceStatusResponse.class, events));
 
-    // 2. Actor connects and triggers a presence check
     StompSession actorSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
 
     // When
@@ -84,7 +85,6 @@ class PresenceFeatureTest extends WebSocketTestAutoConfig {
               assertThat(events).anyMatch(res -> !res.isOnline());
             });
 
-    // Final Verifications
     verify(updatePresenceUseCase, atLeastOnce())
         .setUserOnline(any(UpdatePresenceUseCase.SetUserOnlineCommand.class));
     verify(updatePresenceUseCase, atLeastOnce())
@@ -104,7 +104,6 @@ class PresenceFeatureTest extends WebSocketTestAutoConfig {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void handleFrame(StompHeaders headers, Object payload) {
       queue.add((T) payload);
     }

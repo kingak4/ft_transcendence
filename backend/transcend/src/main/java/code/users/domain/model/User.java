@@ -19,4 +19,5 @@ public class User {
   Role role;
   UserDetails details;
   Set<Session> sessions;
+  Set<FriendId> friends;
 }
