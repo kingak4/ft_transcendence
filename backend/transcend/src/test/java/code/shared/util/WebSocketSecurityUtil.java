@@ -42,11 +42,12 @@ public final class WebSocketSecurityUtil {
             ArgumentMatchers.eq(token), ArgumentMatchers.any(UserDetails.class)))
         .thenReturn(true);
     when(jwtTokenService.buildAuthentication(ArgumentMatchers.any(UserDetails.class)))
-        .thenAnswer(invocation -> {
-          UserDetails ud = invocation.getArgument(0);
-          return new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-            ud, null, ud.getAuthorities());
-        });
+        .thenAnswer(
+            invocation -> {
+              UserDetails ud = invocation.getArgument(0);
+              return new org.springframework.security.authentication
+                  .UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities());
+            });
   }
 
   public static WebSocketStompClient createStompClient() {

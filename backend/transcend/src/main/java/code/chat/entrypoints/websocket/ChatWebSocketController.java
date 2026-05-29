@@ -33,7 +33,8 @@ public class ChatWebSocketController {
   @MessageMapping(MESSAGE_SEND)
   @Operation(
       summary = "Send a message in a chat",
-      description = "Sends a message to a specific chat room. The message is broadcast to all subscribers of that chat topic. Requires authenticated WebSocket connection with JWT Bearer token.")
+      description =
+          "Sends a message to a specific chat room. The message is broadcast to all subscribers of that chat topic. Requires authenticated WebSocket connection with JWT Bearer token.")
   public void sendMessage(
       @DestinationVariable UUID chatId,
       @Payload SendMessageRequest request,
@@ -53,7 +54,8 @@ public class ChatWebSocketController {
   @MessageMapping(MESSAGE_DELETE)
   @Operation(
       summary = "Delete a message from a chat",
-      description = "Deletes a specific message from a chat. Only the message sender can delete their own messages. Requires authenticated WebSocket connection with JWT Bearer token.")
+      description =
+          "Deletes a specific message from a chat. Only the message sender can delete their own messages. Requires authenticated WebSocket connection with JWT Bearer token.")
   public void deleteMessage(
       @DestinationVariable UUID messageId,
       @Payload DeleteMessageRequest request,
@@ -69,17 +71,14 @@ public class ChatWebSocketController {
   @Schema(description = "Request to send a message in a chat")
   public record SendMessageRequest(
       @Schema(description = "The content of the message", example = "Hello, world!")
-      String content) {}
+          String content) {}
 
   @Schema(description = "Request to delete a message (empty payload)")
   public record DeleteMessageRequest() {}
 
   @Schema(description = "Response containing a message sent in a chat")
   public record ChatMessageResponse(
-      @Schema(description = "The chat ID where the message was sent")
-      UUID chatId,
-      @Schema(description = "The ID of the user who sent the message")
-      UUID senderId,
-      @Schema(description = "The content of the message")
-      String content) {}
+      @Schema(description = "The chat ID where the message was sent") UUID chatId,
+      @Schema(description = "The ID of the user who sent the message") UUID senderId,
+      @Schema(description = "The content of the message") String content) {}
 }

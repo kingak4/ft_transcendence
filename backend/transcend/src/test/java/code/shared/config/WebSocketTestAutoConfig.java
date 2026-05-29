@@ -52,9 +52,9 @@ public class WebSocketTestAutoConfig {
     WebSocketSecurityUtil.mockAuth(
         jwtTokenService,
         userDetailsService,
-      WebSocketFixtures.TOKEN_FIXTURE,
-      WebSocketFixtures.ID_FIXTURE,
-      WebSocketFixtures.PASSWORD_FIXTURE);
+        WebSocketFixtures.TOKEN_FIXTURE,
+        WebSocketFixtures.ID_FIXTURE,
+        WebSocketFixtures.PASSWORD_FIXTURE);
   }
 
   @AfterEach

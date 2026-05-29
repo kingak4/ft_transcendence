@@ -16,9 +16,9 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.ArgumentMatchers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -78,11 +78,12 @@ class JwtAuthenticationFilterTest {
     when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
     when(jwtTokenService.isTokenValid(token, userDetails)).thenReturn(true);
     when(jwtTokenService.buildAuthentication(ArgumentMatchers.any(UserDetails.class)))
-      .thenAnswer(invocation -> {
-        UserDetails ud = invocation.getArgument(0);
-        return new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-          ud, null, ud.getAuthorities());
-      });
+        .thenAnswer(
+            invocation -> {
+              UserDetails ud = invocation.getArgument(0);
+              return new org.springframework.security.authentication
+                  .UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities());
+            });
 
     // when
     filter.doFilterInternal(request, response, filterChain);

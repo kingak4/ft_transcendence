@@ -1,5 +1,9 @@
 package code.users.entrypoints.websocket;
 
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.WS_HOST;
+import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
+
 import code.shared.config.WebSocketTestAutoConfig;
 import code.shared.domain.model.WebSocketFixtures;
 import code.users.ports.in.UpdatePresenceUseCase;
@@ -9,10 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
-import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.WS_HOST;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,

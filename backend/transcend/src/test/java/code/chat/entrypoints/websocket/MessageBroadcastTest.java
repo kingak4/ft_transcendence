@@ -1,24 +1,5 @@
 package code.chat.entrypoints.websocket;
 
-import code.shared.domain.model.WebSocketFixtures;
-import code.shared.config.WebSocketTestAutoConfig;
-import code.chat.domain.model.ChatFixtures;
-import code.chat.ports.in.ManageMessagesUseCase;
-import code.shared.util.WebSocketSecurityUtil;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
-import java.lang.reflect.Type;
-import java.time.Duration;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import static code.chat.entrypoints.websocket.ChatWebSocketConfig.chatMessagesTopic;
 import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_SEND;
 import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
@@ -29,6 +10,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+
+import code.chat.domain.model.ChatFixtures;
+import code.chat.ports.in.ManageMessagesUseCase;
+import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.domain.model.WebSocketFixtures;
+import code.shared.util.WebSocketSecurityUtil;
+import java.lang.reflect.Type;
+import java.time.Duration;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
