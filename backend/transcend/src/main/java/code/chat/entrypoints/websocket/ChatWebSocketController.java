@@ -77,8 +77,5 @@ public class ChatWebSocketController {
   public record DeleteMessageRequest() {}
 
   @Schema(description = "Response containing a message sent in a chat")
-  public record ChatMessageResponse(
-      @Schema(description = "The chat ID where the message was sent") UUID chatId,
-      @Schema(description = "The ID of the user who sent the message") UUID senderId,
-      @Schema(description = "The content of the message") String content) {}
+  public record ChatMessageResponse(UUID chatId, UUID senderId, String content) {}
 }
