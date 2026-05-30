@@ -23,7 +23,7 @@ public class UserEntity {
   private String hash;
 
   @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.OTHER)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
   @Column(columnDefinition = "user_role", nullable = false)
   private Role role;
 }
