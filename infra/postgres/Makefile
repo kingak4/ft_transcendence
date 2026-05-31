@@ -4,10 +4,10 @@ include .env
 .PHONY: up down re db logs
 
 up:
-	${COMPOSE} up -d
+	docker compose up -d
 
 down:
-	${COMPOSE} down -v
+	docker compose down -v
 
 re: down up
 
