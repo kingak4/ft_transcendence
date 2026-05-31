@@ -2,5 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-user-role-type
       author: ft_transcendence
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM pg_type WHERE typname = 'user_role'
       sql:
         sql: CREATE TYPE user_role AS ENUM('USER', 'ADMIN')

@@ -36,7 +36,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
   WebSocketServletAutoConfiguration.class
 })
 @Import({UserWebSocketConfig.class, SocketJwtInterceptor.class})
-public class WebSocketTestAutoConfig {
+public class WebSocketTestAutoConfig extends RedisTestSupport {
 
   protected WebSocketStompClient stompClient;
   protected StompSession session;
