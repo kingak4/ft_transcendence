@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import static code.users.domain.model.Role.USER;
+
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ class Register implements RegisterUseCase {
             .email(command.email())
             .password(hash)
             .details(UserDetails.builder().avatarUrl(UserDetails.DEFAULT_AVATAR_URL).build())
+                .role(USER)
             .build();
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.getId());
