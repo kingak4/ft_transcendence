@@ -5,7 +5,7 @@ import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
-import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
+import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

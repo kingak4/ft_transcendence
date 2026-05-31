@@ -19,6 +19,7 @@ import code.shared.config.WebSocketTestAutoConfig;
 import code.shared.domain.model.WebSocketFixtures;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.simp.stomp.StompSession;

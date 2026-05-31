@@ -11,12 +11,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.event.EventListener;
 import org.springframework.modulith.Modulithic;
 
 @Slf4j
 @Modulithic
 @SpringBootApplication
+@EnableCaching
 @ConfigurationPropertiesScan
 public class TranscendApp extends SpringBootServletInitializer {
 

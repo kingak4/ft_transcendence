@@ -24,6 +24,6 @@ public class UserEntity {
 
   @Enumerated(EnumType.STRING)
   @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-  @Column(columnDefinition = "user_role", nullable = false)
+  @Column(nullable = false)
   private Role role;
 }

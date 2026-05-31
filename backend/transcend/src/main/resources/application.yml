@@ -60,11 +60,26 @@ springwolf:
         protocol-version: "13"
         description: "Local WebSocket server"
 
-
-
-
-
 security:
   jwt:
     secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
     expiration-ms: 3600000
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: rate-limit-bucket
+      url: .*
+      strategy: first
+      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API quota.\" }"
+      rate-limits:
+        - cache-key: "getRemoteAddr()"
+          bandwidths:
+            - capacity: 100
+              time: 1
+              unit: minutes
+        - cache-key: "getHeader('Authorization') != null ? getHeader('Authorization') : getRemoteAddr()"
+          bandwidths:
+            - capacity: 200
+              time: 1
+              unit: minutes

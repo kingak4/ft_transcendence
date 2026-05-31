@@ -1,4 +1,5 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
 
 plugins {
    application
@@ -23,7 +24,6 @@ val asciidoctorExt by configurations.creating
 
 dependencies {
    asciidoctorExt(libs.asciidoctorj.diagram)
-
    implementation(libs.commons.lang3)
    testImplementation(libs.bundles.testcontainers)
    implementation(libs.spring.modulith)
@@ -39,8 +39,7 @@ dependencies {
    implementation(libs.jjwt.api)
    implementation(libs.liquibase)
    implementation(libs.dotenv.java)
-   implementation(libs.spring.cache)
-   implementation(libs.spring.redis)
+   implementation(libs.bundles.cache)
    implementation(libs.bundles.structurizr)
    implementation(libs.embedded.redis)
 
