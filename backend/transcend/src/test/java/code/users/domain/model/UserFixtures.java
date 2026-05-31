@@ -27,6 +27,7 @@ public class UserFixtures {
         .id(USER_ID_FIXTURE)
         .email(EMAIL_FIXTURE)
         .password(HASH_FIXTURE)
+        .role(Role.USER)
         .details(details);
   }
 
