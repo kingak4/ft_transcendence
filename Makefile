@@ -1,6 +1,13 @@
 include ./infra/.env
 
-.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build
+.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build env
+
+env:
+	find . -name ".env.example" -type f | while read file; do \
+		dir=$$(dirname $$file); \
+		cp $$file $$dir/.env; \
+		echo "Created $$dir/.env from $$file"; \
+	done
 
 up: infra-up backend-up frontend-up nginx-up
 

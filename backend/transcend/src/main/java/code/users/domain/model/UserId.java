@@ -8,6 +8,6 @@ public record UserId(UUID val) {
   }
 
   public static UserId generate() {
-    return new UserId(UUID.randomUUID());
+    return UserId.of(UUID.randomUUID());
   }
 }

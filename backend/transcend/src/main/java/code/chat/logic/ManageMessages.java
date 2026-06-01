@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ManageMessages implements ManageMessagesUseCase {
-  private ChatDao dao;
+  private final ChatDao dao;
 
   @Override
   public void sendMessage(SendMessageCommand command) {

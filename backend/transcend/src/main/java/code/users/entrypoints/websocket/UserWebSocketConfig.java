@@ -1,5 +1,10 @@
 package code.users.entrypoints.websocket;
 
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.SOCKET_PATH;
+import static code.shared.WebSocketConfig.SOCKET_QUEUE;
+import static code.shared.WebSocketConfig.SOCKET_TOPIC;
+
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +18,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
-class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
+public class UserWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   private final SocketJwtInterceptor interceptor;
 
-  public static final String SOCKET_ENDPOINT = "/ws";
-  public static final String SOCKET_PATH = "/transcend";
-  public static final String SOCKET_TOPIC = "/topic";
-  public static final String SOCKET_QUEUE = "/queue";
   public static final String USER_PRESENCE_TOPIC_PREFIX = SOCKET_TOPIC + "/user/";
   public static final String USER_PRESENCE_TOPIC_SUFFIX = "/presence";
 

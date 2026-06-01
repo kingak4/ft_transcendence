@@ -1,5 +1,7 @@
 package code.users.logic;
 
+import static code.users.domain.model.Role.USER;
+
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
@@ -31,6 +33,7 @@ class Register implements RegisterUseCase {
             .email(command.email())
             .password(hash)
             .details(UserDetails.builder().avatarUrl(UserDetails.DEFAULT_AVATAR_URL).build())
+            .role(USER)
             .build();
     userDao.createUser(newUser);
     return new RegisteredUser(newUser.getId());

@@ -1,7 +1,5 @@
 package code.users.entrypoints.http;
 
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
 import static org.mockito.Mockito.verify;
@@ -14,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
-import code.users.domain.model.UserId;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.ManageFriendsUseCase;
 import java.util.Map;
@@ -24,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc(addFilters = false)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class FriendsControllerTest {
+
+  private static final UUID AUTH_USER_ID = UUID.randomUUID();
 
   private final MockMvc mockMvc;
 
@@ -45,15 +45,15 @@ class FriendsControllerTest {
     // when & then
     mockMvc
         .perform(
-            post(
-                buildUrl(
+            post(buildUrl(
                     FriendsController.FRIENDS_ENDPOINT,
                     FriendsController.FRIEND_ENDPOINT,
-                    ID_FIXTURE,
-                    friendId)))
+                    friendId))
+                .principal(authentication()))
         .andExpect(status().isCreated());
 
-    verify(manageFriendsUseCase).addFriend(USER_ID_FIXTURE, new UserId(friendId));
+    verify(manageFriendsUseCase)
+        .addFriend(code.users.domain.model.UserId.of(AUTH_USER_ID), FriendId.of(friendId));
   }
 
   @Test
@@ -65,33 +65,40 @@ class FriendsControllerTest {
     mockMvc
         .perform(
             delete(
-                buildUrl(
-                    FriendsController.FRIENDS_ENDPOINT,
-                    FriendsController.FRIEND_ENDPOINT,
-                    ID_FIXTURE,
-                    friendId)))
+                    buildUrl(
+                        FriendsController.FRIENDS_ENDPOINT,
+                        FriendsController.FRIEND_ENDPOINT,
+                        friendId))
+                .principal(authentication()))
         .andExpect(status().isNoContent());
 
-    verify(manageFriendsUseCase).removeFriend(USER_ID_FIXTURE, new UserId(friendId));
+    verify(manageFriendsUseCase)
+        .removeFriend(code.users.domain.model.UserId.of(AUTH_USER_ID), FriendId.of(friendId));
   }
 
   @Test
   void getFriendListSuccessfully() throws Exception {
     // given
-    FriendId friendId = new FriendId();
+    FriendId friendId = FriendId.of(UUID.randomUUID());
     UserDetails friendDetails = aDefaultUser().getDetails();
 
     Map<FriendId, UserDetails> friendsMap = Map.of(friendId, friendDetails);
 
-    when(manageFriendsUseCase.getFriendList(USER_ID_FIXTURE, 0, 10)).thenReturn(friendsMap);
+    when(manageFriendsUseCase.getFriendList(code.users.domain.model.UserId.of(AUTH_USER_ID), 0, 10))
+        .thenReturn(friendsMap);
 
     // when & then
     mockMvc
         .perform(
-            get(buildUrl(FriendsController.FRIENDS_ENDPOINT, null, ID_FIXTURE))
+            get(buildUrl(FriendsController.FRIENDS_ENDPOINT, null))
                 .param("page", "0")
-                .param("size", "10"))
+                .param("size", "10")
+                .principal(authentication()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.*").exists());
+  }
+
+  private UsernamePasswordAuthenticationToken authentication() {
+    return new UsernamePasswordAuthenticationToken(AUTH_USER_ID.toString(), null);
   }
 }

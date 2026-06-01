@@ -11,6 +11,7 @@ public interface UserEntityMapper {
   @Mapping(target = "details", ignore = true)
   @Mapping(target = "role", ignore = true)
   @Mapping(target = "sessions", ignore = true)
+  @Mapping(target = "friends", ignore = true)
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")

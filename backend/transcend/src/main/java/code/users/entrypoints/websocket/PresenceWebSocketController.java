@@ -24,7 +24,7 @@ public class PresenceWebSocketController {
     UserId userId = UserId.of(request.userId());
     boolean isOnline = readPresenceUseCase.isOnline(userId);
     messagingTemplate.convertAndSend(
-        WebSocketConfiguration.userPresenceTopic(userId.val()),
+        UserWebSocketConfig.userPresenceTopic(userId.val()),
         new PresenceStatusResponse(userId.val(), isOnline));
   }
 

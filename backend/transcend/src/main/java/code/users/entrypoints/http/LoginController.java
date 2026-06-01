@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
   public static final String BASE_URL = "users";
-  public static final String LOGIN_ENDPOINT = "login";
+  public static final String LOGIN_ENDPOINT = "/login";
 
   private final LoginUseCase loginUseCase;
   private final UsersApiMapper mapper;

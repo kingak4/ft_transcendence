@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserDetailsController {
 
   public static final String BASE_URL = "users";
-  public static final String UPDATE_DISPLAY_NAME_ENDPOINT = "/{userId}/display-name";
+  public static final String UPDATE_DISPLAY_NAME_ENDPOINT = "/display-name";
+  public static final String UPDATE_AVATAR_ENDPOINT = "/avatar";
   public static final String AVATAR_ENDPOINT = "/{userId}/avatar";
   public static final String DETAILS_ENDPOINT = "/{userId}/details";
 
@@ -51,17 +53,19 @@ public class UserDetailsController {
   @PatchMapping(UPDATE_DISPLAY_NAME_ENDPOINT)
   @Operation(summary = "Change the display name of the user")
   public ResponseEntity<Void> updateDisplayName(
-      @PathVariable UUID userId, @RequestBody UpdateDisplayNameRequest request) {
-    updateDisplayNameUseCase.updateDisplayName(new UserId(userId), mapper.toCommand(request));
+      Authentication authentication, @RequestBody UpdateDisplayNameRequest request) {
+    UUID userId = UUID.fromString(authentication.getName());
+    updateDisplayNameUseCase.updateDisplayName(UserId.of(userId), mapper.toCommand(request));
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping(value = AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = UPDATE_AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "Upload a profile avatar")
   public ResponseEntity<Void> uploadAvatar(
-      @PathVariable UUID userId, @RequestParam("file") MultipartFile file) throws IOException {
+      Authentication authentication, @RequestParam("file") MultipartFile file) throws IOException {
+    UUID userId = UUID.fromString(authentication.getName());
     updateAvatarUseCase.updateAvatar(
-        new UserId(userId),
+        UserId.of(userId),
         new UpdateAvatarUseCase.UpdateAvatarCommand(file.getOriginalFilename(), file.getBytes()));
     return ResponseEntity.ok().build();
   }
@@ -69,14 +73,14 @@ public class UserDetailsController {
   @GetMapping(value = AVATAR_ENDPOINT, produces = MediaType.IMAGE_JPEG_VALUE)
   @Operation(summary = "Get the profile avatar of the user")
   public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
-    byte[] avatar = getProfileUseCase.getAvatar(new UserId(userId)).content();
+    byte[] avatar = getProfileUseCase.getAvatar(UserId.of(userId)).content();
     return ResponseEntity.ok(avatar);
   }
 
   @GetMapping(DETAILS_ENDPOINT)
   @Operation(summary = "Get the details of the user")
   public ResponseEntity<GetUserDetailsResponse> getDetails(@PathVariable UUID userId) {
-    UserDetails details = getProfileUseCase.getDetails(new UserId(userId));
+    UserDetails details = getProfileUseCase.getDetails(UserId.of(userId));
     return ResponseEntity.ok(mapper.toResponse(details));
   }
 

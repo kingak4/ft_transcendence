@@ -1,4 +1,4 @@
-.PHONY: all up down re logs ps clean
+.PHONY: all up down re logs ps clean killall
 
 all: up
 
@@ -19,3 +19,6 @@ ps:
 clean:
 	$(MAKE) -C postgres clean
 	$(MAKE) -C redis clean
+
+killall:
+	docker rm -f $(docker ps -asq)

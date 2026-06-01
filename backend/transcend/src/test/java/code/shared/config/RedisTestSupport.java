@@ -1,4 +1,4 @@
-package code.bootstrap.config;
+package code.shared.config;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,6 +18,8 @@ public abstract class RedisTestSupport {
     }
     redisServer = new RedisServer(redisPort);
     redisServer.start();
+    System.setProperty("spring.data.redis.port", String.valueOf(redisPort));
+    System.setProperty("spring.data.redis.host", "localhost");
   }
 
   @AfterAll

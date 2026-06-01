@@ -1,6 +1,9 @@
 package code.users.domain.model;
 
-import lombok.Value;
+import java.util.UUID;
 
-@Value
-public class FriendId {}
+public record FriendId(UUID val) {
+  public static FriendId of(UUID val) {
+    return new FriendId(val);
+  }
+}
