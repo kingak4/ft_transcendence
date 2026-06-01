@@ -16,12 +16,12 @@ public class ManageFriends implements ManageFriendsUseCase {
   private final UserDao userDao;
 
   @Override
-  public void addFriend(UserId userId, UserId friendId) {
+  public void addFriend(UserId userId, FriendId friendId) {
     userDao.addFriend(userId, friendId);
   }
 
   @Override
-  public void removeFriend(UserId userId, UserId friendId) {
+  public void removeFriend(UserId userId, FriendId friendId) {
     userDao.removeFriend(userId, friendId);
   }
 

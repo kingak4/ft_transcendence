@@ -1,14 +1,17 @@
 package code.users.entrypoints.websocket;
 
+import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.WebSocketConfig.SOCKET_PATH;
+import static code.shared.WebSocketConfig.WS_HOST;
+import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
 import static code.users.entrypoints.websocket.PresenceWebSocketController.PRESENCE_CHECK;
-import static code.users.entrypoints.websocket.WebSocketConfiguration.SOCKET_ENDPOINT;
-import static code.users.entrypoints.websocket.WebSocketConfiguration.userPresenceTopic;
-import static code.users.entrypoints.websocket.util.WebSocketSecurityUtil.connectWithToken;
+import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import code.users.domain.model.UserFixtures;
+import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.domain.model.WebSocketFixtures;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
 import java.lang.reflect.Type;
@@ -35,12 +38,12 @@ class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
   @Test
   void shouldReturnPresenceStatusWhenChecked() throws Exception {
     // Given
-    UserId userId = UserFixtures.USER_ID_FIXTURE;
+    UserId userId = UserId.of(WebSocketFixtures.ID_FIXTURE);
     given(readPresenceUseCase.isOnline(userId)).willReturn(true);
 
     session =
         connectWithToken(
-            stompClient, "ws://localhost:" + port + SOCKET_ENDPOINT, UserFixtures.TOKEN_FIXTURE);
+            stompClient, WS_HOST + port + SOCKET_ENDPOINT, WebSocketFixtures.TOKEN_FIXTURE);
     CompletableFuture<PresenceWebSocketController.PresenceStatusResponse> resultKeeper =
         subscribe(
             userPresenceTopic(userId.val()),
@@ -51,7 +54,7 @@ class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
 
     // Then
     var response = resultKeeper.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-    assertThat(response.userId()).isEqualTo(UserFixtures.ID_FIXTURE);
+    assertThat(response.userId()).isEqualTo(WebSocketFixtures.ID_FIXTURE);
     assertThat(response.isOnline()).isTrue();
     verify(readPresenceUseCase).isOnline(userId);
   }
@@ -76,7 +79,7 @@ class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
 
   private void sendPresenceCheck(UserId userId) {
     StompHeaders headers = new StompHeaders();
-    headers.setDestination(WebSocketConfiguration.SOCKET_PATH + PRESENCE_CHECK);
+    headers.setDestination(SOCKET_PATH + PRESENCE_CHECK);
     headers.add("userId", userId.toString());
     session.send(headers, new PresenceWebSocketController.CheckPresenceRequest(userId.val()));
   }

@@ -49,7 +49,7 @@ class UserStatusWebSocketListener {
         SetUserOnlineCommand command = new SetUserOnlineCommand(sessionId, userId, deviceInfo);
         updatePresenceUseCase.setUserOnline(command);
         messagingTemplate.convertAndSend(
-            WebSocketConfiguration.userPresenceTopic(userId),
+            UserWebSocketConfig.userPresenceTopic(userId),
             new PresenceWebSocketController.PresenceStatusResponse(userId, true));
         log.info("User {} connected from device: {}", userId, deviceInfo);
       } catch (IllegalArgumentException ignored) {
@@ -77,7 +77,7 @@ class UserStatusWebSocketListener {
       SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
       updatePresenceUseCase.setUserOffline(command);
       messagingTemplate.convertAndSend(
-          WebSocketConfiguration.userPresenceTopic(userId),
+          UserWebSocketConfig.userPresenceTopic(userId),
           new PresenceWebSocketController.PresenceStatusResponse(userId, false));
       log.info("User {} disconnected", userId);
     }

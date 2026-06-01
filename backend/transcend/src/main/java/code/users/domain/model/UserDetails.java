@@ -11,7 +11,7 @@ import lombok.With;
 public class UserDetails {
   public static final String AVATARS_BASE_URL = "/avatars/";
   public static final String DEFAULT_AVATAR_URL = AVATARS_BASE_URL + "default.png";
-  public static final UserId DEFAULT_AVATAR_USER_ID = new UserId(new UUID(0, 0));
+  public static final UserId DEFAULT_AVATAR_USER_ID = UserId.of(new UUID(0, 0));
 
   String displayName;
   String avatarUrl;

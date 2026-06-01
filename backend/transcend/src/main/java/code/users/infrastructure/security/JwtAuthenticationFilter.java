@@ -15,7 +15,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -59,16 +58,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           .filter(name -> !name.isBlank())
           .map(userDetailsService::loadUserByUsername)
           .filter(userDetails -> jwtTokenService.isTokenValid(token, userDetails))
-          .ifPresent(userDetails -> setAuthentication(userDetails, request));
+          .ifPresent(
+              userDetails -> {
+                var authToken = jwtTokenService.buildAuthentication(userDetails);
+                setAuthentication(authToken, request);
+              });
 
     } catch (JwtException | UserNotFoundException e) {
       SecurityContextHolder.clearContext();
     }
   }
 
-  private void setAuthentication(UserDetails userDetails, HttpServletRequest request) {
-    var authToken =
-        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+  private void setAuthentication(
+      UsernamePasswordAuthenticationToken authToken, HttpServletRequest request) {
     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authToken);
   }

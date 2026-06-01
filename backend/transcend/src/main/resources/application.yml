@@ -47,11 +47,22 @@ springdoc:
     path: /swagger-ui.html
 
 springwolf:
+  use-fqn: true
   docket:
     base-package: code
     info:
       title: Transcend AsyncAPI
       description: Documentation
+    servers:
+      local:
+        host: localhost:8080
+        protocol: ws
+        protocol-version: "13"
+        description: "Local WebSocket server"
+
+
+
+
 
 security:
   jwt:

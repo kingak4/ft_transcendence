@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
-import code.users.domain.model.UserId;
 import code.users.ports.in.ManageFriendsUseCase;
 import code.users.ports.out.UserDao;
 import java.util.Map;
@@ -37,7 +36,7 @@ class ManageFriendsTest {
   @Test
   void addFriendSuccessfully() {
     // given
-    var friendId = new UserId(UUID.randomUUID());
+    var friendId = FriendId.of(UUID.randomUUID());
 
     // when
     service.addFriend(USER_ID_FIXTURE, friendId);
@@ -49,7 +48,7 @@ class ManageFriendsTest {
   @Test
   void removeFriendSuccessfully() {
     // given
-    var friendId = new UserId(UUID.randomUUID());
+    var friendId = FriendId.of(UUID.randomUUID());
 
     // when
     service.removeFriend(USER_ID_FIXTURE, friendId);
@@ -63,7 +62,7 @@ class ManageFriendsTest {
     // given
     var expectedFriends =
         Map.of(
-            new FriendId(),
+            FriendId.of(UUID.randomUUID()),
             UserDetails.builder()
                 .displayName(AVATAR_NAME_FIXTURE)
                 .avatarUrl(AVATAR_URL_FIXTURE)

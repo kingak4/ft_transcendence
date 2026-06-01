@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegisterController {
 
   public static final String BASE_URL = "users";
-  public static final String REGISTER_ENDPOINT = "register";
+  public static final String REGISTER_ENDPOINT = "/register";
 
   private final RegisterUseCase registerUseCase;
   private final UsersApiMapper mapper;

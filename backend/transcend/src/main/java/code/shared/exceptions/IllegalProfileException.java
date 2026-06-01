@@ -1,4 +1,4 @@
-package code.bootstrap.exceptions;
+package code.shared.exceptions;
 
 import java.util.List;
 

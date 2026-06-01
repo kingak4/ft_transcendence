@@ -22,9 +22,9 @@ public interface UserDao {
 
   Avatar getAvatar(UserId userId);
 
-  void addFriend(UserId userId, UserId friendId);
+  void addFriend(UserId userId, FriendId friendId);
 
-  void removeFriend(UserId userId, UserId friendId);
+  void removeFriend(UserId userId, FriendId friendId);
 
   Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);
 }

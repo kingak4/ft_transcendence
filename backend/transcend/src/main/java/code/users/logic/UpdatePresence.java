@@ -22,7 +22,7 @@ class UpdatePresence implements UpdatePresenceUseCase {
     Session session =
         Session.builder()
             .id(SessionId.of(command.sessionId()))
-            .userId(new UserId(command.userId()))
+            .userId(UserId.of(command.userId()))
             .deviceInfo(command.deviceInfo())
             .createdAt(OffsetDateTime.now())
             .build();
