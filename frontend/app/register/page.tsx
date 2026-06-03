@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+
 import React, { useState } from 'react';
-import { client } from '../lib/api-clients';
+
 import { register } from '../lib/register';
 
 export default function SearchInput() {
@@ -58,21 +58,5 @@ export default function SearchInput() {
     window.location.href = '/home';
   }
 
-  interface RegisterError {
-    status: number;
-    error: string;
-    properties: {
-      'register.command.email'?: string;
-      'register.command.rawPassword'?: string;
-    };
-  }
 
-  interface CreateUserPayload {
-    email: string;
-    password: string;
-  }
-
-  interface CreateUserResponse {
-    id: string;
-  }
 }

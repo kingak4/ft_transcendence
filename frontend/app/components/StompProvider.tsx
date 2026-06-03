@@ -13,7 +13,7 @@ export default function StompProvider({
   const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080/ws';
 
   return (
-    <StompSessionProvider 
+    <StompSessionProvider
       url={wsUrl}
       // You can remove debug in production or configure it to only log in dev
       debug={(str) => console.log('[STOMP]', str)}

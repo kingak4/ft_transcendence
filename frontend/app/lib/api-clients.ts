@@ -23,7 +23,7 @@ client.use({
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`);
         }
-      } catch (e) {
+      } catch {
         console.warn('Cookies not available in this context');
       }
     }

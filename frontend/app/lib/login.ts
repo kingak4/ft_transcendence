@@ -3,16 +3,12 @@
 import { cookies } from 'next/headers';
 // import { postData } from './post';
 import { client } from './api-clients';
-import { errorToJSON } from 'next/dist/server/render';
+
 
 export async function login(
   name: string,
   password: string,
 ): Promise<ActionResponse> {
-  const payload: CreateUserPayload = {
-    email: name,
-    password: password,
-  };
 
   // const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
 
@@ -50,7 +46,7 @@ export async function login(
       path: '/',
     });
     return { success: true, status: 200 };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Network or Unexpected Error:', error);
     return {
       success: false,
