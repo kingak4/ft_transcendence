@@ -25,7 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = FriendsController.class)
+@WebMvcTest(controllers = {FriendsController.class, FriendsPaginationController.class})
 @AutoConfigureMockMvc(addFilters = false)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class FriendsControllerTest {

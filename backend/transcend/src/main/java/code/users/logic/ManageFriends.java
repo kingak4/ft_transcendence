@@ -1,5 +1,6 @@
 package code.users.logic;
 
+import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
@@ -17,11 +18,13 @@ public class ManageFriends implements ManageFriendsUseCase {
 
   @Override
   public void addFriend(UserId userId, FriendId friendId) {
+    if (!userDao.exists(friendId)) throw new UserNotFoundException();
     userDao.addFriend(userId, friendId);
   }
 
   @Override
   public void removeFriend(UserId userId, FriendId friendId) {
+    if (!userDao.exists(friendId)) throw new UserNotFoundException();
     userDao.removeFriend(userId, friendId);
   }
 

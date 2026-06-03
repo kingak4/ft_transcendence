@@ -11,11 +11,11 @@ import lombok.*;
 @Table(name = "user_details")
 public class UserDetailsEntity {
 
-    @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
+  @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
 
-    @Column(name = "display_name")
-    private String displayName;
+  @Column(name = "display_name")
+  private String displayName;
 
-    @Column(name = "avatar_url", nullable = false)
-    private String avatarUrl;
+  @Column(name = "avatar_url", nullable = false)
+  private String avatarUrl;
 }

@@ -4,9 +4,13 @@ import static code.users.domain.model.UserFixtures.AVATAR_NAME_FIXTURE;
 import static code.users.domain.model.UserFixtures.AVATAR_URL_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.ports.in.ManageFriendsUseCase;
@@ -37,6 +41,7 @@ class ManageFriendsTest {
   void addFriendSuccessfully() {
     // given
     var friendId = FriendId.of(UUID.randomUUID());
+    when(userDao.exists(friendId)).thenReturn(true);
 
     // when
     service.addFriend(USER_ID_FIXTURE, friendId);
@@ -49,12 +54,38 @@ class ManageFriendsTest {
   void removeFriendSuccessfully() {
     // given
     var friendId = FriendId.of(UUID.randomUUID());
+    when(userDao.exists(friendId)).thenReturn(true);
 
     // when
     service.removeFriend(USER_ID_FIXTURE, friendId);
 
     // then
     verify(userDao).removeFriend(USER_ID_FIXTURE, friendId);
+  }
+
+  // --- New tests for the updated logic ---
+
+  @Test
+  void addFriendThrowsExceptionWhenFriendDoesNotExist() {
+    // given
+    var friendId = FriendId.of(UUID.randomUUID());
+    when(userDao.exists(friendId)).thenReturn(false);
+
+    // when & then
+    assertThrows(UserNotFoundException.class, () -> service.addFriend(USER_ID_FIXTURE, friendId));
+    verify(userDao, never()).addFriend(any(), any());
+  }
+
+  @Test
+  void removeFriendThrowsExceptionWhenFriendDoesNotExist() {
+    // given
+    var friendId = FriendId.of(UUID.randomUUID());
+    when(userDao.exists(friendId)).thenReturn(false);
+
+    // when & then
+    assertThrows(
+        UserNotFoundException.class, () -> service.removeFriend(USER_ID_FIXTURE, friendId));
+    verify(userDao, never()).removeFriend(any(), any());
   }
 
   @Test

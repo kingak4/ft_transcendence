@@ -11,9 +11,8 @@ import lombok.*;
 @Table(name = "avatars")
 public class AvatarEntity {
 
-    @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
+  @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
 
-    @Column(name = "content", nullable = false)
-    private byte[] content;
-
+  @Column(name = "content", nullable = false)
+  private byte[] content;
 }

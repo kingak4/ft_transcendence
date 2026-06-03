@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 public interface UserEntityMapper {
   @Mapping(source = "hash", target = "password")
   @Mapping(target = "details", ignore = true)
-  @Mapping(target = "role", ignore = true)
   @Mapping(target = "sessions", ignore = true)
   @Mapping(target = "friends", ignore = true)
   User toDomain(UserEntity entity);
