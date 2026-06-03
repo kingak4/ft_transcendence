@@ -52,6 +52,7 @@ public class UserDetailsController {
 
   @PatchMapping(UPDATE_DISPLAY_NAME_ENDPOINT)
   @Operation(summary = "Change the display name of the user")
+  @ApiResponse(responseCode = "200", description = "Display name updated successfully")
   public ResponseEntity<Void> updateDisplayName(
       Authentication authentication, @RequestBody UpdateDisplayNameRequest request) {
     UUID userId = UUID.fromString(authentication.getName());
@@ -61,6 +62,7 @@ public class UserDetailsController {
 
   @PostMapping(value = UPDATE_AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "Upload a profile avatar")
+  @ApiResponse(responseCode = "200", description = "Avatar uploaded successfully")
   public ResponseEntity<Void> uploadAvatar(
       Authentication authentication, @RequestParam("file") MultipartFile file) throws IOException {
     UUID userId = UUID.fromString(authentication.getName());
@@ -72,6 +74,7 @@ public class UserDetailsController {
 
   @GetMapping(value = AVATAR_ENDPOINT, produces = MediaType.IMAGE_JPEG_VALUE)
   @Operation(summary = "Get the profile avatar of the user")
+  @ApiResponse(responseCode = "200", description = "User's profile avatar")
   public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
     byte[] avatar = getProfileUseCase.getAvatar(UserId.of(userId)).content();
     return ResponseEntity.ok(avatar);
@@ -79,6 +82,7 @@ public class UserDetailsController {
 
   @GetMapping(DETAILS_ENDPOINT)
   @Operation(summary = "Get the details of the user")
+  @ApiResponse(responseCode = "200", description = "User's details")
   public ResponseEntity<GetUserDetailsResponse> getDetails(@PathVariable UUID userId) {
     UserDetails details = getProfileUseCase.getDetails(UserId.of(userId));
     return ResponseEntity.ok(mapper.toResponse(details));

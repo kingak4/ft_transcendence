@@ -7,6 +7,7 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ManageFriendsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class FriendsController {
 
   @PostMapping(FRIEND_ENDPOINT)
   @Operation(summary = "Add a friend")
+  @ApiResponse(responseCode = "201", description = "Friend added successfully")
   public ResponseEntity<Void> addFriend(
       Authentication authentication, @PathVariable UUID friendId) {
     UUID userId = UUID.fromString(authentication.getName());
@@ -41,6 +43,7 @@ public class FriendsController {
 
   @DeleteMapping(FRIEND_ENDPOINT)
   @Operation(summary = "Remove a friend")
+  @ApiResponse(responseCode = "204", description = "Friend removed successfully")
   public ResponseEntity<Void> removeFriend(
       Authentication authentication, @PathVariable UUID friendId) {
     UUID userId = UUID.fromString(authentication.getName());
@@ -50,6 +53,7 @@ public class FriendsController {
 
   @GetMapping
   @Operation(summary = "Get list of friends with pagination")
+  @ApiResponse(responseCode = "200", description = "List of friends")
   public ResponseEntity<Map<FriendId, UserDetails>> getFriendList(
       Authentication authentication,
       @RequestParam(value = "page", defaultValue = "0") int page,
