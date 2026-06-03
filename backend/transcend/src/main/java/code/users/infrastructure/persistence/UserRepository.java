@@ -3,7 +3,6 @@ package code.users.infrastructure.persistence;
 import code.shared.exceptions.NotImplementedException;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.FriendId;
-import code.users.domain.model.Role;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
@@ -21,14 +20,7 @@ public class UserRepository implements UserDao {
 
   @Override
   public Optional<User> findByEmail(String email) {
-    return userJpaRepository
-        .findByEmail(email)
-        .map(userEntityMapper::toDomain)
-        .map(
-            user -> {
-              // TODO: Replace role mocking with actual role retrieval from database
-              return user.withRole(email.contains("admin") ? Role.ADMIN : Role.USER);
-            });
+    return userJpaRepository.findByEmail(email).map(userEntityMapper::toDomain);
   }
 
   @Override
@@ -39,14 +31,7 @@ public class UserRepository implements UserDao {
 
   @Override
   public Optional<User> findById(UserId id) {
-    return userJpaRepository
-        .findById(userEntityMapper.map(id))
-        .map(userEntityMapper::toDomain)
-        .map(
-            user -> {
-              // TODO: Replace role mocking with actual role retrieval from database
-              return user.withRole(Role.USER);
-            });
+    return userJpaRepository.findById(userEntityMapper.map(id)).map(userEntityMapper::toDomain);
   }
 
   @Override
@@ -76,6 +61,11 @@ public class UserRepository implements UserDao {
 
   @Override
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public boolean exists(FriendId friendId) {
     throw new NotImplementedException();
   }
 }

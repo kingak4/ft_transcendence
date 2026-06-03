@@ -27,4 +27,6 @@ public interface UserDao {
   void removeFriend(UserId userId, FriendId friendId);
 
   Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);
+
+  boolean exists(FriendId friendId);
 }

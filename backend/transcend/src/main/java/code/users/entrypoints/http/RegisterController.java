@@ -35,6 +35,7 @@ public class RegisterController {
   @SecurityRequirements()
   @ApiResponses(
       value = {
+        @ApiResponse(responseCode = "201", description = "User registered successfully"),
         @ApiResponse(
             responseCode = "409",
             content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
