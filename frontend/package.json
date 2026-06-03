@@ -6,7 +6,9 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:api": ". ./.env && openapi-typescript ${BACKEND_URL}/api-docs -o app/types/api.d.ts",
+    "generate:api:dev": ". ./.env.dev && openapi-typescript ${BACKEND_URL}/api-docs -o app/types/api.d.ts"
   },
   "dependencies": {
     "next": "^16.2.6",
