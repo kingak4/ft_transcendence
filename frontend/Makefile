@@ -19,11 +19,11 @@ dev: install
 	@echo "$(BLUE)Starting Next.js development server...$(RESET)"
 	@npm run dev
 
-local:
+local: install
 	@echo "$(BLUE)Waiting for backend API to be ready...$(RESET)"
 	@while ! curl -s ${BACKEND_URL}/api-docs > /dev/null; do sleep 1; done
-	@echo "$(BLUE)Generating API types...$(RESET)"
-	@npm run generate:api
+	@echo "$(BLUE)Generating all API types (OpenAPI & AsyncAPI)...$(RESET)"
+	@npm run generate:all
 	@echo "$(BLUE)Starting Next.js local...$(RESET)"
 	@npm run dev
 
