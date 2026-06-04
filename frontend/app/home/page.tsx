@@ -1,4 +1,3 @@
-import { client } from '../lib/api-clients';
 
 export default async function HomePage() {
   // try {

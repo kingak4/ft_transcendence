@@ -34,6 +34,11 @@ nginx-build:
 
 down:
 	${COMPOSE} down -v
+	$(MAKE) -C infra down
+
+local:
+	$(MAKE) -C infra up
+	@bash -c 'trap "$(MAKE) -C infra down; kill 0" EXIT; $(MAKE) -C backend & $(MAKE) -C frontend local & wait'
 
 re: down up
 

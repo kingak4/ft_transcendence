@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+
 import React, { useState } from 'react';
 import { login } from '../lib/login';
 
@@ -34,7 +34,7 @@ export default function SearchInput() {
           />
         </div>
         <button
-          onClick={() => loginWrap(loginValue, passwordValue)}
+          onClick={() => loginWrap()}
           className="cursor-pointer rounded-md border p-4"
         >
           Login
@@ -43,7 +43,7 @@ export default function SearchInput() {
     </div>
   );
 
-  async function loginWrap(name: string, password: string) {
+  async function loginWrap() {
     const response = await login(loginValue, passwordValue);
 
     if (!response.success) {
