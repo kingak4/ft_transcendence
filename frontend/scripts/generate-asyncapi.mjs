@@ -7,7 +7,7 @@ import { TypeScriptGenerator } from '@asyncapi/modelina';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+const BACKEND_URL = process.env.BACKEND_URL;
 const ASYNCAPI_URL = `${BACKEND_URL}/springwolf/docs`;
 
 async function generate() {

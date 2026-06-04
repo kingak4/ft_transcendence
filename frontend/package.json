@@ -9,8 +9,8 @@
     "lint": "eslint",
     "generate:api": ". ./.env && openapi-typescript ${BACKEND_URL}/api-docs -o app/types/api.d.ts",
     "generate:api:dev": ". ./.env.dev && openapi-typescript ${BACKEND_URL}/api-docs -o app/types/api.d.ts",
-    "generate:asyncapi": ". ./.env && node scripts/generate-asyncapi.mjs",
-    "generate:asyncapi:dev": ". ./.env.dev && node scripts/generate-asyncapi.mjs",
+    "generate:asyncapi": ". ./.env && BACKEND_URL=${BACKEND_URL} node scripts/generate-asyncapi.mjs",
+    "generate:asyncapi:dev": ". ./.env.dev && BACKEND_URL=${BACKEND_URL} node scripts/generate-asyncapi.mjs",
     "generate:all": "npm run generate:api && npm run generate:asyncapi",
     "generate:all:dev": "npm run generate:api:dev && npm run generate:asyncapi:dev"
   },

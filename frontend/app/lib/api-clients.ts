@@ -4,7 +4,7 @@ import type { paths } from '../types/api';
 export const client = createClient<paths>({
   baseUrl:
     typeof window === 'undefined'
-      ? process.env.BACKEND_URL || 'http://localhost:5001'
+      ? process.env.BACKEND_URL
       : '/api',
   headers: {
     Accept: 'application/json',

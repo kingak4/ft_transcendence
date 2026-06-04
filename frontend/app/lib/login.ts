@@ -10,8 +10,6 @@ export async function login(
   password: string,
 ): Promise<ActionResponse> {
 
-  // const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
-
   try {
     const { data, error, response } = await client.POST('/users/login', {
       body: {
