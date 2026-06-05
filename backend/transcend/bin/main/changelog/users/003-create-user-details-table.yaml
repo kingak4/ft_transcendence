@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-user-details-table
+      author: ft_transcendence
+      changes:
+        - createTable:
+            tableName: user_details
+            columns:
+              - column:
+                  name: val
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_user_details_user
+                    references: users(val)
+              - column:
+                  name: display_name
+                  type: VARCHAR(255)
+              - column:
+                  name: avatar_url
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

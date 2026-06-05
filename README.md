@@ -73,8 +73,15 @@ To maintain constant alignment and quick feedback loops, we used a mix of profes
 
 ## 📚 Resources
 
-### Documentation & Articles
+This section contains the official documentation, articles, and video tutorials used during the development of this project, combining standard references with AI-assisted research.
 
-### Video Tutorials
+### 📄 Documentation & Articles
+* [Spring Boot Getting Started Guide](https://spring.io/guides/gs/spring-boot) – Official guide for building and configuring microservices and web applications with Spring Boot.
+* [Docker Documentation](https://docs.docker.com/) – Official reference for containerizing the application, managing multi-container setups, and deployment.
+* [Securiti.ai: What is a Privacy Policy?](https://securiti.ai/what-is-a-privacy-policy/) – A comprehensive breakdown of data privacy compliance, regulations (like GDPR/CCPA), and privacy practices.
+* [Usercentrics: Guide to Terms of Service](https://usercentrics.com/guides/terms-of-service/) – Essential legal guidelines and requirements for implementing user agreements and limiting platform liability.
 
+### 🎥 Video Tutorials
+* [What are Website Policies? (Privacy Policy, Terms of Service, Cookie Policy)](https://www.youtube.com/watch?v=tQmjyEgzrY0) – A practical video guide explaining the distinct differences between website policies and why they are critical for user management.
+* [Open Source Licence Types](https://youtu.be/nFU8KoSgEmk?si=CbjTvu-DIdFZb3Tv) – An overview of the 5 main categories of open-source licenses (from public domain to copyleft/GPL), explaining how they impact downstream code and dependencies.
 

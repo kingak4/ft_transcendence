@@ -1,0 +1,70 @@
+spring:
+  main:
+    banner-mode: off
+  allowed-profiles:
+    - local
+    - dev
+    - prod
+  security:
+    validation:
+      common-passwords: classpath:validation/common-passwords.txt
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: transcendence-hikari-pool
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      idle-timeout: 600000
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    show-sql: true
+  mvc:
+    problemdetails:
+      enabled: true
+  data:
+    redis:
+      lettuce:
+        shutdown-timeout: 2000ms
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
+          max-wait: -1ms
+      timeout: 10000
+server:
+  servlet:
+    context-path: /
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+springwolf:
+  use-fqn: true
+  docket:
+    base-package: code
+    info:
+      title: Transcend AsyncAPI
+      description: Documentation
+    servers:
+      local:
+        host: localhost:8080
+        protocol: ws
+        protocol-version: "13"
+        description: "Local WebSocket server"
+
+
+
+
+
+security:
+  jwt:
+    secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
+    expiration-ms: 3600000
