@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git clone:*)",
+      "Bash(git add:*)"
+    ]
+  },
+  "theme": "dark-daltonized",
+  "defaultMode": "plan"
+}
