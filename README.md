@@ -160,4 +160,5 @@ This section contains the official documentation, articles, and video tutorials 
 ### 🎥 Video Tutorials
 * [What are Website Policies? (Privacy Policy, Terms of Service, Cookie Policy)](https://www.youtube.com/watch?v=tQmjyEgzrY0) – A practical video guide explaining the distinct differences between website policies and why they are critical for user management.
 * [Open Source Licence Types](https://youtu.be/nFU8KoSgEmk?si=CbjTvu-DIdFZb3Tv) – An overview of the 5 main categories of open-source licenses (from public domain to copyleft/GPL), explaining how they impact downstream code and dependencies.
-
+* [Spring Boot & Spring Security Architecture](https://www.youtube.com/watch?v=23lJ2YAnlC8&t=893s) – A deep dive into authentication filters, user management, and token handling for securing Java backend systems.
+* [Microservices and Modular Architecture Patterns](https://youtu.be/aEFkWxUNAVc?si=VNngJs0vRJBH4wy0) – A guide on design principles, loosely-coupled messaging, and service boundaries in modern distributed systems.
