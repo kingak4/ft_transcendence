@@ -5,9 +5,10 @@
 | Tool | Why |
 |---|---|
 | Node 20 | `npm ci` + `npm run generate:api:dev` in the frontend Makefile |
-| JDK 21 (Eclipse Temurin) | VS Code Java / Spring Boot IDE features |
 | Docker-outside-of-Docker | Lets you run `docker compose` / `make -f Makefile.dev` from inside the container using the host's Docker daemon |
 | Claude Code | AI coding assistant available in every terminal session inside the container |
+
+> Java / Spring Boot tooling is intentionally excluded. The backend builds and runs inside its own Docker container — no JDK is needed in the devcontainer itself.
 
 ## Ports forwarded automatically
 
@@ -107,10 +108,37 @@ The script is idempotent — it skips any file that already exists.
 
 ## Starting the stack
 
-Start services in this order from within the devcontainer:
+### Frontend only (default workflow)
+
+For UI work and component development you do not need the backend at all — API calls will simply fail and you handle the empty/error state as you would in production.
 
 ```bash
-# 1. infra (postgres + redis + nginx)
+cd frontend && make -f Makefile.dev up
+```
+
+Open http://localhost:3000.
+
+### Frontend + backend (end-to-end testing)
+
+Only bring up the backend when you need to test a real API call. Skip nginx and the frontend container:
+
+```bash
+# 1. Postgres + Redis
+cd infra && make up
+
+# 2. Spring Boot backend
+cd backend && make -f Makefile.dev up
+
+# 3. Frontend
+cd frontend && make -f Makefile.dev up
+```
+
+### Full stack (nginx + HTTPS)
+
+Only needed if you are testing behaviour that depends on HTTPS or the nginx proxy layer.
+
+```bash
+# 1. infra
 cd infra && make up
 cd infra/nginx && docker compose up -d
 
@@ -120,6 +148,8 @@ cd backend && make -f Makefile.dev up
 # 3. frontend
 cd frontend && make -f Makefile.dev up
 ```
+
+Open https://localhost:8443.
 
 ## Access points
 
