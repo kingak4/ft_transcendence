@@ -1,11 +1,20 @@
-.PHONY: build up down clean
+.PHONY: build up down clean generate
 include .env
 include ./../infra/.env
 
-build:
+node_modules:
+	npm ci
+
+app/types/api.d.ts: node_modules
+	npm run generate:api:dev
+
+generate: node_modules
+	npm run generate:api:dev
+
+build: app/types/api.d.ts
 	${COMPOSE} -f app-compose.yml build
 
-up:
+up: app/types/api.d.ts
 	${COMPOSE} -f app-compose.yml up -d
 
 down:
@@ -13,3 +22,4 @@ down:
 
 clean:
 	${COMPOSE} -f app-compose.yml down -v
+	rm -f app/types/api.d.ts
