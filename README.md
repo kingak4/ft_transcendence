@@ -42,6 +42,14 @@ From the repository root, start the stack on dev (docker) profile with `make up`
 Application will be available via nginx proxy on port 8443.
 
 ## 👥 Team Information
+#### [Kinga](https://github.com/kingak4) — Project Manager & Developer
+Kinga played a pivotal role in the project, driving both the management strategy and hands-on technical development while supporting the team across multiple dimensions.
+
+*   **Project Management & Leadership:** Responsible for overall team organization, facilitating comprehensive task distribution, and coordinating regular hybrid meetings. She successfully established our shared workspace and fostered cross-functional alignment.
+*   **Documentation & Knowledge Base:** Authored vital documentation and supportive technical articles within Confluence. She designed and created comprehensive visual guides and project architecture layouts using **Confluence** and **Canva**.
+*   **Core Software Development:** Contributed as a developer to the implementation of the **Real-Time Chat Module**, ensuring smooth communication workflows within the application.
+*   **Code Quality & Pull Requests:** Actively participated in the code evaluation process, collaborating closely with the Technical Lead to conduct thorough **Code Reviews** and manage incoming **Pull Requests** to maintain high repository standards.
+*   **Compliance & Repository Care:** Fully managed the legal and structural setup of the project by drafting the platform's **Privacy Policy** and integrating the official **Open-Source License** into the repository.
 
 ## 📊 Project Management
 ###  Team Organization & Work Distribution
