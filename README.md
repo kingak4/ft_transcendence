@@ -83,72 +83,73 @@ Established structured workflow for team coordination and task execution:
 ### ⚙️ Core Web Infrastructure
 
 #### 1. Framework-Based Architecture (Major — 2pts)
-* **Justification:** Utilizing robust frameworks ensures a secure, maintainable, and scalable enterprise architecture capable of handling decoupled frontend and backend operations.
-* **Implementation:** The backend is built using the **Java Spring Boot** framework, providing dependency injection and embedded server management. The frontend is built as a separate single-page application (SPA) interacting via REST APIs.
+* **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** as a single-page application (SPA) using a Backend-for-Frontend (BFF) pattern with JWT based authentication.
 
-#### 2. Microservices / Modulith Architecture (Major — 2pts)
-* **Justification:** Designing the system with loosely-coupled components guarantees that each service has a single responsibility, reducing dependency entanglements and allowing easier scaling.
-* **Implementation:** Implemented using a **Spring Modulith / Microservices** approach. Modules communicate through clearly defined interfaces and lightweight REST APIs, ensuring high autonomy for each domain layer.
+* **Reasons:** Provides dependency injection, complete frontend-backend separation, secure token management, and enterprise-grade maintainability / future scalability.
+
+#### 2. Microservices Architecture (Major — 2pts)
+* **Implementation:** The backend was built using **Spring Modulith** with loosely-coupled modules. Services are documented with **OpenAPI** specifications for synchronous communication and **AsyncAPI** specifications for event-driven messaging. Each module contains independent services adhering to the single responsibility principle. REST endpoints are documented via OpenAPI/Swagger; asynchronous messaging patterns follow AsyncAPI standards for WebSocket and STOMP-based communication.
+
+* **Reasons:** Reduces dependency entanglement, ensures module autonomy, enables independent scaling, facilitates team parallelization, and provides clear API contracts. Modular structure allows straightforward migration to full microservices if needed.
 
 #### 3. Database Object-Relational Mapping (Minor — 1pt)
-* **Justification:** An ORM abstractly maps code objects to database tables, preventing SQL injection vulnerabilities, maintaining type safety, and speeding up development.
-* **Implementation:** Implemented using **Spring Data JPA (Hibernate)** as the ORM layer, managing object states and schema definitions seamlessly.
+* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping.
+
+* **Reasons:** Prevents SQL injection vulnerabilities, maintains type safety, abstracts database schema complexity.
 
 ---
 
 ### 💬 Communication & Social Features
 
 #### 4. Real-Time WebSockets Module (Major — 2pts)
-* **Justification:** To provide an immersive and modern user experience, chat and updates must happen instantly without constant HTTP polling.
-* **Implementation:** Built a custom event-driven system using **Java WebSockets (STOMP protocol)**. The architecture efficiently broadcasts messages across clients, handles connection/disconnection lifecycles gracefully, and keeps system state synchronized.
+* **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)**. The architecture efficiently broadcasts messages across clients, gracefully handles connection/disconnection lifecycles, and synchronizes system state for live features.
+
+* **Reasons:** Eliminates constant HTTP polling, providing an immersive user experience essential for chatting and live updates.
 
 #### 5. User Interaction & Core Social Systems (Major — 2pts)
-* **Justification:** Social connectivity is a core pillar of the platform, requiring a unified system where users can chat and stay updated on their network.
-* **Implementation:** * **Chat:** A basic messaging service allowing users to send and receive direct messages.
-    * **Profile Page:** A dedicated view displaying user-specific information.
-    * **Friends System:** Fully operational add/remove friend workflows, including a real-time view of friends' online/offline statuses.
+* **Implementation:** Developed a suite for user interactions, including:
+    * **Chat:** A real-time, direct messaging service to send/receive messages between users.
+    * **Profile Page:** Pages to view user-specific information.
+    * **Friends System:** Functionality to add/remove friends and view a list of friends with real-time online/offline statuses.
+
+* **Reasons:** Establishes the core pillars for a social platform, ensuring users can communicate with each other and build their network.
+
+#### 6. Organization System for Forums (Major — 2pts)
+* **Implementation:** Developed a forum platform, enabling users to create, edit, and delete sub-communities. It manages member lists (adding/removing users) and isolates permissions, allowing users to perform scoped CRUD actions, based on their given Role, only within an assigned organization.
+
+* **Reasons:** Grouping users enables structured sub-communities within the forum space, organizing interactions and related content.
+
 
 ---
 
 ### 🔐 Security, Authentication & Access Control
 
-#### 6. Standard User Management & Authentication (Major — 2pts)
-* **Justification:** Securing user identity and managing user profiles safely is critical for platform trust and data integrity.
-* **Implementation:** Powered by **Spring Security**. Users can register, log in, modify their personal profiles, and upload custom avatars (with a fallback default avatar system built-in).
+#### 7. Standard User Management & Authentication (Major — 2pts)
+* **Implementation:** Using **Spring Security**, implemented email and password authentication (salted and hashed passwords). Features registration, login flows, profile modifications, and avatar uploads. Incorporates form and user input validation across both the frontend and backend.
 
-#### 7. Advanced Permissions & Role Management (Major — 2pts)
-* **Justification:** The forum module requires clear hierarchies to prevent data tampering and ensure moderators can maintain community standards.
-* **Implementation:** Created an advanced Role-Based Access Control (RBAC) system. Administrators, Moderators, Users, and Guests have distinct UI views and action permissions. Full CRUD operations on users are restricted to specific authorized roles.
+* **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
 
-#### 8. Organization System for Forums (Major — 2pts)
-* **Justification:** Grouping users into organizations allows structured sub-communities within the forum space.
-* **Implementation:** Developed an organization management engine allowing authorized users to create, edit, and delete organizations, manage member lists (adding/removing users), and perform scoped CRUD actions inside specific organizational spaces.
+#### 8. Secured Public API (Major — 2pts)
+* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes strict **rate limiting** and is fully documented following 'living documentation' principles.
 
-#### 9. Secured Public API (Major — 2pts)
-* **Justification:** Exposing a public API allows external systems to interact with our database securely, requiring protection against abuse.
-* **Implementation:** Developed a public REST API secured via **API Keys**. It features strict **rate limiting** to prevent DDoS/abuse, and is fully documented adhering to 'self-documenting code' and 'living documentation' principles.
+* **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
+
+#### 9. Advanced Permissions & Role Management (Major — 2pts)
+* **Implementation:** Built a Role-Based Access Control (RBAC) system managing distinct forum roles (Admin, Moderator, User, Guest). Features include per-role frontend UI views and backend action restrictions.
+
+* **Reasons:** Establishes hierarchies to prevent data tampering, enforces authorized data manipulation, and empowers moderators/admins to maintain community standards.
 
 ---
 
 ### 📊 Devops, Monitoring & Observability
 
 #### 10. Centralized Log Management - ELK Stack (Major — 2pts)
-* **Justification:** Essential for tracking system errors, security audits, and behavioral patterns across loosely-coupled modules.
-* **Implementation:** *Managed by Szymon.* Implemented a complete infrastructure using **Logstash** to collect and transform application logs, **Elasticsearch** to index and store them securely, and **Kibana** to build dashboards for log visualization. Strict data retention and archiving policies were applied.
+TODO
 
 #### 11. Monitoring & Alerting - Prometheus & Grafana (Major — 2pts)
-* **Justification:** Real-time visibility into system metrics (CPU, memory, request latency) allows the team to fix infrastructure strains before they impact users.
-* **Implementation:** *Managed by Alina.* Configured **Prometheus** to scrape system metrics via specialized exporters. Metrics are channeled into custom-built **Grafana dashboards** equipped with automated alerting rules to flag unusual server behavior immediately. Access to Grafana is strictly secured.
+TODO
 
 ---
-
-### 🔢 Point Calculation Summary
-According to the project requirements, **Major** modules are worth **2 points** each, and **Minor** modules are worth **1 point** each.
-
-* **Total Chosen Modules:** 9 Major Modules + 1 Minor Module
-* **Total Points Earned:** $(9 \times 2) + (1 \times 1) = 19 \text{ points}$
-
-## 👨‍💻 Individual Contributions
 
 ## 📚 Resources
 
@@ -164,4 +165,3 @@ This section contains the official documentation, articles, and video tutorials 
 * [What are Website Policies? (Privacy Policy, Terms of Service, Cookie Policy)](https://www.youtube.com/watch?v=tQmjyEgzrY0) – A practical video guide explaining the distinct differences between website policies and why they are critical for user management.
 * [Open Source Licence Types](https://youtu.be/nFU8KoSgEmk?si=CbjTvu-DIdFZb3Tv) – An overview of the 5 main categories of open-source licenses (from public domain to copyleft/GPL), explaining how they impact downstream code and dependencies.
 * [Spring Boot & Spring Security Architecture](https://www.youtube.com/watch?v=23lJ2YAnlC8&t=893s) – A deep dive into authentication filters, user management, and token handling for securing Java backend systems.
-* [Microservices and Modular Architecture Patterns](https://youtu.be/aEFkWxUNAVc?si=VNngJs0vRJBH4wy0) – A guide on design principles, loosely-coupled messaging, and service boundaries in modern distributed systems.
