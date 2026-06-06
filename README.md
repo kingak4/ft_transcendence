@@ -75,6 +75,23 @@ TODO
 ### [Zyta](https://github.com/) — Frontend Developer & Designer
 TODO
 
+## 🔄 Development Lifecycle & Practices
+
+### Workflow
+All feature development followed a structured, API-first approach that enabled parallel execution across different technology layers:
+* **Requirements & Core Domain:** Feature development began with business requirements defined by the Project Manager (**Kinga**). The Technical Lead (**Szymon**) then implemented the core domain models and use cases in Java, exposing the functionality via REST APIs.
+* **Parallel Integration:** Once the API contracts were established, the team split into simultaneous tracks to prevent bottlenecks:
+  * **Persistence Layer (Infra):** Implementing database repositories and integrating infrastructure (**Alina**).
+  * **Client Layer (Frontend):** Designing the UI components (**Zyta**) and consuming the exposed backend endpoints (**Kacper**).
+
+### Code Quality & Version Control Standards
+Due to project time constraints that prevented setting up a full CI/CD GitOps pipeline, integration standards were enforced strictly through team policies and repository configuration:
+
+* **Automated Formatters & Linters:** Integrated static analysis tools to eliminate stylistic debates, catch logical bugs before runtime, and enforce framework best practices. This allowed peer reviews to focus entirely on architecture and business logic.
+* **Strict GitHub Flow:** Adopted an isolated feature-branching strategy. Developers frequently synced with the main branch to preempt massive merge conflicts, submitting all work exclusively through Pull Requests.
+* **Conventional Commits:** Enforced structured commit messaging. This provided instant context for changes, streamlined debugging, and prepped the repository for automated release changelogs.
+* **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable direct pushes and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
+
 
 ## 🛠️ Technical Stack
 TODO
