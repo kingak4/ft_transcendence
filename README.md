@@ -108,7 +108,7 @@ Established structured workflow for team coordination and task execution:
 
 #### 5. User Interaction & Core Social Systems (Major — 2pts)
 * **Implementation:** Developed a suite for user interactions, including:
-    * **Chat:** A real-time, direct messaging service to send/receive messages between users.
+    * **Chat:** A real-time messaging service to send/receive messages between users.
     * **Profile Page:** Pages to view user-specific information.
     * **Friends System:** Functionality to add/remove friends and view a list of friends with real-time online/offline statuses.
 
@@ -137,7 +137,7 @@ Established structured workflow for team coordination and task execution:
 #### 9. Advanced Permissions & Role Management (Major — 2pts)
 * **Implementation:** Built a Role-Based Access Control (RBAC) system managing distinct forum roles (Admin, Moderator, User, Guest). Features include per-role frontend UI views and backend action restrictions.
 
-* **Reasons:** Establishes hierarchies to prevent data tampering, enforces authorized data manipulation, and empowers moderators/admins to maintain community standards.
+* **Reasons:** Establishes hierarchies to prevent data tampering, enforces authorized data manipulation, and allows moderators/admins to maintain community standards.
 
 ---
 
@@ -156,12 +156,27 @@ TODO
 This section contains the official documentation, articles, and video tutorials used during the development of this project, combining standard references with AI-assisted research.
 
 ### 📄 Documentation & Articles
-* [Spring Boot Getting Started Guide](https://spring.io/guides/gs/spring-boot) – Official guide for building and configuring microservices and web applications with Spring Boot.
-* [Docker Documentation](https://docs.docker.com/) – Official reference for containerizing the application, managing multi-container setups, and deployment.
-* [Securiti.ai: What is a Privacy Policy?](https://securiti.ai/what-is-a-privacy-policy/) – A comprehensive breakdown of data privacy compliance, regulations (like GDPR/CCPA), and privacy practices.
-* [Usercentrics: Guide to Terms of Service](https://usercentrics.com/guides/terms-of-service/) – Essential legal guidelines and requirements for implementing user agreements and limiting platform liability.
+
+#### Backend Framework & Architecture
+* [Spring Boot Reference Guide](https://docs.spring.io/spring-boot/index.html) – Foundation for the Java backend.
+* [Spring Framework Reference](https://docs.spring.io/spring-framework/reference/index.html) – Documentation for core Spring concepts.
+* [Spring Modulith Documentation](https://spring.io/projects/spring-modulith) – Guidelines for building and structuring modular monoliths.
+* [Backend-for-Frontend (BFF) Pattern](https://en.wikipedia.org/wiki/BFF) – Architectural explanation of creating dedicated backends tailored for specific frontend applications.
+
+#### Security & Authentication
+* [Spring Security Reference](https://docs.spring.io/spring-security/reference/index.html) – Implementation guides for Web Security, authentication filters, and authorization.
+* [Bcrypt Password Hashing](https://en.wikipedia.org/wiki/Bcrypt) – Details on the cryptographic hash function used for securely storing user passwords with salt.
+* [JSON Web Tokens (JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token) – Open standard defining the compact and self-contained way for securely transmitting information.
+
+#### Databases & Infrastructure
+* [PostgreSQL Documentation](https://www.postgresql.org/docs/) – Technical manual for managing relational data, schemas, and relational integrity.
+* [Redis Documentation](https://redis.io/docs/latest/) – Reference for implementing fast, in-memory caching and session state management.
+* [Docker Documentation](https://docs.docker.com/) – Official reference for containerizing the application, managing multi-container setups via Docker Compose, and deployment.
+
+#### Compliance & Legal
+* [Securiti.ai: What is a Privacy Policy?](https://securiti.ai/what-is-a-privacy-policy/) – A breakdown of data privacy compliance, regulations (like GDPR/CCPA), and data gathering practices.
+* [Usercentrics: Guide to Terms of Service](https://usercentrics.com/guides/terms-of-service/) – Legal guidelines and requirements for implementing user agreements and defining platform liability limits.
 
 ### 🎥 Video Tutorials
 * [What are Website Policies? (Privacy Policy, Terms of Service, Cookie Policy)](https://www.youtube.com/watch?v=tQmjyEgzrY0) – A practical video guide explaining the distinct differences between website policies and why they are critical for user management.
 * [Open Source Licence Types](https://youtu.be/nFU8KoSgEmk?si=CbjTvu-DIdFZb3Tv) – An overview of the 5 main categories of open-source licenses (from public domain to copyleft/GPL), explaining how they impact downstream code and dependencies.
-* [Spring Boot & Spring Security Architecture](https://www.youtube.com/watch?v=23lJ2YAnlC8&t=893s) – A deep dive into authentication filters, user management, and token handling for securing Java backend systems.
