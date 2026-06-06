@@ -90,7 +90,7 @@ Due to project time constraints that prevented setting up a full CI/CD GitOps pi
 * **Automated Formatters & Linters:** Integrated static analysis tools to eliminate stylistic debates, catch logical bugs before runtime, and enforce framework best practices. This allowed peer reviews to focus entirely on architecture and business logic.
 * **Strict GitHub Flow:** Adopted an isolated feature-branching strategy. Developers frequently synced with the main branch to preempt massive merge conflicts, submitting all work exclusively through Pull Requests.
 * **Conventional Commits:** Enforced structured commit messaging. This provided instant context for changes, streamlined debugging, and prepped the repository for automated release changelogs.
-* **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable direct pushes and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
+* **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable pushes to  main and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
 
 
 ## 🛠️ Technical Stack
@@ -154,7 +154,7 @@ TODO
 * **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
 
 #### 8. Secured Public API (Major — 2pts)
-* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes strict **rate limiting** and is fully documented following 'living documentation' principles.
+* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes **rate limiting** and is documented following 'living documentation' principles.
 
 * **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
 
