@@ -21,3 +21,6 @@ spring:
     default-schema: test
     parameters:
       schemaName: test
+
+bucket4j:
+  enabled: false

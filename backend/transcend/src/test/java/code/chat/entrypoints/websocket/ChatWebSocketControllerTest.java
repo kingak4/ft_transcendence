@@ -15,11 +15,11 @@ import code.chat.domain.model.ChatFixtures;
 import code.chat.entrypoints.websocket.ChatWebSocketController.DeleteMessageRequest;
 import code.chat.entrypoints.websocket.ChatWebSocketController.SendMessageRequest;
 import code.chat.ports.in.ManageMessagesUseCase;
-import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.config.WebSocketAutoConfig;
+import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -27,8 +27,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketTestAutoConfig.class, ChatWebSocketController.class})
-class ChatWebSocketControllerTest extends WebSocketTestAutoConfig {
+    classes = {WebSocketAutoConfig.class, ChatWebSocketController.class})
+class ChatWebSocketControllerTest extends WebSocketTest {
 
   private static final Duration TIMEOUT = Duration.ofSeconds(10);
 

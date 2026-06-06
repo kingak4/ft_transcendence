@@ -26,16 +26,6 @@ spring:
   mvc:
     problemdetails:
       enabled: true
-  data:
-    redis:
-      lettuce:
-        shutdown-timeout: 2000ms
-        pool:
-          max-active: 10
-          max-idle: 5
-          min-idle: 2
-          max-wait: -1ms
-      timeout: 10000
 server:
   servlet:
     context-path: /
@@ -68,18 +58,15 @@ security:
 bucket4j:
   enabled: true
   filters:
-    - cache-name: rate-limit-bucket
+    - cache-name: rate-limit-buckets
       url: .*
+      filter-order: 10
       strategy: first
-      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API quota.\" }"
+      http-response-body: "{ \"error\": \"Slow down.\" }"
       rate-limits:
         - cache-key: "getRemoteAddr()"
           bandwidths:
             - capacity: 100
               time: 1
               unit: minutes
-        - cache-key: "getHeader('Authorization') != null ? getHeader('Authorization') : getRemoteAddr()"
-          bandwidths:
-            - capacity: 200
-              time: 1
-              unit: minutes
+  cache-to-use: jcache

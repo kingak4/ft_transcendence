@@ -1,7 +1,7 @@
 package code.users.entrypoints.http;
 
-import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
+import static code.users.domain.model.UserFixtures.aDefaultUser;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

@@ -4,7 +4,8 @@ import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
 import static code.shared.WebSocketConfig.WS_HOST;
 import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
 
-import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.config.WebSocketAutoConfig;
+import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
 import code.users.ports.in.UpdatePresenceUseCase;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketTestAutoConfig.class, UserStatusWebSocketListener.class})
-class UserStatusTest extends WebSocketTestAutoConfig {
+    classes = {WebSocketAutoConfig.class, UserStatusWebSocketListener.class})
+class UserStatusTest extends WebSocketTest {
 
   private static final int TIMEOUT_SECONDS = 10;
 

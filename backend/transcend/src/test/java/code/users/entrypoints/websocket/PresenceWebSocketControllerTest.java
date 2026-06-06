@@ -10,7 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.config.WebSocketAutoConfig;
+import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
@@ -26,8 +27,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketTestAutoConfig.class, PresenceWebSocketController.class})
-class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
+    classes = {WebSocketAutoConfig.class, PresenceWebSocketController.class})
+class PresenceWebSocketControllerTest extends WebSocketTest {
 
   private static final int TIMEOUT_SECONDS = 5;
 

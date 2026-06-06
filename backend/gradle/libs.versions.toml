@@ -41,18 +41,13 @@ redis-testcontainers = "1.6.4"
 # https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
 embedded-redis = "0.6"
 # Source: https://mvnrepository.com/artifact/com.giffing.bucket4j.spring.boot.starter/bucket4j-spring-boot-starter
-bucket4j = "0.13.0"
-# Source: https://mvnrepository.com/artifact/com.bucket4j/bucket4j_jdk17-redis
-bucket4j-redis = "8.14.0"
-# Source: https://mvnrepository.com/artifact/com.bucket4j/bucket4j_jdk17-lettuce
-bucket4j-lettuce = "8.19.0"
-# Source: https://mvnrepository.com/artifact/io.lettuce/lettuce-core
-lettuce = "6.4.2.RELEASE"
+bucket4j = "0.10.0"
+# Source https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter
+reddison = "3.52.0"
 
 [libraries]
-lettuce-core = {module = "io.lettuce:lettuce-core", version.ref = "lettuce"}
-bucket4j-lettuce = { module = "com.bucket4j:bucket4j_jdk17-lettuce", version.ref = "bucket4j-lettuce" }
-bucket4j-redis = {module = "com.bucket4j:bucket4j_jdk17-redis", version.ref = "bucket4j-redis"}
+
+bucket4j-redisson = {module = "org.redisson:redisson-spring-boot-starter", version.ref = "reddison"}
 bucket4j = {module = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter", version.ref = "bucket4j"}
 
 structurizr-core = { module = "com.structurizr:structurizr-core", version.ref = "structurizr" }
@@ -106,7 +101,7 @@ sprint-modulith-test = { module = "org.springframework.modulith:spring-modulith-
 asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", version.ref = "asciidoctorj-diagram" }
 
 [bundles]
-cache = ["spring-cache", "spring-redis", "bucket4j", "bucket4j-redis", "bucket4j-lettuce", "lettuce-core"]
+cache = ["spring-cache", "spring-redis", "bucket4j", "bucket4j-redisson"]
 structurizr = ["structurizr-core", "structurizr-export", "structurizr-client", "structurizr-analysis"]
 mapstruct-annotation = ["mapstruct-processor", "mapstruct-lombok"]
 testcontainers = ["redis-testcontainers", "postgresql-testcontainers"]
