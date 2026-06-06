@@ -22,7 +22,7 @@
 
   "postCreateCommand": "bash -lc 'sudo chown -R vscode:vscode /workspaces/ft_transcendence /home/vscode/.claude && cp /home/vscode/.claude-host/CLAUDE.md /home/vscode/.claude/ 2>/dev/null; cp /home/vscode/.claude-host/settings.json /home/vscode/.claude/ 2>/dev/null; cp -rn /home/vscode/.claude-host/plugins /home/vscode/.claude/ 2>/dev/null; .devcontainer/setup.sh'",
 
-  "postStartCommand": "bash -lc 'sudo chown -R vscode:vscode /workspaces/ft_transcendence /home/vscode/.claude && cp /home/vscode/.claude-host/CLAUDE.md /home/vscode/.claude/ 2>/dev/null; cp /home/vscode/.claude-host/settings.json /home/vscode/.claude/ 2>/dev/null; cp -rn /home/vscode/.claude-host/plugins /home/vscode/.claude/ 2>/dev/null'",
+  "postStartCommand": "bash -lc 'sudo chown -R vscode:vscode /workspaces/ft_transcendence /home/vscode/.claude && cp /home/vscode/.claude-host/CLAUDE.md /home/vscode/.claude/ 2>/dev/null; cp /home/vscode/.claude-host/settings.json /home/vscode/.claude/ 2>/dev/null; cp -rn /home/vscode/.claude-host/plugins /home/vscode/.claude/ 2>/dev/null; docker network create transcend-net 2>/dev/null; docker network connect transcend-net $(hostname) 2>/dev/null'",
 
   "containerEnv": {
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"

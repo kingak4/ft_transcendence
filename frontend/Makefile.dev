@@ -1,15 +1,17 @@
 .PHONY: build up down clean generate
 include .env
+-include .env.local
 include ./../infra/.env
 
 node_modules:
 	npm ci
 
 app/types/api.d.ts: node_modules
-	npm run generate:api:dev
+	mkdir -p app/types
+	./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
 
 generate: node_modules
-	npm run generate:api:dev
+	$(MAKE) app/types/api.d.ts
 
 build: app/types/api.d.ts
 	${COMPOSE} -f app-compose.yml build

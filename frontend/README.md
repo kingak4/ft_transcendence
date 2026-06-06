@@ -6,37 +6,30 @@ Welcome to the Next.js frontend application for `ft_transcendence`.
 
 ## Environment Setup
 
-Before starting for the first time, create the two env files:
+Only `.env.example` is committed. All real env files are gitignored — create them locally once:
 
 ```bash
-cp .env.example .env
-cp .env.example .env.dev
+cp .env.example .env          # Docker context: transcend-backend:5000 already set
 ```
 
-Both files should already contain the correct value after copying:
+Then create `.env.local` manually (value depends on your setup — see the Local Development section below).
 
-```
-BACKEND_URL=http://transcend-backend:5000
-```
+**Two env files, two purposes:**
 
-**Why two files?**
+| File | Read by | Used when | Value | Committed? |
+|---|---|---|---|---|
+| `.env` | Docker Compose (automatic), `Makefile.dev` (build arg), `app-compose.yml` (container runtime), `npm run generate:api` | Docker `build` — bakes `BACKEND_URL` into the Next.js bundle via `rewrites()` in `next.config.ts`; also injected as a runtime env var inside the container | `http://transcend-backend:5000` | **No** — create with `cp .env.example .env` |
+| `.env.local` | Next.js (automatic, highest priority — overrides `.env`), `npm run generate:*:dev`, `Makefile.dev` generate target | `npm run dev` runtime and local type generation — overrides the Docker-internal default so these can reach the backend from your machine | **Devcontainer:** `http://transcend-backend:5000` (devcontainer joins `transcend-net` on start) **·** **Host terminal:** `http://localhost:5001` | **No** — create manually |
 
-| File | Who reads it | When |
-|---|---|---|
-| `.env` | `Makefile.dev` | Supplies `BACKEND_URL` as a Docker **build arg** — baked into the Next.js bundle during `docker build` |
-| `.env.dev` | `app-compose.yml` | Loaded as **runtime env vars** into the running container |
+`http://transcend-backend:5000` is the Docker-internal hostname — it only resolves inside the `transcend-net` Docker network. Outside Docker (local dev, type generation) you need the host-reachable address, which is what `.env.local` provides.
 
-The `rewrites()` in `next.config.ts` read `BACKEND_URL` at build time, so the `.env` value is what actually controls where `/api/*` requests are proxied. The `.env.dev` copy is redundant for that purpose but must exist because the compose file declares it as `env_file`.
-
-> `http://transcend-backend:5000` is the Docker-internal hostname of the backend on `transcend-net`. It only resolves inside Docker — **do not use it for local dev.**
-
-> If you change `BACKEND_URL` you must rebuild the Docker image: `make -f Makefile.dev build`.
+> If you change `BACKEND_URL` in `.env` you must rebuild the Docker image: `make -f Makefile.dev build`.
 
 ---
 
 ## Running the Application
 
-### Local Development (Recommended)
+### Local Development (Recommended) — uses `.env.local`
 
 Runs Next.js directly with Node — no Docker required. Works both inside and outside a dev container, as long as Node.js is installed.
 
@@ -50,14 +43,24 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 **Connecting to the backend from local dev**
 
-`http://transcend-backend:5000` is a Docker-internal address that does not resolve from your host. When running `npm run dev`, you need to override `BACKEND_URL` to point at localhost. Create a `.env.local` file (Next.js reads this automatically and it takes precedence over `.env`):
+`http://transcend-backend:5000` is a Docker-internal address that does not resolve outside Docker. Create a `.env.local` file — Next.js reads it automatically at the highest priority, overriding `.env`. You only need to do this once.
 
+**Inside devcontainer** (VS Code "Dev Containers: Reopen in Container"):
 ```bash
-# frontend/.env.local  — not committed, local override only
-BACKEND_URL=http://localhost:5000
+# frontend/.env.local
+BACKEND_URL=http://transcend-backend:5000
+```
+The devcontainer's `postStartCommand` joins it to `transcend-net` — the same Docker bridge network the backend runs on — so container names resolve directly. `localhost` and `host.docker.internal` both point to Docker Desktop's internal VM, not to where the backend port is bound.
+
+> **Start order matters:** if you open the devcontainer before starting the backend, reload the VS Code window after `make up` so `postStartCommand` re-runs and joins the network.
+
+**Host terminal (no devcontainer)**:
+```bash
+# frontend/.env.local
+BACKEND_URL=http://localhost:5001
 ```
 
-> `.env.local` is gitignored by Next.js by convention. You only need to create it once.
+> `.env.local` is gitignored. See the table in [Environment Setup](#environment-setup) for the full breakdown of both env files.
 
 **What if the backend is not running?**
 
@@ -70,7 +73,102 @@ cd infra && make up                      # Postgres + Redis
 cd backend && make -f Makefile.dev up    # Spring Boot backend
 ```
 
-### Docker Environment
+#### How to check if your full development stack is running correctly in development container
+
+Here's the full verification sequence in order — each step confirms the
+  previous one worked before going further.
+
+Step 1 — Backend containers are up and healthy
+```bash
+docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+```
+*List running containers as a table showing name, health status, and port
+bindings. All three — transcend-backend, redis-db, postgres-db — should
+show (healthy).*
+
+Step 2 — Devcontainer is joined to transcend-net
+```bash
+docker network inspect transcend-net --format '{{range.Containers}}{{.Name}}{{"\n"}}{{end}}'
+```
+*Print the names of every container currently on transcend-net. You should
+see transcend-backend and your devcontainer's name (something like
+ft_transcendence_devcontainer_...).*
+
+If the devcontainer is missing, the postStartCommand hasn't run yet —
+reload the VS Code window first (Ctrl+Shift+P → Developer: Reload Window),
+then re-run this check.
+
+Step 3 — Backend is reachable by name from inside the devcontainer
+```bash
+curl -s http://transcend-backend:5000/actuator/health | cat
+```
+*Make an HTTP request to the backend's health endpoint using the Docker
+container name (not an IP). If the network join worked, this resolves and
+returns {"status":"UP"}. If it fails with Could not resolve host, step 2
+didn't succeed.*
+
+Step 4 — Type generation works
+
+Via npm (reads `BACKEND_URL` from `.env.local`):
+```bash
+npm run generate:all:dev
+```
+
+Via Make (reads `BACKEND_URL` from `.env`, then `.env.local` overrides — same value in devcontainer):
+```bash
+make -f Makefile.dev generate
+```
+*Both commands generate `app/types/api.d.ts` (OpenAPI/REST) and
+`app/types/asyncapi.d.ts` (WebSocket) by fetching live specs from the
+running backend. Both should complete without errors.*
+
+Step 5 — Frontend compiles cleanly
+
+Via npm:
+```bash
+npm run build 2>&1 | tail -20
+```
+
+Via Make:
+```bash
+make build 2>&1 | tail -20
+```
+*Run a production Next.js build and show only the last 20 lines of output.
+A clean build ends with `✓ Compiled successfully`. The `make build` target
+does the same thing — it installs dependencies first if missing, then runs
+`npm run build`.*
+
+Step 6 — Makefile targets all work
+
+These targets do not require the backend:
+```bash
+make lint
+```
+*Run ESLint across the project. Should exit with no errors.*
+
+```bash
+make check
+```
+*Run ESLint then verify Prettier formatting across all `.ts`, `.tsx`, and
+`.css` files. Should exit cleanly. Use `make format` to auto-fix any
+formatting issues.*
+
+These targets verify the clean/rebuild cycle:
+```bash
+make clean && make build 2>&1 | tail -5
+```
+*Delete `app/types/api.d.ts` and the `.next` build cache, then rebuild.
+Confirms that Make correctly re-triggers the build from a clean state.
+The last 5 lines should still end with `✓ Compiled successfully`.*
+
+```bash
+make fclean && make build 2>&1 | tail -5
+```
+*Delete `node_modules` as well, then rebuild. This is the slowest path —
+Make reinstalls all dependencies before building. Useful to confirm a
+fresh-clone experience works end-to-end.*
+
+### Docker Environment — uses `.env` (build arg)
 
 Runs the frontend inside a container, mirroring the production setup. Requires infra and backend to already be running.
 
@@ -125,15 +223,15 @@ Type safety between the backend and frontend is maintained by auto-generating Ty
 Types are generated automatically on `make -f Makefile.dev up`. To regenerate manually after a backend schema change:
 
 ```bash
-# local dev
+# local dev (reads BACKEND_URL from .env.local)
 npm run generate:all:dev
 
-# or via Make (also rebuilds the Docker image)
+# or via Make (reads BACKEND_URL from .env.local, falls back to .env)
 make -f Makefile.dev generate
-make -f Makefile.dev build
 ```
 
 > The backend must be running before regenerating — `openapi-typescript` fetches the live `/api-docs` endpoint.
+> Make sure `.env.local` exists with the correct `BACKEND_URL` for your environment before running either command.
 
 ---
 

@@ -49,6 +49,7 @@ check: lint
 
 clean:
 	@echo "$(BLUE)Cleaning build artifacts...$(RESET)"
+	# @rm -rf app/types/api.d.ts TODO: where should it sit?
 	@rm -rf .next
 
 fclean: clean
