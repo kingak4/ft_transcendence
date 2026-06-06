@@ -7,7 +7,7 @@ up:
 	${COMPOSE} up -d
 
 down:
-	${COMPOSE} down -v
+	${COMPOSE} down
 
 re: down up
 
@@ -18,6 +18,6 @@ logs:
 	${DOCKER} logs -f redis-db
 
 clean:
-	docker compose down -v
+	${COMPOSE} down -v
 ps:
 	${COMPOSE} ps
