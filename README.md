@@ -64,19 +64,26 @@ Established structured workflow for team coordination and task execution:
 **Tools:** Jira (task tracking), Confluence (knowledge base & architecture), Slack (project communication), Messenger (rapid updates).
 
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
+TODO
 
 ### [Alina](https://github.com/alrltgit) — DevOps, Data Engineer
+TODO
 
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
+TODO
 
-### [Zyta](https://github.com/) — Forum & Social Systems Developer
+### [Zyta](https://github.com/) — Fronend Developer & Designer
+TODO
 
 
 ## 🛠️ Technical Stack
+TODO
 
 ## 🗄️ Database Schema
+TODO
 
 ## ✨ Features List
+TODO
 
 ## 🧩 Modules
 
