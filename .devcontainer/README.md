@@ -101,7 +101,7 @@ infra/.env
 infra/postgres/.env
 infra/redis/.env
 frontend/.env
-frontend/.env.dev
+frontend/.env.local
 backend/.env
 backend/transcend/.env
 ```

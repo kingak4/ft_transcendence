@@ -4,10 +4,10 @@ include .env
 .PHONY: up down re db logs
 
 up:
-	docker compose up -d
+	${COMPOSE} up -d
 
 down:
-	docker compose down
+	${COMPOSE} down
 
 re: down up
 
@@ -18,7 +18,7 @@ logs:
 	${DOCKER} logs -f postgres-db
 
 clean:
-	docker compose down -v
+	${COMPOSE} down -v
 
 ps:
 	${COMPOSE} ps

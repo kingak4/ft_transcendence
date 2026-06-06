@@ -10,13 +10,20 @@ app/types/api.d.ts: node_modules
 	mkdir -p app/types
 	./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
 
-generate: node_modules
-	$(MAKE) app/types/api.d.ts
+app/types/asyncapi.d.ts: node_modules
+	mkdir -p app/types
+	BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
 
-build: app/types/api.d.ts
+generate: node_modules
+	rm -f app/types/api.d.ts app/types/asyncapi.d.ts
+	mkdir -p app/types
+	./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
+	BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
+
+build: app/types/api.d.ts app/types/asyncapi.d.ts
 	${COMPOSE} -f app-compose.yml build
 
-up: app/types/api.d.ts
+up: app/types/api.d.ts app/types/asyncapi.d.ts
 	${COMPOSE} -f app-compose.yml up -d
 
 down:
@@ -24,4 +31,4 @@ down:
 
 clean:
 	${COMPOSE} -f app-compose.yml down -v
-	rm -f app/types/api.d.ts
+	rm -f app/types/api.d.ts app/types/asyncapi.d.ts
