@@ -6,15 +6,25 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:api": ". ./.env && openapi-typescript ${BACKEND_URL}/api-docs -o app/types/api.d.ts",
+    "generate:api:dev": ". ./.env.dev && openapi-typescript ${BACKEND_URL}/api-docs -o app/types/api.d.ts",
+    "generate:asyncapi": ". ./.env && BACKEND_URL=${BACKEND_URL} node scripts/generate-asyncapi.mjs",
+    "generate:asyncapi:dev": ". ./.env.dev && BACKEND_URL=${BACKEND_URL} node scripts/generate-asyncapi.mjs",
+    "generate:all": "npm run generate:api && npm run generate:asyncapi",
+    "generate:all:dev": "npm run generate:api:dev && npm run generate:asyncapi:dev"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "next": "^16.2.6",
     "openapi-fetch": "^0.17.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-stomp-hooks": "^3.0.0"
   },
   "devDependencies": {
+    "@asyncapi/modelina": "^3.0.0",
+    "@asyncapi/parser": "^3.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -30,5 +40,10 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "jsonpath-plus": "^10.3.0",
+    "postcss": "^8.5.10",
+    "ajv": "^8.12.0"
   }
 }

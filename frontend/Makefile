@@ -9,11 +9,7 @@ RESET       = \033[0m
 include .env 
 .PHONY: install dev build start lint format check clean fclean re
 
-all: dev
-
-certificate:
-	mkdir -p certificates
-	~/.cache/mkcert/mkcert-v1.4.4-linux-amd64 -key-file ./certificates/localhost-key.pem -cert-file ./certificates/localhost.pem localhost 127.0.0.1 ::1
+all: local
 
 install:
 	@echo "$(BLUE)Installing npm dependencies...$(RESET)"
@@ -21,6 +17,14 @@ install:
 
 dev: install
 	@echo "$(BLUE)Starting Next.js development server...$(RESET)"
+	@npm run dev
+
+local: install
+	@echo "$(BLUE)Waiting for backend API to be ready...$(RESET)"
+	@while ! curl -s ${BACKEND_URL}/api-docs > /dev/null; do sleep 1; done
+	@echo "$(BLUE)Generating all API types (OpenAPI & AsyncAPI)...$(RESET)"
+	@npm run generate:all
+	@echo "$(BLUE)Starting Next.js local...$(RESET)"
 	@npm run dev
 
 build: install

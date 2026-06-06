@@ -34,6 +34,7 @@ public class LoginController {
   @Operation(summary = "Authenticate and issue JWT")
   @ApiResponses(
       value = {
+        @ApiResponse(responseCode = "200", description = "Successfully logged in"),
         @ApiResponse(
             responseCode = "401",
             content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
