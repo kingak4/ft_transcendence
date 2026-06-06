@@ -14,11 +14,13 @@ copy_if_missing() {
 }
 
 echo "==> Initialising env files..."
-copy_if_missing infra/.env.example          infra/.env
-copy_if_missing infra/postgres/.env.example infra/postgres/.env
-copy_if_missing infra/redis/.env.example    infra/redis/.env
-copy_if_missing frontend/.env.example       frontend/.env
-copy_if_missing frontend/.env.example       frontend/.env.dev
+copy_if_missing infra/.env.example             infra/.env
+copy_if_missing infra/postgres/.env.example    infra/postgres/.env
+copy_if_missing infra/redis/.env.example       infra/redis/.env
+copy_if_missing frontend/.env.example          frontend/.env
+copy_if_missing frontend/.env.example          frontend/.env.local
+copy_if_missing backend/.env.example           backend/.env
+copy_if_missing backend/transcend/.env.example backend/transcend/.env
 
 echo ""
 echo "==> Ready. Start the stack in this order:"

@@ -102,6 +102,8 @@ infra/postgres/.env
 infra/redis/.env
 frontend/.env
 frontend/.env.dev
+backend/.env
+backend/transcend/.env
 ```
 
 The script is idempotent — it skips any file that already exists.
@@ -113,14 +115,18 @@ The script is idempotent — it skips any file that already exists.
 For UI work and component development you do not need the backend at all — API calls will simply fail and you handle the empty/error state as you would in production.
 
 ```bash
-cd frontend && make -f Makefile.dev up
+cd frontend
+npm install   # first time only
+npm run dev
 ```
 
 Open http://localhost:3000.
 
+> `app/types/` will be empty on a fresh checkout. This only matters if you are actively working on code that uses the generated API types — to populate it, start the backend first and run `npm run generate:all:dev`.
+
 ### Frontend + backend (end-to-end testing)
 
-Only bring up the backend when you need to test a real API call. Skip nginx and the frontend container:
+Only bring up the backend when you need to test a real API call. nginx is not needed for this.
 
 ```bash
 # 1. Postgres + Redis
@@ -130,7 +136,10 @@ cd infra && make up
 cd backend && make -f Makefile.dev up
 
 # 3. Frontend
-cd frontend && make -f Makefile.dev up
+cd frontend
+npm install              # first time only
+npm run generate:all:dev # populate app/types/ from the live backend
+npm run dev
 ```
 
 ### Full stack (nginx + HTTPS)
@@ -146,7 +155,10 @@ cd infra/nginx && docker compose up -d
 cd backend && make -f Makefile.dev up
 
 # 3. frontend
-cd frontend && make -f Makefile.dev up
+cd frontend
+npm install              # first time only
+npm run generate:all:dev # populate app/types/ from the live backend
+npm run dev
 ```
 
 Open https://localhost:8443.

@@ -31,11 +31,12 @@ Then create `.env.local` manually (value depends on your setup — see the Local
 
 ### Local Development (Recommended) — uses `.env.local`
 
-Runs Next.js directly with Node — no Docker required. Works both inside and outside a dev container, as long as Node.js is installed.
+Once the `.env` files are ready run Next.js directly with Node — no Docker required. Works both inside and outside a dev container, as long as Node.js is installed.
 
 ```bash
 cd frontend
-npm install        # first time only
+npm install              # first time only
+npm run generate:all:dev # first time, and after backend schema changes (backend must be running)
 npm run dev
 ```
 

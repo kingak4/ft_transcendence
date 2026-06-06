@@ -49,11 +49,12 @@ check: lint
 
 clean:
 	@echo "$(BLUE)Cleaning build artifacts...$(RESET)"
-	# @rm -rf app/types/api.d.ts TODO: where should it sit?
 	@rm -rf .next
 
 fclean: clean
 	@echo "$(BLUE)Removing node_modules...$(RESET)"
+	@rm -rf app/types/api.d.ts
+	@rm -rf app/types/asyncapi.d.ts
 	@rm -rf node_modules
 
 re: fclean all
