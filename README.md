@@ -66,13 +66,13 @@ Established structured workflow for team coordination and task execution:
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
 TODO
 
-### [Alina](https://github.com/alrltgit) — DevOps, Data Engineer
+### [Alina](https://github.com/alrltgit) — DevOps, Database Engineer
 TODO
 
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
 TODO
 
-### [Zyta](https://github.com/) — Fronend Developer & Designer
+### [Zyta](https://github.com/) — Frontend Developer & Designer
 TODO
 
 
