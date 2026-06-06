@@ -14,8 +14,8 @@ This project is licensed under the GNU GPL v3 License.
 The goal of this web application is to enable user interaction through real-time communication and community building.
 
 The platform provides three functionalities:
-*   **Secure Authentication:** A reliable user management system supporting registration, login, and session handling to protect user data and privacy.
-*   **Chat:** A messaging system that allows users to connect exchange messages in real time.
+*   **Secure Authentication:** A user management system supporting registration, login, and session handling.
+*   **Chat:** A messaging system that allows users to connect and exchange messages in real time.
 *   **Community Forums:** A space for users to create discussions, post topics, share knowledge, and engage in threaded conversations.
 
 ## ⚙️ Setup
@@ -41,32 +41,38 @@ Supporting documentation:
 Application will be available via nginx proxy on port 8443.
 
 ## 👥 Team Information
-#### [Kinga](https://github.com/kingak4) — Project Manager & Developer
-Kinga played a pivotal role in the project, driving both the management strategy and hands-on technical development while supporting the team across multiple dimensions.
+### [Kinga](https://github.com/kingak4) — Project Manager & Developer
 
-*   **Project Management & Leadership:** Responsible for overall team organization, facilitating comprehensive task distribution, and coordinating regular hybrid meetings. She successfully established our shared workspace and fostered cross-functional alignment.
-*   **Documentation & Knowledge Base:** Authored vital documentation and supportive technical articles within Confluence. She designed and created comprehensive visual guides and project architecture layouts using **Confluence** and **Canva**.
-*   **Core Software Development:** Contributed as a developer to the implementation of the **Real-Time Chat Module**, ensuring smooth communication workflows within the application.
-*   **Code Quality & Pull Requests:** Actively participated in the code evaluation process, collaborating closely with the Technical Lead to conduct thorough **Code Reviews** and manage incoming **Pull Requests** to maintain high repository standards.
-*   **Compliance & Repository Care:** Fully managed the legal and structural setup of the project by drafting the platform's **Privacy Policy** and integrating the official **Open-Source License** into the repository.
+Lead the project through full development lifecycle while contributing as a developer.
 
-## 📊 Project Management
-###  Team Organization & Work Distribution
-To ensure smooth collaboration and efficient progress, our team established a structured workflow from the very beginning:
-* **Kick-off Meeting:** At the start of the project, the entire team gathered to brainstorm, define the core application concept, and allocate team roles based on mutual agreement.
-* **Role-Based Task Distribution:** Tasks were assigned strictly in accordance with each member's designated role. Every task assignment was discussed and agreed upon collaboratively, ensuring that everyone was aligned and comfortable with their responsibilities.
-* **Adaptive Meetings:** We maintained regular synchronization throughout the development lifecycle. Depending on the current needs, we held either full-team meetings or sub-team sessions focused on specific technical modules or technologies. 
-* **Hybrid Collaboration:** Meetings were conducted both in person at the **42 Warsaw campus** and online, ensuring maximum flexibility. Any significant changes or pivots in the project scope were immediately communicated to all team members to keep everyone updated.
+*   **Team Organization:** Structured task distribution and hybrid meetings, establishing the shared workspace and cross-functional coordination.
+*   **Documentation:** Created Confluence articles, architecture diagrams, and visual guides (Canva) for knowledge base. Coordinated documentation and knowledge sharing across the whole team.
+*   **Chat Module:** Implemented the Real-Time Chat Module feature.
+*   **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
+*   **Legal & Compliance:** Drafted Privacy Policy and integrated Open-Source License into the repository.
 
-### 🛠️ Project Management & Documentation Tools
-We utilized industry-standard tools to plan, track, and document our development process:
-* **Jira:** Used as our primary agile project management tool. We managed tasks through a Jira board, allowing every team member to clearly see their assignments, deadlines, and the overall project status.
-* **Confluence:** Served as our central knowledge base. It was used to gather comprehensive project requirements, ideas, and system architecture details. Our Project Manager (**Kinga**) and Technical Lead (**Szymon**) collaborated here to prepare detailed articles, project documentation, and visual guides (such as the forum module architecture).
+#### 📊 Project Management
 
-### 💬 Communication Channels
-To maintain constant alignment and quick feedback loops, we used a mix of professional and rapid communication tools:
-* **Slack:** Our main workspace for structured project communication, official updates, and technical discussions.
-* **Messenger:** Used for day-to-day, rapid communication, quick synchronization, and urgent notices.
+####  Team Organization & Work Distribution
+*   **Kick-off Meeting:** Initial team brainstorming to define the application concept and allocate roles.
+*   **Role-Based Task Distribution:** Tasks assigned according to each member's role and agreed upon collaboratively.
+*   **Regular Synchronization:** Full-team and sub-team meetings held throughout development based on needs.
+*   **Hybrid Collaboration:** In-person meetings at 42 Warsaw campus and online sessions; scope changes communicated immediately.
+
+#### 🛠️ Tools
+*   **Jira:** Primary project management tool for task tracking and status visibility.
+*   **Confluence:** Central knowledge base for requirements, architecture, and documentation.
+*   **Slack:** Main workspace for project communication.
+*   **Messenger:** Rapid day-to-day synchronization and urgent updates.
+
+### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
+
+### [Alina](https://github.com/alrltgit) — DevOps, Data Engineer
+
+### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
+
+### [Zyta](https://github.com/) — Forum & Social Systems Developer
+
 
 ## 🛠️ Technical Stack
 
