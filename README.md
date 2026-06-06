@@ -9,9 +9,9 @@ This project is licensed under the GNU GPL v3 License.
 
 ➡️ [[GNU GPL v3 License](LICENSE.md)]
 
-## 📌 Description
+## 📌 42hub.tech Project Description
 
-The goal of this web application is to enable user interaction through real-time communication and community building.
+The goal is to enable user interaction through real-time communication and community building.
 
 The platform provides three functionalities:
 *   **Secure Authentication:** A user management system supporting registration, login, and session handling.
@@ -20,7 +20,7 @@ The platform provides three functionalities:
 
 ## ⚙️ Setup
 
-Create and configure the environment files before running the project:
+Create and configure the environment files before running the project, either manually or by running `make env` (using the defaults):
 
 - [infra/.env](infra/.env) and [infra/.env.example](infra/.env.example)
 - [infra/postgres/.env](infra/postgres/.env) and [infra/postgres/.env.example](infra/postgres/.env.example)
@@ -28,7 +28,7 @@ Create and configure the environment files before running the project:
 - [backend/.env](backend/.env) and [backend/.env.example](backend/.env.example)
 - [backend/transcend/.env](backend/transcend/.env) and [backend/transcend/.env.example](backend/transcend/.env.example)
 
-## ▶️ Run the Project
+## ▶️ Instructions
 
 From the repository root, start the application on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders (see supporting documentation).
 
