@@ -53,17 +53,15 @@ Lead the project through full development lifecycle while contributing as a deve
 
 #### 📊 Project Management
 
-####  Team Organization & Work Distribution
-*   **Kick-off Meeting:** Initial team brainstorming to define the application concept and allocate roles.
-*   **Role-Based Task Distribution:** Tasks assigned according to each member's role and agreed upon collaboratively.
-*   **Regular Synchronization:** Full-team and sub-team meetings held throughout development based on needs.
-*   **Hybrid Collaboration:** In-person meetings at 42 Warsaw campus and online sessions; scope changes communicated immediately.
+Established structured workflow for team coordination and task execution:
 
-#### 🛠️ Tools
-*   **Jira:** Primary project management tool for task tracking and status visibility.
-*   **Confluence:** Central knowledge base for requirements, architecture, and documentation.
-*   **Slack:** Main workspace for project communication.
-*   **Messenger:** Rapid day-to-day synchronization and urgent updates.
+*   **Kick-off Meeting:** Defined application concept and allocated roles through team brainstorming.
+*   **Task Distribution:** Assigned tasks by role and agreed upon collaboratively.
+*   **Synchronization:** Held full-team and sub-team meetings throughout the development lifecycle.
+*   **Hybrid Meetings:** Conducted in-person sessions at 42 Warsaw campus and online.
+*   **Timeline Management:** Monitored project progress and adapted scope based on time constraints, conducting concept pivots when necessary.
+
+**Tools:** Jira (task tracking), Confluence (knowledge base & architecture), Slack (project communication), Messenger (rapid updates).
 
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
 
