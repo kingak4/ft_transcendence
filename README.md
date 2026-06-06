@@ -11,13 +11,12 @@ This project is licensed under the GNU GPL v3 License.
 
 ## 📌 Description
 
-This application is a comprehensive web platform designed to facilitate user interaction through real-time communication and community building. Built with a robust **Java** backend, the system ensures high performance, scalability, and secure data management. 
+The goal of this web application is to enable user interaction through real-time communication and community building.
 
-The platform revolves around three core pillars:
-*   **Secure Authentication:** A reliable user management system supporting secure registration, login, and session handling to protect user data and privacy.
-*   **Real-Time Chat Module:** A dynamic messaging system that allows users to connect instantly, exchange messages, and communicate in real time.
-*   **Community Forum:** A structured space for users to create discussions, post topics, share knowledge, and engage in threaded conversations.
-
+The platform provides three functionalities:
+*   **Secure Authentication:** A reliable user management system supporting registration, login, and session handling to protect user data and privacy.
+*   **Chat:** A messaging system that allows users to connect exchange messages in real time.
+*   **Community Forums:** A space for users to create discussions, post topics, share knowledge, and engage in threaded conversations.
 
 ## ⚙️ Setup
 
@@ -29,15 +28,15 @@ Create and configure the environment files before running the project:
 - [backend/.env](backend/.env) and [backend/.env.example](backend/.env.example)
 - [backend/transcend/.env](backend/transcend/.env) and [backend/transcend/.env.example](backend/transcend/.env.example)
 
+## ▶️ Run the Project
+
+From the repository root, start the application on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders (see supporting documentation).
+
 Supporting documentation:
 
 - [Infrastructure README](infra/README.md)
 - [Backend README](backend/README.md)
 - [Frontend README](frontend/README.md)
-
-## ▶️ Run the Project
-
-From the repository root, start the stack on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders.
 
 Application will be available via nginx proxy on port 8443.
 
