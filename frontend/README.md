@@ -19,7 +19,7 @@ Then create `.env.local` manually (value depends on your setup — see the Local
 | File | Read by | Used when | Value | Committed? |
 |---|---|---|---|---|
 | `.env` | Docker Compose (automatic), `Makefile.dev` (build arg), `app-compose.yml` (container runtime), `npm run generate:api` | Docker `build` — bakes `BACKEND_URL` into the Next.js bundle via `rewrites()` in `next.config.ts`; also injected as a runtime env var inside the container | `http://transcend-backend:5000` | **No** — create with `cp .env.example .env` |
-| `.env.local` | Next.js (automatic, highest priority — overrides `.env`), `npm run generate:*:dev`, `Makefile.dev` generate target | `npm run dev` runtime and local type generation — overrides the Docker-internal default so these can reach the backend from your machine | **Devcontainer:** `http://transcend-backend:5000` (devcontainer joins `transcend-net` on start) **·** **Host terminal:** `http://localhost:5001` | **No** — create manually |
+| `.env.local` | Next.js (automatic, highest priority — overrides `.env`), `npm run generate:*:dev`, `Makefile.dev` generate target | `npm run dev` runtime and local type generation — overrides the Docker-internal default so these can reach the backend | `http://localhost:5001` — works for both devcontainer (`--network=host` in `devcontainer.json` shares the host network stack) and host terminal | **No** — create manually |
 
 `http://transcend-backend:5000` is the Docker-internal hostname — it only resolves inside the `transcend-net` Docker network. Outside Docker (local dev, type generation) you need the host-reachable address, which is what `.env.local` provides.
 
@@ -46,20 +46,12 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 `http://transcend-backend:5000` is a Docker-internal address that does not resolve outside Docker. Create a `.env.local` file — Next.js reads it automatically at the highest priority, overriding `.env`. You only need to do this once.
 
-**Inside devcontainer** (VS Code "Dev Containers: Reopen in Container"):
-```bash
-# frontend/.env.local
-BACKEND_URL=http://transcend-backend:5000
-```
-The devcontainer's `postStartCommand` joins it to `transcend-net` — the same Docker bridge network the backend runs on — so container names resolve directly. `localhost` and `host.docker.internal` both point to Docker Desktop's internal VM, not to where the backend port is bound.
-
-> **Start order matters:** if you open the devcontainer before starting the backend, reload the VS Code window after `make up` so `postStartCommand` re-runs and joins the network.
-
-**Host terminal (no devcontainer)**:
+**Both devcontainer and host terminal** — use the same value:
 ```bash
 # frontend/.env.local
 BACKEND_URL=http://localhost:5001
 ```
+`devcontainer.json` runs the devcontainer with `--network=host`, which makes the container share the host's network stack entirely. `localhost` inside the devcontainer is the same `localhost` as on your WSL/Linux host, so port 5001 reaches the backend's published port directly.
 
 > `.env.local` is gitignored. See the table in [Environment Setup](#environment-setup) for the full breakdown of both env files.
 
