@@ -4,6 +4,7 @@ import code.users.domain.model.User;
 import code.users.domain.model.UserId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import code.users.domain.model.FriendId;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
@@ -14,6 +15,9 @@ public interface UserEntityMapper {
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")
+  @Mapping(target = "displayName", source = "details.displayName")
+  @Mapping(target = "friends", ignore = true)
+  @Mapping(target = "avatar", ignore = true)
   UserEntity toEntity(User user);
 
   default UserId map(UserIdEntity id) {
@@ -23,4 +27,8 @@ public interface UserEntityMapper {
   default UserIdEntity map(UserId id) {
     return id == null ? null : new UserIdEntity(id.val());
   }
+
+  default FriendId mapToFriendId(UserIdEntity id) { return id == null ? null : FriendId.of(id.val()); }
+
+  default UserIdEntity mapFromFriendId(FriendId id) { return id == null ? null : new UserIdEntity(id.val()); }
 }

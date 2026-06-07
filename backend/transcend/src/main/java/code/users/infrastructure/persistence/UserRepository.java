@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,36 +38,72 @@ public class UserRepository implements UserDao {
 
   @Override
   public void updateUser(User user) {
-    throw new NotImplementedException();
+    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(user.getId()))
+            .orElseThrow(EntityNotFoundException::new);
+    entity.setHash(user.getPassword());
+    if (user.getDetails() != null) {
+      entity.setDisplayName(user.getDetails().getDisplayName());
+    }
+    userJpaRepository.save(entity);
   }
 
   @Override
   public void saveAvatar(UserId userId, Avatar avatar) {
-    throw new NotImplementedException();
+    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+            .orElseThrow(EntityNotFoundException::new);
+    entity.setAvatar(avatar.content());
+    userJpaRepository.save(entity);
   }
 
   @Override
   public Avatar getAvatar(UserId userId) {
-    throw new NotImplementedException();
+    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+            .orElseThrow(EntityNotFoundException::new);
+    return new Avatar(entity.getAvatar());
   }
 
   @Override
   public void addFriend(UserId userId, FriendId friendId) {
-    throw new NotImplementedException();
+    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+            .orElseThrow(EntityNotFoundException::new);
+    entity.getFriends().add(new UserIdEntity(friendId.val()));
+    userJpaRepository.save(entity);
   }
 
   @Override
   public void removeFriend(UserId userId, FriendId friendId) {
-    throw new NotImplementedException();
+    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+            .orElseThrow(EntityNotFoundException::new);
+    entity.getFriends().remove(new UserIdEntity(friendId.val()));
+    userJpaRepository.save(entity);
   }
 
   @Override
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    throw new NotImplementedException();
+    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+            .orElseThrow(EntityNotFoundException::new);
+
+    return entity.getFriends().stream()
+            .skip((long) page * size)
+            .limit(size)
+            .collect(Collectors.toMap(
+                    friendId -> FriendId.of(friendId.val()),
+                    friendId -> userJpaRepository.findById(friendId)
+                            .map(f -> UserDetails.builder()
+                                    .displayName(f.getDisplayName())
+                                    .avatarUrl(f.getAvatar() != null
+                                            ? UserDetails.AVATARS_BASE_URL + friendId.val()
+                                            : UserDetails.DEFAULT_AVATAR_URL)
+                                    .build())
+                            .orElse(UserDetails.builder()
+                                    .displayName("")
+                                    .avatarUrl(UserDetails.DEFAULT_AVATAR_URL)
+                                    .build())
+            ));
   }
 
   @Override
   public boolean exists(FriendId friendId) {
-    throw new NotImplementedException();
+    return userJpaRepository.existsById(new UserIdEntity(friendId.val()));
   }
 }
