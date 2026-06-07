@@ -7,7 +7,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
- * @deprecated Prefer {@link RedisTestSupport} (embedded Redis) for tests.
+ * @deprecated Prefer {@link EmbeddedRedisTestSupport} (embedded Redis) for tests.
  */
 @Deprecated
 @TestConfiguration

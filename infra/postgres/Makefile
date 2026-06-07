@@ -7,7 +7,7 @@ up:
 	${COMPOSE} up -d
 
 down:
-	${COMPOSE} down
+	${COMPOSE} down -v
 
 re: down up
 

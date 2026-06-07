@@ -8,7 +8,7 @@ import static code.chat.domain.model.ChatFixtures.aDefaultMessage;
 import static code.chat.entrypoints.http.ChatController.BASE_URL;
 import static code.chat.entrypoints.http.ChatController.CHAT_MESSAGES_ENDPOINT;
 import static code.chat.entrypoints.http.ChatController.START_CHAT_ENDPOINT;
-import static code.users.entrypoints.http.UrlBuilderUtil.buildUrl;
+import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

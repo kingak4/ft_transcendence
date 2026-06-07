@@ -15,10 +15,10 @@ spring:
     hibernate:
       ddl-auto: validate
   datasource:
-    url: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=dev
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=dev
   data:
     redis:
-      host: redis-db
+      host: ${REDIS_HOST}
       port: 6379
 server:
   port: 5000
