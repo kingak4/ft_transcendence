@@ -24,7 +24,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: role
-                  type: user_role
+                  type: public.user_role
                   constraints:
                     nullable: false
 

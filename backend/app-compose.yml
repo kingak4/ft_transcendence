@@ -27,6 +27,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=test,dev
       - POSTGRES_HOST=postgres-db
+      - REDIS_HOST=redis-db
     command: ["sh", "-c", "gradle test --no-daemon"]
     profiles:
       - test
