@@ -18,6 +18,6 @@ logs:
 	${DOCKER} logs -f redis-db
 
 clean:
-	docker compose down -v
+	${COMPOSE} down -v
 ps:
 	${COMPOSE} ps

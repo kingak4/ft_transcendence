@@ -17,7 +17,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
-import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.config.WebSocketAutoConfig;
+import code.shared.config.WebSocketTest;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
 import code.users.ports.in.UpdatePresenceUseCase;
@@ -36,11 +37,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = {
-      WebSocketTestAutoConfig.class,
+      WebSocketAutoConfig.class,
       PresenceWebSocketController.class,
       UserStatusWebSocketListener.class
     })
-class PresenceFeatureTest extends WebSocketTestAutoConfig {
+class PresenceFeatureTest extends WebSocketTest {
 
   private static final Duration TIMEOUT = Duration.ofSeconds(10);
 

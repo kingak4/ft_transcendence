@@ -13,7 +13,8 @@ import static org.mockito.Mockito.verify;
 
 import code.chat.domain.model.ChatFixtures;
 import code.chat.ports.in.ManageMessagesUseCase;
-import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.config.WebSocketAutoConfig;
+import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
 import code.shared.util.WebSocketSecurityUtil;
 import java.lang.reflect.Type;
@@ -31,8 +32,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketTestAutoConfig.class, ChatWebSocketController.class})
-class MessageBroadcastTest extends WebSocketTestAutoConfig {
+    classes = {WebSocketAutoConfig.class, ChatWebSocketController.class})
+class MessageBroadcastTest extends WebSocketTest {
 
   private static final Duration TIMEOUT = Duration.ofSeconds(10);
 

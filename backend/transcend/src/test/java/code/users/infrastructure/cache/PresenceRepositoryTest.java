@@ -5,7 +5,7 @@ import static code.users.infrastructure.cache.PresenceRepository.sessionInfoKey;
 import static code.users.infrastructure.cache.PresenceRepository.sessionsKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import code.shared.config.RedisTestSupport;
+import code.shared.config.EmbeddedRedisTestSupport;
 import code.users.domain.model.Session;
 import code.users.domain.model.SessionId;
 import code.users.domain.model.UserFixtures;
@@ -21,7 +21,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @DataRedisTest
 @Import(PresenceRepository.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-class PresenceRepositoryTest extends RedisTestSupport {
+class PresenceRepositoryTest extends EmbeddedRedisTestSupport {
 
   private final StringRedisTemplate redisTemplate;
 
