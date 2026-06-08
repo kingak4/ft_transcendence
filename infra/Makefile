@@ -21,4 +21,4 @@ clean:
 	$(MAKE) -C redis clean
 
 killall:
-	docker rm -f $(docker ps -asq)
+	ids=$$(docker ps -aq); [ -n "$$ids" ] && docker rm -f $$ids

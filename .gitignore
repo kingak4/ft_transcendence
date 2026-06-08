@@ -6,6 +6,9 @@
 *.ipr
 .idea/
 .DS_Store
+.claude/
+.devcontainer/
+DEVELOPMENT_DOC.md
 
 # Environment Variables
 .env
