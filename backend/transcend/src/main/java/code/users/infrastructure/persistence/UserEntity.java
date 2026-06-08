@@ -8,6 +8,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -41,8 +42,8 @@ public class UserEntity {
   @ElementCollection
   @CollectionTable(
           name = "user_friends",
-          joinColumns = @JoinColumn(name = "val")
+          joinColumns = @JoinColumn(name = "user_id")
   )
-  @AttributeOverride(name = "val", column = @Column(name = "friend_id"))
-  private Set<UserIdEntity> friends = new HashSet<>();
+  @Column(name = "friend_id", nullable = false)
+  private Set<UUID> friends = new HashSet<>();
 }

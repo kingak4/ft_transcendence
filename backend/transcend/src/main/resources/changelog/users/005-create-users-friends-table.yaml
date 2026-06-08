@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: user_friends
             columns:
               - column:
-                  name: val
+                  name: user_id
                   type: uuid
                   constraints:
                     nullable: false
@@ -18,11 +18,11 @@ databaseChangeLog:
                     nullable: false
         - addPrimaryKey:
             tableName: user_friends
-            columnNames: val, friend_id
+            columnNames: user_id, friend_id
             constraintName: pk_user_friends
         - addForeignKeyConstraint:
             baseTableName: user_friends
-            baseColumnNames: val
+            baseColumnNames: user_id
             referencedTableName: users
-            referencedColumnNames: val
+            referencedColumnNames: user_id
             constraintName: fk_user_friends_user_id
