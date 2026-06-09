@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   return (
     <aside className="flex h-screen w-44 shrink-0 flex-col bg-white px-3 py-6 shadow-sm">
-      <span className="mb-8 px-3 text-xl font-bold italic">42hub</span>
+      <span className="mb-8 px-3 text-xl font-bold italic">Grindin&apos;</span>
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -26,8 +26,8 @@ export default function Sidebar() {
               href={item.href}
               className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-brand-green text-brand-dark'
-                  : 'text-brand-dark hover:bg-brand-gray'
+                  ? 'bg-brand-secondary-color text-brand-reversed-main-color'
+                  : 'text-brand-reversed-main-color hover:bg-brand-main-color'
               }`}
             >
               {item.label}

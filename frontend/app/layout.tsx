@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: '42hub',
+  title: 'Grindin\'',
   description: 'Every skill has a story — start yours.',
 };
 

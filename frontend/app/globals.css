@@ -4,12 +4,38 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* 42hub brand palette */
-  --color-brand-gray: #f0f0f0;
-  --color-brand-green: #8bde5a;
-  --color-brand-mint: #5cd4a0;
-  --color-brand-cyan: #15c8f7;
-  --color-brand-dark: #333333;
+  /* Grindin' brand palette */
+  --color-brand-main-color: #f0f0f0;
+  --color-brand-secondary-color: #8bde5a;
+  --color-brand-additional-color: #5cd4a0;
+  --color-brand-additional-color-2: #4C603A;
+  --color-brand-accent-color: #15c8f7;
+  --color-brand-reversed-main-color: #333333;
+}
+
+@utility bg-gradient-start-page {
+  background: linear-gradient(
+    to bottom left,
+    #7de8b4 0%,
+    #56876f 44%,
+    var(--color-brand-reversed-main-color) 100%
+  );
+}
+
+@utility bg-gradient-login-page {
+  background: linear-gradient(
+    to bottom right,
+    #a0d860 0%,
+    #3a5e30 100%
+  );
+}
+
+@utility bg-gradient-register-page {
+  background: linear-gradient(
+    to bottom right,
+    #0a0f15 0%,
+    #159090 100%
+  );
 }
 
 body {
