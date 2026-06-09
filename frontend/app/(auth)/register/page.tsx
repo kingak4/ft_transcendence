@@ -2,22 +2,22 @@
 
 
 import React, { useState } from 'react';
-import { login } from '../lib/login';
+
+import { register } from '../../lib/register';
 
 export default function SearchInput() {
-  const [loginValue, setLogin] = useState('');
+  const [emailValue, setLogin] = useState('');
   const [passwordValue, setPassword] = useState('');
 
   return (
     <div className="flex min-h-screen w-screen flex-col items-center justify-center border">
-      <h1 className="text-3xl font-bold">LOGIN</h1>
-      <h1 className="text-3xl font-bold">LOGIN</h1>
+      <h1 className="text-3xl font-bold">REGISTER</h1>
       <div className="min-h-3/4 flex w-1/6 flex-col items-center justify-center rounded-md border p-2">
         <div className="flex flex-row justify-center gap-2">
           <input
             id="user-name"
             type="text"
-            value={loginValue}
+            value={emailValue}
             onChange={(e) => setLogin(e.target.value)}
             placeholder="Login"
             className="w-3/4 rounded-md border p-2"
@@ -34,17 +34,17 @@ export default function SearchInput() {
           />
         </div>
         <button
-          onClick={() => loginWrap()}
+          onClick={() => registerWrap(emailValue, passwordValue)}
           className="cursor-pointer rounded-md border p-4"
         >
-          Login
+          Register
         </button>
       </div>
     </div>
   );
 
-  async function loginWrap() {
-    const response = await login(loginValue, passwordValue);
+  async function registerWrap(name: string, password: string) {
+    const response = await register(name, password);
 
     if (!response.success) {
       if (response.status === 500) {
@@ -54,7 +54,9 @@ export default function SearchInput() {
       }
       return;
     }
-    alert('Succesfully logged in!');
+    alert(`Succesfully registered!\n${response.message}`);
     window.location.href = '/home';
   }
+
+
 }
