@@ -46,12 +46,9 @@ export default function LoginPage() {
         />
 
         <div className="mb-6 text-right">
-          <Link
-            href="/forgot-password"
-            className="text-xs text-brand-main-color/50 transition-colors hover:text-brand-main-color"
-          >
+          <span className="cursor-not-allowed text-xs text-brand-main-color/50">
             Forgot password?
-          </Link>
+          </span>
         </div>
 
         <button

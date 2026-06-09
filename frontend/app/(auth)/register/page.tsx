@@ -78,7 +78,14 @@ export default function RegisterPage() {
               href="/terms-of-service"
               className="text-brand-main-color/80 underline transition-colors hover:text-brand-main-color"
             >
-              Terms &amp; Privacy Policy
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link
+              href="/privacy-policy"
+              className="text-brand-main-color/80 underline transition-colors hover:text-brand-main-color"
+            >
+              Privacy Policy
             </Link>
           </span>
         </label>

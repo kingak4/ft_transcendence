@@ -11,7 +11,7 @@ const stats = [
 ];
 
 const friends = [
-  { id: 1, name: 'Johhny', status: 'Active', statusColor: 'bg-green-400' },
+  { id: 1, name: 'Johnny', status: 'Active', statusColor: 'bg-green-400' },
   { id: 2, name: 'Adelada', status: 'Away', statusColor: 'bg-amber-400' },
   { id: 3, name: 'Vic', status: 'Active', statusColor: 'bg-green-400' },
   { id: 4, name: 'Ben', status: 'Inactive', statusColor: 'bg-red-400' },
@@ -89,7 +89,11 @@ export default function UserProfilePage() {
                   <p className="text-xs text-brand-reversed-main-color/50">{friend.status}</p>
                 </div>
               </div>
-              <button className="shrink-0 text-brand-reversed-main-color/30 transition-colors hover:text-brand-reversed-main-color">
+              <button
+                type="button"
+                aria-label="Message friend"
+                className="shrink-0 text-brand-reversed-main-color/30 transition-colors hover:text-brand-reversed-main-color"
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>

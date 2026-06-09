@@ -37,7 +37,7 @@ export default function LandingPage() {
         {/* Card — right */}
         <div className="w-72 rounded-2xl bg-brand-reversed-main-color p-8">
           <h2 className="mb-1 text-2xl font-bold text-brand-main-color">Hello!</h2>
-          <p className="mb-8 text-sm text-brand-main-color">Do you thing. Grind.</p>
+          <p className="mb-8 text-sm text-brand-main-color">Do your thing. Grind.</p>
           <Link
             href="/login"
             className="mb-4 block rounded-lg bg-brand-secondary-color py-3 text-center text-sm font-bold text-brand-additional-color-2 transition-colors hover:brightness-125"

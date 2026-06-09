@@ -40,4 +40,6 @@
 
 body {
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  background-color: var(--color-brand-main-color);
+  color: var(--color-brand-additional-color-2);
 }
