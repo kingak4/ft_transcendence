@@ -66,7 +66,7 @@ public class UserRepository implements UserDao {
   public void addFriend(UserId userId, FriendId friendId) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
-    entity.getFriends().add(new UserIdEntity(friendId.val()));
+    entity.getFriends().add(friendId.val());
     userJpaRepository.save(entity);
   }
 
@@ -74,7 +74,7 @@ public class UserRepository implements UserDao {
   public void removeFriend(UserId userId, FriendId friendId) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
-    entity.getFriends().remove(new UserIdEntity(friendId.val()));
+    entity.getFriends().remove(friendId.val());
     userJpaRepository.save(entity);
   }
 
@@ -87,12 +87,12 @@ public class UserRepository implements UserDao {
             .skip((long) page * size)
             .limit(size)
             .collect(Collectors.toMap(
-                    friendId -> FriendId.of(friendId.val()),
-                    friendId -> userJpaRepository.findById(friendId)
+                    FriendId::of,
+                    friendUuid -> userJpaRepository.findById(new UserIdEntity(friendUuid))
                             .map(f -> UserDetails.builder()
                                     .displayName(f.getDisplayName())
                                     .avatarUrl(f.getAvatar() != null
-                                            ? UserDetails.AVATARS_BASE_URL + friendId.val()
+                                            ? UserDetails.AVATARS_BASE_URL + friendUuid
                                             : UserDetails.DEFAULT_AVATAR_URL)
                                     .build())
                             .orElse(UserDetails.builder()

@@ -18,10 +18,7 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserEntity {
 
-  @EmbeddedId
-  @AttributeOverride(name = "val", column = @Column(name = "id"))
-  @EqualsAndHashCode.Include
-  private UserIdEntity id;
+  @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
 
   @Column(unique = true, nullable = false)
   private String email;
@@ -36,7 +33,6 @@ public class UserEntity {
 
   private String displayName;
 
-  @Lob
   private byte[] avatar;
 
   @ElementCollection

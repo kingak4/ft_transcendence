@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-add-user-profile-columns
+      author: dev
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: display_name
+                  type: VARCHAR(255)
+              - column:
+                  name: avatar
+                  type: BYTEA
