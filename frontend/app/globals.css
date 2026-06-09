@@ -24,7 +24,7 @@
 
 @utility bg-gradient-login-page {
   background: linear-gradient(
-    to bottom right,
+    to bottom left,
     #a0d860 0%,
     #3a5e30 100%
   );
@@ -32,7 +32,7 @@
 
 @utility bg-gradient-register-page {
   background: linear-gradient(
-    to bottom right,
+    to bottom left,
     #0a0f15 0%,
     #159090 100%
   );
