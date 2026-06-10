@@ -28,6 +28,7 @@ export async function login(
     }
 
     const token = data?.accessToken;
+    const id = data?.userId;
 
     if (!token) {
       return {
@@ -43,7 +44,7 @@ export async function login(
       sameSite: 'lax',
       path: '/',
     });
-    return { success: true, status: 200 };
+    return { success: true, status: 200, message: id };
   } catch (error: unknown) {
     console.error('Network or Unexpected Error:', error);
     return {

@@ -54,7 +54,7 @@ export default function SearchInput() {
       }
       return;
     }
-    alert('Succesfully logged in!');
+    alert('Succesfully logged in! ' + response.message);
     window.location.href = '/home';
   }
 }

@@ -33,7 +33,7 @@ nginx-build:
 	${COMPOSE} up --build -d nginx
 
 down:
-	${COMPOSE} down -v
+	${COMPOSE} down
 	$(MAKE) -C infra down
 
 local:
