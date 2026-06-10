@@ -18,7 +18,9 @@ databaseChangeLog:
                   name: display_name
                   type: VARCHAR(255)
               - column:
-                  name: avatar_url # change to avatar id
-                  type: VARCHAR(255)
+                  name: avatar_id
+                  type: UUID
                   constraints:
-                    nullable: false
+                    nullable: true
+                    foreignKeyName: fk_details_avatar
+                    references: avatars(val)
