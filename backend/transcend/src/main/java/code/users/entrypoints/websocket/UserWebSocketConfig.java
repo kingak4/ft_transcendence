@@ -5,6 +5,7 @@ import static code.shared.WebSocketConfig.SOCKET_PATH;
 import static code.shared.WebSocketConfig.SOCKET_QUEUE;
 import static code.shared.WebSocketConfig.SOCKET_TOPIC;
 
+import code.users.infrastructure.security.config.HandshakeJwtInterceptor;
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class UserWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-  private final SocketJwtInterceptor interceptor;
+  private final SocketJwtInterceptor jwtInterceptor;
+  private final HandshakeJwtInterceptor handshakeInterceptor;
 
   public static final String USER_PRESENCE_TOPIC_PREFIX = SOCKET_TOPIC + "/user/";
   public static final String USER_PRESENCE_TOPIC_SUFFIX = "/presence";
@@ -31,7 +33,10 @@ public class UserWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint(SOCKET_ENDPOINT).setAllowedOriginPatterns("*").withSockJS();
+    registry.addEndpoint(SOCKET_ENDPOINT)
+        .addInterceptors(handshakeInterceptor)
+        .setAllowedOriginPatterns("*")
+        .withSockJS();
   }
 
   @Override
@@ -42,6 +47,6 @@ public class UserWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Override
   public void configureClientInboundChannel(ChannelRegistration registration) {
-    registration.interceptors(interceptor);
+    registration.interceptors(jwtInterceptor);
   }
 }

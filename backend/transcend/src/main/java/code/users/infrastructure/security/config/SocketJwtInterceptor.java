@@ -58,7 +58,16 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
   }
 
   private Optional<String> extractJwtToken(StompHeaderAccessor accessor) {
-    return Optional.ofNullable(accessor.getFirstNativeHeader(AUTHORIZATION_HEADER))
+    Optional<String> token = Optional.ofNullable(accessor.getFirstNativeHeader(AUTHORIZATION_HEADER))
+        .filter(header -> header.startsWith(BEARER_PREFIX))
+        .map(header -> header.substring(BEARER_PREFIX.length()));
+    if (token.isPresent()) {
+      return token;
+    }
+    Object attr = accessor.getSessionAttributes() != null ? accessor.getSessionAttributes().get(AUTHORIZATION_HEADER) : null;
+    return Optional.ofNullable(attr)
+        .filter(String.class::isInstance)
+        .map(String.class::cast)
         .filter(header -> header.startsWith(BEARER_PREFIX))
         .map(header -> header.substring(BEARER_PREFIX.length()));
   }

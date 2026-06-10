@@ -1,7 +1,9 @@
 package code.shared.config;
 
 import code.users.entrypoints.websocket.UserWebSocketConfig;
+import code.users.infrastructure.security.config.HandshakeJwtInterceptor;
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
+import jakarta.websocket.server.HandshakeRequest;
 import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
@@ -33,5 +35,5 @@ import org.springframework.context.annotation.Import;
   ConfigurationPropertiesAutoConfiguration.class,
   PropertyPlaceholderAutoConfiguration.class,
 })
-@Import({UserWebSocketConfig.class, SocketJwtInterceptor.class})
+@Import({UserWebSocketConfig.class, SocketJwtInterceptor.class, HandshakeJwtInterceptor.class})
 public class WebSocketAutoConfig {}
