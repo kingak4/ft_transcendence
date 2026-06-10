@@ -4,12 +4,10 @@ import { cookies } from 'next/headers';
 // import { postData } from './post';
 import { client } from './api-clients';
 
-
 export async function login(
   name: string,
   password: string,
 ): Promise<ActionResponse> {
-
   try {
     const { data, error, response } = await client.POST('/users/login', {
       body: {

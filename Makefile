@@ -36,9 +36,8 @@ down:
 	${COMPOSE} down
 	$(MAKE) -C infra down
 
-local:
-	$(MAKE) -C infra up
-	@bash -c 'trap "$(MAKE) -C infra down; kill 0" EXIT; $(MAKE) -C backend & $(MAKE) -C frontend local & wait'
+frontend-local: infra-up backend-up
+	$(MAKE) -C frontend local
 
 re: down up
 

@@ -1,6 +1,5 @@
 'use client';
 
-
 import React, { useState } from 'react';
 
 import { register } from '../lib/register';
@@ -57,6 +56,4 @@ export default function SearchInput() {
     alert(`Succesfully registered!\n${response.message}`);
     window.location.href = '/home';
   }
-
-
 }

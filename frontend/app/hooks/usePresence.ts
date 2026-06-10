@@ -10,14 +10,14 @@ export function usePresence(userIdsToWatch: string[] = []) {
 
   // W backendzie topic dla konkretnego usera to: /topic/user/{userId}/presence
   const destinations = userIdsToWatch.map(
-    (id) => `${TOPIC_PREFIX}/user/${id}/presence`
+    (id) => `${TOPIC_PREFIX}/user/${id}/presence`,
   );
 
   useSubscription(destinations, (message) => {
     try {
       // Backend wysyła klasę PresenceStatusResponse: { userId: UUID, isOnline: boolean }
       const payload = JSON.parse(message.body);
-      
+
       if (payload.userId !== undefined && payload.isOnline !== undefined) {
         setOnlineStatus((prev) => ({
           ...prev,
