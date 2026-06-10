@@ -4,13 +4,13 @@ import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
 import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 
 import code.users.infrastructure.security.JwtTokenService;
-import io.jsonwebtoken.JwtException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -18,7 +18,6 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -36,7 +35,21 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
 
     if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
       Optional<String> jwtToken = extractJwtToken(accessor);
-      jwtToken.ifPresent(token -> handleToken(token, accessor));
+
+      // 1. Fail if token is missing
+      if (jwtToken.isEmpty()) {
+        log.error("Authentication failed: No token provided");
+        throw new MessageDeliveryException("Missing authentication token");
+      }
+
+      // 2. Attempt to authenticate
+      handleToken(jwtToken.get(), accessor);
+
+      // 3. Fail if handleToken did not result in a valid user
+      if (accessor.getUser() == null) {
+        log.error("Authentication failed: Invalid token");
+        throw new MessageDeliveryException("Invalid authentication token");
+      }
     }
     return message;
   }
@@ -52,13 +65,26 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
           log.info("User '{}' authenticated for WebSocket session.", username);
         }
       }
-    } catch (JwtException | UsernameNotFoundException e) {
-      log.error("WebSocket authentication failed: {}", e.getMessage());
+    } catch (Exception e) {
+      log.error("WebSocket authentication processing error: {}", e.getMessage());
     }
   }
 
   private Optional<String> extractJwtToken(StompHeaderAccessor accessor) {
-    return Optional.ofNullable(accessor.getFirstNativeHeader(AUTHORIZATION_HEADER))
+    Optional<String> token =
+        Optional.ofNullable(accessor.getFirstNativeHeader(AUTHORIZATION_HEADER))
+            .filter(header -> header.startsWith(BEARER_PREFIX))
+            .map(header -> header.substring(BEARER_PREFIX.length()));
+    if (token.isPresent()) {
+      return token;
+    }
+    Object attr =
+        accessor.getSessionAttributes() != null
+            ? accessor.getSessionAttributes().get(AUTHORIZATION_HEADER)
+            : null;
+    return Optional.ofNullable(attr)
+        .filter(String.class::isInstance)
+        .map(String.class::cast)
         .filter(header -> header.startsWith(BEARER_PREFIX))
         .map(header -> header.substring(BEARER_PREFIX.length()));
   }
