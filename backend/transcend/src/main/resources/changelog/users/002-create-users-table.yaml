@@ -27,6 +27,13 @@ databaseChangeLog:
                   type: user_role
                   constraints:
                     nullable: false
+              - column:
+                  name: avatar_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_users_avatar
+                    references: avatars(val)
 
         - addUniqueConstraint:
             tableName: users

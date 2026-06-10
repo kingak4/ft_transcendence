@@ -1,6 +1,5 @@
 package code.users.infrastructure.persistence;
 
-import code.shared.exceptions.NotImplementedException;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
 
@@ -37,6 +37,7 @@ public class UserRepository implements UserDao {
   }
 
   @Override
+  @Transactional
   public void updateUser(User user) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(user.getId()))
             .orElseThrow(EntityNotFoundException::new);
@@ -44,15 +45,14 @@ public class UserRepository implements UserDao {
     if (user.getDetails() != null) {
       entity.setDisplayName(user.getDetails().getDisplayName());
     }
-    userJpaRepository.save(entity);
   }
 
   @Override
+  @Transactional
   public void saveAvatar(UserId userId, Avatar avatar) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
     entity.setAvatar(avatar.content());
-    userJpaRepository.save(entity);
   }
 
   @Override
@@ -63,22 +63,23 @@ public class UserRepository implements UserDao {
   }
 
   @Override
+  @Transactional
   public void addFriend(UserId userId, FriendId friendId) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
     entity.getFriends().add(friendId.val());
-    userJpaRepository.save(entity);
   }
 
   @Override
+  @Transactional
   public void removeFriend(UserId userId, FriendId friendId) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
     entity.getFriends().remove(friendId.val());
-    userJpaRepository.save(entity);
   }
 
   @Override
+  @Transactional
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);

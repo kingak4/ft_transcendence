@@ -18,7 +18,7 @@ databaseChangeLog:
                   name: display_name
                   type: VARCHAR(255)
               - column:
-                  name: avatar_url
+                  name: avatar_url # change to avatar id
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
