@@ -3,7 +3,6 @@ package code.shared.config;
 import code.users.entrypoints.websocket.UserWebSocketConfig;
 import code.users.infrastructure.security.config.HandshakeJwtInterceptor;
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
-import jakarta.websocket.server.HandshakeRequest;
 import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;

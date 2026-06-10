@@ -4,7 +4,6 @@ import static code.bootstrap.config.TokenConfig.AUTHORIZATION_HEADER;
 import static code.bootstrap.config.TokenConfig.BEARER_PREFIX;
 
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -36,6 +35,5 @@ public class HandshakeJwtInterceptor implements HandshakeInterceptor {
       ServerHttpRequest request,
       ServerHttpResponse response,
       WebSocketHandler wsHandler,
-      Exception exception) {
-  }
+      Exception exception) {}
 }

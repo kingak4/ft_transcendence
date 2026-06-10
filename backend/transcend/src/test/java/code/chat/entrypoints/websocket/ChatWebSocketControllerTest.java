@@ -2,13 +2,12 @@ package code.chat.entrypoints.websocket;
 
 import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_DELETE;
 import static code.chat.entrypoints.websocket.ChatWebSocketController.MESSAGE_SEND;
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.SOCKET_PATH;
-import static code.shared.WebSocketConfig.WS_HOST;
+import static code.shared.config.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.config.WebSocketConfig.SOCKET_PATH;
+import static code.shared.config.WebSocketConfig.WS_HOST;
 import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import code.chat.domain.model.ChatFixtures;
@@ -38,47 +37,35 @@ class ChatWebSocketControllerTest extends WebSocketTest {
 
   @Test
   void shouldDeleteMessageViaWebSocket() throws Exception {
-    // Given
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
     String messageId = ChatFixtures.MESSAGE_ID_FIXTURE.toString();
 
-    doNothing()
-        .when(manageMessagesUseCase)
-        .deleteMessage(any(ManageMessagesUseCase.DeleteMessageCommand.class));
-
-    StompSession session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
-
-    // When
+    session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
     deleteMessage(session, messageId);
 
-    // Then
-    verify(manageMessagesUseCase, timeout(TIMEOUT.toMillis()))
-        .deleteMessage(any(ManageMessagesUseCase.DeleteMessageCommand.class));
-
-    session.disconnect();
+    await()
+        .atMost(TIMEOUT)
+        .untilAsserted(
+            () ->
+                verify(manageMessagesUseCase)
+                    .deleteMessage(any(ManageMessagesUseCase.DeleteMessageCommand.class)));
   }
 
   @Test
   void shouldSendMessageViaWebSocket() throws Exception {
-    // Given
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
     String chatId = ChatFixtures.CHAT_ID_FIXTURE.toString();
     String messageContent = "Hello from WebSocket";
 
-    doNothing()
-        .when(manageMessagesUseCase)
-        .sendMessage(any(ManageMessagesUseCase.SendMessageCommand.class));
-
-    StompSession session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
-
-    // When
+    session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
     sendMessage(session, chatId, messageContent);
 
-    // Then
-    verify(manageMessagesUseCase, timeout(TIMEOUT.toMillis()))
-        .sendMessage(any(ManageMessagesUseCase.SendMessageCommand.class));
-
-    session.disconnect();
+    await()
+        .atMost(TIMEOUT)
+        .untilAsserted(
+            () ->
+                verify(manageMessagesUseCase)
+                    .sendMessage(any(ManageMessagesUseCase.SendMessageCommand.class)));
   }
 
   private void sendMessage(StompSession session, String chatId, String content) {

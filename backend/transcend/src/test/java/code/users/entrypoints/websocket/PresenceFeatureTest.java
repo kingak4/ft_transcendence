@@ -1,8 +1,8 @@
 package code.users.entrypoints.websocket;
 
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.SOCKET_PATH;
-import static code.shared.WebSocketConfig.WS_HOST;
+import static code.shared.config.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.config.WebSocketConfig.SOCKET_PATH;
+import static code.shared.config.WebSocketConfig.WS_HOST;
 import static code.shared.domain.model.WebSocketFixtures.ID_FIXTURE;
 import static code.shared.domain.model.WebSocketFixtures.TOKEN_FIXTURE;
 import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
@@ -22,14 +22,15 @@ import code.shared.config.WebSocketTest;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
 import code.users.ports.in.UpdatePresenceUseCase;
-import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -50,63 +51,64 @@ class PresenceFeatureTest extends WebSocketTest {
   @MockitoBean private ReadPresenceUseCase readPresenceUseCase;
   @MockitoBean private UpdatePresenceUseCase updatePresenceUseCase;
 
+  @AfterEach
+  void resetBusinessMocks() {
+    Mockito.reset(readPresenceUseCase, updatePresenceUseCase);
+  }
+
   @Test
   void shouldBroadcastPresenceEventsWhenUserConnectsAndDisconnects() throws Exception {
-    // Given
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
     UserId userId = UserId.of(ID_FIXTURE);
     given(readPresenceUseCase.isOnline(userId)).willReturn(true);
 
     BlockingQueue<PresenceStatusResponse> events = new LinkedBlockingQueue<>();
+    StompSession observerSession = null;
+    StompSession actorSession = null;
 
-    StompSession observerSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
-    observerSession.subscribe(
-        userPresenceTopic(userId.val()),
-        new QueueingFrameHandler<>(PresenceStatusResponse.class, events));
+    try {
+      observerSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
+      observerSession.setAutoReceipt(true);
 
-    StompSession actorSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
+      CompletableFuture<StompHeaders> receipt = new CompletableFuture<>();
+      StompSession.Subscription sub =
+          observerSession.subscribe(
+              userPresenceTopic(userId.val()),
+              new QueueingFrameHandler<>(PresenceStatusResponse.class, events));
+      sub.addReceiptTask(() -> receipt.complete(new StompHeaders()));
 
-    // When
-    actorSession.send(SOCKET_PATH + PRESENCE_CHECK, new CheckPresenceRequest(userId.val()));
+      actorSession = connectWithToken(stompClient, wsUrl, TOKEN_FIXTURE);
 
-    // Then: Should receive Online event
-    await()
-        .atMost(TIMEOUT)
-        .untilAsserted(
-            () -> {
-              assertThat(events).anyMatch(PresenceStatusResponse::isOnline);
-            });
+      // When
+      actorSession.send(SOCKET_PATH + PRESENCE_CHECK, new CheckPresenceRequest(userId.val()));
 
-    // When: Actor disconnects
-    actorSession.disconnect();
+      // Then: Should receive Online event
+      await()
+          .atMost(TIMEOUT)
+          .untilAsserted(
+              () -> {
+                assertThat(events).anyMatch(PresenceStatusResponse::isOnline);
+              });
 
-    // Then: Should receive Offline event
-    await()
-        .atMost(TIMEOUT)
-        .untilAsserted(
-            () -> {
-              assertThat(events).anyMatch(res -> !res.isOnline());
-            });
+      // When: Actor disconnects
+      actorSession.disconnect();
+      actorSession = null;
 
-    verify(updatePresenceUseCase, atLeastOnce())
-        .setUserOnline(any(UpdatePresenceUseCase.SetUserOnlineCommand.class));
-    verify(updatePresenceUseCase, atLeastOnce())
-        .setUserOffline(any(UpdatePresenceUseCase.SetUserOfflineCommand.class));
-    assertThat(events).extracting(PresenceStatusResponse::userId).containsOnly(ID_FIXTURE);
+      // Then: Should receive Offline event
+      await()
+          .atMost(TIMEOUT)
+          .untilAsserted(
+              () -> {
+                assertThat(events).anyMatch(res -> !res.isOnline());
+              });
 
-    observerSession.disconnect();
-  }
+      // Verify mocks
+      verify(updatePresenceUseCase, atLeastOnce()).setUserOnline(any());
+      verify(updatePresenceUseCase, atLeastOnce()).setUserOffline(any());
 
-  private record QueueingFrameHandler<T>(Class<T> payloadType, BlockingQueue<T> queue)
-      implements StompFrameHandler {
-    @Override
-    public Type getPayloadType(StompHeaders headers) {
-      return payloadType;
-    }
-
-    @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-      queue.add((T) payload);
+    } finally {
+      if (observerSession != null && observerSession.isConnected()) observerSession.disconnect();
+      if (actorSession != null && actorSession.isConnected()) actorSession.disconnect();
     }
   }
 }

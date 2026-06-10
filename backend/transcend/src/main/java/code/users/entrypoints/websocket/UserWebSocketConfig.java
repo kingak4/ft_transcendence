@@ -1,9 +1,9 @@
 package code.users.entrypoints.websocket;
 
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.SOCKET_PATH;
-import static code.shared.WebSocketConfig.SOCKET_QUEUE;
-import static code.shared.WebSocketConfig.SOCKET_TOPIC;
+import static code.shared.config.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.config.WebSocketConfig.SOCKET_PATH;
+import static code.shared.config.WebSocketConfig.SOCKET_QUEUE;
+import static code.shared.config.WebSocketConfig.SOCKET_TOPIC;
 
 import code.users.infrastructure.security.config.HandshakeJwtInterceptor;
 import code.users.infrastructure.security.config.SocketJwtInterceptor;
@@ -33,7 +33,8 @@ public class UserWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint(SOCKET_ENDPOINT)
+    registry
+        .addEndpoint(SOCKET_ENDPOINT)
         .addInterceptors(handshakeInterceptor)
         .setAllowedOriginPatterns("*")
         .withSockJS();
