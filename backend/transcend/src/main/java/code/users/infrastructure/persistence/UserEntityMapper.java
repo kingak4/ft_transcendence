@@ -6,11 +6,9 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {

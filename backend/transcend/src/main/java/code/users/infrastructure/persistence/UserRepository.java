@@ -8,17 +8,17 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
+@Transactional
 public class UserRepository implements UserDao {
   private final UserJpaRepository userJpaRepository;
   private final UserDetailsJpaRepository userDetailsJpaRepository;
@@ -45,7 +45,6 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  @Transactional
   public void updateUser(User user) {
     UserEntity entity =
         userJpaRepository
@@ -71,7 +70,6 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  @Transactional
   public void saveAvatar(Avatar avatar) {
     AvatarEntity avatarEntity = new AvatarEntity();
     avatarEntity.setVal(avatar.id().val());
@@ -80,22 +78,16 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  @Transactional
   public void addFriend(UserId userId, FriendId friendId) {
     UserEntity entity =
-        userJpaRepository
-            .findById(mapper.map(userId))
-            .orElseThrow(EntityNotFoundException::new);
+        userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
     entity.getFriends().add(friendId.val());
   }
 
   @Override
-  @Transactional
   public void removeFriend(UserId userId, FriendId friendId) {
     UserEntity entity =
-        userJpaRepository
-            .findById(mapper.map(userId))
-            .orElseThrow(EntityNotFoundException::new);
+        userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
     entity.getFriends().remove(friendId.val());
   }
 
@@ -111,34 +103,31 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  @Transactional
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
     UserEntity entity =
-        userJpaRepository
-            .findById(mapper.map(userId))
-            .orElseThrow(EntityNotFoundException::new);
+        userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
     return entity.getFriends().stream()
         .skip((long) page * size)
         .limit(size)
-        .collect(Collectors.toMap(
-            FriendId::of,
-            friendUuid -> {
-              UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
-              Optional<UserDetailsEntity> detailsOpt =
-                  userDetailsJpaRepository.findById(friendIdEntity);
+        .collect(
+            Collectors.toMap(
+                FriendId::of,
+                friendUuid -> {
+                  UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
+                  Optional<UserDetailsEntity> detailsOpt =
+                      userDetailsJpaRepository.findById(friendIdEntity);
 
-              String displayName =
-                  detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
-              UUID avatarId = detailsOpt
-                  .map(UserDetailsEntity::getAvatarId)
-                  .orElse(UserDetails.DEFAULT_AVATAR_ID.val());
+                  String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
+                  UUID avatarId =
+                      detailsOpt
+                          .map(UserDetailsEntity::getAvatarId)
+                          .orElse(UserDetails.DEFAULT_AVATAR_ID.val());
 
-              return UserDetails.builder()
-                  .displayName(displayName)
-                  .avatarId(AvatarId.of(avatarId))
-                  .build();
-            }
-        ));
+                  return UserDetails.builder()
+                      .displayName(displayName)
+                      .avatarId(AvatarId.of(avatarId))
+                      .build();
+                }));
   }
 
   @Override

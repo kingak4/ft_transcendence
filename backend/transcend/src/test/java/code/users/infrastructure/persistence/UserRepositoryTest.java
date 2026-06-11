@@ -1,5 +1,7 @@
 package code.users.infrastructure.persistence;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import code.bootstrap.DotEnvInitializer;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.AvatarId;
@@ -7,9 +9,12 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserFixtures;
+import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,12 +22,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -30,13 +30,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({UserRepository.class, UserEntityMapperImpl.class})
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Transactional
 public class UserRepositoryTest {
   private final UserDao userRepository;
 
   @Test
   public void testCreateAndFindByEmail() {
-    // given
-    User user = UserFixtures.aDefaultUser();
+    // give
+    User user = UserFixtures.aSimpleUser();
 
     // when
     userRepository.createUser(user);
@@ -62,7 +63,7 @@ public class UserRepositoryTest {
   @Test
   void testFindById() {
     // given
-    User user = UserFixtures.aDefaultUser();
+    User user = UserFixtures.aSimpleUser();
     userRepository.createUser(user);
 
     // when
@@ -76,51 +77,47 @@ public class UserRepositoryTest {
   @Test
   void testUpdateUser_updatesPasswordAndDetails() {
     // given
-    User user = UserFixtures.aDefaultUser();
+    User user = UserFixtures.aSimpleUser();
     userRepository.createUser(user);
 
     String newPassword = "new-password";
     String newName = "UpdatedName";
     User updated = user.withPassword(newPassword);
-    updated = updated.withDetails(
-        UserDetails.builder()
-            .displayName(newName)
-            .build()
-    );
+    updated = updated.withDetails(UserDetails.builder().displayName(newName).build());
 
     // when
     userRepository.updateUser(updated);
 
     // then
     Optional<User> found = userRepository.findById(user.getId());
+    Optional<UserDetails> foundDetails = userRepository.findUserDetailsById(user.getId());
 
     assertThat(found).isPresent();
     assertThat(found.get().getPassword()).isEqualTo(newPassword);
-    assertThat(found.get().getDetails().getDisplayName()).isEqualTo(newName);
+    assertThat(foundDetails).isPresent();
+    assertThat(foundDetails.get().getDisplayName()).isEqualTo(newName);
   }
 
   @Test
   void testSaveAvatarAndGetAvatar() {
     // given
-    User user = UserFixtures.aDefaultUser();
-    userRepository.createUser(user);
-
     AvatarId id = AvatarId.generate();
-    Avatar avatar = new Avatar(id, "avatar-content".getBytes());
+    byte[] content = "avatar-content".getBytes();
+    Avatar avatar = new Avatar(id, content);
 
     // when
     userRepository.saveAvatar(avatar);
     Optional<Avatar> byId = userRepository.findById(id);
 
     // then
-    assertThat(byId.isPresent());
-    assertThat(byId.get().content()).isEqualTo("avatar-content".getBytes());
+    assertThat(byId).isPresent();
+    assertThat(byId.get().content()).isEqualTo(content);
   }
 
   @Test
   void testRemoveFriend() {
     // given
-    User user = UserFixtures.aDefaultUser();
+    User user = UserFixtures.aSimpleUser();
     userRepository.createUser(user);
 
     FriendId friendId = FriendId.of(UUID.randomUUID());
@@ -135,15 +132,15 @@ public class UserRepositoryTest {
   }
 
   @Test
-  @Disabled
   void testAddFriend_andExists() {
     // given
-    User user = UserFixtures.aDefaultUser();
+    User user = UserFixtures.aSimpleUser();
+    User friend = UserFixtures.aFriendUser();
     userRepository.createUser(user);
-
-    FriendId friendId = FriendId.of(UUID.randomUUID());
+    userRepository.createUser(friend);
 
     // when
+    FriendId friendId = FriendId.of(friend.getId().val());
     userRepository.addFriend(user.getId(), friendId);
 
     // then
@@ -151,19 +148,20 @@ public class UserRepositoryTest {
   }
 
   @Test
-  @Disabled
   void testGetFriendList_pagination() {
     // given
-    User user = UserFixtures.aDefaultUser();
+    User user = UserFixtures.aSimpleUser();
+    User friend = UserFixtures.aFriendUser();
+    UserId friend2Id = UserId.generate();
+    User friend2 =
+        UserFixtures.aSimpleUserBuilder().id(friend2Id).email("firend@random.com").build();
     userRepository.createUser(user);
+    userRepository.createUser(friend);
+    userRepository.createUser(friend2);
 
-    FriendId f1 = FriendId.of(UUID.randomUUID());
-    FriendId f2 = FriendId.of(UUID.randomUUID());
-    FriendId f3 = FriendId.of(UUID.randomUUID());
-
-    userRepository.addFriend(user.getId(), f1);
-    userRepository.addFriend(user.getId(), f2);
-    userRepository.addFriend(user.getId(), f3);
+    userRepository.addFriend(user.getId(), FriendId.of(user.getId().val()));
+    userRepository.addFriend(user.getId(), FriendId.of(friend.getId().val()));
+    userRepository.addFriend(user.getId(), FriendId.of(friend2.getId().val()));
 
     // when
     Map<FriendId, UserDetails> page = userRepository.getFriendList(user.getId(), 0, 2);
