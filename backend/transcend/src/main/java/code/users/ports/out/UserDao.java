@@ -19,9 +19,9 @@ public interface UserDao {
 
   void updateUser(User user);
 
-  void saveAvatar(UserId userId, Avatar avatar);
+  void saveAvatar(Avatar avatar);
 
-  Avatar findById(AvatarId userId);
+  Optional<Avatar> findById(AvatarId userId);
 
   void addFriend(UserId userId, FriendId friendId);
 

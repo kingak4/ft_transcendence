@@ -22,7 +22,7 @@ public class UpdateAvatar implements UpdateAvatarUseCase {
     User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
 
     AvatarId avatarId = AvatarId.generate();
-    userDao.saveAvatar(userId, new Avatar(avatarId, command.content()));
+    userDao.saveAvatar(new Avatar(avatarId, command.content()));
 
     UserDetails newDetails =
         user.getDetails().withAvatarId(avatarId);

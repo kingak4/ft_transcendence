@@ -64,54 +64,12 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  // TODO impl this
-  public Optional<UserDetails> findUserDetailsById(UserId id) {
-    throw new NotImplementedException();
-  }
-
-  @Override
   @Transactional
-  public void saveAvatar(UserId userId, Avatar avatar) {
-    UserIdEntity userIdEntity = userEntityMapper.map(userId);
-    UserEntity entity = userJpaRepository.findById(userIdEntity)
-            .orElseThrow(EntityNotFoundException::new);
-
-    UserDetailsEntity details = userDetailsJpaRepository.findById(userIdEntity)
-            .orElseGet(() -> {
-              UserDetailsEntity d = new UserDetailsEntity();
-              d.setId(userIdEntity);
-              return d;
-            });
-
-    // TODO UUID is generated in avatar, save that instead and set.
-    UUID avatarVal = UUID.randomUUID();
+  public void saveAvatar(Avatar avatar) {
     AvatarEntity avatarEntity = new AvatarEntity();
-    avatarEntity.setVal(avatarVal);
+    avatarEntity.setVal(avatar.id().val());
     avatarEntity.setContent(avatar.content());
     avatarJpaRepository.save(avatarEntity);
-
-    details.setAvatarId(avatarEntity.getVal());
-    userDetailsJpaRepository.save(details);
-
-    entity.setUserDetailsId(userIdEntity.val());
-  }
-
-  @Override
-  public Avatar findById(AvatarId userId) {
-    // TODO adjust this
-//    UserIdEntity userIdEntity = userEntityMapper.map(userId);
-//    UserDetailsEntity details = userDetailsJpaRepository.findById(userIdEntity)
-//            .orElseThrow(EntityNotFoundException::new);
-//
-//    if (details.getAvatarId() == null) {
-//      throw new EntityNotFoundException();
-//    }
-//
-//    AvatarEntity avatarEntity = avatarJpaRepository.findById(details.getAvatarId())
-//            .orElseThrow(EntityNotFoundException::new);
-//
-//    return new Avatar(avatarEntity.getContent());
-    throw new NotImplementedException();
   }
 
   @Override
@@ -128,6 +86,24 @@ public class UserRepository implements UserDao {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
     entity.getFriends().remove(friendId.val());
+  }
+
+  @Override
+  // TODO impl this
+  public Optional<UserDetails> findUserDetailsById(UserId id) {
+    throw new NotImplementedException();
+  }
+
+
+  @Override
+  public Optional<Avatar> findById(AvatarId userId) {
+    // TODO adjust this
+
+//    AvatarEntity avatarEntity = avatarJpaRepository.findById(details.getAvatarId())
+//            .orElseThrow(EntityNotFoundException::new);
+//
+//    return new Avatar(AvatarId.of(avatarEntity.getVal()), avatarEntity.getContent());
+    throw new NotImplementedException();
   }
 
   @Override

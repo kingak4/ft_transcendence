@@ -13,12 +13,6 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: avatar_url
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
                   name: content
                   type: BYTEA
                   constraints:

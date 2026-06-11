@@ -9,6 +9,8 @@ import code.users.ports.out.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class GetProfile implements GetProfileUseCase {
@@ -23,6 +25,7 @@ public class GetProfile implements GetProfileUseCase {
   @Override
   public Avatar getAvatar(UserId userId) {
     UserDetails userDetails = userDao.findUserDetailsById(userId).orElseThrow(UserNotFoundException::new);
-    return userDao.findById(userDetails.getAvatarId());
+    Optional<Avatar> byId = userDao.findById(userDetails.getAvatarId());
+    return byId.orElseGet(() -> userDao.findById(UserDetails.DEFAULT_AVATAR_ID).orElseThrow(UserNotFoundException::new));
   }
 }
