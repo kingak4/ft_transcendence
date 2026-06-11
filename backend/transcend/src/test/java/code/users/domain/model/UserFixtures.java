@@ -19,10 +19,7 @@ public class UserFixtures {
 
   public static User.UserBuilder aUser() {
     UserDetails details =
-        UserDetails.builder()
-            .displayName(DISPLAY_NAME_FIXTURE)
-            .avatarId(AVATAR_ID_FIXTURE)
-            .build();
+        UserDetails.builder().displayName(DISPLAY_NAME_FIXTURE).avatarId(AVATAR_ID_FIXTURE).build();
     return User.builder()
         .id(USER_ID_FIXTURE)
         .email(EMAIL_FIXTURE)

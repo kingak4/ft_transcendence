@@ -1,19 +1,16 @@
 package code.users.infrastructure.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import code.bootstrap.DotEnvInitializer;
+import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
-import code.users.domain.model.Avatar;
-import code.users.domain.model.FriendId;
-import jakarta.persistence.EntityNotFoundException;
-import java.util.UUID;
-import java.util.Map;
 import code.users.domain.model.UserFixtures;
 import code.users.ports.out.UserDao;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -73,55 +70,55 @@ public class UserRepositoryTest {
     assertThat(found.get().getEmail()).isEqualTo(UserFixtures.EMAIL_FIXTURE);
   }
 
-//  @Test
-//  void testUpdateUser_updatesPasswordAndDetails() {
-//    // given
-//    User user = UserFixtures.aDefaultUser();
-//    userRepository.createUser(user);
-//
-//    User updated = user.withPassword("new-password");
-//    updated = updated.withDetails(
-//            new UserDetails("UpdatedName", null)
-//    );
-//
-//    // when
-//    userRepository.updateUser(updated);
-//
-//    // then
-//    Optional<User> found = userRepository.findById(user.getId());
-//
-//    assertThat(found).isPresent();
-//    assertThat(found.get().getPassword()).isEqualTo("new-password");
-//    assertThat(found.get().getDetails().getDisplayName()).isEqualTo("UpdatedName");
-//  }
+  //  @Test
+  //  void testUpdateUser_updatesPasswordAndDetails() {
+  //    // given
+  //    User user = UserFixtures.aDefaultUser();
+  //    userRepository.createUser(user);
+  //
+  //    User updated = user.withPassword("new-password");
+  //    updated = updated.withDetails(
+  //            new UserDetails("UpdatedName", null)
+  //    );
+  //
+  //    // when
+  //    userRepository.updateUser(updated);
+  //
+  //    // then
+  //    Optional<User> found = userRepository.findById(user.getId());
+  //
+  //    assertThat(found).isPresent();
+  //    assertThat(found.get().getPassword()).isEqualTo("new-password");
+  //    assertThat(found.get().getDetails().getDisplayName()).isEqualTo("UpdatedName");
+  //  }
 
-//  @Test
-//  void testSaveAvatarAndGetAvatar() {
-//    // given
-//    User user = UserFixtures.aDefaultUser();
-//    userRepository.createUser(user);
-//
-//    Avatar avatar = new Avatar("avatar-content".getBytes());
-//
-//    // when
-//    userRepository.saveAvatar(user.getId(), avatar);
-//    Avatar result = userRepository.getAvatar(user.getId());
-//
-//    // then
-//    assertThat(result.content()).isEqualTo("avatar-content".getBytes());
-//  }
+  //  @Test
+  //  void testSaveAvatarAndGetAvatar() {
+  //    // given
+  //    User user = UserFixtures.aDefaultUser();
+  //    userRepository.createUser(user);
+  //
+  //    Avatar avatar = new Avatar("avatar-content".getBytes());
+  //
+  //    // when
+  //    userRepository.saveAvatar(user.getId(), avatar);
+  //    Avatar result = userRepository.getAvatar(user.getId());
+  //
+  //    // then
+  //    assertThat(result.content()).isEqualTo("avatar-content".getBytes());
+  //  }
 
-//  @Test
-//  void testGetAvatar_notFound() {
-//    // given
-//    User user = UserFixtures.aDefaultUser();
-//    userRepository.createUser(user);
-//
-//    // then
-//    assertThatThrownBy(() ->
-//            userRepository.getAvatar(user.getId())
-//    ).isInstanceOf(EntityNotFoundException.class);
-//  }
+  //  @Test
+  //  void testGetAvatar_notFound() {
+  //    // given
+  //    User user = UserFixtures.aDefaultUser();
+  //    userRepository.createUser(user);
+  //
+  //    // then
+  //    assertThatThrownBy(() ->
+  //            userRepository.getAvatar(user.getId())
+  //    ).isInstanceOf(EntityNotFoundException.class);
+  //  }
 
   @Test
   void testRemoveFriend() {

@@ -2,13 +2,12 @@ package code.users.infrastructure.persistence;
 
 import code.users.domain.model.Role;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -34,13 +33,10 @@ public class UserEntity {
   @Column(name = "user_details_id")
   private UUID userDetailsId;
 
-//  private byte[] avatar;
+  //  private byte[] avatar;
 
   @ElementCollection
-  @CollectionTable(
-          name = "user_friends",
-          joinColumns = @JoinColumn(name = "user_id")
-  )
+  @CollectionTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "friend_id", nullable = false)
   private Set<UUID> friends = new HashSet<>();
 }

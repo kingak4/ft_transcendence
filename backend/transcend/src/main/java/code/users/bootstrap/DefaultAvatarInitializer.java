@@ -1,11 +1,7 @@
 package code.users.bootstrap;
 
-import static code.users.domain.model.Role.USER;
-
 import code.users.domain.model.Avatar;
-import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
-import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;

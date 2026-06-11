@@ -1,7 +1,7 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.AVATAR_NAME_FIXTURE;
 import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.AVATAR_NAME_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

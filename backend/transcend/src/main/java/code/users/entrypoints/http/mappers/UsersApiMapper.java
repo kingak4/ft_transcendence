@@ -27,7 +27,7 @@ public interface UsersApiMapper {
     }
     return value.val();
   }
-  
+
   default UUID map(AvatarId value) {
     if (value == null) {
       return null;

@@ -1,10 +1,10 @@
 package code.users.infrastructure.persistence;
 
+import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import code.users.domain.model.FriendId;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
@@ -17,7 +17,7 @@ public interface UserEntityMapper {
   @Mapping(source = "password", target = "hash")
   @Mapping(target = "userDetailsId", ignore = true)
   @Mapping(target = "friends", ignore = true)
-//  @Mapping(target = "avatar", ignore = true)
+  //  @Mapping(target = "avatar", ignore = true)
   UserEntity toEntity(User user);
 
   default UserId map(UserIdEntity id) {
@@ -28,7 +28,11 @@ public interface UserEntityMapper {
     return id == null ? null : new UserIdEntity(id.val());
   }
 
-  default FriendId mapToFriendId(UserIdEntity id) { return id == null ? null : FriendId.of(id.val()); }
+  default FriendId mapToFriendId(UserIdEntity id) {
+    return id == null ? null : FriendId.of(id.val());
+  }
 
-  default UserIdEntity mapFromFriendId(FriendId id) { return id == null ? null : new UserIdEntity(id.val()); }
+  default UserIdEntity mapFromFriendId(FriendId id) {
+    return id == null ? null : new UserIdEntity(id.val());
+  }
 }

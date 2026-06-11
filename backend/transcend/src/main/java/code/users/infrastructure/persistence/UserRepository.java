@@ -9,12 +9,11 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -43,18 +42,23 @@ public class UserRepository implements UserDao {
   @Override
   @Transactional
   public void updateUser(User user) {
-    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(user.getId()))
+    UserEntity entity =
+        userJpaRepository
+            .findById(userEntityMapper.map(user.getId()))
             .orElseThrow(EntityNotFoundException::new);
     entity.setHash(user.getPassword());
 
     if (user.getDetails() != null) {
       UserIdEntity userIdEntity = userEntityMapper.map(user.getId());
-      UserDetailsEntity details = userDetailsJpaRepository.findById(userIdEntity)
-              .orElseGet(() -> {
-                UserDetailsEntity d = new UserDetailsEntity();
-                d.setId(userIdEntity);
-                return d;
-              });
+      UserDetailsEntity details =
+          userDetailsJpaRepository
+              .findById(userIdEntity)
+              .orElseGet(
+                  () -> {
+                    UserDetailsEntity d = new UserDetailsEntity();
+                    d.setId(userIdEntity);
+                    return d;
+                  });
       details.setDisplayName(user.getDetails().getDisplayName());
       userDetailsJpaRepository.save(details);
       entity.setUserDetailsId(userIdEntity.val());
@@ -73,7 +77,9 @@ public class UserRepository implements UserDao {
   @Override
   @Transactional
   public void addFriend(UserId userId, FriendId friendId) {
-    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+    UserEntity entity =
+        userJpaRepository
+            .findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
     entity.getFriends().add(friendId.val());
   }
@@ -81,7 +87,9 @@ public class UserRepository implements UserDao {
   @Override
   @Transactional
   public void removeFriend(UserId userId, FriendId friendId) {
-    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+    UserEntity entity =
+        userJpaRepository
+            .findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
     entity.getFriends().remove(friendId.val());
   }
@@ -92,46 +100,49 @@ public class UserRepository implements UserDao {
     throw new NotImplementedException();
   }
 
-
   @Override
   public Optional<Avatar> findById(AvatarId userId) {
     // TODO adjust this
 
-//    AvatarEntity avatarEntity = avatarJpaRepository.findById(details.getAvatarId())
-//            .orElseThrow(EntityNotFoundException::new);
-//
-//    return new Avatar(AvatarId.of(avatarEntity.getVal()), avatarEntity.getContent());
+    //    AvatarEntity avatarEntity = avatarJpaRepository.findById(details.getAvatarId())
+    //            .orElseThrow(EntityNotFoundException::new);
+    //
+    //    return new Avatar(AvatarId.of(avatarEntity.getVal()), avatarEntity.getContent());
     throw new NotImplementedException();
   }
 
   @Override
   @Transactional
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+    UserEntity entity =
+        userJpaRepository
+            .findById(userEntityMapper.map(userId))
             .orElseThrow(EntityNotFoundException::new);
 
     // TODO adapt to not use default URL.
-//    return entity.getFriends().stream()
-//            .skip((long) page * size)
-//            .limit(size)
-//            .collect(Collectors.toMap(
-//                    FriendId::of,
-//                    friendUuid -> {
-//                      UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
-//                      Optional<UserDetailsEntity> detailsOpt = userDetailsJpaRepository.findById(friendIdEntity);
-//
-//                      String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
-//                      String avatarUrl = detailsOpt
-//                              .map(UserDetailsEntity::getAvatarId)
-//                              .map(avatarId -> UserDetails.AVATARS_BASE_URL + avatarId)
-//                              .orElse(UserDetails.DEFAULT_AVATAR_URL);
-//
-//                      return UserDetails.builder()
-//                              .displayName(displayName)
-//                              .avatarUrl(avatarUrl)
-//                              .build();
-//                    }
-//            ));
+    //    return entity.getFriends().stream()
+    //            .skip((long) page * size)
+    //            .limit(size)
+    //            .collect(Collectors.toMap(
+    //                    FriendId::of,
+    //                    friendUuid -> {
+    //                      UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
+    //                      Optional<UserDetailsEntity> detailsOpt =
+    // userDetailsJpaRepository.findById(friendIdEntity);
+    //
+    //                      String displayName =
+    // detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
+    //                      String avatarUrl = detailsOpt
+    //                              .map(UserDetailsEntity::getAvatarId)
+    //                              .map(avatarId -> UserDetails.AVATARS_BASE_URL + avatarId)
+    //                              .orElse(UserDetails.DEFAULT_AVATAR_URL);
+    //
+    //                      return UserDetails.builder()
+    //                              .displayName(displayName)
+    //                              .avatarUrl(avatarUrl)
+    //                              .build();
+    //                    }
+    //            ));
     throw new NotImplementedException();
   }
 

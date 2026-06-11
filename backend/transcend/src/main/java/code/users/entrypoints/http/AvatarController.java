@@ -1,5 +1,7 @@
 package code.users.entrypoints.http;
 
+import static code.users.entrypoints.http.AvatarController.BASE_URL;
+
 import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserId;
 import code.users.ports.in.GetProfileUseCase;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -22,19 +26,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import static code.users.entrypoints.http.AvatarController.BASE_URL;
-
 @RestController
 @RequestMapping(BASE_URL)
 @RequiredArgsConstructor
 @ApiResponses(
     value = {
-        @ApiResponse(
-            responseCode = "404",
-            content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+      @ApiResponse(
+          responseCode = "404",
+          content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
 public class AvatarController {
 

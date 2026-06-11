@@ -1,10 +1,18 @@
 package code.users.logic;
 
+import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.UserDetails;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.out.UserDao;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +20,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
-import java.util.Optional;
-
-import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig(GetProfileTest.GetProfileTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
