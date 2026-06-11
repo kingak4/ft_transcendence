@@ -57,49 +57,6 @@ class UserDetailsControllerTest {
   @MockitoBean private JwtAuthenticationFilter jwtAuthenticationFilter;
 
   @Test
-  void uploadAvatarSuccessfully() throws Exception {
-    // given
-    MockMultipartFile file =
-        new MockMultipartFile("file", "test.png", "image/png", "test image".getBytes());
-
-    // when
-    mockMvc
-        .perform(
-            multipart(
-                    buildUrl(
-                        UserDetailsController.BASE_URL,
-                        UserDetailsController.UPDATE_AVATAR_ENDPOINT))
-                .file(file)
-                .principal(authentication()))
-        .andExpect(status().isOk());
-
-    // then
-    verify(updateAvatarUseCase)
-        .updateAvatar(
-            eq(code.users.domain.model.UserId.of(AUTH_USER_ID)),
-            any(UpdateAvatarUseCase.UpdateAvatarCommand.class));
-  }
-
-  @Test
-  void getAvatarSuccessfully() throws Exception {
-    // given
-    byte[] avatarBytes = "test avatar content".getBytes();
-    when(getProfileUseCase.getAvatar(USER_ID_FIXTURE)).thenReturn(new Avatar(AVATAR_ID_FIXTURE, avatarBytes));
-
-    // when & then
-    mockMvc
-        .perform(
-            get(
-                buildUrl(
-                    UserDetailsController.BASE_URL,
-                    UserDetailsController.AVATAR_ENDPOINT,
-                    ID_FIXTURE)))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.IMAGE_JPEG_VALUE))
-        .andExpect(content().bytes(avatarBytes));
-  }
-
-  @Test
   void getDetailsSuccessfully() throws Exception {
     // given
     UserDetails details = aDefaultUser().getDetails();

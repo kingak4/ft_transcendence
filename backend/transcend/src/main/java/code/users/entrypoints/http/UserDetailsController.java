@@ -1,5 +1,6 @@
 package code.users.entrypoints.http;
 
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.http.mappers.UsersApiMapper;
@@ -41,12 +42,9 @@ public class UserDetailsController {
 
   public static final String BASE_URL = "users";
   public static final String UPDATE_DISPLAY_NAME_ENDPOINT = "/display-name";
-  public static final String UPDATE_AVATAR_ENDPOINT = "/avatar";
-  public static final String AVATAR_ENDPOINT = "/{userId}/avatar";
   public static final String DETAILS_ENDPOINT = "/{userId}/details";
 
   private final UpdateDisplayNameUseCase updateDisplayNameUseCase;
-  private final UpdateAvatarUseCase updateAvatarUseCase;
   private final GetProfileUseCase getProfileUseCase;
   private final UsersApiMapper mapper;
 
@@ -58,26 +56,6 @@ public class UserDetailsController {
     UUID userId = UUID.fromString(authentication.getName());
     updateDisplayNameUseCase.updateDisplayName(UserId.of(userId), mapper.toCommand(request));
     return ResponseEntity.ok().build();
-  }
-
-  @PostMapping(value = UPDATE_AVATAR_ENDPOINT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @Operation(summary = "Upload a profile avatar")
-  @ApiResponse(responseCode = "200", description = "Avatar uploaded successfully")
-  public ResponseEntity<Void> uploadAvatar(
-      Authentication authentication, @RequestParam("file") MultipartFile file) throws IOException {
-    UUID userId = UUID.fromString(authentication.getName());
-    updateAvatarUseCase.updateAvatar(
-        UserId.of(userId),
-        new UpdateAvatarUseCase.UpdateAvatarCommand(file.getOriginalFilename(), file.getBytes()));
-    return ResponseEntity.ok().build();
-  }
-
-  @GetMapping(value = AVATAR_ENDPOINT, produces = MediaType.IMAGE_JPEG_VALUE)
-  @Operation(summary = "Get the profile avatar of the user")
-  @ApiResponse(responseCode = "200", description = "User's profile avatar")
-  public ResponseEntity<byte[]> getAvatar(@PathVariable UUID userId) {
-    byte[] avatar = getProfileUseCase.getAvatar(UserId.of(userId)).content();
-    return ResponseEntity.ok(avatar);
   }
 
   @GetMapping(DETAILS_ENDPOINT)

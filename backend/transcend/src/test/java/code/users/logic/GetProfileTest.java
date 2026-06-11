@@ -62,15 +62,13 @@ class GetProfileTest {
   @Test
   void getAvatarSuccessfully() {
     // given
-    UserDetails details = aDefaultUser().getDetails();
-    when(userDao.findUserDetailsById(USER_ID_FIXTURE)).thenReturn(Optional.of(details));
 
     byte[] content = {1, 2, 3};
     var expectedAvatar = new Avatar(AVATAR_ID_FIXTURE, content);
     when(userDao.findById(AVATAR_ID_FIXTURE)).thenReturn(Optional.of(expectedAvatar));
 
     // when
-    var result = service.getAvatar(USER_ID_FIXTURE);
+    var result = service.getAvatar(AVATAR_ID_FIXTURE);
 
     // then
     assertThat(result).isNotNull();

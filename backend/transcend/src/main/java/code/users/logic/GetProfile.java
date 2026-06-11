@@ -2,6 +2,7 @@ package code.users.logic;
 
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.Avatar;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.GetProfileUseCase;
@@ -23,9 +24,8 @@ public class GetProfile implements GetProfileUseCase {
   }
 
   @Override
-  public Avatar getAvatar(UserId userId) {
-    UserDetails userDetails = userDao.findUserDetailsById(userId).orElseThrow(UserNotFoundException::new);
-    Optional<Avatar> byId = userDao.findById(userDetails.getAvatarId());
+  public Avatar getAvatar(AvatarId avatarId) {
+    Optional<Avatar> byId = userDao.findById(avatarId);
     return byId.orElseGet(() -> userDao.findById(UserDetails.DEFAULT_AVATAR_ID).orElseThrow(UserNotFoundException::new));
   }
 }
