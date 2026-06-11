@@ -1,10 +1,16 @@
 package code.users.infrastructure.persistence;
 
+import code.users.domain.model.Avatar;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
+import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
@@ -17,8 +23,19 @@ public interface UserEntityMapper {
   @Mapping(source = "password", target = "hash")
   @Mapping(target = "userDetailsId", ignore = true)
   @Mapping(target = "friends", ignore = true)
-  //  @Mapping(target = "avatar", ignore = true)
   UserEntity toEntity(User user);
+
+  default AvatarId map(UUID value) {
+    if (value == null) return null;
+    return AvatarId.of(value);
+  }
+
+  default UUID map(AvatarId value) {
+    if (value == null) return null;
+    return value.val();
+  }
+
+  UserDetails toDomain(UserDetailsEntity entity);
 
   default UserId map(UserIdEntity id) {
     return id == null ? null : UserId.of(id.val());
@@ -35,4 +52,10 @@ public interface UserEntityMapper {
   default UserIdEntity mapFromFriendId(FriendId id) {
     return id == null ? null : new UserIdEntity(id.val());
   }
+
+  @Mapping(target = "id", ignore = true)
+  UserDetailsEntity toEntity(UserDetails details);
+
+  @Mapping(source = "val", target = "id")
+  Avatar toDomain(AvatarEntity avatarEntity);
 }

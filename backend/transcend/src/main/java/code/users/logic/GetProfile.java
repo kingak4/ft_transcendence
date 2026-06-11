@@ -1,5 +1,6 @@
 package code.users.logic;
 
+import code.users.domain.exceptions.AvatarNotFoundException;
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.AvatarId;
@@ -29,6 +30,6 @@ public class GetProfile implements GetProfileUseCase {
         () ->
             userDao
                 .findById(UserDetails.DEFAULT_AVATAR_ID)
-                .orElseThrow(UserNotFoundException::new));
+                .orElseThrow(AvatarNotFoundException::new));
   }
 }
