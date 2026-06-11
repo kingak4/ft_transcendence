@@ -9,5 +9,3 @@ databaseChangeLog:
       file: changelog/users/002-create-users-table.yaml
   - include:
       file: changelog/users/005-create-user-friends-table.yaml
-#  - include:
-#      file: changelog/users/006-add-user-profile-columns.yaml
