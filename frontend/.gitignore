@@ -46,3 +46,5 @@ certificates
 #types generated for api clients
 app/types/*
 scripts/asyncapi-debug.json
+
+mockups/*

@@ -1,26 +1,45 @@
 @import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Grindin' brand palette */
+  --color-brand-main-color: #f0f0f0;
+  --color-brand-secondary-color: #8bde5a;
+  --color-brand-additional-color: #5cd4a0;
+  --color-brand-additional-color-2: #4C603A;
+  --color-brand-accent-color: #15c8f7;
+  --color-brand-reversed-main-color: #333333;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@utility bg-gradient-start-page {
+  background: linear-gradient(
+    to bottom left,
+    #7de8b4 0%,
+    #56876f 44%,
+    var(--color-brand-reversed-main-color) 100%
+  );
+}
+
+@utility bg-gradient-login-page {
+  background: linear-gradient(
+    to bottom left,
+    #a0d860 0%,
+    #3a5e30 100%
+  );
+}
+
+@utility bg-gradient-register-page {
+  background: linear-gradient(
+    to bottom left,
+    #0a0f15 0%,
+    #159090 100%
+  );
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  background-color: var(--color-brand-main-color);
+  color: var(--color-brand-additional-color-2);
 }
