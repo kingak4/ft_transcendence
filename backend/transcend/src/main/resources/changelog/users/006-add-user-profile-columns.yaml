@@ -7,8 +7,9 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: display_name
-                  type: VARCHAR(255)
-              - column:
-                  name: avatar
-                  type: BYTEA
+                  name: user_details_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_users_user_details
+                    references: user_details(val)

@@ -4,10 +4,10 @@ databaseChangeLog:
   - include:
       file: changelog/users/001-create-user-role-type.yaml
   - include:
-      file: changelog/users/002-create-users-table.yaml
-  - include:
       file: changelog/users/003-create-user-details-table.yaml
   - include:
-      file: changelog/users/005-create-user-friends-table.yaml
+      file: changelog/users/002-create-users-table.yaml
   - include:
-      file: changelog/users/006-add-user-profile-columns.yaml
+      file: changelog/users/005-create-user-friends-table.yaml
+#  - include:
+#      file: changelog/users/006-add-user-profile-columns.yaml

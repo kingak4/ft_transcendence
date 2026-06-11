@@ -31,9 +31,10 @@ public class UserEntity {
   @Column(nullable = false)
   private Role role;
 
-  private String displayName;
+  @Column(name = "user_details_id")
+  private UUID userDetailsId;
 
-  private byte[] avatar;
+//  private byte[] avatar;
 
   @ElementCollection
   @CollectionTable(

@@ -15,9 +15,9 @@ public interface UserEntityMapper {
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")
-  @Mapping(target = "displayName", source = "details.displayName")
+  @Mapping(target = "userDetailsId", ignore = true)
   @Mapping(target = "friends", ignore = true)
-  @Mapping(target = "avatar", ignore = true)
+//  @Mapping(target = "avatar", ignore = true)
   UserEntity toEntity(User user);
 
   default UserId map(UserIdEntity id) {

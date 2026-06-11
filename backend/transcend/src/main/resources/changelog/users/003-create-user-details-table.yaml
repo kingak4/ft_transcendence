@@ -12,8 +12,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-                    foreignKeyName: fk_user_details_user
-                    references: users(val)
               - column:
                   name: display_name
                   type: VARCHAR(255)

@@ -28,12 +28,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: avatar_id
+                  name: user_details_id
                   type: UUID
                   constraints:
                     nullable: true
-                    foreignKeyName: fk_users_avatar
-                    references: avatars(val)
+                    foreignKeyName: fk_users_details
+                    references: user_details(val)
 
         - addUniqueConstraint:
             tableName: users

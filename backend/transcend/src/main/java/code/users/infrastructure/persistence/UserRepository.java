@@ -8,6 +8,7 @@ import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 @Repository
 public class UserRepository implements UserDao {
   private final UserJpaRepository userJpaRepository;
+  private final UserDetailsJpaRepository userDetailsJpaRepository;
+  private final AvatarJpaRepository avatarJpaRepository;
   private final UserEntityMapper userEntityMapper;
 
   @Override
@@ -42,24 +45,62 @@ public class UserRepository implements UserDao {
     UserEntity entity = userJpaRepository.findById(userEntityMapper.map(user.getId()))
             .orElseThrow(EntityNotFoundException::new);
     entity.setHash(user.getPassword());
+
     if (user.getDetails() != null) {
-      entity.setDisplayName(user.getDetails().getDisplayName());
+      UserIdEntity userIdEntity = userEntityMapper.map(user.getId());
+      UserDetailsEntity details = userDetailsJpaRepository.findById(userIdEntity)
+              .orElseGet(() -> {
+                UserDetailsEntity d = new UserDetailsEntity();
+                d.setId(userIdEntity);
+                return d;
+              });
+      details.setDisplayName(user.getDetails().getDisplayName());
+      userDetailsJpaRepository.save(details);
+      entity.setUserDetailsId(userIdEntity.val());
     }
   }
 
   @Override
   @Transactional
   public void saveAvatar(UserId userId, Avatar avatar) {
-    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+    UserIdEntity userIdEntity = userEntityMapper.map(userId);
+    UserEntity entity = userJpaRepository.findById(userIdEntity)
             .orElseThrow(EntityNotFoundException::new);
-    entity.setAvatar(avatar.content());
+
+    UserDetailsEntity details = userDetailsJpaRepository.findById(userIdEntity)
+            .orElseGet(() -> {
+              UserDetailsEntity d = new UserDetailsEntity();
+              d.setId(userIdEntity);
+              return d;
+            });
+
+    UUID avatarVal = UUID.randomUUID();
+    AvatarEntity avatarEntity = new AvatarEntity();
+    avatarEntity.setVal(avatarVal);
+    avatarEntity.setAvatarUrl(UserDetails.AVATARS_BASE_URL + avatarVal);
+    avatarEntity.setContent(avatar.content());
+    avatarJpaRepository.save(avatarEntity);
+
+    details.setAvatarId(avatarEntity.getVal());
+    userDetailsJpaRepository.save(details);
+
+    entity.setUserDetailsId(userIdEntity.val());
   }
 
   @Override
   public Avatar getAvatar(UserId userId) {
-    UserEntity entity = userJpaRepository.findById(userEntityMapper.map(userId))
+    UserIdEntity userIdEntity = userEntityMapper.map(userId);
+    UserDetailsEntity details = userDetailsJpaRepository.findById(userIdEntity)
             .orElseThrow(EntityNotFoundException::new);
-    return new Avatar(entity.getAvatar());
+
+    if (details.getAvatarId() == null) {
+      throw new EntityNotFoundException();
+    }
+
+    AvatarEntity avatarEntity = avatarJpaRepository.findById(details.getAvatarId())
+            .orElseThrow(EntityNotFoundException::new);
+
+    return new Avatar(avatarEntity.getContent());
   }
 
   @Override
@@ -89,17 +130,21 @@ public class UserRepository implements UserDao {
             .limit(size)
             .collect(Collectors.toMap(
                     FriendId::of,
-                    friendUuid -> userJpaRepository.findById(new UserIdEntity(friendUuid))
-                            .map(f -> UserDetails.builder()
-                                    .displayName(f.getDisplayName())
-                                    .avatarUrl(f.getAvatar() != null
-                                            ? UserDetails.AVATARS_BASE_URL + friendUuid
-                                            : UserDetails.DEFAULT_AVATAR_URL)
-                                    .build())
-                            .orElse(UserDetails.builder()
-                                    .displayName("")
-                                    .avatarUrl(UserDetails.DEFAULT_AVATAR_URL)
-                                    .build())
+                    friendUuid -> {
+                      UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
+                      Optional<UserDetailsEntity> detailsOpt = userDetailsJpaRepository.findById(friendIdEntity);
+
+                      String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
+                      String avatarUrl = detailsOpt
+                              .map(UserDetailsEntity::getAvatarId)
+                              .map(avatarId -> UserDetails.AVATARS_BASE_URL + avatarId)
+                              .orElse(UserDetails.DEFAULT_AVATAR_URL);
+
+                      return UserDetails.builder()
+                              .displayName(displayName)
+                              .avatarUrl(avatarUrl)
+                              .build();
+                    }
             ));
   }
 
