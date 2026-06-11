@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-users-friends-table
+      author: dev
+      changes:
+        - createTable:
+            tableName: user_friends
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: friend_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: user_friends
+            columnNames: user_id, friend_id
+            constraintName: pk_user_friends
+        - addForeignKeyConstraint:
+            baseTableName: user_friends
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: val
+            constraintName: fk_user_friends_user_id
+        - addForeignKeyConstraint:
+            baseTableName: user_friends
+            baseColumnNames: friend_id
+            referencedTableName: users
+            referencedColumnNames: val
+            constraintName: fk_user_friends_friend_id

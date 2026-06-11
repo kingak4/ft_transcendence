@@ -1,6 +1,7 @@
 package code.users.infrastructure.persistence;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.*;
 
 @Data
@@ -16,6 +17,6 @@ public class UserDetailsEntity {
   @Column(name = "display_name")
   private String displayName;
 
-  @Column(name = "avatar_url", nullable = false)
-  private String avatarUrl;
+  @Column(name = "avatar_id")
+  private UUID avatarId;
 }
