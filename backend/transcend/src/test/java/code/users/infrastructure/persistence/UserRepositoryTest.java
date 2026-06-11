@@ -1,6 +1,7 @@
 package code.users.infrastructure.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import code.bootstrap.DotEnvInitializer;
 import code.users.domain.model.User;
@@ -41,7 +42,7 @@ public class UserRepositoryTest {
     Optional<User> found = userRepository.findByEmail(UserFixtures.EMAIL_FIXTURE);
 
     // then
-    assertThat(found.isPresent());
+    assertThat(found).isPresent();
     assertThat(found.get().getEmail()).isEqualTo(UserFixtures.EMAIL_FIXTURE);
   }
 
@@ -99,14 +100,14 @@ public class UserRepositoryTest {
     User user = UserFixtures.aDefaultUser();
     userRepository.createUser(user);
 
-    Avatar avatar = new Avatar("avatar-content");
+    Avatar avatar = new Avatar("avatar-content".getBytes());
 
     // when
     userRepository.saveAvatar(user.getId(), avatar);
     Avatar result = userRepository.getAvatar(user.getId());
 
     // then
-    assertThat(result.content()).isEqualTo("avatar-content");
+    assertThat(result.content()).isEqualTo("avatar-content".getBytes());
   }
 
   @Test

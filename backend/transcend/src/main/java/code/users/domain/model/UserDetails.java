@@ -15,4 +15,9 @@ public class UserDetails {
 
   String displayName;
   String avatarUrl;
+
+  public UserDetails(String displayName, String avatarUrl) {
+    this.displayName = displayName;
+    this.avatarUrl = avatarUrl;
+  }
 }
