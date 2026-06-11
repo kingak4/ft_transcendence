@@ -33,6 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +72,7 @@ class AvatarControllerTest {
                     UPDATE_AVATAR_ENDPOINT))
                 .file(file)
                 .principal(authentication()))
+        .andDo(print())
         .andExpect(status().isOk());
 
     // then
@@ -93,7 +95,8 @@ class AvatarControllerTest {
                 buildUrl(
                     BASE_URL,
                     AVATAR_ENDPOINT,
-                    ID_FIXTURE)))
+                    AVATAR_ID_FIXTURE.val().toString())))
+        .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.IMAGE_JPEG_VALUE))
         .andExpect(content().bytes(avatarBytes));

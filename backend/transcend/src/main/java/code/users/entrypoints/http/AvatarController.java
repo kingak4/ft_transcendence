@@ -36,7 +36,7 @@ import static code.users.entrypoints.http.AvatarController.BASE_URL;
             responseCode = "404",
             content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
-class AvatarController {
+public class AvatarController {
 
   private final UpdateAvatarUseCase updateAvatarUseCase;
   private final GetProfileUseCase getProfileUseCase;
