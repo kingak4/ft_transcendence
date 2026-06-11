@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DefaultAvatarInitializer implements CommandLineRunner {
 
-  private static final String DEFAULT_AVATAR_EMAIL = "default-avatar@system.internal";
-
   private final UserDao userDao;
 
   @Override
@@ -29,7 +27,7 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
     try {
       ensureDefaultAvatarUserExists();
       byte[] content = loadDefaultAvatarContent();
-      userDao.saveAvatar(UserDetails.DEFAULT_AVATAR_USER_ID, new Avatar(content));
+      userDao.saveAvatar(UserDetails.DEFAULT_AVATAR_USER_ID, new Avatar(UserDetails.DEFAULT_AVATAR_ID, content));
     } catch (Exception e) {
       log.warn("Failed to initialize default avatar: {}", e.getMessage(), e);
     }
@@ -40,14 +38,6 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
     if (userDao.findById(defaultAvatarUserId).isPresent()) {
       return;
     }
-
-    userDao.createUser(
-        User.builder()
-            .id(defaultAvatarUserId)
-            .email(DEFAULT_AVATAR_EMAIL)
-            .password("unused")
-            .role(USER)
-            .build());
   }
 
   private byte[] loadDefaultAvatarContent() throws Exception {

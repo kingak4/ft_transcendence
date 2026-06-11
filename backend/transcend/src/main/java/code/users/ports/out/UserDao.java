@@ -1,6 +1,7 @@
 package code.users.ports.out;
 
 import code.users.domain.model.Avatar;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
@@ -20,7 +21,7 @@ public interface UserDao {
 
   void saveAvatar(UserId userId, Avatar avatar);
 
-  Avatar getAvatar(UserId userId);
+  Avatar findById(AvatarId userId);
 
   void addFriend(UserId userId, FriendId friendId);
 
@@ -29,4 +30,6 @@ public interface UserDao {
   Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);
 
   boolean exists(FriendId friendId);
+
+  Optional<UserDetails> findUserDetailsById(UserId id);
 }

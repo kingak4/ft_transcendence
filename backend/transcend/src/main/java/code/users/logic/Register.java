@@ -27,12 +27,16 @@ class Register implements RegisterUseCase {
     String hash = hashingService.encode(command.rawPassword());
     if (userDao.findByEmail(command.email()).isPresent())
       throw new EmailAlreadyRegisteredException(command.email());
+    UserDetails details = UserDetails.builder()
+        .displayName("Default User")
+        .avatarId(UserDetails.DEFAULT_AVATAR_ID)
+        .build();
     User newUser =
         User.builder()
             .id(UserId.generate())
             .email(command.email())
             .password(hash)
-            .details(UserDetails.builder().avatarUrl(UserDetails.DEFAULT_AVATAR_URL).build())
+            .details(details)
             .role(USER)
             .build();
     userDao.createUser(newUser);

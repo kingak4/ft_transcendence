@@ -17,8 +17,8 @@ public class AvatarEntity {
   @Column(name = "val")
   private UUID val;
 
-  @Column(name = "avatar_url", nullable = false, unique = true)
-  private String avatarUrl;
+//  @Column(name = "avatar_url", nullable = false, unique = true)
+//  private String avatarUrl;
 
   @Column(name = "content", nullable = false)
   private byte[] content;

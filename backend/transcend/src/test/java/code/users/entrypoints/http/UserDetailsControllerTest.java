@@ -1,7 +1,7 @@
 package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
-import static code.users.domain.model.UserFixtures.AVATAR_URL_FIXTURE;
+import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.DISPLAY_NAME_FIXTURE;
 import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.NAME_FIXTURE;
@@ -20,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import code.users.domain.model.Avatar;
 import code.users.domain.model.UserDetails;
+import code.users.domain.model.UserFixtures;
+import code.users.domain.model.UserId;
 import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.GetProfileUseCase;
@@ -82,7 +84,7 @@ class UserDetailsControllerTest {
   void getAvatarSuccessfully() throws Exception {
     // given
     byte[] avatarBytes = "test avatar content".getBytes();
-    when(getProfileUseCase.getAvatar(USER_ID_FIXTURE)).thenReturn(new Avatar(avatarBytes));
+    when(getProfileUseCase.getAvatar(USER_ID_FIXTURE)).thenReturn(new Avatar(AVATAR_ID_FIXTURE, avatarBytes));
 
     // when & then
     mockMvc
@@ -102,7 +104,7 @@ class UserDetailsControllerTest {
     // given
     UserDetails details = aDefaultUser().getDetails();
     var response =
-        new UserDetailsController.GetUserDetailsResponse(DISPLAY_NAME_FIXTURE, AVATAR_URL_FIXTURE);
+        new UserDetailsController.GetUserDetailsResponse(DISPLAY_NAME_FIXTURE, AVATAR_ID_FIXTURE.val());
 
     when(getProfileUseCase.getDetails(USER_ID_FIXTURE)).thenReturn(details);
     when(mapper.toResponse(details)).thenReturn(response);
@@ -117,7 +119,7 @@ class UserDetailsControllerTest {
                     ID_FIXTURE)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.displayName").value(DISPLAY_NAME_FIXTURE))
-        .andExpect(jsonPath("$.avatarUrl").value(AVATAR_URL_FIXTURE));
+        .andExpect(jsonPath("$.avatarId").value(AVATAR_ID_FIXTURE.val().toString()));
   }
 
   @Test
@@ -141,7 +143,7 @@ class UserDetailsControllerTest {
         .andExpect(status().isOk());
 
     verify(updateDisplayNameUseCase)
-        .updateDisplayName(code.users.domain.model.UserId.of(AUTH_USER_ID), command);
+        .updateDisplayName(UserId.of(AUTH_USER_ID), command);
   }
 
   private UsernamePasswordAuthenticationToken authentication() {

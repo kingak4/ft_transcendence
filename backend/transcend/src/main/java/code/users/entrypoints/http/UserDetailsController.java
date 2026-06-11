@@ -90,5 +90,5 @@ public class UserDetailsController {
 
   public record UpdateDisplayNameRequest(String displayName) {}
 
-  public record GetUserDetailsResponse(String displayName, String avatarUrl) {}
+  public record GetUserDetailsResponse(String displayName, UUID avatarId) {}
 }
