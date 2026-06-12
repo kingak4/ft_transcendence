@@ -1,3 +1,6 @@
 package code.users.domain.model;
 
-public record Avatar(AvatarId id, byte[] content) {}
+import lombok.With;
+
+@With
+public record Avatar(byte[] content) {}

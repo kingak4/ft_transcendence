@@ -1,7 +1,7 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.AVATAR_NAME_FIXTURE;
+import static code.users.domain.model.UserFixtures.AVATAR_URL_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -96,7 +96,7 @@ class ManageFriendsTest {
             FriendId.of(UUID.randomUUID()),
             UserDetails.builder()
                 .displayName(AVATAR_NAME_FIXTURE)
-                .avatarId(AVATAR_ID_FIXTURE)
+                .avatarUrl(AVATAR_URL_FIXTURE)
                 .build());
     when(userDao.getFriendList(USER_ID_FIXTURE, 0, 10)).thenReturn(expectedFriends);
 
