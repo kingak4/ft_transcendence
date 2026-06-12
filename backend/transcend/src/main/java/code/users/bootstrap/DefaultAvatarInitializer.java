@@ -21,28 +21,17 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
   public void run(String... args) {
     log.info("Initializing default avatar");
     try {
-      byte[] content = loadDefaultAvatarContent();
-      userDao.saveAvatar(new Avatar(UserDetails.DEFAULT_AVATAR_ID, content));
-      ensureDefaultAvatarUserExists();
+      ClassPathResource resource = new ClassPathResource("default-avatar.png");
+      if (resource.exists()) {
+        try (InputStream is = resource.getInputStream()) {
+          byte[] content = is.readAllBytes();
+          userDao.saveAvatar(UserDetails.DEFAULT_AVATAR_USER_ID, new Avatar(content));
+        }
+      } else {
+        userDao.saveAvatar(UserDetails.DEFAULT_AVATAR_USER_ID, new Avatar(new byte[] {0}));
+      }
     } catch (Exception e) {
-      log.warn("Failed to initialize default avatar: {}", e.getMessage(), e);
-    }
-  }
-
-  private void ensureDefaultAvatarUserExists() {
-    if (userDao.findById(UserDetails.DEFAULT_AVATAR_ID).isPresent()) {
-      throw new RuntimeException("Avatar does not exist after initialization");
-    }
-  }
-
-  private byte[] loadDefaultAvatarContent() throws Exception {
-    ClassPathResource resource = new ClassPathResource("default-avatar.png");
-    if (!resource.exists()) {
-      return new byte[] {0};
-    }
-
-    try (InputStream is = resource.getInputStream()) {
-      return is.readAllBytes();
+      log.warn("Failed to initialize default avatar {}", e.getMessage());
     }
   }
 }

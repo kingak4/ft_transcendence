@@ -27,13 +27,6 @@ databaseChangeLog:
                   type: public.user_role
                   constraints:
                     nullable: false
-              - column:
-                  name: user_details_id
-                  type: UUID
-                  constraints:
-                    nullable: true
-                    foreignKeyName: fk_users_details
-                    references: user_details(val)
 
         - addUniqueConstraint:
             tableName: users

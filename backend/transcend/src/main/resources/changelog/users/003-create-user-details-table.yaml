@@ -12,13 +12,13 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                    foreignKeyName: fk_user_details_user
+                    references: users(val)
               - column:
                   name: display_name
                   type: VARCHAR(255)
               - column:
-                  name: avatar_id
-                  type: UUID
+                  name: avatar_url
+                  type: VARCHAR(255)
                   constraints:
-                    nullable: true
-                    foreignKeyName: fk_details_avatar
-                    references: avatars(val)
+                    nullable: false

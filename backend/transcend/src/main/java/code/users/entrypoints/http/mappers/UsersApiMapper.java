@@ -5,7 +5,6 @@ import static code.users.entrypoints.http.RegisterController.RegisterRequest;
 import static code.users.ports.in.RegisterUseCase.RegisterCommand;
 import static code.users.ports.in.UpdateDisplayNameUseCase.UpdateDisplayNameCommand;
 
-import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.http.LoginController.LoginResponse;
@@ -22,13 +21,6 @@ import org.mapstruct.Mapping;
 public interface UsersApiMapper {
 
   default UUID map(UserId value) {
-    if (value == null) {
-      return null;
-    }
-    return value.val();
-  }
-
-  default UUID map(AvatarId value) {
     if (value == null) {
       return null;
     }
