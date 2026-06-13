@@ -12,8 +12,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-                    foreignKeyName: fk_avatars_user
-                    references: users(val)
               - column:
                   name: content
                   type: BYTEA
