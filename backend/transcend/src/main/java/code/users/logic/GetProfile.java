@@ -1,15 +1,14 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserDetails.DEFAULT_AVATAR_URL;
-import static code.users.domain.model.UserDetails.DEFAULT_AVATAR_USER_ID;
-
+import code.users.domain.exceptions.AvatarNotFoundException;
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.Avatar;
-import code.users.domain.model.User;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.out.UserDao;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +20,16 @@ public class GetProfile implements GetProfileUseCase {
 
   @Override
   public UserDetails getDetails(UserId userId) {
-    User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
-    return user.getDetails();
+    return userDao.findUserDetailsById(userId).orElseThrow(UserNotFoundException::new);
   }
 
   @Override
-  public Avatar getAvatar(UserId userId) {
-    User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
-    if (user.getDetails().getAvatarUrl().equals(DEFAULT_AVATAR_URL))
-      return userDao.getAvatar(DEFAULT_AVATAR_USER_ID);
-    else return userDao.getAvatar(userId);
+  public Avatar getAvatar(AvatarId avatarId) {
+    Optional<Avatar> byId = userDao.findById(avatarId);
+    return byId.orElseGet(
+        () ->
+            userDao
+                .findById(UserDetails.DEFAULT_AVATAR_ID)
+                .orElseThrow(AvatarNotFoundException::new));
   }
 }
