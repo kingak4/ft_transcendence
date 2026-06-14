@@ -6,7 +6,7 @@ BLUE        = \033[0;34m
 GREEN       = \033[0;32m
 RESET       = \033[0m
 
-include .env 
+-include .env.local
 .PHONY: install dev build start lint format check clean fclean re
 
 all: local
@@ -23,7 +23,7 @@ local: install
 	@echo "$(BLUE)Waiting for backend API to be ready...$(RESET)"
 	@while ! curl -s ${BACKEND_URL}/api-docs > /dev/null; do sleep 1; done
 	@echo "$(BLUE)Generating all API types (OpenAPI & AsyncAPI)...$(RESET)"
-	@npm run generate:all
+	@npm run generate:all:dev
 	@echo "$(BLUE)Starting Next.js local...$(RESET)"
 	@npm run dev
 

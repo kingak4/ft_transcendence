@@ -17,5 +17,4 @@ ENV NODE_ENV=production
 COPY --from=builder /build/.next/standalone ./
 COPY --from=builder /build/.next/static ./.next/static
 
-EXPOSE 3000
 ENTRYPOINT ["node", "server.js"]
