@@ -1,20 +1,24 @@
 package code.users.entrypoints.websocket;
 
-import static code.shared.WebSocketConfig.SOCKET_ENDPOINT;
-import static code.shared.WebSocketConfig.SOCKET_PATH;
-import static code.shared.WebSocketConfig.WS_HOST;
+import static code.shared.config.WebSocketConfig.SOCKET_ENDPOINT;
+import static code.shared.config.WebSocketConfig.SOCKET_PATH;
+import static code.shared.config.WebSocketConfig.WS_HOST;
 import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
 import static code.users.entrypoints.websocket.PresenceWebSocketController.PRESENCE_CHECK;
 import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
-import code.shared.config.WebSocketTestAutoConfig;
+import code.shared.config.WebSocketAutoConfig;
+import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -26,10 +30,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketTestAutoConfig.class, PresenceWebSocketController.class})
-class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
-
-  private static final int TIMEOUT_SECONDS = 5;
+    classes = {WebSocketAutoConfig.class, PresenceWebSocketController.class})
+class PresenceWebSocketControllerTest extends WebSocketTest {
 
   @LocalServerPort private int port;
 
@@ -44,19 +46,28 @@ class PresenceWebSocketControllerTest extends WebSocketTestAutoConfig {
     session =
         connectWithToken(
             stompClient, WS_HOST + port + SOCKET_ENDPOINT, WebSocketFixtures.TOKEN_FIXTURE);
+
     CompletableFuture<PresenceWebSocketController.PresenceStatusResponse> resultKeeper =
         subscribe(
             userPresenceTopic(userId.val()),
             PresenceWebSocketController.PresenceStatusResponse.class);
 
-    // When
-    sendPresenceCheck(userId);
+    // When & Then
+    await()
+        .atMost(TIMEOUT, TimeUnit.SECONDS)
+        .pollInterval(Duration.ofMillis(500))
+        .untilAsserted(
+            () -> {
+              sendPresenceCheck(userId);
 
-    // Then
-    var response = resultKeeper.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-    assertThat(response.userId()).isEqualTo(WebSocketFixtures.ID_FIXTURE);
-    assertThat(response.isOnline()).isTrue();
-    verify(readPresenceUseCase).isOnline(userId);
+              assertThat(resultKeeper.isDone()).isTrue();
+
+              var response = resultKeeper.join();
+              assertThat(response.userId()).isEqualTo(WebSocketFixtures.ID_FIXTURE);
+              assertThat(response.isOnline()).isTrue();
+            });
+
+    verify(readPresenceUseCase, atLeastOnce()).isOnline(userId);
   }
 
   private <T> CompletableFuture<T> subscribe(String destination, Class<T> payloadType) {

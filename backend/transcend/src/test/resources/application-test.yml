@@ -21,3 +21,13 @@ spring:
     default-schema: test
     parameters:
       schemaName: test
+
+bucket4j:
+  enabled: false
+
+logging:
+  level:
+    org:
+      springframework:
+        messaging:
+          TRACE

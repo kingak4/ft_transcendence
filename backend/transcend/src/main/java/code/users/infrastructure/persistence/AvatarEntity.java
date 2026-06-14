@@ -1,6 +1,7 @@
 package code.users.infrastructure.persistence;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.*;
 
 @Data
@@ -11,7 +12,10 @@ import lombok.*;
 @Table(name = "avatars")
 public class AvatarEntity {
 
-  @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
+  @Id
+  @EqualsAndHashCode.Include
+  @Column(name = "val")
+  private UUID val;
 
   @Column(name = "content", nullable = false)
   private byte[] content;

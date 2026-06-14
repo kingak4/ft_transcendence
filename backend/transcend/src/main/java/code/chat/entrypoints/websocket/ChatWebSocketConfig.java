@@ -1,6 +1,6 @@
 package code.chat.entrypoints.websocket;
 
-import static code.shared.WebSocketConfig.SOCKET_TOPIC;
+import static code.shared.config.WebSocketConfig.SOCKET_TOPIC;
 
 import java.util.UUID;
 

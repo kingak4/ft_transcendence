@@ -1,4 +1,4 @@
-package code.shared;
+package code.shared.config;
 
 public class WebSocketConfig {
   public static final String WS_HOST = "ws://localhost:";

@@ -6,7 +6,7 @@ services:
         BACKEND_URL: ${BACKEND_URL}
     container_name: transcend-frontend
     env_file:
-      - .env.dev
+      - .env
     # environment:
     #   - BACKEND_URL=http://transcend-backend:5000
     ports:

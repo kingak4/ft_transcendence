@@ -1,11 +1,29 @@
-.PHONY: build up down clean
+.PHONY: build up down clean generate
 include .env
+-include .env.local
 include ./../infra/.env
 
-build:
+node_modules:
+	npm ci
+
+app/types/api.d.ts: node_modules
+	mkdir -p app/types
+	./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
+
+app/types/asyncapi.d.ts: node_modules
+	mkdir -p app/types
+	BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
+
+generate: node_modules
+	rm -f app/types/api.d.ts app/types/asyncapi.d.ts
+	mkdir -p app/types
+	./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
+	BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
+
+build: app/types/api.d.ts app/types/asyncapi.d.ts
 	${COMPOSE} -f app-compose.yml build
 
-up:
+up: app/types/api.d.ts app/types/asyncapi.d.ts
 	${COMPOSE} -f app-compose.yml up -d
 
 down:
@@ -13,3 +31,4 @@ down:
 
 clean:
 	${COMPOSE} -f app-compose.yml down -v
+	rm -f app/types/api.d.ts app/types/asyncapi.d.ts

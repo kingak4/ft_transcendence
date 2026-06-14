@@ -13,7 +13,7 @@ spring:
       ddl-auto: create-drop
   data:
     redis:
-      host: localhost
+      host: ${REDIS_HOST}
       port: 6380
 logging:
   level:
@@ -23,5 +23,6 @@ logging:
     code: DEBUG
     org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    com.giffing.bucket4j: DEBUG
 server:
   port: 8080
