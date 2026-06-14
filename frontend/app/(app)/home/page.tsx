@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { usePresence } from '../hooks/usePresence';
+import { usePresence } from '../../hooks/usePresence';
 // import { useChat } from '../hooks/useChat';
 
 export default function HomePage() {
