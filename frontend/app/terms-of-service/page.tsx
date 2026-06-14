@@ -66,7 +66,8 @@ export default function TermsOfService() {
         <h2 className="mb-4 text-2xl font-semibold">5. Service Availability</h2>
 
         <p>
-          The application is provided on an &quot;as is&quot; and &quot;as available&quot; basis.
+          The application is provided on an &quot;as is&quot; and &quot;as
+          available&quot; basis.
         </p>
 
         <p className="mt-4">
