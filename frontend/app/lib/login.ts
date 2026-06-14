@@ -17,7 +17,7 @@ export async function login(
     });
 
     if (!response.ok) {
-      console.error('Login Error:', response.body);
+      console.error('Login Error:', error);
       return {
         success: false,
         status: error?.status,
