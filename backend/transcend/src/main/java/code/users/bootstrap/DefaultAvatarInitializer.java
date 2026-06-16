@@ -30,7 +30,7 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
   }
 
   private void ensureDefaultAvatarUserExists() {
-    if (userDao.findById(UserDetails.DEFAULT_AVATAR_ID).isPresent()) {
+    if (!userDao.findById(UserDetails.DEFAULT_AVATAR_ID).isPresent()) {
       throw new RuntimeException("Avatar does not exist after initialization");
     }
   }
