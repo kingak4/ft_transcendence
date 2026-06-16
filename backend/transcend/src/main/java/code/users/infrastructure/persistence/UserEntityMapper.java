@@ -9,6 +9,7 @@ import code.users.domain.model.UserId;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
@@ -33,6 +34,15 @@ public interface UserEntityMapper {
     return value.val();
   }
 
+  default AvatarId map(AvatarIdEntity entity) {
+    return entity == null ? null : AvatarId.of(entity.val());
+  }
+
+  @Named("toAvatarIdEntity")
+  default AvatarIdEntity mapToAvatarIdEntity(AvatarId id) {
+    return id == null ? null : new AvatarIdEntity(id.val());
+  }
+
   UserDetails toDomain(UserDetailsEntity entity);
 
   default UserId map(UserIdEntity id) {
@@ -52,8 +62,9 @@ public interface UserEntityMapper {
   }
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "avatarId", qualifiedByName = "toAvatarIdEntity")
   UserDetailsEntity toEntity(UserDetails details);
 
-  @Mapping(source = "val", target = "id")
+  @Mapping(source = "id", target = "id")
   Avatar toDomain(AvatarEntity avatarEntity);
 }

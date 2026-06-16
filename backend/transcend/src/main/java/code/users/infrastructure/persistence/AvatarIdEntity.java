@@ -1,3 +1,8 @@
 package code.users.infrastructure.persistence;
 
-class AvatarIdEntity {}
+import jakarta.persistence.Embeddable;
+import java.io.Serializable;
+import java.util.UUID;
+
+@Embeddable
+public record AvatarIdEntity(UUID val) implements Serializable {}
