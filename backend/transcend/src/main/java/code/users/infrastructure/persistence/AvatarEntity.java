@@ -12,10 +12,7 @@ import lombok.*;
 @Table(name = "avatars")
 public class AvatarEntity {
 
-  @Id
-  @EqualsAndHashCode.Include
-  @Column(name = "val")
-  private UUID val;
+  @EmbeddedId @EqualsAndHashCode.Include private AvatarIdEntity id;
 
   @Column(name = "content", nullable = false)
   private byte[] content;

@@ -72,7 +72,7 @@ public class UserRepository implements UserDao {
   @Override
   public void saveAvatar(Avatar avatar) {
     AvatarEntity avatarEntity = new AvatarEntity();
-    avatarEntity.setVal(avatar.id().val());
+    avatarEntity.setId(new AvatarIdEntity(avatar.id().val())); // was setVal()
     avatarEntity.setContent(avatar.content());
     avatarJpaRepository.save(avatarEntity);
   }
@@ -98,7 +98,7 @@ public class UserRepository implements UserDao {
 
   @Override
   public Optional<Avatar> findById(AvatarId avatarId) {
-    Optional<AvatarEntity> avatarEntity = avatarJpaRepository.findById(avatarId.val());
+    Optional<AvatarEntity> avatarEntity = avatarJpaRepository.findById(new AvatarIdEntity(avatarId.val())); // was avatarId.val()
     return avatarEntity.map(mapper::toDomain);
   }
 
@@ -119,9 +119,9 @@ public class UserRepository implements UserDao {
 
                   String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
                   UUID avatarId =
-                      detailsOpt
-                          .map(UserDetailsEntity::getAvatarId)
-                          .orElse(UserDetails.DEFAULT_AVATAR_ID.val());
+                          detailsOpt
+                                  .map(d -> d.getAvatarId() != null ? d.getAvatarId().val() : UserDetails.DEFAULT_AVATAR_ID.val())
+                                  .orElse(UserDetails.DEFAULT_AVATAR_ID.val());
 
                   return UserDetails.builder()
                       .displayName(displayName)

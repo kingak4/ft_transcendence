@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { usePresence } from '../hooks/usePresence';
+import { usePresence } from '../../hooks/usePresence';
 // import { useChat } from '../hooks/useChat';
 
 export default function HomePage() {
-  const [chatId, setChatId] = useState('test-chat-id');
+  // const [chatId, setChatId] = useState('test-chat-id');
   // const [messageContent, setMessageContent] = useState('');
   const [presenceUserId, setPresenceUserId] = useState(
     '00000000-0000-0000-0000-000000000000',
