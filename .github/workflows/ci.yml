@@ -65,6 +65,10 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Show backend logs on failure
+        if: failure()
+        run: docker compose logs backend
+
   # ──────────────────────────────────────────────────────────────────────────
   # Job 2: run the Spring Boot test suite.
   # Uses GitHub Actions service containers for postgres and redis so we avoid
