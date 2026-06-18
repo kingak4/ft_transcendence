@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-@Component("chatValidator")
+@Component("membershipValidator")
 @RequiredArgsConstructor
 public class MembershipValidator {
 

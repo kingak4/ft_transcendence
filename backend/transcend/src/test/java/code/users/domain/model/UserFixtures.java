@@ -30,12 +30,12 @@ public class UserFixtures {
         .avatarId(AvatarId.DEFAULT_AVATAR_ID);
   }
 
+  public static User aDaoUser() {
+    return aTestUserBuilder().details(aTestUserDetailsBuilder().build()).build();
+  }
+
   public static User aSimpleUser() {
     UserDetails details = UserDetails.builder().displayName("").avatarId(null).build();
     return aTestUserBuilder().details(details).build();
-  }
-
-  public static User aDaoUser() {
-    return aTestUserBuilder().details(aTestUserDetailsBuilder().build()).build();
   }
 }

@@ -1,8 +1,7 @@
-package code.shared;
+package code;
 
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import code.bootstrap.DotEnvInitializer;
 import code.shared.config.WebSocketTest;

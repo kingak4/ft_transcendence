@@ -4,7 +4,6 @@ import static code.shared.config.WebSocketTest.TIMEOUT;
 import static code.shared.domain.model.WebSocketFixtures.ID_FIXTURE;
 import static code.shared.domain.model.WebSocketFixtures.SESSION_FIXTURE;
 import static code.users.entrypoints.websocket.UserWebSocketConfig.userPresenceTopic;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.verify;

@@ -11,13 +11,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import code.chat.domain.model.ChatFixtures;
+import code.chat.domain.model.MessageId;
 import code.chat.entrypoints.websocket.ChatWebSocketController.DeleteMessageRequest;
 import code.chat.entrypoints.websocket.ChatWebSocketController.SendMessageRequest;
 import code.chat.ports.in.ManageMessagesUseCase;
 import code.shared.config.WebSocketAutoConfig;
 import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
-import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -36,7 +36,7 @@ class ChatWebSocketControllerTest extends WebSocketTest {
   @Test
   void shouldDeleteMessageViaWebSocket() throws Exception {
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
-    String messageId = ChatFixtures.MESSAGE_ID_FIXTURE.toString();
+    String messageId = MessageId.generate().val().toString();
 
     session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
     deleteMessage(session, messageId);
@@ -52,7 +52,7 @@ class ChatWebSocketControllerTest extends WebSocketTest {
   @Test
   void shouldSendMessageViaWebSocket() throws Exception {
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
-    String chatId = ChatFixtures.CHAT_ID_FIXTURE.toString();
+    String chatId = ChatFixtures.CHAT_UUID_FIXTURE.toString();
     String messageContent = "Hello from WebSocket";
 
     session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);

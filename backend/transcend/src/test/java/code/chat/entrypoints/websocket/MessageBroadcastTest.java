@@ -22,7 +22,6 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -57,9 +56,9 @@ class MessageBroadcastTest extends WebSocketTest {
   void shouldBroadcastMessageToAllSubscribersViaWebSocket() throws Exception {
     // Given
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
-    String chatId = ChatFixtures.CHAT_ID_FIXTURE.toString();
+    String chatId = ChatFixtures.CHAT_UUID_FIXTURE.toString();
     String messageContent = "Hello from WebSocket " + UUID.randomUUID();
-    String topic = chatMessagesTopic(ChatFixtures.CHAT_ID_FIXTURE);
+    String topic = chatMessagesTopic(ChatFixtures.CHAT_UUID_FIXTURE);
 
     observerOne = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
     observerTwo = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
@@ -94,7 +93,7 @@ class MessageBroadcastTest extends WebSocketTest {
         .sendMessage(any(ManageMessagesUseCase.SendMessageCommand.class));
 
     ChatWebSocketController.ChatMessageResponse received = observerOneEvents.poll();
-    assertThat(received.chatId()).isEqualTo(ChatFixtures.CHAT_ID_FIXTURE);
+    assertThat(received.chatId()).isEqualTo(ChatFixtures.CHAT_UUID_FIXTURE);
   }
 
   private void sendMessage(StompSession session, String chatId, String content) {

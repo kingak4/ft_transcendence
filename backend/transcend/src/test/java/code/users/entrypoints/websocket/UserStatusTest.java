@@ -3,7 +3,6 @@ package code.users.entrypoints.websocket;
 import static code.shared.config.WebSocketConfig.SOCKET_ENDPOINT;
 import static code.shared.config.WebSocketConfig.WS_HOST;
 import static code.shared.util.WebSocketSecurityUtil.connectWithToken;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;

@@ -1,5 +1,6 @@
 package code.chat.logic;
 
+import code.chat.domain.exception.ChatNotFoundException;
 import code.chat.domain.model.ChatId;
 import code.chat.domain.model.Message;
 import code.chat.ports.in.GetChatMessagesUseCase;
@@ -15,6 +16,7 @@ public class GetChatMessages implements GetChatMessagesUseCase {
 
   @Override
   public List<Message> getChatMessages(ChatId chatId, int page, int size) {
+    if (dao.getChat(chatId).isEmpty()) throw new ChatNotFoundException();
     return dao.getRecentMessages(chatId, page, size);
   }
 }

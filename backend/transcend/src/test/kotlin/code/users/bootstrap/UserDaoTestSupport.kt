@@ -3,7 +3,7 @@ package code.users.bootstrap
 import code.bootstrap.DotEnvInitializer
 import code.users.domain.model.Role
 import code.users.domain.model.User
-import code.users.domain.model.UserFixtures.aDaoUser
+import code.users.domain.model.UserFixtures
 import code.users.infrastructure.persistence.UserEntityMapperImpl
 import code.users.infrastructure.persistence.UserRepository
 import code.users.infrastructure.security.OwnershipValidator
@@ -44,7 +44,8 @@ class UserDaoTestSupport : BehaviorSpec() {
     val authorities = listOf(SimpleGrantedAuthority(Role.USER.name))
 
     val authentication = UsernamePasswordAuthenticationToken(
-      user.id,
+      user.id.`val`.toString(),
+      null,
       authorities
     )
     SecurityContextHolder.getContext().authentication = authentication
@@ -52,10 +53,13 @@ class UserDaoTestSupport : BehaviorSpec() {
 
   init {
     extension(SpringExtension)
+    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL)
+    beforeTest {
+      setupAuth(UserFixtures.aDaoUser())
+    }
 
     beforeSpec {
-      setupAuth(aDaoUser())
-      userDao.createUser(aDaoUser())
+      userDao.createUser(UserFixtures.aDaoUser())
     }
     afterSpec {
       SecurityContextHolder.clearContext()

@@ -3,6 +3,7 @@ package code.users.infrastructure.security;
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,9 +19,7 @@ class CustomUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String idStr) throws UsernameNotFoundException {
     var user =
-        userDao
-            .findById(UserId.of(java.util.UUID.fromString(idStr)))
-            .orElseThrow(UserNotFoundException::new);
+        userDao.findById(UserId.of(UUID.fromString(idStr))).orElseThrow(UserNotFoundException::new);
     String roleName = user.getRole() != null ? user.getRole().name() : "USER";
 
     return org.springframework.security.core.userdetails.User.builder()

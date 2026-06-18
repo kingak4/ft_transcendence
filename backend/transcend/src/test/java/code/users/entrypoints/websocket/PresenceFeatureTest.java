@@ -22,7 +22,6 @@ import code.shared.config.WebSocketTest;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ReadPresenceUseCase;
 import code.users.ports.in.UpdatePresenceUseCase;
-import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
