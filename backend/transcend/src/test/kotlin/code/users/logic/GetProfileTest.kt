@@ -4,6 +4,7 @@ import code.shared.config.DaoTestSupport
 import code.users.domain.exceptions.UserNotFoundException
 import code.users.domain.model.AvatarId
 import code.users.domain.model.UserFixtures.DISPLAY_NAME_FIXTURE
+import code.users.domain.model.UserFixtures.NON_EXISTENT_USER
 import code.users.domain.model.UserFixtures.USER_ID_FIXTURE
 import code.users.domain.model.UserId
 import code.users.infrastructure.persistence.UserEntityMapperImpl
@@ -13,6 +14,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Import(
@@ -20,6 +22,7 @@ import java.util.*
   UserEntityMapperImpl::class,
   GetProfile::class
 )
+@Transactional
 class GetProfileTest(
   private val service: GetProfileUseCase
 ) : DaoTestSupport() {
@@ -39,12 +42,11 @@ class GetProfileTest(
     }
 
     Given("a non-existent user ID") {
-      val nonExistentUserId = UserId.of(UUID.randomUUID())
 
       When("the get details service is executed") {
         Then("it should throw a UserNotFoundException") {
           shouldThrow<UserNotFoundException> {
-            service.getDetails(nonExistentUserId)
+            service.getDetails(NON_EXISTENT_USER)
           }
         }
       }

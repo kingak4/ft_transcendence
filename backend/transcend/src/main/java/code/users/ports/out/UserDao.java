@@ -19,6 +19,8 @@ public interface UserDao {
 
   void updateUser(User user);
 
+  void updateDetails(UserId id, UserDetails newDetails);
+
   void saveAvatar(Avatar avatar);
 
   Optional<Avatar> findById(AvatarId userId);
@@ -32,4 +34,5 @@ public interface UserDao {
   boolean exists(FriendId friendId);
 
   Optional<UserDetails> findUserDetailsById(UserId id);
+
 }

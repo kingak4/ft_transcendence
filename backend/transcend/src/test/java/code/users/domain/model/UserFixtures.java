@@ -1,5 +1,6 @@
 package code.users.domain.model;
 
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -15,6 +16,8 @@ public class UserFixtures {
   public static final String INVALID_EMAIL_FIXTURE = "invalid-email";
   public static final String WRONG_PASSWORD_FIXTURE = "wrong-password";
   public static final String NEW_EMAIL = "newuser@example.com";
+
+  public static final UserId NON_EXISTENT_USER = UserId.of(UUID.randomUUID());
 
   public static User.UserBuilder aTestUserBuilder() {
     return User.builder()

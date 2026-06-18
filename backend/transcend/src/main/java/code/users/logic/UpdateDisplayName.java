@@ -17,8 +17,8 @@ public class UpdateDisplayName implements UpdateDisplayNameUseCase {
 
   @Override
   public void updateDisplayName(UserId userId, UpdateDisplayNameCommand command) {
-    User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
-    UserDetails newDetails = user.getDetails().withDisplayName(command.displayName());
-    userDao.updateUser(user.withDetails(newDetails));
+    UserDetails userDetails = userDao.findUserDetailsById(userId).orElseThrow(UserNotFoundException::new);
+    UserDetails newDetails = userDetails.withDisplayName(command.displayName());
+    userDao.updateDetails(userId, newDetails);
   }
 }

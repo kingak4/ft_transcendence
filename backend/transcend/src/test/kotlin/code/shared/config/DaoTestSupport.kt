@@ -21,10 +21,8 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 @ContextConfiguration(initializers = [DotEnvInitializer::class])
 @Import(
   DefaultAvatarInitializer::class,
-  UserFixtureInitializer::class,
   MethodValidationPostProcessor::class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
 class DaoTestSupport : BehaviorSpec() {
 
   @Autowired
@@ -34,8 +32,7 @@ class DaoTestSupport : BehaviorSpec() {
     extension(SpringExtension)
 
     beforeSpec {
-      val existingUser = aDaoUser()
-      userDao.createUser(existingUser)
+      userDao.createUser(aDaoUser())
     }
   }
 }

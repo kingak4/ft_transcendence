@@ -14,12 +14,14 @@ import jakarta.validation.ConstraintViolationException
 import org.mockito.BDDMockito.given
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.transaction.annotation.Transactional
 
 @Import(
   UserRepository::class,
   UserEntityMapperImpl::class,
   Register::class
 )
+@Transactional
 class RegisterComponentTest(
   private val service: RegisterUseCase
 ) : DaoTestSupport() {

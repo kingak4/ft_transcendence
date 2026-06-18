@@ -11,18 +11,19 @@ import code.users.ports.`in`.LoginUseCase
 import code.users.ports.`in`.LoginUseCase.LoginCommand
 import code.users.ports.out.AccessTokenProvider
 import code.users.ports.out.HashingService
-import code.users.ports.out.UserDao
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.mockito.BDDMockito.given
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.transaction.annotation.Transactional
 
 @Import(
   UserRepository::class,
   UserEntityMapperImpl::class,
   Login::class
 )
+@Transactional
 class LoginComponentTest (
   private val service: LoginUseCase
 ) : DaoTestSupport() {

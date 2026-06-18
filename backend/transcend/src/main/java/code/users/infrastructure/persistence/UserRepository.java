@@ -46,27 +46,32 @@ public class UserRepository implements UserDao {
 
   @Override
   public void updateUser(User user) {
-    UserEntity entity =
-        userJpaRepository
-            .findById(mapper.map(user.getId()))
-            .orElseThrow(EntityNotFoundException::new);
-    entity.setHash(user.getPassword());
+    UserIdEntity userIdEntity = mapper.map(user.getId());
+
+    UserEntity userEntity = userJpaRepository
+        .findById(userIdEntity)
+        .orElseThrow(EntityNotFoundException::new);
+
+    userEntity.setHash(user.getPassword());
 
     if (user.getDetails() != null) {
-      UserIdEntity userIdEntity = mapper.map(user.getId());
-      UserDetailsEntity details =
-          userDetailsJpaRepository
-              .findById(userIdEntity)
-              .orElseGet(
-                  () -> {
-                    UserDetailsEntity d = new UserDetailsEntity();
-                    d.setId(userIdEntity);
-                    return d;
-                  });
-      details.setDisplayName(user.getDetails().getDisplayName());
-      userDetailsJpaRepository.save(details);
-      entity.setUserDetailsId(userIdEntity.val());
+      updateDetails(user.getId(), user.getDetails());
+      userEntity.setUserDetailsId(userIdEntity.val());
     }
+  }
+
+  @Override
+  public void updateDetails(UserId id, UserDetails newDetails) {
+    UserIdEntity userIdEntity = mapper.map(id);
+
+    UserDetailsEntity details = userDetailsJpaRepository
+        .findById(userIdEntity)
+        .orElseGet(UserDetailsEntity::new);
+
+    details.setId(userIdEntity);
+    details.setDisplayName(newDetails.getDisplayName());
+
+    userDetailsJpaRepository.save(details);
   }
 
   @Override
