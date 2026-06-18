@@ -1,14 +1,14 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.Avatar;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.out.UserDao;
@@ -36,7 +36,7 @@ class GetProfileTest {
   @Test
   void getDetailsSuccessfully() {
     // given
-    UserDetails details = aDefaultUser().getDetails();
+    UserDetails details = aDaoUser().getDetails();
     when(userDao.findUserDetailsById(USER_ID_FIXTURE)).thenReturn(Optional.of(details));
 
     // when
@@ -63,11 +63,11 @@ class GetProfileTest {
     // given
 
     byte[] content = {1, 2, 3};
-    var expectedAvatar = new Avatar(AVATAR_ID_FIXTURE, content);
-    when(userDao.findById(AVATAR_ID_FIXTURE)).thenReturn(Optional.of(expectedAvatar));
+    var expectedAvatar = new Avatar(AvatarId.DEFAULT_AVATAR_ID, content);
+    when(userDao.findById(AvatarId.DEFAULT_AVATAR_ID)).thenReturn(Optional.of(expectedAvatar));
 
     // when
-    var result = service.getAvatar(AVATAR_ID_FIXTURE);
+    var result = service.getAvatar(AvatarId.DEFAULT_AVATAR_ID);
 
     // then
     assertThat(result).isNotNull();

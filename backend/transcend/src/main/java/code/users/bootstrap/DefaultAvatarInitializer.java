@@ -1,6 +1,7 @@
 package code.users.bootstrap;
 
 import code.users.domain.model.Avatar;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.ports.out.UserDao;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
     log.info("Initializing default avatar");
     try {
       byte[] content = loadDefaultAvatarContent();
-      userDao.saveAvatar(new Avatar(UserDetails.DEFAULT_AVATAR_ID, content));
+      userDao.saveAvatar(new Avatar(AvatarId.DEFAULT_AVATAR_ID, content));
       ensureDefaultAvatarUserExists();
     } catch (Exception e) {
       log.warn("Failed to initialize default avatar: {}", e.getMessage(), e);
@@ -30,7 +31,7 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
   }
 
   private void ensureDefaultAvatarUserExists() {
-    if (!userDao.findById(UserDetails.DEFAULT_AVATAR_ID).isPresent()) {
+    if (userDao.findById(AvatarId.DEFAULT_AVATAR_ID).isEmpty()) {
       throw new RuntimeException("Avatar does not exist after initialization");
     }
   }

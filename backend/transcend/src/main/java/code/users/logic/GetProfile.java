@@ -29,7 +29,7 @@ public class GetProfile implements GetProfileUseCase {
     return byId.orElseGet(
         () ->
             userDao
-                .findById(UserDetails.DEFAULT_AVATAR_ID)
+                .findById(AvatarId.DEFAULT_AVATAR_ID)
                 .orElseThrow(AvatarNotFoundException::new));
   }
 }

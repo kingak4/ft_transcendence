@@ -17,13 +17,14 @@ import org.springframework.stereotype.Component;
 public class UserFixtureInitializer implements ApplicationRunner {
   private final RegisterUseCase registerUseCase;
 
+  public static final String EMAIL_FIXTURE = "user@email.com";
+  public static final String PASSWORD_FIXTURE = "plain-password";
+
   @Override
   public void run(ApplicationArguments args) {
     log.info("Initializing default user fixture");
-    String defaultEmail = "user@email.com";
-    String defaultPassword = "plain-password";
     try {
-      registerUseCase.register(new RegisterCommand(defaultEmail, defaultPassword));
+      registerUseCase.register(new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE));
     } catch (EmailAlreadyRegisteredException ignored) {
     }
   }

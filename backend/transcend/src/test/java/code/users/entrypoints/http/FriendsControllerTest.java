@@ -1,7 +1,7 @@
 package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -80,7 +80,7 @@ class FriendsControllerTest {
   void getFriendListSuccessfully() throws Exception {
     // given
     FriendId friendId = FriendId.of(UUID.randomUUID());
-    UserDetails friendDetails = aDefaultUser().getDetails();
+    UserDetails friendDetails = aDaoUser().getDetails();
 
     Map<FriendId, UserDetails> friendsMap = Map.of(friendId, friendDetails);
 

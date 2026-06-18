@@ -1,22 +1,11 @@
 package code.users.logic;
 
-import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.AVATAR_NAME_FIXTURE;
-import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import code.users.domain.exceptions.UserNotFoundException;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.ports.in.ManageFriendsUseCase;
 import code.users.ports.out.UserDao;
-import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +13,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.util.Map;
+import java.util.UUID;
+
+import static code.users.domain.model.FriendFixtures.FRIEND1_NAME_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig(ManageFriendsTest.ManageFriendsTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -95,8 +96,8 @@ class ManageFriendsTest {
         Map.of(
             FriendId.of(UUID.randomUUID()),
             UserDetails.builder()
-                .displayName(AVATAR_NAME_FIXTURE)
-                .avatarId(AVATAR_ID_FIXTURE)
+                .displayName(FRIEND1_NAME_FIXTURE)
+                .avatarId(AvatarId.DEFAULT_AVATAR_ID)
                 .build());
     when(userDao.getFriendList(USER_ID_FIXTURE, 0, 10)).thenReturn(expectedFriends);
 
@@ -106,6 +107,6 @@ class ManageFriendsTest {
     // then
     verify(userDao).getFriendList(USER_ID_FIXTURE, 0, 10);
     assertThat(result).hasSize(1);
-    assertThat(result.values().iterator().next().getDisplayName()).isEqualTo(AVATAR_NAME_FIXTURE);
+    assertThat(result.values().iterator().next().getDisplayName()).isEqualTo(FRIEND1_NAME_FIXTURE);
   }
 }

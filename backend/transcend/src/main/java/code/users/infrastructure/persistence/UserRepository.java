@@ -120,8 +120,8 @@ public class UserRepository implements UserDao {
                   String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
                   UUID avatarId =
                           detailsOpt
-                                  .map(d -> d.getAvatarId() != null ? d.getAvatarId().val() : UserDetails.DEFAULT_AVATAR_ID.val())
-                                  .orElse(UserDetails.DEFAULT_AVATAR_ID.val());
+                                  .map(d -> d.getAvatarId() != null ? d.getAvatarId().val() : AvatarId.DEFAULT_AVATAR_ID.val())
+                                  .orElse(AvatarId.DEFAULT_AVATAR_ID.val());
 
                   return UserDetails.builder()
                       .displayName(displayName)

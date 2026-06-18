@@ -3,11 +3,11 @@ package code.users.logic;
 import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.UUID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
-import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
+import static code.users.domain.model.AuthFixtures.TOKEN_FIXTURE;
 import static code.users.domain.model.UserFixtures.WRONG_PASSWORD_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -46,11 +46,11 @@ class LoginTest {
   void loginAuthenticatesAndReturnsBearerToken() {
     // given
     var command = new LoginCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var user = aDefaultUser();
+    var user = aDaoUser();
 
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
     when(hashingService.matches(PASSWORD_FIXTURE, HASH_FIXTURE)).thenReturn(true);
-    when(accessTokenProvider.generateToken(ID_FIXTURE.toString())).thenReturn(TOKEN_FIXTURE);
+    when(accessTokenProvider.generateToken(UUID_FIXTURE.toString())).thenReturn(TOKEN_FIXTURE);
 
     // when
     var result = service.login(command);
@@ -58,10 +58,10 @@ class LoginTest {
     // then
     assertEquals(TOKEN_FIXTURE, result.accessToken());
     assertEquals(TOKEN_TYPE, result.tokenType());
-    assertEquals(ID_FIXTURE.toString(), result.userId());
+    assertEquals(UUID_FIXTURE.toString(), result.userId());
     verify(userDao).findByEmail(EMAIL_FIXTURE);
     verify(hashingService).matches(PASSWORD_FIXTURE, HASH_FIXTURE);
-    verify(accessTokenProvider).generateToken(ID_FIXTURE.toString());
+    verify(accessTokenProvider).generateToken(UUID_FIXTURE.toString());
   }
 
   @Test
@@ -79,7 +79,7 @@ class LoginTest {
   void loginWithInvalidPasswordThrowsException() {
     // given
     var command = new LoginCommand(EMAIL_FIXTURE, WRONG_PASSWORD_FIXTURE);
-    var user = aDefaultUser();
+    var user = aDaoUser();
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(user));
     when(hashingService.matches(WRONG_PASSWORD_FIXTURE, PASSWORD_FIXTURE)).thenReturn(false);
 

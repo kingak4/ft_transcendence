@@ -1,8 +1,8 @@
 package code.users.infrastructure.security;
 
 import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.UUID_FIXTURE;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -35,14 +35,14 @@ class CustomUserDetailsServiceTest {
   @Test
   void loadUserByUsernameReturnsUserDetailsWhenUserExists() {
     // given
-    var user = aDefaultUser();
+    var user = aDaoUser();
     when(userDao.findById(user.getId())).thenReturn(Optional.of(user));
 
     // when
-    var userDetails = userDetailsService.loadUserByUsername(ID_FIXTURE.toString());
+    var userDetails = userDetailsService.loadUserByUsername(UUID_FIXTURE.toString());
 
     // then
-    assertEquals(ID_FIXTURE.toString(), userDetails.getUsername());
+    assertEquals(UUID_FIXTURE.toString(), userDetails.getUsername());
     assertEquals(HASH_FIXTURE, userDetails.getPassword());
     verify(userDao).findById(user.getId());
   }
@@ -50,8 +50,8 @@ class CustomUserDetailsServiceTest {
   @Test
   void loadUserByUsernameThrowsWhenUserDoesNotExist() {
     // given
-    String idStr = ID_FIXTURE.toString();
-    var userId = code.users.domain.model.UserId.of(ID_FIXTURE);
+    String idStr = UUID_FIXTURE.toString();
+    var userId = code.users.domain.model.UserId.of(UUID_FIXTURE);
     when(userDao.findById(userId)).thenReturn(Optional.empty());
 
     // when

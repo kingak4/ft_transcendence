@@ -1,6 +1,6 @@
 package code.users.infrastructure.cache;
 
-import static code.users.domain.model.UserFixtures.SESSION_FIXTURE;
+import static code.users.domain.model.SessionFixtures.SESSION_FIXTURE;
 import static code.users.infrastructure.cache.PresenceRepository.sessionInfoKey;
 import static code.users.infrastructure.cache.PresenceRepository.sessionsKey;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,7 +1,7 @@
 package code.users.logic;
 
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -37,7 +37,7 @@ class UpdateAvatarTest {
   @Test
   void updatesAvatarSuccessfully() {
     // given
-    var user = aDefaultUser();
+    var user = aDaoUser();
     when(userDao.findById(USER_ID_FIXTURE)).thenReturn(Optional.of(user));
 
     var command = new UpdateAvatarCommand("test.png", new byte[] {1, 2, 3});

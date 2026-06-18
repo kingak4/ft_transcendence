@@ -1,7 +1,6 @@
 package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
-import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
 import static code.users.entrypoints.http.AvatarController.AVATAR_ENDPOINT;
 import static code.users.entrypoints.http.AvatarController.BASE_URL;
 import static code.users.entrypoints.http.AvatarController.UPDATE_AVATAR_ENDPOINT;
@@ -16,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import code.users.domain.model.Avatar;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
@@ -74,12 +74,12 @@ class AvatarControllerTest {
   void getAvatarSuccessfully() throws Exception {
     // given
     byte[] avatarBytes = "test avatar content".getBytes();
-    when(getProfileUseCase.getAvatar(AVATAR_ID_FIXTURE))
-        .thenReturn(new Avatar(AVATAR_ID_FIXTURE, avatarBytes));
+    when(getProfileUseCase.getAvatar(AvatarId.DEFAULT_AVATAR_ID))
+        .thenReturn(new Avatar(AvatarId.DEFAULT_AVATAR_ID, avatarBytes));
 
     // when & then
     mockMvc
-        .perform(get(buildUrl(BASE_URL, AVATAR_ENDPOINT, AVATAR_ID_FIXTURE.val().toString())))
+        .perform(get(buildUrl(BASE_URL, AVATAR_ENDPOINT, AvatarId.DEFAULT_AVATAR_ID.val().toString())))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.IMAGE_JPEG_VALUE))

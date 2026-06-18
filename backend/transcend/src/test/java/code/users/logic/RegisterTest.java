@@ -5,7 +5,7 @@ import static code.users.domain.model.UserFixtures.HASH_FIXTURE;
 import static code.users.domain.model.UserFixtures.INVALID_EMAIL_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
 import static code.users.domain.model.UserFixtures.WRONG_PASSWORD_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,7 +70,7 @@ class RegisterTest {
   void registerThrowsWhenEmailAlreadyExists() {
     // given
     var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var existingUser = aDefaultUser();
+    var existingUser = aDaoUser();
 
     when(hashingService.encode(PASSWORD_FIXTURE)).thenReturn(HASH_FIXTURE);
     when(userDao.findByEmail(EMAIL_FIXTURE)).thenReturn(Optional.of(existingUser));
