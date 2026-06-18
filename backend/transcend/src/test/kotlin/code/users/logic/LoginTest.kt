@@ -11,6 +11,7 @@ import code.users.ports.`in`.LoginUseCase
 import code.users.ports.`in`.LoginUseCase.LoginCommand
 import code.users.ports.out.AccessTokenProvider
 import code.users.ports.out.HashingService
+import code.users.ports.out.UserDao
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.mockito.BDDMockito.given
@@ -30,7 +31,6 @@ class LoginComponentTest (
   @MockitoBean private lateinit var accessTokenProvider: AccessTokenProvider
 
   init {
-
     Given("an existing user in the database") {
       val existingUser = aDaoUser()
       userDao.createUser(existingUser)

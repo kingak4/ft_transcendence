@@ -14,11 +14,15 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor
 
 @DataJpaTest
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = [DotEnvInitializer::class])
-@Import(DefaultAvatarInitializer::class, UserFixtureInitializer::class)
+@Import(
+  DefaultAvatarInitializer::class,
+  UserFixtureInitializer::class,
+  MethodValidationPostProcessor::class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
 class DaoTestSupport : BehaviorSpec() {

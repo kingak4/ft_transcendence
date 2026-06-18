@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 public class UserFixtureInitializer implements ApplicationRunner {
   private final RegisterUseCase registerUseCase;
 
-  public static final String EMAIL_FIXTURE = "user@email.com";
-  public static final String PASSWORD_FIXTURE = "plain-password";
+  private static final String EMAIL_FIXTURE = "user@email.com";
+  private static final String PASSWORD_FIXTURE = "plain-password";
 
   @Override
   public void run(ApplicationArguments args) {
