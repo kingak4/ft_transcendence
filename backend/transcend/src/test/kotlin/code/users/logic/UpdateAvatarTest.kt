@@ -1,25 +1,22 @@
 package code.users.logic
 
-import code.shared.config.DaoTestSupport
+import code.users.bootstrap.UserDaoTestSupport
 import code.users.domain.exceptions.UserNotFoundException
 import code.users.domain.model.UserFixtures.NON_EXISTENT_USER
 import code.users.domain.model.UserFixtures.USER_ID_FIXTURE
-import code.users.infrastructure.persistence.UserEntityMapperImpl
-import code.users.infrastructure.persistence.UserRepository
 import code.users.ports.`in`.UpdateAvatarUseCase
 import code.users.ports.`in`.UpdateAvatarUseCase.UpdateAvatarCommand
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
-import org.springframework.transaction.annotation.Transactional
 
 @Import(
   UpdateAvatar::class
 )
 class UpdateAvatarTest(
   private val service: UpdateAvatarUseCase
-) : DaoTestSupport() {
+) : UserDaoTestSupport() {
 
   init {
 

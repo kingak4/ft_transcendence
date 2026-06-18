@@ -1,23 +1,20 @@
 package code.users.logic
 
-import code.shared.config.DaoTestSupport
+import code.users.bootstrap.UserDaoTestSupport
 import code.users.domain.exceptions.UserNotFoundException
 import code.users.domain.model.UserFixtures.*
-import code.users.infrastructure.persistence.UserEntityMapperImpl
-import code.users.infrastructure.persistence.UserRepository
 import code.users.ports.`in`.UpdateDisplayNameUseCase
 import code.users.ports.`in`.UpdateDisplayNameUseCase.UpdateDisplayNameCommand
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
-import org.springframework.transaction.annotation.Transactional
 
 @Import(
   UpdateDisplayName::class
 )
 class UpdateDisplayNameTest(
   private val service: UpdateDisplayNameUseCase
-) : DaoTestSupport() {
+) : UserDaoTestSupport() {
 
   init {
 

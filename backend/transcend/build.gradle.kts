@@ -8,8 +8,8 @@ plugins {
    alias(libs.plugins.spring.management)
    alias(libs.plugins.formatter)
    alias(libs.plugins.asciidoctor)
-   kotlin("jvm") version "1.9.23"
-   kotlin("plugin.spring") version "1.9.23"
+   alias(libs.plugins.kotlin.jvm)
+   alias(libs.plugins.kotlin.spring)
 }
 
 group = "code"
@@ -62,10 +62,10 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
-   testImplementation(platform("io.kotest:kotest-bom:5.9.1"))
-   testImplementation("io.kotest:kotest-runner-junit5")
-   testImplementation("io.kotest:kotest-assertions-core")
-   testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
+   testImplementation(platform(libs.kotest.bom))
+   testImplementation(libs.kotest.runner.junit5)
+   testImplementation(libs.kotest.assertions.core)
+   testImplementation(libs.kotest.extensions.spring)
 }
 
 java {

@@ -1,8 +1,8 @@
-package code.shared.config
+package code.users.bootstrap
 
 import code.users.domain.model.FriendFixtures
 
-class FriendDaoTestSupport : DaoTestSupport() {
+class FriendDaoTestSupport : UserDaoTestSupport() {
 
   init {
     beforeSpec {

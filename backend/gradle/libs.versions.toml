@@ -44,6 +44,8 @@ embedded-redis = "0.6"
 bucket4j = "0.10.0"
 # Source https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter
 reddison = "3.52.0"
+kotest = "5.9.1"
+kotlin = "1.9.23"
 
 [libraries]
 
@@ -100,6 +102,12 @@ postgresql-testcontainers = { module = "org.testcontainers:postgresql" }
 sprint-modulith-test = { module = "org.springframework.modulith:spring-modulith-starter-test", version.ref = "spring-modulith" }
 asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", version.ref = "asciidoctorj-diagram" }
 
+# Kotest dependencies
+kotest-bom = { module = "io.kotest:kotest-bom", version.ref = "kotest" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-extensions-spring = { module = "io.kotest.extensions:kotest-extensions-spring", version.ref = "kotest" }
+
 [bundles]
 cache = ["spring-cache", "spring-redis", "bucket4j", "bucket4j-redisson"]
 structurizr = ["structurizr-core", "structurizr-export", "structurizr-client", "structurizr-analysis"]
@@ -113,3 +121,5 @@ asciidoctor = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-p
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot-plugin" }
 spring-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-plugin" }
 formatter = { id = "com.diffplug.spotless", version.ref = "formatter" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }

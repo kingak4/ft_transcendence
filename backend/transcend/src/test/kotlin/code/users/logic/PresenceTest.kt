@@ -1,6 +1,6 @@
 package code.users.logic
 
-import code.shared.config.RedisDaoTestSupport
+import code.shared.bootstrap.RedisDaoTestSupport
 import code.users.domain.model.SessionFixtures
 import code.users.domain.model.SessionFixtures.DEVICE_INFO_FIXTURE
 import code.users.domain.model.SessionFixtures.SESSION_ID_FIXTURE

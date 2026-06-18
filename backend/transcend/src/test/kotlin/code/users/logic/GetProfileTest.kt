@@ -1,6 +1,6 @@
 package code.users.logic
 
-import code.shared.config.DaoTestSupport
+import code.users.bootstrap.UserDaoTestSupport
 import code.users.domain.exceptions.UserNotFoundException
 import code.users.domain.model.AvatarId
 import code.users.domain.model.UserFixtures.*
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import
 )
 class GetProfileTest(
   private val service: GetProfileUseCase
-) : DaoTestSupport() {
+) : UserDaoTestSupport() {
 
   init {
 

@@ -1,6 +1,6 @@
 package code.users.logic
 
-import code.shared.config.DaoTestSupport
+import code.users.bootstrap.UserDaoTestSupport
 import code.users.domain.exceptions.EmailAlreadyRegisteredException
 import code.users.domain.model.UserFixtures.*
 import code.users.ports.`in`.RegisterUseCase
@@ -18,7 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 )
 class RegisterComponentTest(
   private val service: RegisterUseCase
-) : DaoTestSupport() {
+) : UserDaoTestSupport() {
 
   @MockitoBean
   private lateinit var hashingService: HashingService

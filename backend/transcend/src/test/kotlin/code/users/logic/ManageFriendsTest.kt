@@ -1,18 +1,14 @@
 package code.users.logic
 
-import code.shared.config.FriendDaoTestSupport
+import code.users.bootstrap.FriendDaoTestSupport
 import code.users.domain.exceptions.UserNotFoundException
-import code.users.domain.model.FriendFixtures
 import code.users.domain.model.FriendFixtures.*
 import code.users.domain.model.UserFixtures.USER_ID_FIXTURE
-import code.users.infrastructure.persistence.UserEntityMapperImpl
-import code.users.infrastructure.persistence.UserRepository
 import code.users.ports.`in`.ManageFriendsUseCase
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
-import org.springframework.transaction.annotation.Transactional
 
 @Import(
   ManageFriends::class

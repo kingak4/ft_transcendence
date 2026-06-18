@@ -1,7 +1,7 @@
 package code.users.logic
 
 import code.bootstrap.config.TokenConfig.TOKEN_TYPE
-import code.shared.config.DaoTestSupport
+import code.users.bootstrap.UserDaoTestSupport
 import code.users.domain.exceptions.InvalidCredentialsException
 import code.users.domain.model.AuthFixtures.TOKEN_FIXTURE
 import code.users.domain.model.UserFixtures.*
@@ -20,7 +20,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 )
 class LoginComponentTest (
   private val service: LoginUseCase
-) : DaoTestSupport() {
+) : UserDaoTestSupport() {
 
   @MockitoBean private lateinit var hashingService: HashingService
   @MockitoBean private lateinit var accessTokenProvider: AccessTokenProvider
