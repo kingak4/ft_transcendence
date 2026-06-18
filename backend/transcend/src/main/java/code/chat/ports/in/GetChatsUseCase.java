@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface GetChatsUseCase {
 
-  @PreAuthorize("hasRole('ADMIN') or @ownershipValidator.isSameUser(authentication, #userId)")
+  @PreAuthorize(
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #userId)")
   List<ChatId> getChatList(UserId userId, int page, int size);
 }

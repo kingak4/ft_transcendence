@@ -39,7 +39,7 @@ class UserStatusTest extends WebSocketTest {
     session = connectWithToken(stompClient, url, WebSocketFixtures.TOKEN_FIXTURE);
 
     await()
-        .atMost(TIMEOUT, SECONDS)
+        .atMost(TIMEOUT)
         .untilAsserted(
             () ->
                 verify(updatePresenceUseCase)
@@ -49,7 +49,7 @@ class UserStatusTest extends WebSocketTest {
     session = null;
 
     await()
-        .atMost(TIMEOUT, SECONDS)
+        .atMost(TIMEOUT)
         .untilAsserted(
             () ->
                 verify(updatePresenceUseCase)

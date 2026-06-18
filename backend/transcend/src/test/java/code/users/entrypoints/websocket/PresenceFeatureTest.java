@@ -44,8 +44,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
     })
 class PresenceFeatureTest extends WebSocketTest {
 
-  private static final Duration TIMEOUT = Duration.ofSeconds(10);
-
   @LocalServerPort private int port;
 
   @MockitoBean private ReadPresenceUseCase readPresenceUseCase;

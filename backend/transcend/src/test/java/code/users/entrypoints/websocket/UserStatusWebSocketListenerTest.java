@@ -47,7 +47,7 @@ class UserStatusWebSocketListenerTest {
 
     // Then
     await()
-        .atMost(TIMEOUT, SECONDS)
+        .atMost(TIMEOUT)
         .untilAsserted(
             () -> {
               verify(updatePresenceUseCase)
@@ -67,7 +67,7 @@ class UserStatusWebSocketListenerTest {
 
     // Then
     await()
-        .atMost(TIMEOUT, SECONDS)
+        .atMost(TIMEOUT)
         .untilAsserted(
             () -> {
               verify(updatePresenceUseCase)

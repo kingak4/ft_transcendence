@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component("chatValidator")
 @RequiredArgsConstructor
-public class ChatValidator {
+public class MembershipValidator {
 
   private final ChatDao dao;
 

@@ -29,8 +29,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
     classes = {WebSocketAutoConfig.class, ChatWebSocketController.class})
 class ChatWebSocketControllerTest extends WebSocketTest {
 
-  private static final Duration TIMEOUT = Duration.ofSeconds(10);
-
   @LocalServerPort private int port;
 
   @MockitoBean private ManageMessagesUseCase manageMessagesUseCase;

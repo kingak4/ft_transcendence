@@ -54,7 +54,7 @@ class PresenceWebSocketControllerTest extends WebSocketTest {
 
     // When & Then
     await()
-        .atMost(TIMEOUT, TimeUnit.SECONDS)
+        .atMost(TIMEOUT)
         .pollInterval(Duration.ofMillis(500))
         .untilAsserted(
             () -> {
