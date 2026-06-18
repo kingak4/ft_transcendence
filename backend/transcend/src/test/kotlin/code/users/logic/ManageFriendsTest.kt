@@ -15,11 +15,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 
 @Import(
-  UserRepository::class,
-  UserEntityMapperImpl::class,
   ManageFriends::class
 )
-@Transactional
 class ManageFriendsTest(
   private val service: ManageFriendsUseCase
 ) : FriendDaoTestSupport() {

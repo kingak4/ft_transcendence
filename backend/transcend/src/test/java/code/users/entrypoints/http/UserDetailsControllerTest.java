@@ -1,5 +1,17 @@
 package code.users.entrypoints.http;
 
+import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
+import static code.users.domain.model.UserFixtures.DISPLAY_NAME_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_UUID_FIXTURE;
+import static code.users.domain.model.UserFixtures.aDaoUser;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserFixtures;
@@ -10,6 +22,7 @@ import code.users.ports.in.GetProfileUseCase;
 import code.users.ports.in.UpdateAvatarUseCase;
 import code.users.ports.in.UpdateDisplayNameUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.UUID;
-
-import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
-import static code.users.domain.model.UserFixtures.DISPLAY_NAME_FIXTURE;
-import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.UUID_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDaoUser;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = UserDetailsController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -68,7 +67,7 @@ class UserDetailsControllerTest {
                 buildUrl(
                     UserDetailsController.BASE_URL,
                     UserDetailsController.DETAILS_ENDPOINT,
-                    UUID_FIXTURE)))
+                    USER_UUID_FIXTURE)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.displayName").value(DISPLAY_NAME_FIXTURE))
         .andExpect(jsonPath("$.avatarId").value(AvatarId.DEFAULT_AVATAR_ID.val().toString()));
@@ -77,8 +76,10 @@ class UserDetailsControllerTest {
   @Test
   void updateDisplayNameSuccessfully() throws Exception {
     // given
-    var request = new UserDetailsController.UpdateDisplayNameRequest(UserFixtures.DISPLAY_NAME_FIXTURE);
-    var command = new UpdateDisplayNameUseCase.UpdateDisplayNameCommand(UserFixtures.DISPLAY_NAME_FIXTURE);
+    var request =
+        new UserDetailsController.UpdateDisplayNameRequest(UserFixtures.DISPLAY_NAME_FIXTURE);
+    var command =
+        new UpdateDisplayNameUseCase.UpdateDisplayNameCommand(UserFixtures.DISPLAY_NAME_FIXTURE);
 
     when(mapper.toCommand(request)).thenReturn(command);
 

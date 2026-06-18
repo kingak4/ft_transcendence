@@ -4,6 +4,8 @@ import code.bootstrap.DotEnvInitializer
 import code.users.bootstrap.DefaultAvatarInitializer
 import code.users.bootstrap.UserFixtureInitializer
 import code.users.domain.model.UserFixtures.aDaoUser
+import code.users.infrastructure.persistence.UserEntityMapperImpl
+import code.users.infrastructure.persistence.UserRepository
 import code.users.ports.out.UserDao
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringExtension
@@ -20,9 +22,12 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = [DotEnvInitializer::class])
 @Import(
+  UserRepository::class,
+  UserEntityMapperImpl::class,
   DefaultAvatarInitializer::class,
   MethodValidationPostProcessor::class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class DaoTestSupport : BehaviorSpec() {
 
   @Autowired

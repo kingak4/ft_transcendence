@@ -15,11 +15,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 
 @Import(
-  UserRepository::class,
-  UserEntityMapperImpl::class,
   UpdateAvatar::class
 )
-@Transactional
 class UpdateAvatarTest(
   private val service: UpdateAvatarUseCase
 ) : DaoTestSupport() {
@@ -34,8 +31,8 @@ class UpdateAvatarTest(
         service.updateAvatar(USER_ID_FIXTURE, command)
 
         Then("it should successfully update the user's avatar in the database") {
-          val savedUser = userDao.findById(USER_ID_FIXTURE).orElseThrow()
-          val newAvatarId = savedUser.details.avatarId
+          val savedDetails = userDao.findUserDetailsById(USER_ID_FIXTURE).orElseThrow()
+          val newAvatarId = savedDetails.avatarId
 
           newAvatarId.shouldNotBeNull()
 

@@ -48,9 +48,8 @@ public class UserRepository implements UserDao {
   public void updateUser(User user) {
     UserIdEntity userIdEntity = mapper.map(user.getId());
 
-    UserEntity userEntity = userJpaRepository
-        .findById(userIdEntity)
-        .orElseThrow(EntityNotFoundException::new);
+    UserEntity userEntity =
+        userJpaRepository.findById(userIdEntity).orElseThrow(EntityNotFoundException::new);
 
     userEntity.setHash(user.getPassword());
 
@@ -64,11 +63,11 @@ public class UserRepository implements UserDao {
   public void updateDetails(UserId id, UserDetails newDetails) {
     UserIdEntity userIdEntity = mapper.map(id);
 
-    UserDetailsEntity details = userDetailsJpaRepository
-        .findById(userIdEntity)
-        .orElseGet(UserDetailsEntity::new);
+    UserDetailsEntity details =
+        userDetailsJpaRepository.findById(userIdEntity).orElseGet(UserDetailsEntity::new);
 
     details.setId(userIdEntity);
+    details.setAvatarId(mapper.map(newDetails.getAvatarId()));
     details.setDisplayName(newDetails.getDisplayName());
 
     userDetailsJpaRepository.save(details);
@@ -103,7 +102,8 @@ public class UserRepository implements UserDao {
 
   @Override
   public Optional<Avatar> findById(AvatarId avatarId) {
-    Optional<AvatarEntity> avatarEntity = avatarJpaRepository.findById(new AvatarIdEntity(avatarId.val())); // was avatarId.val()
+    Optional<AvatarEntity> avatarEntity =
+        avatarJpaRepository.findById(new AvatarIdEntity(avatarId.val())); // was avatarId.val()
     return avatarEntity.map(mapper::toDomain);
   }
 
@@ -124,9 +124,13 @@ public class UserRepository implements UserDao {
 
                   String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
                   UUID avatarId =
-                          detailsOpt
-                                  .map(d -> d.getAvatarId() != null ? d.getAvatarId().val() : AvatarId.DEFAULT_AVATAR_ID.val())
-                                  .orElse(AvatarId.DEFAULT_AVATAR_ID.val());
+                      detailsOpt
+                          .map(
+                              d ->
+                                  d.getAvatarId() != null
+                                      ? d.getAvatarId().val()
+                                      : AvatarId.DEFAULT_AVATAR_ID.val())
+                          .orElse(AvatarId.DEFAULT_AVATAR_ID.val());
 
                   return UserDetails.builder()
                       .displayName(displayName)

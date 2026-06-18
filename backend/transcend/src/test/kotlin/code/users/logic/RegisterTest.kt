@@ -3,8 +3,6 @@ package code.users.logic
 import code.shared.config.DaoTestSupport
 import code.users.domain.exceptions.EmailAlreadyRegisteredException
 import code.users.domain.model.UserFixtures.*
-import code.users.infrastructure.persistence.UserEntityMapperImpl
-import code.users.infrastructure.persistence.UserRepository
 import code.users.ports.`in`.RegisterUseCase
 import code.users.ports.out.HashingService
 import io.kotest.assertions.throwables.shouldThrow
@@ -14,14 +12,10 @@ import jakarta.validation.ConstraintViolationException
 import org.mockito.BDDMockito.given
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.bean.override.mockito.MockitoBean
-import org.springframework.transaction.annotation.Transactional
 
 @Import(
-  UserRepository::class,
-  UserEntityMapperImpl::class,
   Register::class
 )
-@Transactional
 class RegisterComponentTest(
   private val service: RegisterUseCase
 ) : DaoTestSupport() {

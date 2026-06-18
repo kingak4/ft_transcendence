@@ -79,7 +79,8 @@ class AvatarControllerTest {
 
     // when & then
     mockMvc
-        .perform(get(buildUrl(BASE_URL, AVATAR_ENDPOINT, AvatarId.DEFAULT_AVATAR_ID.val().toString())))
+        .perform(
+            get(buildUrl(BASE_URL, AVATAR_ENDPOINT, AvatarId.DEFAULT_AVATAR_ID.val().toString())))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.IMAGE_JPEG_VALUE))

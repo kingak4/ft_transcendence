@@ -1,13 +1,10 @@
 package code.users.domain.model;
 
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
 public class UserFixtures {
-  public static final UUID UUID_FIXTURE = UUID.randomUUID();
-  public static final UserId USER_ID_FIXTURE = UserId.of(UUID_FIXTURE);
+  public static final UUID USER_UUID_FIXTURE = UUID.randomUUID();
+  public static final UserId USER_ID_FIXTURE = UserId.of(USER_UUID_FIXTURE);
   public static final String EMAIL_FIXTURE = "kinga@42.fr";
   public static final String PASSWORD_FIXTURE = "password-fixture";
   public static final String HASH_FIXTURE = "hash-fixture";
@@ -28,19 +25,17 @@ public class UserFixtures {
   }
 
   public static UserDetails.UserDetailsBuilder aTestUserDetailsBuilder() {
-    return UserDetails.builder().displayName(DISPLAY_NAME_FIXTURE).avatarId(AvatarId.DEFAULT_AVATAR_ID);
+    return UserDetails.builder()
+        .displayName(DISPLAY_NAME_FIXTURE)
+        .avatarId(AvatarId.DEFAULT_AVATAR_ID);
   }
 
   public static User aSimpleUser() {
     UserDetails details = UserDetails.builder().displayName("").avatarId(null).build();
-    return aTestUserBuilder()
-        .details(details)
-        .build();
+    return aTestUserBuilder().details(details).build();
   }
 
   public static User aDaoUser() {
-    return aTestUserBuilder()
-        .details(aTestUserDetailsBuilder().build())
-        .build();
+    return aTestUserBuilder().details(aTestUserDetailsBuilder().build()).build();
   }
 }

@@ -2,7 +2,6 @@ package code.users.bootstrap;
 
 import code.users.domain.model.Avatar;
 import code.users.domain.model.AvatarId;
-import code.users.domain.model.UserDetails;
 import code.users.ports.out.UserDao;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;

@@ -29,11 +29,6 @@ public interface UserEntityMapper {
     return AvatarId.of(value);
   }
 
-  default UUID map(AvatarId value) {
-    if (value == null) return null;
-    return value.val();
-  }
-
   default AvatarId map(AvatarIdEntity entity) {
     return entity == null ? null : AvatarId.of(entity.val());
   }
@@ -47,6 +42,10 @@ public interface UserEntityMapper {
 
   default UserId map(UserIdEntity id) {
     return id == null ? null : UserId.of(id.val());
+  }
+
+  default AvatarIdEntity map(AvatarId id) {
+    return id == null ? null : new AvatarIdEntity(id.val());
   }
 
   default UserIdEntity map(UserId id) {

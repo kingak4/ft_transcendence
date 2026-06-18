@@ -34,5 +34,4 @@ public interface UserDao {
   boolean exists(FriendId friendId);
 
   Optional<UserDetails> findUserDetailsById(UserId id);
-
 }

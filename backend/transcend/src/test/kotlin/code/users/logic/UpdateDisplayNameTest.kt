@@ -13,11 +13,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 
 @Import(
-  UserRepository::class,
-  UserEntityMapperImpl::class,
   UpdateDisplayName::class
 )
-@Transactional
 class UpdateDisplayNameTest(
   private val service: UpdateDisplayNameUseCase
 ) : DaoTestSupport() {

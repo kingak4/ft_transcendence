@@ -1,6 +1,5 @@
 package code.users.domain.model;
 
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -9,7 +8,8 @@ import lombok.With;
 @Value
 @Builder
 public class UserDetails {
-  public static final String DEFAULT_DISPLAY_NAME = "User";;
+  public static final String DEFAULT_DISPLAY_NAME = "User";
+  ;
   String displayName;
   AvatarId avatarId;
 }
