@@ -38,7 +38,7 @@ public class WebSocketSecurityUtil {
 
     String username = userId.toString();
     UserDetails user =
-        User.withUsername(username).password(password).authorities(Role.USER.toString()).build();
+        User.withUsername(username).password(password).authorities(Role.USER.name()).build();
 
     lenient().when(jwtTokenService.extractUsername(token)).thenReturn(username);
     lenient().when(userDetailsService.loadUserByUsername(username)).thenReturn(user);
@@ -98,6 +98,6 @@ public class WebSocketSecurityUtil {
                 System.out.println("Received frame: " + headers.getDestination());
               }
             })
-        .get(TIMEOUT, TimeUnit.SECONDS);
+        .get(TIMEOUT.toSeconds(), TimeUnit.SECONDS);
   }
 }

@@ -8,6 +8,8 @@ plugins {
    alias(libs.plugins.spring.management)
    alias(libs.plugins.formatter)
    alias(libs.plugins.asciidoctor)
+   alias(libs.plugins.kotlin.jvm)
+   alias(libs.plugins.kotlin.spring)
 }
 
 group = "code"
@@ -60,6 +62,11 @@ dependencies {
    testImplementation(libs.junit.jupiter)
    testRuntimeOnly(libs.junit.platform)
    testImplementation(libs.bundles.spring.test)
+   testImplementation(platform(libs.kotest.bom))
+   testImplementation(libs.kotest.runner.junit5)
+   testImplementation(libs.kotest.assertions.core)
+   testImplementation(libs.kotest.extensions.spring)
+//   testImplementation("io.mockk:mockk:1.13.17")
 }
 
 java {

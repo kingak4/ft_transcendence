@@ -1,7 +1,6 @@
 package code.users.infrastructure.persistence;
 
 import jakarta.persistence.*;
-import java.util.UUID;
 import lombok.*;
 
 @Data

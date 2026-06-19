@@ -1,10 +1,8 @@
 package code.chat.entrypoints.http;
 
-import static code.chat.domain.model.ChatFixtures.CHAT_ID_FIXTURE;
-import static code.chat.domain.model.ChatFixtures.MESSAGE_ID_FIXTURE;
-import static code.chat.domain.model.ChatFixtures.USER_ID_1_FIXTURE;
-import static code.chat.domain.model.ChatFixtures.USER_ID_2_FIXTURE;
+import static code.chat.domain.model.ChatFixtures.CHAT_UUID_FIXTURE;
 import static code.chat.domain.model.ChatFixtures.aDefaultMessage;
+import static code.chat.domain.model.ChatUserFixtures.CHAT_USER_UUID_FIXTURE;
 import static code.chat.entrypoints.http.ChatController.BASE_URL;
 import static code.chat.entrypoints.http.ChatController.CHAT_MESSAGES_ENDPOINT;
 import static code.chat.entrypoints.http.ChatController.START_CHAT_ENDPOINT;
@@ -57,7 +55,7 @@ class ChatControllerTest {
 
     mockMvc
         .perform(
-            post(buildUrl(BASE_URL, START_CHAT_ENDPOINT, USER_ID_2_FIXTURE))
+            post(buildUrl(BASE_URL, START_CHAT_ENDPOINT, CHAT_USER_UUID_FIXTURE))
                 .principal(authentication()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.chatId").value(chatId.toString()));
@@ -65,12 +63,12 @@ class ChatControllerTest {
     verify(startChatUseCase)
         .startChat(
             new StartChatUseCase.StartChatCommand(
-                UserId.of(AUTH_USER_ID), UserId.of(USER_ID_2_FIXTURE)));
+                UserId.of(AUTH_USER_ID), UserId.of(CHAT_USER_UUID_FIXTURE)));
   }
 
   @Test
   void getChatsSuccessfully() throws Exception {
-    List<ChatId> chatIdFixture = List.of(ChatId.of(CHAT_ID_FIXTURE));
+    List<ChatId> chatIdFixture = List.of(ChatId.of(CHAT_UUID_FIXTURE));
     when(getChatsUseCase.getChatList(UserId.of(AUTH_USER_ID), 0, 10)).thenReturn(chatIdFixture);
 
     mockMvc
@@ -80,7 +78,7 @@ class ChatControllerTest {
                 .param("size", "10")
                 .principal(authentication()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].chatId").value(CHAT_ID_FIXTURE.toString()));
+        .andExpect(jsonPath("$[0].chatId").value(CHAT_UUID_FIXTURE.toString()));
 
     verify(getChatsUseCase).getChatList(UserId.of(AUTH_USER_ID), 0, 10);
   }
@@ -88,19 +86,20 @@ class ChatControllerTest {
   @Test
   void getChatMessagesSuccessfully() throws Exception {
     Message message = aDefaultMessage();
-    when(getChatMessagesUseCase.getChatMessages(ChatId.of(CHAT_ID_FIXTURE), 0, 10))
+    UUID messageId = message.getId().val();
+    when(getChatMessagesUseCase.getChatMessages(ChatId.of(CHAT_UUID_FIXTURE), 0, 10))
         .thenReturn(List.of(message));
 
     mockMvc
         .perform(
-            get(buildUrl(BASE_URL, CHAT_MESSAGES_ENDPOINT, CHAT_ID_FIXTURE))
+            get(buildUrl(BASE_URL, CHAT_MESSAGES_ENDPOINT, CHAT_UUID_FIXTURE))
                 .param("page", "0")
                 .param("size", "10"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].messageId").value(MESSAGE_ID_FIXTURE.toString()))
-        .andExpect(jsonPath("$[0].senderId").value(USER_ID_1_FIXTURE.toString()));
+        .andExpect(jsonPath("$[0].messageId").value(messageId.toString()))
+        .andExpect(jsonPath("$[0].senderId").value(CHAT_USER_UUID_FIXTURE.toString()));
 
-    verify(getChatMessagesUseCase).getChatMessages(ChatId.of(CHAT_ID_FIXTURE), 0, 10);
+    verify(getChatMessagesUseCase).getChatMessages(ChatId.of(CHAT_UUID_FIXTURE), 0, 10);
   }
 
   private UsernamePasswordAuthenticationToken authentication() {
