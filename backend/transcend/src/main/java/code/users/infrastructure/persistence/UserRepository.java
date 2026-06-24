@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 @RequiredArgsConstructor
 @Repository
@@ -109,34 +112,23 @@ public class UserRepository implements UserDao {
 
   @Override
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    UserEntity entity =
-        userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
-    return entity.getFriends().stream()
-        .skip((long) page * size)
-        .limit(size)
-        .collect(
-            Collectors.toMap(
-                FriendId::of,
-                friendUuid -> {
-                  UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
-                  Optional<UserDetailsEntity> detailsOpt =
-                      userDetailsJpaRepository.findById(friendIdEntity);
+    Pageable pageable = PageRequest.of(page, size);
 
-                  String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
-                  UUID avatarId =
-                      detailsOpt
-                          .map(
-                              d ->
-                                  d.getAvatarId() != null
-                                      ? d.getAvatarId().val()
-                                      : AvatarId.DEFAULT_AVATAR_ID.val())
-                          .orElse(AvatarId.DEFAULT_AVATAR_ID.val());
+    List<Object[]> rows = userDetailsJpaRepository
+            .findFriendDetailsByUserId(userId.val(), pageable);
 
-                  return UserDetails.builder()
-                      .displayName(displayName)
-                      .avatarId(AvatarId.of(avatarId))
+    return rows.stream().collect(Collectors.toMap(
+            row -> FriendId.of((UUID) row[0]),
+            row -> {
+              Object[] r = (Object[]) row;  // explicit cast
+              return UserDetails.builder()
+                      .displayName(r[1] != null ? (String) r[1] : "")
+                      .avatarId(r[2] != null
+                              ? AvatarId.of((UUID) r[2])
+                              : AvatarId.DEFAULT_AVATAR_ID)
                       .build();
-                }));
+            }
+    ));
   }
 
   @Override
