@@ -1,6 +1,7 @@
 package code.chat.entrypoints.websocket;
 
 import static code.chat.entrypoints.websocket.ChatWebSocketConfig.chatMessagesTopic;
+import static code.chat.ports.in.ManageMessagesUseCase.SendMessageResponse;
 
 import code.chat.domain.model.ChatId;
 import code.chat.domain.model.MessageId;
@@ -10,6 +11,7 @@ import code.chat.ports.in.ManageMessagesUseCase.DeleteMessageCommand;
 import code.chat.ports.in.ManageMessagesUseCase.SendMessageCommand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +47,15 @@ public class ChatWebSocketController {
 
     var command = new SendMessageCommand(sender, chat, request.content());
 
-    manageMessagesUseCase.sendMessage(command);
+    SendMessageResponse response = manageMessagesUseCase.sendMessage(command);
     messagingTemplate.convertAndSend(
         chatMessagesTopic(chat.val()),
-        new ChatMessageResponse(chat.val(), sender.val(), request.content()));
+        new ChatMessageResponse(
+            chat.val(),
+            sender.val(),
+            response.id().val(),
+            request.content(),
+            response.createdAt()));
   }
 
   @MessageMapping(MESSAGE_DELETE)
@@ -77,5 +84,6 @@ public class ChatWebSocketController {
   public record DeleteMessageRequest() {}
 
   @Schema(description = "Response containing a message sent in a chat")
-  public record ChatMessageResponse(UUID chatId, UUID senderId, String content) {}
+  public record ChatMessageResponse(
+      UUID chatId, UUID senderId, UUID messageId, String content, OffsetDateTime time) {}
 }
