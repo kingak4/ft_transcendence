@@ -1,0 +1,54 @@
+{
+  "name": "ft_transcendence",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "enableNonRootDocker": "true"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+
+  "workspaceFolder": "/workspaces/ft_transcendence",
+
+  "mounts": [
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume",
+    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude-host,type=bind,readonly"
+  ],
+
+  "postCreateCommand": "bash -lc 'sudo chown -R vscode:vscode /workspaces/ft_transcendence /home/vscode/.claude && cp /home/vscode/.claude-host/CLAUDE.md /home/vscode/.claude/ 2>/dev/null; cp /home/vscode/.claude-host/settings.json /home/vscode/.claude/ 2>/dev/null; cp -rn /home/vscode/.claude-host/plugins /home/vscode/.claude/ 2>/dev/null; bash .devcontainer/setup.sh'",
+
+  "postStartCommand": "bash -lc 'sudo chown -R vscode:vscode /workspaces/ft_transcendence /home/vscode/.claude && cp /home/vscode/.claude-host/CLAUDE.md /home/vscode/.claude/ 2>/dev/null; cp /home/vscode/.claude-host/settings.json /home/vscode/.claude/ 2>/dev/null; cp -rn /home/vscode/.claude-host/plugins /home/vscode/.claude/ 2>/dev/null'",
+
+  "containerEnv": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+
+  "forwardPorts": [3000, 5001, 8443, 5432, 6380],
+  "portsAttributes": {
+    "3000": { "label": "Frontend (HTTP)" },
+    "5001": { "label": "Backend API / Swagger" },
+    "8443": { "label": "nginx HTTPS entry point" },
+    "5432": { "label": "PostgreSQL" },
+    "6380": { "label": "Redis" }
+  },
+
+  "runArgs": ["--network=host"],
+
+  "remoteUser": "vscode",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  }
+}
