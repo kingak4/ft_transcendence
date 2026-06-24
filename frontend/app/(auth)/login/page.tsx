@@ -18,7 +18,7 @@ export default function LoginPage() {
       }
       return;
     }
-    window.location.href = '/home';
+    window.location.href = `/${response.message}`;
   }
 
   return (

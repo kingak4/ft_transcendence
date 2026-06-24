@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 
 import { client } from '../../lib/api-clients';
+import { logout } from '../../lib/logout';
 
 interface Props {
   params: Promise<{ userId: string }>;
@@ -38,12 +39,20 @@ export default async function UserProfilePage({ params }: Props) {
             <h1 className="mb-4 text-3xl font-bold text-brand-reversed-main-color">
               {displayName}
             </h1>
+            <form action={logout}>
+              <button
+                type="submit"
+                className="rounded-lg bg-brand-reversed-main-color px-4 py-2 text-sm font-bold text-brand-main-color transition-colors hover:brightness-90"
+              >
+                Log Out
+              </button>
+            </form>
           </div>
 
           <div className="relative shrink-0">
-            {data.avatarUrl ? (
+            {data.avatarId ? (
               <img
-                src={data.avatarUrl}
+                src={`/api/users/avatar/${data.avatarId}`}
                 alt={`${displayName}'s avatar`}
                 className="h-24 w-24 rounded-full object-cover"
               />

@@ -29,7 +29,7 @@ export default function RegisterPage() {
       return;
     }
     alert(`Successfully registered!\n${response.message}`);
-    window.location.href = '/home';
+    window.location.href = '/login';
   }
 
   return (
