@@ -1,7 +1,6 @@
 package code.users.ports.in;
 
 import java.util.UUID;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface UpdatePresenceUseCase {
   void setUserOnline(SetUserOnlineCommand command);

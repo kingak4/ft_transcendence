@@ -56,7 +56,7 @@ class BffAuthenticationTest extends WebSocketTest {
         stompClient.connectAsync(
             wsUrl, handshakeHeaders, stompHeaders, new StompSessionHandlerAdapter() {});
 
-    await().atMost(TIMEOUT, SECONDS).until(completableFuture::isDone);
+    await().atMost(TIMEOUT).until(completableFuture::isDone);
     session = completableFuture.get();
 
     assertThat(session.isConnected()).isTrue();
@@ -73,7 +73,7 @@ class BffAuthenticationTest extends WebSocketTest {
         stompClient.connectAsync(
             wsUrl, handshakeHeaders, stompHeaders, new StompSessionHandlerAdapter() {});
 
-    await().atMost(TIMEOUT, SECONDS).until(completableFuture::isDone);
+    await().atMost(TIMEOUT).until(completableFuture::isDone);
     session = completableFuture.get();
 
     assertThat(session.isConnected()).isTrue();
@@ -90,7 +90,7 @@ class BffAuthenticationTest extends WebSocketTest {
               stompClient
                   .connectAsync(
                       wsUrl, handshakeHeaders, stompHeaders, new StompSessionHandlerAdapter() {})
-                  .get(TIMEOUT, SECONDS);
+                  .get(TIMEOUT.toSeconds(), SECONDS);
             })
         .describedAs("Connection should be refused or timeout due to lack of auth");
   }

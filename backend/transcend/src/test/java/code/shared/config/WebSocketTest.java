@@ -8,6 +8,7 @@ import code.users.bootstrap.DefaultAvatarInitializer;
 import code.users.infrastructure.persistence.UserJpaRepository;
 import code.users.infrastructure.security.JwtTokenService;
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 public class WebSocketTest extends EmbeddedRedisTestSupport {
 
   protected WebSocketStompClient stompClient;
-  public static final int TIMEOUT = 20;
+  public static final Duration TIMEOUT = Duration.ofSeconds(20);
   protected StompSession session;
 
   @MockitoBean private JwtTokenService jwtTokenService;
