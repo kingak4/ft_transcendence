@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   return (
     <aside className="flex h-screen w-44 shrink-0 flex-col bg-white px-3 py-6 shadow-sm">
-      <span className="mb-8 px-3 text-xl font-bold italic">Grindin&apos;</span>
+      <span className="mb-8 px-3 text-xl font-bold italic">42Hub</span>
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;

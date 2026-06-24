@@ -6,7 +6,7 @@ export default function LandingPage() {
   return (
     <div className="relative flex min-h-screen bg-gradient-start-page">
       <span className="absolute left-6 top-6 text-xl font-bold italic text-brand-main-color">
-        Grindin&apos;
+        42Hub
       </span>
 
       <div className="flex flex-1 items-center justify-between gap-16 px-20 py-24">
@@ -18,7 +18,7 @@ export default function LandingPage() {
           </h1>
           <p className="mb-10 text-sm leading-relaxed text-brand-main-color">
             Turn your daily grind into a journey of mastery.<br />
-            <span className="text-brand-secondary-color">Grindin&apos;</span>{' '}
+            <span className="text-brand-secondary-color">42Hub</span>{' '}
             is a tool designed for high-achievers who want to
             bridge the gap between &quot;getting things done&quot; and &quot;getting better&quot;.
           </p>
