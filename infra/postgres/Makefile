@@ -27,6 +27,6 @@ tables:
 	${DOCKER} exec -it postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c "\dt dev.*"
 
 users_table:
-	${DOCKER} exec -i postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c "SELECT * FROM dev.users;" > users_table.txt
+	${DOCKER} exec -i postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c "SELECT * FROM dev.users; SELECT * FROM dev.user_details; SELECT * FROM dev.user_friends;" > users_table.txt
 
 

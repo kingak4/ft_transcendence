@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import { client } from '../../lib/api-clients';
 import { logout } from '../../lib/logout';
+import FirstLoginSetup from './FirstLoginSetup';
 
 interface Props {
   params: Promise<{ userId: string }>;
@@ -29,10 +30,16 @@ export default async function UserProfilePage({ params }: Props) {
 
   const displayName = data.displayName ?? 'Unknown User';
 
+  const isFirstLogin =
+    data.displayName === 'User' &&
+    data.avatarId === '00000000-0000-0000-0000-000000000000';
+
   return (
-    <div className="flex gap-6">
-      {/* Main column */}
-      <div className="flex min-w-0 flex-1 flex-col gap-6">
+    <>
+      {isFirstLogin && <FirstLoginSetup />}
+      <div className="flex gap-6">
+        {/* Main column */}
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
         {/* Profile banner */}
         <div className="flex items-start justify-between rounded-2xl bg-brand-secondary-color p-6">
           <div>
@@ -100,5 +107,6 @@ export default async function UserProfilePage({ params }: Props) {
         <p className="text-sm text-brand-reversed-main-color/40">Friends list coming soon</p>
       </aside>
     </div>
+    </>
   );
 }
