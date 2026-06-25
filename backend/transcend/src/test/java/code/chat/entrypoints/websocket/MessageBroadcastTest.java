@@ -73,11 +73,11 @@ class MessageBroadcastTest extends WebSocketTest {
         .thenReturn(
             new ManageMessagesUseCase.SendMessageResponse(expectedId, OffsetDateTime.now()));
 
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> observerOneEvents =
+    BlockingQueue<ChatWebSocketController.SendMessageResponse> observerOneEvents =
         subscribe(observerOne, topic);
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> observerTwoEvents =
+    BlockingQueue<ChatWebSocketController.SendMessageResponse> observerTwoEvents =
         subscribe(observerTwo, topic);
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> senderEvents =
+    BlockingQueue<ChatWebSocketController.SendMessageResponse> senderEvents =
         subscribe(sender, topic);
 
     sendMessage(sender, chatId, messageContent);
@@ -120,21 +120,21 @@ class MessageBroadcastTest extends WebSocketTest {
         new ChatWebSocketController.SendMessageRequest(content));
   }
 
-  private BlockingQueue<ChatWebSocketController.ChatMessageResponse> subscribe(
+  private BlockingQueue<ChatWebSocketController.SendMessageResponse> subscribe(
       StompSession session, String destination) {
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> queue = new LinkedBlockingQueue<>();
+    BlockingQueue<ChatWebSocketController.SendMessageResponse> queue = new LinkedBlockingQueue<>();
     session.subscribe(
         destination,
         new StompFrameHandler() {
           @Override
           public Type getPayloadType(StompHeaders headers) {
-            return ChatWebSocketController.ChatMessageResponse.class;
+            return ChatWebSocketController.SendMessageResponse.class;
           }
 
           @Override
           public void handleFrame(StompHeaders headers, Object payload) {
             log.info("Received message: {}", payload);
-            queue.add((ChatWebSocketController.ChatMessageResponse) payload);
+            queue.add((ChatWebSocketController.SendMessageResponse) payload);
           }
         });
     return queue;
