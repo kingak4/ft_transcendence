@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 
 import code.chat.domain.model.ChatFixtures;
 import code.chat.domain.model.MessageId;
+import code.chat.entrypoints.websocket.ChatEventListener.SendMessageEventResponse;
 import code.chat.ports.in.ManageMessagesUseCase;
 import code.shared.config.WebSocketAutoConfig;
 import code.shared.config.WebSocketTest;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -37,7 +39,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketAutoConfig.class, ChatWebSocketController.class})
+    classes = {WebSocketAutoConfig.class, ChatWebSocketController.class, ChatEventListener.class})
 @Slf4j
 class MessageBroadcastTest extends WebSocketTest {
 
@@ -73,12 +75,9 @@ class MessageBroadcastTest extends WebSocketTest {
         .thenReturn(
             new ManageMessagesUseCase.SendMessageResponse(expectedId, OffsetDateTime.now()));
 
-    BlockingQueue<ChatWebSocketController.SendMessageResponse> observerOneEvents =
-        subscribe(observerOne, topic);
-    BlockingQueue<ChatWebSocketController.SendMessageResponse> observerTwoEvents =
-        subscribe(observerTwo, topic);
-    BlockingQueue<ChatWebSocketController.SendMessageResponse> senderEvents =
-        subscribe(sender, topic);
+    BlockingQueue<SendMessageEventResponse> observerOneEvents = subscribe(observerOne, topic);
+    BlockingQueue<SendMessageEventResponse> observerTwoEvents = subscribe(observerTwo, topic);
+    BlockingQueue<SendMessageEventResponse> senderEvents = subscribe(sender, topic);
 
     sendMessage(sender, chatId, messageContent);
 
@@ -120,21 +119,21 @@ class MessageBroadcastTest extends WebSocketTest {
         new ChatWebSocketController.SendMessageRequest(content));
   }
 
-  private BlockingQueue<ChatWebSocketController.SendMessageResponse> subscribe(
+  private BlockingQueue<SendMessageEventResponse> subscribe(
       StompSession session, String destination) {
-    BlockingQueue<ChatWebSocketController.SendMessageResponse> queue = new LinkedBlockingQueue<>();
+    BlockingQueue<SendMessageEventResponse> queue = new LinkedBlockingQueue<>();
     session.subscribe(
         destination,
         new StompFrameHandler() {
           @Override
-          public Type getPayloadType(StompHeaders headers) {
-            return ChatWebSocketController.SendMessageResponse.class;
+          public @NonNull Type getPayloadType(@NonNull StompHeaders headers) {
+            return SendMessageEventResponse.class;
           }
 
           @Override
-          public void handleFrame(StompHeaders headers, Object payload) {
+          public void handleFrame(@NonNull StompHeaders headers, Object payload) {
             log.info("Received message: {}", payload);
-            queue.add((ChatWebSocketController.SendMessageResponse) payload);
+            queue.add((SendMessageEventResponse) payload);
           }
         });
     return queue;
