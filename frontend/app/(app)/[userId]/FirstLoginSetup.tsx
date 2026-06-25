@@ -62,9 +62,11 @@ export default function FirstLoginSetup() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-96 rounded-2xl bg-brand-reversed-main-color p-8 shadow-xl">
-        <h2 className="mb-1 text-2xl font-bold text-brand-main-color">Welcome!</h2>
-        <p className="mb-6 text-sm text-brand-main-color/60">
+      <div className="bg-brand-reversed-main-color w-96 rounded-2xl p-8 shadow-xl">
+        <h2 className="text-brand-main-color mb-1 text-2xl font-bold">
+          Welcome!
+        </h2>
+        <p className="text-brand-main-color/60 mb-6 text-sm">
           Set up your profile before continuing.
         </p>
 
@@ -87,12 +89,14 @@ export default function FirstLoginSetup() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="flex h-full w-full items-center justify-center text-xs text-brand-main-color/40">
+                <span className="text-brand-main-color/40 flex h-full w-full items-center justify-center text-xs">
                   Add photo
                 </span>
               )}
             </button>
-            <p className="text-xs text-brand-main-color/40">Avatar (optional)</p>
+            <p className="text-brand-main-color/40 text-xs">
+              Avatar (optional)
+            </p>
             <input
               ref={fileInputRef}
               type="file"
@@ -104,7 +108,7 @@ export default function FirstLoginSetup() {
 
           {/* Display name */}
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-brand-main-color">
+            <label className="text-brand-main-color mb-1.5 block text-sm font-medium">
               Display name <span className="text-red-400">*</span>
             </label>
             <input
@@ -112,7 +116,7 @@ export default function FirstLoginSetup() {
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="Choose a display name"
-              className="w-full rounded-lg bg-white/10 px-4 py-3 text-sm text-brand-main-color outline-none placeholder:text-brand-main-color/40 focus:ring-1 focus:ring-brand-secondary-color"
+              className="text-brand-main-color placeholder:text-brand-main-color/40 focus:ring-brand-secondary-color w-full rounded-lg bg-white/10 px-4 py-3 text-sm outline-none focus:ring-1"
               autoFocus
               maxLength={32}
             />
@@ -123,7 +127,7 @@ export default function FirstLoginSetup() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-lg bg-brand-secondary-color py-3 text-sm font-bold text-brand-additional-color-2 transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-brand-secondary-color text-brand-additional-color-2 rounded-lg py-3 text-sm font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSubmitting ? 'Saving…' : 'Save profile'}
           </button>

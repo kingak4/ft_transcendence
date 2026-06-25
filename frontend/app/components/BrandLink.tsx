@@ -6,7 +6,10 @@ interface Props {
 
 export default function BrandLink({ className }: Props) {
   return (
-    <Link href="/" className={`text-3xl font-bold italic ${className ?? ''}`}>
+    <Link
+      href="/"
+      className={`text-3xl font-bold italic${className ? ` ${className}` : ''}`}
+    >
       42Hub
     </Link>
   );

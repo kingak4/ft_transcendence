@@ -85,7 +85,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
         )}
         <button
           onClick={handleOpen}
-          className="absolute bottom-0 right-0 rounded-full bg-white p-1.5 text-xs shadow transition-colors hover:bg-brand-main-color"
+          className="hover:bg-brand-main-color absolute bottom-0 right-0 rounded-full bg-white p-1.5 text-xs shadow transition-colors"
         >
           Edit
         </button>
@@ -94,9 +94,11 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-96 rounded-2xl bg-brand-reversed-main-color p-8 shadow-xl">
-            <h2 className="mb-1 text-2xl font-bold text-brand-main-color">Change avatar</h2>
-            <p className="mb-6 text-sm text-brand-main-color/60">
+          <div className="bg-brand-reversed-main-color w-96 rounded-2xl p-8 shadow-xl">
+            <h2 className="text-brand-main-color mb-1 text-2xl font-bold">
+              Change avatar
+            </h2>
+            <p className="text-brand-main-color/60 mb-6 text-sm">
               Pick a new photo for your profile.
             </p>
 
@@ -126,12 +128,14 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="flex h-full w-full items-center justify-center text-xs text-brand-main-color/40">
+                    <span className="text-brand-main-color/40 flex h-full w-full items-center justify-center text-xs">
                       Add photo
                     </span>
                   )}
                 </button>
-                <p className="text-xs text-brand-main-color/40">Click to choose a photo</p>
+                <p className="text-brand-main-color/40 text-xs">
+                  Click to choose a photo
+                </p>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -147,14 +151,14 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="flex-1 rounded-lg bg-white/10 py-3 text-sm font-medium text-brand-main-color/70 transition-colors hover:bg-white/20"
+                  className="text-brand-main-color/70 flex-1 rounded-lg bg-white/10 py-3 text-sm font-medium transition-colors hover:bg-white/20"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 rounded-lg bg-brand-secondary-color py-3 text-sm font-bold text-brand-additional-color-2 transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="bg-brand-secondary-color text-brand-additional-color-2 flex-1 rounded-lg py-3 text-sm font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving…' : 'Save'}
                 </button>

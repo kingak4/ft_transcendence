@@ -33,10 +33,14 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-register-page">
-      <div className="w-80 rounded-2xl bg-brand-reversed-main-color p-8">
-        <h1 className="mb-1 text-2xl font-bold text-brand-main-color">Register</h1>
-        <p className="mb-6 text-sm text-brand-main-color/60">Nice to meet you!</p>
+    <div className="bg-gradient-register-page flex min-h-screen items-center justify-center">
+      <div className="bg-brand-reversed-main-color w-80 rounded-2xl p-8">
+        <h1 className="text-brand-main-color mb-1 text-2xl font-bold">
+          Register
+        </h1>
+        <p className="text-brand-main-color/60 mb-6 text-sm">
+          Nice to meet you!
+        </p>
 
         <input
           id="user-name"
@@ -44,7 +48,7 @@ export default function RegisterPage() {
           value={nameValue}
           onChange={(e) => setName(e.target.value)}
           placeholder="Username"
-          className="mb-3 w-full rounded-lg bg-white/10 px-4 py-3 text-sm text-brand-main-color outline-none placeholder:text-brand-main-color/40 focus:ring-1 focus:ring-brand-accent-color"
+          className="text-brand-main-color placeholder:text-brand-main-color/40 focus:ring-brand-accent-color mb-3 w-full rounded-lg bg-white/10 px-4 py-3 text-sm outline-none focus:ring-1"
         />
 
         <input
@@ -53,7 +57,7 @@ export default function RegisterPage() {
           value={passwordValue}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="mb-3 w-full rounded-lg bg-white/10 px-4 py-3 text-sm text-brand-main-color outline-none placeholder:text-brand-main-color/40 focus:ring-1 focus:ring-brand-accent-color"
+          className="text-brand-main-color placeholder:text-brand-main-color/40 focus:ring-brand-accent-color mb-3 w-full rounded-lg bg-white/10 px-4 py-3 text-sm outline-none focus:ring-1"
         />
 
         <input
@@ -62,7 +66,7 @@ export default function RegisterPage() {
           value={confirmPasswordValue}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm password"
-          className="mb-5 w-full rounded-lg bg-white/10 px-4 py-3 text-sm text-brand-main-color outline-none placeholder:text-brand-main-color/40 focus:ring-1 focus:ring-brand-accent-color"
+          className="text-brand-main-color placeholder:text-brand-main-color/40 focus:ring-brand-accent-color mb-5 w-full rounded-lg bg-white/10 px-4 py-3 text-sm outline-none focus:ring-1"
         />
 
         <label className="mb-6 flex cursor-pointer items-start gap-2">
@@ -70,20 +74,20 @@ export default function RegisterPage() {
             type="checkbox"
             checked={agreedToTerms}
             onChange={(e) => setAgreedToTerms(e.target.checked)}
-            className="mt-0.5 accent-brand-accent-color"
+            className="accent-brand-accent-color mt-0.5"
           />
-          <span className="text-xs text-brand-main-color/60">
+          <span className="text-brand-main-color/60 text-xs">
             I agree to the{' '}
             <Link
               href="/terms-of-service"
-              className="text-brand-main-color/80 underline transition-colors hover:text-brand-main-color"
+              className="text-brand-main-color/80 hover:text-brand-main-color underline transition-colors"
             >
               Terms of Service
             </Link>{' '}
             and{' '}
             <Link
               href="/privacy-policy"
-              className="text-brand-main-color/80 underline transition-colors hover:text-brand-main-color"
+              className="text-brand-main-color/80 hover:text-brand-main-color underline transition-colors"
             >
               Privacy Policy
             </Link>
@@ -92,16 +96,16 @@ export default function RegisterPage() {
 
         <button
           onClick={handleRegister}
-          className="mb-4 w-full rounded-lg bg-brand-accent-color py-3 text-sm font-bold text-brand-reversed-main-color transition-colors hover:brightness-110"
+          className="bg-brand-accent-color text-brand-reversed-main-color mb-4 w-full rounded-lg py-3 text-sm font-bold transition-colors hover:brightness-110"
         >
           Register
         </button>
 
-        <p className="text-center text-xs text-brand-main-color/50">
+        <p className="text-brand-main-color/50 text-center text-xs">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="font-bold text-brand-additional-color transition-colors hover:text-brand-secondary-color"
+            className="text-brand-additional-color hover:text-brand-secondary-color font-bold transition-colors"
           >
             Login
           </Link>

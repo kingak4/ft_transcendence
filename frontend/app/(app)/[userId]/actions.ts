@@ -4,16 +4,23 @@ import { client } from '../../lib/api-clients';
 
 type ActionResult = { success: true } | { success: false; message: string };
 
-export async function updateDisplayNameAction(displayName: string): Promise<ActionResult> {
+export async function updateDisplayNameAction(
+  displayName: string,
+): Promise<ActionResult> {
   const { response } = await client.PATCH('/users/display-name', {
     body: { displayName },
   });
 
   if (response.ok) return { success: true };
-  return { success: false, message: 'Failed to update display name. Try a different one.' };
+  return {
+    success: false,
+    message: 'Failed to update display name. Try a different one.',
+  };
 }
 
-export async function uploadAvatarAction(formData: FormData): Promise<ActionResult> {
+export async function uploadAvatarAction(
+  formData: FormData,
+): Promise<ActionResult> {
   const { cookies } = await import('next/headers');
   const cookieStore = await cookies();
   const token = cookieStore.get('auth_token')?.value;

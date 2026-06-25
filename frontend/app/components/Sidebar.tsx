@@ -20,7 +20,7 @@ export default function Sidebar({ userId }: Props) {
 
   return (
     <aside className="flex h-screen w-52 shrink-0 flex-col bg-white px-3 py-6 shadow-sm">
-      <BrandLink className="mb-3 px-3 text-brand-reversed-main-color" />
+      <BrandLink className="text-brand-reversed-main-color mb-3 px-3" />
 
       {userId && (
         <Link
