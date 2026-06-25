@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -72,9 +73,11 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
       {/* Avatar display + edit trigger */}
       <div className="relative shrink-0">
         {currentSrc ? (
-          <img
+          <Image
             src={currentSrc}
             alt={`${displayName}'s avatar`}
+            width={96}
+            height={96}
             className="h-24 w-24 rounded-full object-cover"
           />
         ) : (
@@ -106,15 +109,20 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                   title="Click to choose a photo"
                 >
                   {avatarPreview ? (
-                    <img
+                    <Image
                       src={avatarPreview}
                       alt="Preview"
+                      width={96}
+                      height={96}
+                      unoptimized
                       className="h-full w-full object-cover"
                     />
                   ) : currentSrc ? (
-                    <img
+                    <Image
                       src={currentSrc}
                       alt="Current avatar"
+                      width={96}
+                      height={96}
                       className="h-full w-full object-cover"
                     />
                   ) : (

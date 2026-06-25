@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -77,9 +78,12 @@ export default function FirstLoginSetup() {
               title="Click to choose an avatar photo"
             >
               {avatarPreview ? (
-                <img
+                <Image
                   src={avatarPreview}
                   alt="Avatar preview"
+                  width={96}
+                  height={96}
+                  unoptimized
                   className="h-full w-full object-cover"
                 />
               ) : (
