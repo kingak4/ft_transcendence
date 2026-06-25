@@ -38,10 +38,20 @@ export async function login(
     const cookieStore = await cookies();
     cookieStore.set('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use HTTPS in prod
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
     });
+
+    if (id) {
+      cookieStore.set('user_id', id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+      });
+    }
+
     return { success: true, status: 200, message: id };
   } catch (error: unknown) {
     console.error('Network or Unexpected Error:', error);

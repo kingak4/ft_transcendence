@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import { client } from '../../lib/api-clients';
 import { logout } from '../../lib/logout';
+import EditAvatarButton from './EditAvatarButton';
 import FirstLoginSetup from './FirstLoginSetup';
 
 interface Props {
@@ -56,20 +57,7 @@ export default async function UserProfilePage({ params }: Props) {
             </form>
           </div>
 
-          <div className="relative shrink-0">
-            {data.avatarId ? (
-              <img
-                src={`/api/users/avatar/${data.avatarId}`}
-                alt={`${displayName}'s avatar`}
-                className="h-24 w-24 rounded-full object-cover"
-              />
-            ) : (
-              <div className="h-24 w-24 rounded-full bg-blue-200" />
-            )}
-            <button className="absolute bottom-0 right-0 rounded-full bg-white p-1.5 text-xs shadow transition-colors hover:bg-brand-main-color">
-              Edit
-            </button>
-          </div>
+          <EditAvatarButton avatarId={data.avatarId} displayName={displayName} />
         </div>
 
         {/* Statistics */}

@@ -3,20 +3,38 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import BrandLink from './BrandLink';
+
 const navItems = [
-  { label: 'Home', href: '/home' },
-  { label: 'Planner', href: '/planner' },
-  { label: 'Dashboard', href: '/dashboard' },
-  { label: 'User', href: '/user' },
-  { label: 'Settings', href: '/settings' },
+  { label: 'Terms of service', href: '/terms-of-service' },
+  { label: 'Privacy policy', href: '/privacy-policy' },
+  { label: 'Dev: STOMP WebSocket Test', href: '/home' },
 ];
 
-export default function Sidebar() {
+interface Props {
+  userId: string | null;
+}
+
+export default function Sidebar({ userId }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-44 shrink-0 flex-col bg-white px-3 py-6 shadow-sm">
-      <span className="mb-8 px-3 text-xl font-bold italic">42Hub</span>
+    <aside className="flex h-screen w-52 shrink-0 flex-col bg-white px-3 py-6 shadow-sm">
+      <BrandLink className="mb-3 px-3 text-brand-reversed-main-color" />
+
+      {userId && (
+        <Link
+          href={`/${userId}`}
+          className={`mb-6 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            pathname === `/${userId}`
+              ? 'bg-brand-secondary-color text-brand-reversed-main-color'
+              : 'text-brand-reversed-main-color hover:bg-brand-main-color'
+          }`}
+        >
+          My Profile
+        </Link>
+      )}
+
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
