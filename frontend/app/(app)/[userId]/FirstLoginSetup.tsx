@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { updateDisplayNameAction, uploadAvatarAction } from './actions';
@@ -9,6 +9,7 @@ import { updateDisplayNameAction, uploadAvatarAction } from './actions';
 export default function FirstLoginSetup() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const avatarPreviewRef = useRef<string | null>(null);
 
   const [displayName, setDisplayName] = useState('');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -19,9 +20,16 @@ export default function FirstLoginSetup() {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (avatarPreviewRef.current) URL.revokeObjectURL(avatarPreviewRef.current);
+    const url = URL.createObjectURL(file);
+    avatarPreviewRef.current = url;
     setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
+    setAvatarPreview(url);
   }
+
+  useEffect(() => {
+    return () => { if (avatarPreviewRef.current) URL.revokeObjectURL(avatarPreviewRef.current); };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

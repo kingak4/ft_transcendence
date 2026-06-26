@@ -21,19 +21,11 @@ export async function updateDisplayNameAction(
 export async function uploadAvatarAction(
   formData: FormData,
 ): Promise<ActionResult> {
-  const { cookies } = await import('next/headers');
-  const cookieStore = await cookies();
-  const token = cookieStore.get('auth_token')?.value;
-
   const file = formData.get('file') as File;
   const body = new FormData();
   body.append('file', file);
 
-  const response = await fetch(`${process.env.BACKEND_URL}/users/avatar`, {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body,
-  });
+  const { response } = await client.POST('/users/avatar', { body } as any);
 
   if (response.ok) return { success: true };
   return { success: false, message: 'Failed to upload avatar.' };
