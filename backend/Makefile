@@ -1,18 +1,18 @@
-.PHONY: run build format test docs
-include ./.env
-PROFILE := local
+.PHONY: build up down clean test
+include .env
+include ./../infra/.env
 
-run:
-	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'
+up:
+	${COMPOSE} -f app-compose.yml up -d
 
 build:
-	${GRADLE} build
+	${COMPOSE} -f app-compose.yml build
 
-format:
-	${GRADLE} spotlessApply
+down:
+	${COMPOSE} -f app-compose.yml down
+
+clean:
+	${COMPOSE} -f app-compose.yml down -v
 
 test:
-	${GRADLE} jacocoTestReport
-
-docs:
-	${GRADLE} docs
+	${COMPOSE} -f app-compose.yml up --build backend-test --abort-on-container-exit
