@@ -10,8 +10,6 @@ services:
       - "5001:5000"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - POSTGRES_HOST=postgres-db
-      - REDIS_HOST=redis-db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
       interval: 5s
@@ -28,8 +26,6 @@ services:
       - transcend/.env
     environment:
       - SPRING_PROFILES_ACTIVE=test,dev
-      - POSTGRES_HOST=postgres-db
-      - REDIS_HOST=redis-db
     command: ["sh", "-c", "gradle test --no-daemon"]
     profiles:
       - test
