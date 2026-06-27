@@ -164,6 +164,8 @@ tasks {
       testLogging {
          events("passed", "skipped", "failed")
       }
+//      maxParallelForks = (Runtime.getRuntime().availableProcessors() / 4).coerceAtLeast(1)
+//      forkEvery = 100
 
       jvmArgs(
          "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",

@@ -8,16 +8,16 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
 
 @RequiredArgsConstructor
 @Repository
@@ -114,21 +114,21 @@ public class UserRepository implements UserDao {
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
 
-    List<Object[]> rows = userDetailsJpaRepository
-            .findFriendDetailsByUserId(userId.val(), pageable);
+    List<Object[]> rows =
+        userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
 
-    return rows.stream().collect(Collectors.toMap(
-            row -> FriendId.of((UUID) row[0]),
-            row -> {
-              Object[] r = (Object[]) row;  // explicit cast
-              return UserDetails.builder()
+    return rows.stream()
+        .collect(
+            Collectors.toMap(
+                row -> FriendId.of((UUID) row[0]),
+                row -> {
+                  Object[] r = (Object[]) row; // explicit cast
+                  return UserDetails.builder()
                       .displayName(r[1] != null ? (String) r[1] : "")
-                      .avatarId(r[2] != null
-                              ? AvatarId.of((UUID) r[2])
-                              : AvatarId.DEFAULT_AVATAR_ID)
+                      .avatarId(
+                          r[2] != null ? AvatarId.of((UUID) r[2]) : AvatarId.DEFAULT_AVATAR_ID)
                       .build();
-            }
-    ));
+                }));
   }
 
   @Override
