@@ -1,10 +1,10 @@
 include ./infra/.env
 
-.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build env
+.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build env network
 
-up: infra-up backend-up frontend-up nginx-up
+up: network infra-up backend-up frontend-up nginx-up
 
-build: infra-build backend-build frontend-build nginx-build
+build: network infra-build backend-build frontend-build nginx-build
 
 rebuild: down build up
 
@@ -47,3 +47,6 @@ env:
 		cp $$file $$dir/.env; \
 		echo "Created $$dir/.env from $$file"; \
 	done
+
+network:
+	docker network create transcend-net 2>/dev/null || true
