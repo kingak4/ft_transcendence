@@ -51,6 +51,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Create shared external network before starting any compose services
+      - name: Create Docker network
+        run: docker network create transcend-net 2>/dev/null || true
+
       - name: Start infrastructure (postgres + redis)
         run: docker compose up -d --wait db redis
 
