@@ -1,6 +1,6 @@
 include ./infra/.env
 
-.PHONY: up down re build rebuild env network
+.PHONY: up down re build rebuild
 
 up: network
 	$(MAKE) -C infra up
@@ -11,15 +11,14 @@ down:
 	${COMPOSE} down
 
 build: network 
-	$(MAKE) -C infra build
-	$(MAKE) -C backend build
-	$(MAKE) -C frontend build
+	${COMPOSE} build
 
 rebuild: down build up
 
 re: down up
 
 # Setup
+.PHONY: env network
 
 env:
 	find . -name ".env.example" -type f | while read file; do \
@@ -32,6 +31,12 @@ network:
 	docker network create transcend-net 2>/dev/null || true
 
 # Utils
+.PHONY: frontend-local
+
+clean:
+	$(MAKE) -C infra clean
+	$(MAKE) -C backend clean
+	$(MAKE) -C frontend clean
 
 frontend-local: infra-up backend-up
 	$(MAKE) -C frontend local

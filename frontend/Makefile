@@ -2,6 +2,7 @@
 include .env
 -include .env.local
 include ./../infra/.env
+export COMPOSE_IGNORE_ORPHANS
 
 node_modules:
 	npm ci
@@ -21,15 +22,15 @@ generate: node_modules
 	BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
 
 build: app/types/api.d.ts app/types/asyncapi.d.ts
-	${COMPOSE} -f compose.yml build
+	${COMPOSE} build
 
 up: app/types/api.d.ts app/types/asyncapi.d.ts
-	${COMPOSE} -f compose.yml up -d
+	${COMPOSE} up -d
 
 down:
-	${COMPOSE} -f compose.yml down
+	${COMPOSE} down
 
 clean:
-	${COMPOSE} -f compose.yml down -v
+	${COMPOSE} down -v
 	rm -f app/types/api.d.ts app/types/asyncapi.d.ts
 	
