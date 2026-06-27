@@ -15,3 +15,5 @@ Reports
 * link:pmd/main.html[PMD Main Report]
 * link:pmd/test.html[PMD Test Report]
 * link:tests/test/index.html[Tests Report]
+* link:specs/asyncapi.json[AsyncApi Json file]
+* link:specs/openapi.json[OpenApi Json file]

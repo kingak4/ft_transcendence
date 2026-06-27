@@ -1,14 +1,13 @@
 package code.bootstrap;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.Profiles;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class DotEnvInitializer
@@ -22,8 +21,8 @@ public class DotEnvInitializer
     log.info("Loading .env properties");
     loadEnv(userDir, props);
 
-    boolean isLocalProfileActive = applicationContext.getEnvironment()
-        .acceptsProfiles(Profiles.of("local"));
+    boolean isLocalProfileActive =
+        applicationContext.getEnvironment().acceptsProfiles(Profiles.of("local"));
 
     if (isLocalProfileActive) {
       log.info("Loading .env.local overrides");
@@ -39,21 +38,14 @@ public class DotEnvInitializer
   }
 
   private static void loadEnv(String userDir, Map<String, Object> props) {
-    Dotenv dotenv = Dotenv.configure()
-        .directory(userDir)
-        .filename(".env")
-        .ignoreIfMissing()
-        .load();
+    Dotenv dotenv = Dotenv.configure().directory(userDir).filename(".env").ignoreIfMissing().load();
 
     dotenv.entries().forEach(entry -> props.put(entry.getKey(), entry.getValue()));
   }
 
   private void overrideWithLocalEnv(String userDir, Map<String, Object> props) {
-    Dotenv dotenvLocal = Dotenv.configure()
-        .directory(userDir)
-        .filename(".env.local")
-        .ignoreIfMissing()
-        .load();
+    Dotenv dotenvLocal =
+        Dotenv.configure().directory(userDir).filename(".env.local").ignoreIfMissing().load();
     dotenvLocal.entries().forEach(entry -> props.put(entry.getKey(), entry.getValue()));
   }
 }

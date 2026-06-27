@@ -20,7 +20,7 @@ rebuild: down build up
 .PHONY: test clean
 
 test:
-	${COMPOSE} up --build backend-test --abort-on-container-exit
+	${COMPOSE} up --build transcend-backend-test --abort-on-container-exit
 
 clean:
 	${COMPOSE} down -v

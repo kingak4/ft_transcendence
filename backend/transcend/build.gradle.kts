@@ -1,4 +1,5 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.gradle.internal.classpath.Instrumented.systemProperty
 
 plugins {
    application
@@ -10,6 +11,7 @@ plugins {
    alias(libs.plugins.asciidoctor)
    alias(libs.plugins.kotlin.jvm)
    alias(libs.plugins.kotlin.spring)
+   id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 group = "code"
@@ -66,7 +68,6 @@ dependencies {
    testImplementation(libs.kotest.runner.junit5)
    testImplementation(libs.kotest.assertions.core)
    testImplementation(libs.kotest.extensions.spring)
-//   testImplementation("io.mockk:mockk:1.13.17")
 }
 
 java {
@@ -75,16 +76,30 @@ java {
    }
 }
 
+val profileToUse = (project.findProperty("profile") ?: System.getenv("SPRING_PROFILES_ACTIVE") ?: "default").toString()
+
+allprojects {
+   tasks.withType<Test>().configureEach {
+      systemProperty("spring.profiles.include", profileToUse)
+      systemProperty("spring.profiles.active", profileToUse)
+
+      testLogging {
+         showStandardStreams = true
+      }
+   }
+}
 
 tasks {
    compileJava {
       options.encoding = "UTF-8"
-      options.compilerArgs.addAll(listOf(
-         "-parameters",
-         "-Amapstruct.defaultComponentModel=spring",
-         "-Amapstruct.unmappedTargetPolicy=ERROR",
-         "-Amapstruct.suppressGeneratorTimestamp=true"
-      ))
+      options.compilerArgs.addAll(
+         listOf(
+            "-parameters",
+            "-Amapstruct.defaultComponentModel=spring",
+            "-Amapstruct.unmappedTargetPolicy=ERROR",
+            "-Amapstruct.suppressGeneratorTimestamp=true"
+         )
+      )
    }
    compileTestJava {
       options.encoding = "UTF-8"
@@ -96,15 +111,31 @@ tasks {
       enabled = false
    }
 
+
    register("docs") {
       dependsOn("check")
       dependsOn("asciidoctorModulith")
       dependsOn("asciidoctor")
       dependsOn("generateStructurizr")
+      dependsOn("generateSpecs")
       doLast {
          val reportPath = layout.buildDirectory.file("reports/index.html").get().asFile
          println("Report index: file://${reportPath.toURI().path}")
       }
+   }
+
+   register<Test>("generateSpecs") {
+      group = "documentation"
+      description = "Runs tests to generate OpenAPI and AsyncAPI specs"
+
+      useJUnitPlatform()
+
+      filter {
+         includeTestsMatching("code.SpecGeneratorTest")
+      }
+
+      outputs.dir(layout.buildDirectory.dir("reports/specs"))
+      outputs.upToDateWhen { false }
    }
 
 
@@ -120,15 +151,17 @@ tasks {
             diagram.use()
          }
          setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
-         attributes(mapOf(
-            "toc" to "left",
-            "icons" to "font",
-            "projectdir" to projectDir.absolutePath,
-            "imagesdir" to "images",
-            "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
-            "structurizr-docs" to layout.buildDirectory.dir("tmp/structurizr").get().asFile.absolutePath,
-            "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
-         ))
+         attributes(
+            mapOf(
+               "toc" to "left",
+               "icons" to "font",
+               "projectdir" to projectDir.absolutePath,
+               "imagesdir" to "images",
+               "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+               "structurizr-docs" to layout.buildDirectory.dir("tmp/structurizr").get().asFile.absolutePath,
+               "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
+            )
+         )
       }
       jvm {
          jvmArgs(

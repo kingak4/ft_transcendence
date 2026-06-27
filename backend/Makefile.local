@@ -1,18 +1,25 @@
 include .env
-.PHONY: run build format test docs
+.PHONY: run build format test docs verify
 PROFILE := local
+export SPRING_PROFILES_ACTIVE=local
 
 run:
 	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'
 
 build:
-	${GRADLE} build
+	${GRADLE} build -Pprofile=$(PROFILE)
 
 format:
-	${GRADLE} spotlessApply
+	${GRADLE} spotlessApply -Pprofile=$(PROFILE)
+
+clean:
+	${GRADLE} clean
 
 test:
-	${GRADLE} jacocoTestReport
+	${GRADLE} jacocoTestReport -Pprofile=$(PROFILE)
 
 docs:
-	${GRADLE} docs
+	${GRADLE} docs -Pprofile=$(PROFILE)
+
+verify:
+	${GRADLE} test --tests "code.SpringContextTest" -Pprofile=$(PROFILE)
