@@ -1,18 +1,26 @@
-.PHONY: build up down clean test
 include .env
 include ./../infra/.env
+export COMPOSE_IGNORE_ORPHANS
+.PHONY: up build down rebuild re
+
+CONTAINER := transcend-backend
 
 up:
-	${COMPOSE} -f app-compose.yml up -d
+	${COMPOSE} up --wait ${CONTAINER} -d
 
 build:
-	${COMPOSE} -f app-compose.yml build
+	${COMPOSE} build
 
 down:
-	${COMPOSE} -f app-compose.yml down
+	${COMPOSE} down ${CONTAINER}
 
-clean:
-	${COMPOSE} -f app-compose.yml down -v
+rebuild: down build up
+
+# Utils
+.PHONY: test clean
 
 test:
-	${COMPOSE} -f app-compose.yml up --build backend-test --abort-on-container-exit
+	${COMPOSE} up --build backend-test --abort-on-container-exit
+
+clean:
+	${COMPOSE} down -v

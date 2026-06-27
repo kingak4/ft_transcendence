@@ -7,6 +7,8 @@
 ```bash
 make -f Makefile.local run
 ```
+The .env will be overriden with .env.local if present
+
 **or run in docker**
 ```bash
 make build up
