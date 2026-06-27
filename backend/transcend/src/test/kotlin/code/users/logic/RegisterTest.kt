@@ -13,15 +13,10 @@ import org.mockito.BDDMockito.given
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 
-@Import(
-  Register::class
-)
-class RegisterComponentTest(
-  private val service: RegisterUseCase
-) : UserDaoTestSupport() {
+@Import(Register::class)
+class RegisterComponentTest(private val service: RegisterUseCase) : UserDaoTestSupport() {
 
-  @MockitoBean
-  private lateinit var hashingService: HashingService
+  @MockitoBean private lateinit var hashingService: HashingService
 
   init {
     Given("a valid register command for a new user") {
@@ -46,9 +41,7 @@ class RegisterComponentTest(
 
         When("the register service is executed") {
           Then("it should throw an EmailAlreadyRegisteredException") {
-            shouldThrow<EmailAlreadyRegisteredException> {
-              service.register(command)
-            }
+            shouldThrow<EmailAlreadyRegisteredException> { service.register(command) }
           }
         }
       }
@@ -59,9 +52,7 @@ class RegisterComponentTest(
 
       When("the register service is executed") {
         Then("it should throw a ConstraintViolationException") {
-          shouldThrow<ConstraintViolationException> {
-            service.register(command)
-          }
+          shouldThrow<ConstraintViolationException> { service.register(command) }
         }
       }
     }

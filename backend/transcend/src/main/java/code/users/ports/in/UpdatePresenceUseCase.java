@@ -1,10 +1,16 @@
 package code.users.ports.in;
 
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface UpdatePresenceUseCase {
+
+  @PreAuthorize(
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.userId())")
   void setUserOnline(SetUserOnlineCommand command);
 
+  @PreAuthorize(
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.userId())")
   void setUserOffline(SetUserOfflineCommand command);
 
   record SetUserOnlineCommand(String sessionId, UUID userId, String deviceInfo) {}

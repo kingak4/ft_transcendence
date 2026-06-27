@@ -1,7 +1,5 @@
 package code.chat.entrypoints.websocket;
 
-import static code.chat.entrypoints.websocket.ChatWebSocketConfig.chatMessagesTopic;
-
 import code.chat.domain.model.ChatId;
 import code.chat.domain.model.MessageId;
 import code.chat.domain.model.UserId;
@@ -13,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -25,16 +24,16 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 public class ChatWebSocketController {
 
+  private final ApplicationEventPublisher eventPublisher;
   private final ManageMessagesUseCase manageMessagesUseCase;
   private final SimpMessagingTemplate messagingTemplate;
   public static final String MESSAGE_SEND = "/chat/{chatId}/send";
-  public static final String MESSAGE_DELETE = "/chat/messages/{messageId}/delete";
+  public static final String MESSAGE_DELETE = "/chat/{chatId}/messages/{messageId}/delete";
 
   @MessageMapping(MESSAGE_SEND)
   @Operation(
       summary = "Send a message in a chat",
-      description =
-          "Sends a message to a specific chat room. The message is broadcast to all subscribers of that chat topic. Requires authenticated WebSocket connection with JWT Bearer token.")
+      description = "The message is broadcast to all subscribers of that chat topic.")
   public void sendMessage(
       @DestinationVariable UUID chatId,
       @Payload SendMessageRequest request,
@@ -45,27 +44,30 @@ public class ChatWebSocketController {
 
     var command = new SendMessageCommand(sender, chat, request.content());
 
-    manageMessagesUseCase.sendMessage(command);
-    messagingTemplate.convertAndSend(
-        chatMessagesTopic(chat.val()),
-        new ChatMessageResponse(chat.val(), sender.val(), request.content()));
+    ManageMessagesUseCase.SendMessageResponse response = manageMessagesUseCase.sendMessage(command);
+
+    eventPublisher.publishEvent(
+        new MessageSentEvent(chat, sender, response.id(), request.content(), response.createdAt()));
   }
 
   @MessageMapping(MESSAGE_DELETE)
   @Operation(
       summary = "Delete a message from a chat",
-      description =
-          "Deletes a specific message from a chat. Only the message sender can delete their own messages. Requires authenticated WebSocket connection with JWT Bearer token.")
+      description = "Only the message sender can delete their own messages.")
   public void deleteMessage(
+      @DestinationVariable UUID chatId,
       @DestinationVariable UUID messageId,
       @Payload DeleteMessageRequest request,
       Authentication authentication) {
 
     UserId sender = UserId.of(UUID.fromString(authentication.getName()));
+    ChatId chat = ChatId.of(chatId);
     MessageId message = MessageId.of(messageId);
 
     var command = new DeleteMessageCommand(sender, message);
     manageMessagesUseCase.deleteMessage(command);
+
+    eventPublisher.publishEvent(new MessageDeletedEvent(chat, sender, message));
   }
 
   @Schema(description = "Request to send a message in a chat")
@@ -75,7 +77,4 @@ public class ChatWebSocketController {
 
   @Schema(description = "Request to delete a message (empty payload)")
   public record DeleteMessageRequest() {}
-
-  @Schema(description = "Response containing a message sent in a chat")
-  public record ChatMessageResponse(UUID chatId, UUID senderId, String content) {}
 }

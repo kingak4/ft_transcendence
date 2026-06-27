@@ -32,37 +32,28 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
   UserEntityMapperImpl::class,
   DefaultAvatarInitializer::class,
   OwnershipValidator::class,
-  MethodValidationPostProcessor::class)
+  MethodValidationPostProcessor::class
+)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
 class UserDaoTestSupport : BehaviorSpec() {
 
-  @Autowired
-  lateinit var userDao: UserDao
+  @Autowired lateinit var userDao: UserDao
 
   fun setupAuth(user: User) {
     val authorities = listOf(SimpleGrantedAuthority(Role.USER.name))
 
-    val authentication = UsernamePasswordAuthenticationToken(
-      user.id.`val`.toString(),
-      null,
-      authorities
-    )
+    val authentication =
+      UsernamePasswordAuthenticationToken(user.id.`val`.toString(), null, authorities)
     SecurityContextHolder.getContext().authentication = authentication
   }
 
   init {
     extension(SpringExtension)
     SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL)
-    beforeTest {
-      setupAuth(UserFixtures.aDaoUser())
-    }
+    beforeTest { setupAuth(UserFixtures.aDaoUser()) }
 
-    beforeSpec {
-      userDao.createUser(UserFixtures.aDaoUser())
-    }
-    afterSpec {
-      SecurityContextHolder.clearContext()
-    }
+    beforeSpec { userDao.createUser(UserFixtures.aDaoUser()) }
+    afterSpec { SecurityContextHolder.clearContext() }
   }
 }

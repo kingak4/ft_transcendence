@@ -15,12 +15,8 @@ import org.mockito.BDDMockito.given
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 
-@Import(
-  Login::class
-)
-class LoginComponentTest (
-  private val service: LoginUseCase
-) : UserDaoTestSupport() {
+@Import(Login::class)
+class LoginComponentTest(private val service: LoginUseCase) : UserDaoTestSupport() {
 
   @MockitoBean private lateinit var hashingService: HashingService
   @MockitoBean private lateinit var accessTokenProvider: AccessTokenProvider
@@ -32,7 +28,8 @@ class LoginComponentTest (
 
         When("the login service is executed") {
           given(hashingService.matches(PASSWORD_FIXTURE, HASH_FIXTURE)).willReturn(true)
-          given(accessTokenProvider.generateToken(USER_UUID_FIXTURE.toString())).willReturn(TOKEN_FIXTURE)
+          given(accessTokenProvider.generateToken(USER_UUID_FIXTURE.toString()))
+            .willReturn(TOKEN_FIXTURE)
 
           val result = service.login(command)
 
@@ -51,9 +48,7 @@ class LoginComponentTest (
           given(hashingService.matches(WRONG_PASSWORD_FIXTURE, HASH_FIXTURE)).willReturn(false)
 
           Then("it should throw an InvalidCredentialsException") {
-            shouldThrow<InvalidCredentialsException> {
-              service.login(command)
-            }
+            shouldThrow<InvalidCredentialsException> { service.login(command) }
           }
         }
       }
@@ -64,9 +59,7 @@ class LoginComponentTest (
 
       When("the login service is executed") {
         Then("it should throw an InvalidCredentialsException") {
-          shouldThrow<InvalidCredentialsException> {
-            service.login(command)
-          }
+          shouldThrow<InvalidCredentialsException> { service.login(command) }
         }
       }
     }
