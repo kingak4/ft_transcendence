@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import code.bootstrap.DotEnvInitializer;
+import code.shared.config.EmbeddedRedisTestSupport;
 import code.shared.config.WebSocketTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(
+    classes = TranscendApp.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = {"bucket4j.enabled=true"})
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = DotEnvInitializer.class)
 class RateLimitIT extends WebSocketTest {

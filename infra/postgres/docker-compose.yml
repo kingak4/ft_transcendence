@@ -1,5 +1,5 @@
 services:
-  db:
+  postgres-db:
     build:
       args:
         POSTGRES_VERSION: ${POSTGRES_VERSION}

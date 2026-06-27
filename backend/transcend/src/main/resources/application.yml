@@ -37,6 +37,8 @@ springdoc:
     path: /swagger-ui.html
 
 springwolf:
+  paths:
+    docs: /springwolf/docs
   use-fqn: true
   docket:
     base-package: code

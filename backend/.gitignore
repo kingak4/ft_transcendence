@@ -29,3 +29,5 @@ replay_pid*
 
 # Environment
 transcend/.env
+transcend/.env.local
+

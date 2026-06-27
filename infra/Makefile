@@ -1,24 +1,35 @@
-.PHONY: all up down re logs ps clean killall
-
-all: up
+include .env
+.PHONY: up build down rebuild re
 
 up:
-	$(MAKE) -C postgres up
-	$(MAKE) -C redis up
+	make -C nginx up
+	make -C postgres up
+	make -C redis up
+
+build:
+	make -C nginx build
+	make -C postgres build
+	make -C redis build
 
 down:
-	$(MAKE) -C postgres down
-	$(MAKE) -C redis down
+	make -C nginx down
+	make -C postgres down
+	make -C redis down
+
+rebuild: down build up
 
 re: down up
 
-ps:
-	$(MAKE) -C postgres ps
-	$(MAKE) -C redis ps
+# Utils
+.PHONY: ps clean killall
 
 clean:
 	$(MAKE) -C postgres clean
 	$(MAKE) -C redis clean
+
+ps:
+	$(MAKE) -C postgres ps
+	$(MAKE) -C redis ps
 
 killall:
 	ids=$$(docker ps -aq); [ -n "$$ids" ] && docker rm -f $$ids

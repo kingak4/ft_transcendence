@@ -1,18 +1,26 @@
-.PHONY: run build format test docs
-include ./.env
-PROFILE := local
+include .env
+include ./../infra/.env
+export COMPOSE_IGNORE_ORPHANS
+.PHONY: up build down rebuild re
 
-run:
-	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'
+CONTAINER := transcend-backend
+
+up:
+	${COMPOSE} up --wait ${CONTAINER} -d
 
 build:
-	${GRADLE} build
+	${COMPOSE} build 
 
-format:
-	${GRADLE} spotlessApply
+down:
+	${COMPOSE} down ${CONTAINER}
+
+rebuild: down build up
+
+# Utils
+.PHONY: test clean
 
 test:
-	${GRADLE} jacocoTestReport
+	${COMPOSE} up --build transcend-backend-test --abort-on-container-exit
 
-docs:
-	${GRADLE} docs
+clean:
+	${COMPOSE} down -v

@@ -1,0 +1,38 @@
+include .env.local
+include ./../infra/.env
+export BACKEND_URL
+
+PRETTIER = npx prettier
+
+.PHONY: all install dev local generate lint format check clean fclean re
+
+all: local
+
+local: generate
+	@npm run dev
+
+install:
+	@npm install
+
+generate:
+	@mkdir -p app/types
+	@./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
+	@BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
+
+lint:
+	@npm run lint
+
+format:
+	@$(PRETTIER) --write "./**/*.{ts,tsx,css}"
+
+check:
+	@$(PRETTIER) --check "./**/*.{ts,tsx,css}"
+	@npm run lint
+
+clean:
+	@rm -rf .next
+
+fclean: clean
+	@rm -rf app/types/api.d.ts app/types/asyncapi.d.ts node_modules
+
+re: fclean all

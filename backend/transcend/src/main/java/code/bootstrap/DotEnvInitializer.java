@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.Profiles;
 
 @Slf4j
 public class DotEnvInitializer
@@ -14,16 +15,37 @@ public class DotEnvInitializer
 
   @Override
   public void initialize(ConfigurableApplicationContext applicationContext) {
-    log.info("Initializing .env");
-    Dotenv dotenv =
-        Dotenv.configure().directory(System.getProperty("user.dir")).ignoreIfMissing().load();
+    String userDir = System.getProperty("user.dir");
 
     Map<String, Object> props = new HashMap<>();
-    dotenv.entries().forEach(entry -> props.put(entry.getKey(), entry.getValue()));
+    log.info("Loading .env properties");
+    loadEnv(userDir, props);
 
-    applicationContext
-        .getEnvironment()
-        .getPropertySources()
-        .addFirst(new MapPropertySource("dotenvProperties", props));
+    boolean isLocalProfileActive =
+        applicationContext.getEnvironment().acceptsProfiles(Profiles.of("local"));
+
+    if (isLocalProfileActive) {
+      log.info("Loading .env.local overrides");
+      overrideWithLocalEnv(userDir, props);
+    }
+
+    if (!props.isEmpty()) {
+      applicationContext
+          .getEnvironment()
+          .getPropertySources()
+          .addFirst(new MapPropertySource("dotenvProperties", props));
+    }
+  }
+
+  private static void loadEnv(String userDir, Map<String, Object> props) {
+    Dotenv dotenv = Dotenv.configure().directory(userDir).filename(".env").ignoreIfMissing().load();
+
+    dotenv.entries().forEach(entry -> props.put(entry.getKey(), entry.getValue()));
+  }
+
+  private void overrideWithLocalEnv(String userDir, Map<String, Object> props) {
+    Dotenv dotenvLocal =
+        Dotenv.configure().directory(userDir).filename(".env.local").ignoreIfMissing().load();
+    dotenvLocal.entries().forEach(entry -> props.put(entry.getKey(), entry.getValue()));
   }
 }
