@@ -9,7 +9,7 @@ up:
 	${COMPOSE} up --wait ${CONTAINER} -d
 
 build:
-	${COMPOSE} build
+	${COMPOSE} build 
 
 down:
 	${COMPOSE} down ${CONTAINER}

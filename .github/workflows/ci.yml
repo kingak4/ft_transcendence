@@ -16,20 +16,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      steps:
+      - name: Setup Example env
+        run: make env
+        
+      - name: Create Docker Network
+        run: make network
+
+      - name: Start infrastructure
+        working-directory: infra
+        run: make
+
       - uses: actions/checkout@v4
-      - name: Create .env files from examples and initialize frontend/.env
+      - name: Create .env.local for frontend
         run: |
-          cp infra/.env.example           infra/.env
-          cp infra/postgres/.env.example  infra/postgres/.env
-          cp infra/redis/.env.example     infra/redis/.env
-          cp backend/transcend/.env.example backend/transcend/.env
-          # Type-gen scripts source frontend/.env for BACKEND_URL.
-          # In CI the backend's published port is 5001 (host-accessible).
-          echo "BACKEND_URL=http://localhost:5001"     > frontend/.env
-          echo "NEXT_PUBLIC_WS_URL=http://localhost:5001/ws" >> frontend/.env
+          echo "BACKEND_URL=http://localhost:5001"     > frontend/.env.local
+          echo "NEXT_PUBLIC_WS_URL=http://localhost:5001/ws" >> frontend/.env.local
 
       - name: Create Docker Network
         run: make network
+
+      - name: Start infrastructure
+        working-directory: infra
+        run: make
 
       - name: Set up Docker Buildx Cache
         uses: docker/setup-buildx-action@v3
@@ -93,15 +102,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Create .env files from examples
-        run: |
-          cp infra/.env.example           infra/.env
-          cp infra/postgres/.env.example  infra/postgres/.env
-          cp infra/redis/.env.example     infra/redis/.env
-          cp backend/transcend/.env.example backend/transcend/.env
-          cp backend/.env.example backend/.env
-
+      - name: Setup Example env
+        run: make env
+        
       - name: Create Docker Network
         run: make network
 
