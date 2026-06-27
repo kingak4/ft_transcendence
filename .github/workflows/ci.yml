@@ -95,7 +95,7 @@ jobs:
           cp backend/transcend/.env.example backend/transcend/.env
           cp backend/.env.example backend/.env
       - name: Start infrastructure
-        working-directory: backend
+        working-directory: infra
         run: make
 
       - name: Setup Java 21
