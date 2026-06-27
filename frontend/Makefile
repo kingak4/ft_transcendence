@@ -21,14 +21,15 @@ generate: node_modules
 	BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs
 
 build: app/types/api.d.ts app/types/asyncapi.d.ts
-	${COMPOSE} -f app-compose.yml build
+	${COMPOSE} -f compose.yml build
 
 up: app/types/api.d.ts app/types/asyncapi.d.ts
-	${COMPOSE} -f app-compose.yml up -d
+	${COMPOSE} -f compose.yml up -d
 
 down:
-	${COMPOSE} -f app-compose.yml down
+	${COMPOSE} -f compose.yml down
 
 clean:
-	${COMPOSE} -f app-compose.yml down -v
+	${COMPOSE} -f compose.yml down -v
 	rm -f app/types/api.d.ts app/types/asyncapi.d.ts
+	

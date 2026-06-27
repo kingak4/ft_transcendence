@@ -1,21 +1,31 @@
 include ../.env
 include .env
+export COMPOSE_IGNORE_ORPHANS
+.PHONY: up build down rebuild re
 
-.PHONY: up down re db logs
+CONTAINER := postgres-db
 
 up:
-	${COMPOSE} up -d
+	${COMPOSE} up --wait ${CONTAINER}
+
+build:
+	${COMPOSE} build
 
 down:
-	${COMPOSE} down
+	${COMPOSE} down ${CONTAINER}
+
+rebuild: down build up
 
 re: down up
 
+# Utils
+.PHONY: db logs clean ps
+
 db:
-	${DOCKER} exec -it postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+	${DOCKER} exec -it ${CONTAINER} psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
 
 logs:
-	${DOCKER} logs -f postgres-db
+	${DOCKER} logs -f ${CONTAINER}
 
 clean:
 	${COMPOSE} down -v

@@ -115,6 +115,7 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: gradle
+      
       - name: Run backend tests in docker
         working-directory: backend
         run: make test
