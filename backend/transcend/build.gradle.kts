@@ -107,6 +107,7 @@ tasks {
       }
    }
 
+
    withType<AsciidoctorTask>().configureEach {
       baseDirFollowsSourceFile()
       useIntermediateWorkDir()
