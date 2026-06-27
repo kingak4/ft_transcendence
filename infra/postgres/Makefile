@@ -1,7 +1,7 @@
 include ../.env
 include .env
 
-.PHONY: up down re db logs
+.PHONY: up down re db logs users_table tables
 
 up:
 	${COMPOSE} up -d
@@ -22,3 +22,11 @@ clean:
 
 ps:
 	${COMPOSE} ps
+
+tables:
+	${DOCKER} exec -it postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c "\dt dev.*"
+
+users_table:
+	${DOCKER} exec -i postgres-db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c "SELECT * FROM dev.users; SELECT * FROM dev.user_details; SELECT * FROM dev.user_friends;" > users_table.txt
+
+

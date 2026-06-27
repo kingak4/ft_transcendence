@@ -4,11 +4,11 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Grindin' brand palette */
+  /* 42Hub brand palette */
   --color-brand-main-color: #f0f0f0;
   --color-brand-secondary-color: #8bde5a;
   --color-brand-additional-color: #5cd4a0;
-  --color-brand-additional-color-2: #4C603A;
+  --color-brand-additional-color-2: #4c603a;
   --color-brand-accent-color: #15c8f7;
   --color-brand-reversed-main-color: #333333;
 }
@@ -23,19 +23,11 @@
 }
 
 @utility bg-gradient-login-page {
-  background: linear-gradient(
-    to bottom left,
-    #a0d860 0%,
-    #3a5e30 100%
-  );
+  background: linear-gradient(to bottom left, #a0d860 0%, #3a5e30 100%);
 }
 
 @utility bg-gradient-register-page {
-  background: linear-gradient(
-    to bottom left,
-    #0a0f15 0%,
-    #159090 100%
-  );
+  background: linear-gradient(to bottom left, #0a0f15 0%, #159090 100%);
 }
 
 body {
