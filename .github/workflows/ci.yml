@@ -17,9 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # ── Environment ──────────────────────────────────────────────────────
-      - name: Create .env files from examples
+      - name: Create .env files from examples and initialize frontend/.env
         run: |
           cp infra/.env.example           infra/.env
           cp infra/postgres/.env.example  infra/postgres/.env
@@ -30,17 +28,9 @@ jobs:
           echo "BACKEND_URL=http://localhost:5001"     > frontend/.env
           echo "NEXT_PUBLIC_WS_URL=http://localhost:5001/ws" >> frontend/.env
 
-      # ── Infrastructure ───────────────────────────────────────────────────
-      # Buildx is required for the type=gha cache driver — it serialises
-      # Docker build layers into GitHub's Actions cache storage so they
-      # survive across ephemeral runner instances.
-      - name: Set up Docker Buildx
+      - name: Set up Docker Buildx Cache
         uses: docker/setup-buildx-action@v3
 
-      # Build the backend image once, explicitly, with cache-from/to.
-      # The tag transcend-backend:latest matches what Docker Compose v2
-      # auto-assigns to the "backend" service in the "transcend" project,
-      # so the subsequent `docker compose up` step reuses it without --build.
       - name: Build backend image
         uses: docker/build-push-action@v5
         with:
@@ -55,8 +45,6 @@ jobs:
         run: docker compose up -d --wait db redis
 
       - name: Start backend
-        # Image already built above — no --build needed.
-        # --wait blocks until the Spring Boot actuator health check passes.
         run: docker compose up -d --wait backend
         timeout-minutes: 5
 
@@ -92,46 +80,23 @@ jobs:
 
   # ──────────────────────────────────────────────────────────────────────────
   # Job 2: run the Spring Boot test suite.
-  # Uses GitHub Actions service containers for postgres and redis so we avoid
-  # the docker-compose overhead and can cache Gradle dependencies across runs.
   # ──────────────────────────────────────────────────────────────────────────
   backend-test:
     name: Backend — Tests
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16.3
-        env:
-          POSTGRES_DB: postgres_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 10s
-          --health-retries 5
-
-      redis:
-        # Redis 7 is close enough to the project's version for test compatibility.
-        # Tests only need a working Redis; bucket4j is disabled in the test profile.
-        image: redis:7 # TODO: align to redis:8 once stable major tag is available
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 5s
-          --health-timeout 10s
-          --health-retries 5
-
     steps:
       - uses: actions/checkout@v4
-
-      # The backend expects four schemas (test/local/dev/prod) to exist.
-      - name: Initialize DB schemas
-        run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres_db -f infra/postgres/init.sql
+      - name: Create .env files from examples
+        run: |
+          cp infra/.env.example           infra/.env
+          cp infra/postgres/.env.example  infra/postgres/.env
+          cp infra/redis/.env.example     infra/redis/.env
+          cp backend/transcend/.env.example backend/transcend/.env
+          cp backend/.env.example backend/.env
+      - name: Start infrastructure
+        working-directory: backend
+        run: make
 
       - name: Setup Java 21
         uses: actions/setup-java@v4
@@ -139,14 +104,6 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: gradle
-
-      - name: Run backend tests
+      - name: Run backend tests in docker
         working-directory: backend
-        run: ./gradlew test --no-daemon
-        env:
-          SPRING_PROFILES_ACTIVE: dev,test
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: postgres_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          REDIS_HOST: localhost
+        run: make test
