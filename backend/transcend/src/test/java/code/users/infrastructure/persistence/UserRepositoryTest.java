@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserRepositoryTest {
   private final UserDao userRepository;
+
+  @BeforeEach
+  void setup() {
+    Avatar defaultAvatar = new Avatar(
+            AvatarId.DEFAULT_AVATAR_ID,
+            new byte[]{0}
+    );
+
+    userRepository.saveAvatar(defaultAvatar);
+  }
 
   @Test
   public void testCreateAndFindByEmail() {
