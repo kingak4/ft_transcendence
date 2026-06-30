@@ -6,19 +6,23 @@ import code.users.ports.out.UserDao;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+//import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DefaultAvatarInitializer implements CommandLineRunner {
+@Order(1)
+public class DefaultAvatarInitializer implements ApplicationRunner {
 
   private final UserDao userDao;
 
   @Override
-  public void run(String... args) {
+  public void run(ApplicationArguments args) {
     log.info("Initializing default avatar");
     try {
       byte[] content = loadDefaultAvatarContent();
