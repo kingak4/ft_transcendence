@@ -39,6 +39,7 @@ public class UserRepository implements UserDao {
     UserDetailsEntity detailsEntity = mapper.toEntity(user.getDetails());
     detailsEntity.setId(mapper.map(user.getId()));
     userDetailsJpaRepository.save(detailsEntity);
+    entity.setUserDetailsId(detailsEntity.getId().val());
     userJpaRepository.save(entity);
   }
 
@@ -89,6 +90,7 @@ public class UserRepository implements UserDao {
     UserEntity entity =
         userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
     entity.getFriends().add(friendId.val());
+    userJpaRepository.save(entity);
   }
 
   @Override

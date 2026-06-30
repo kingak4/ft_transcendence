@@ -24,6 +24,7 @@ class ManageFriendsTest(
         service.addFriend(USER_ID_FIXTURE, FRIEND1_CLASS_ID_FIXTURE)
 
         Then("friend 1 should be in the user's friend list") {
+          val exists = userDao.exists(FRIEND1_CLASS_ID_FIXTURE)
           val friends = userDao.getFriendList(USER_ID_FIXTURE, 0, 10)
           friends.containsKey(FRIEND1_CLASS_ID_FIXTURE) shouldBe true
         }

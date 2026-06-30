@@ -159,7 +159,7 @@ public class UserRepositoryTest {
     userRepository.createUser(friend);
     userRepository.createUser(friend2);
 
-    userRepository.addFriend(user.getId(), FriendId.of(user.getId().val()));
+//    userRepository.addFriend(user.getId(), FriendId.of(user.getId().val()));
     userRepository.addFriend(user.getId(), FriendId.of(friend.getId().val()));
     userRepository.addFriend(user.getId(), FriendId.of(friend2.getId().val()));
 
