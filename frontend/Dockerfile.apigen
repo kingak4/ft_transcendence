@@ -1,0 +1,13 @@
+FROM node:20-alpine AS apigen
+WORKDIR /build
+
+RUN apk add --no-cache curl
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+COPY entrypoint.apigen.sh ./
+RUN chmod +x entrypoint.apigen.sh
+
+ENTRYPOINT ["./entrypoint.apigen.sh"]

@@ -14,9 +14,10 @@ services:
       - REDIS_HOST=redis-db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
-      interval: 5s
-      timeout: 10s
+      interval: 10s
+      timeout: 5s
       retries: 5
+      start_period: 30s
     restart: unless-stopped
 
   backend-test:
