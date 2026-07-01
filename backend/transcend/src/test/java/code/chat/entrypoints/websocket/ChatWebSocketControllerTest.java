@@ -36,10 +36,11 @@ class ChatWebSocketControllerTest extends WebSocketTest {
   @Test
   void shouldDeleteMessageViaWebSocket() throws Exception {
     String wsUrl = WS_HOST + port + SOCKET_ENDPOINT;
+    String chatId = ChatFixtures.CHAT_UUID_FIXTURE.toString();
     String messageId = MessageId.generate().val().toString();
 
     session = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
-    deleteMessage(session, messageId);
+    deleteMessage(session, chatId, messageId);
 
     await()
         .atMost(TIMEOUT)
@@ -71,8 +72,9 @@ class ChatWebSocketControllerTest extends WebSocketTest {
         SOCKET_PATH + MESSAGE_SEND.replace("{chatId}", chatId), new SendMessageRequest(content));
   }
 
-  private void deleteMessage(StompSession session, String messageId) {
+  private void deleteMessage(StompSession session, String chatId, String messageId) {
     session.send(
-        SOCKET_PATH + MESSAGE_DELETE.replace("{messageId}", messageId), new DeleteMessageRequest());
+        SOCKET_PATH + MESSAGE_DELETE.replace("{chatId}", chatId).replace("{messageId}", messageId),
+        new DeleteMessageRequest());
   }
 }

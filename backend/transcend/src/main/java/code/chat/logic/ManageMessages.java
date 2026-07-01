@@ -20,18 +20,21 @@ public class ManageMessages implements ManageMessagesUseCase {
   private final ChatDao dao;
 
   @Override
-  public void sendMessage(SendMessageCommand command) {
+  public SendMessageResponse sendMessage(SendMessageCommand command) {
     if (command.content().isBlank()) throw new EmptyMessageException();
     Optional<Chat> chat = dao.getChat(command.chatId());
     if (chat.isEmpty()) throw new ChatNotFoundException();
+    MessageId id = MessageId.generate();
+    OffsetDateTime time = OffsetDateTime.now();
     Message message =
         Message.builder()
-            .id(MessageId.generate())
+            .id(id)
             .senderId(command.sender())
-            .createdAt(OffsetDateTime.now())
+            .createdAt(time)
             .content(command.content())
             .build();
     dao.saveMessage(message);
+    return new SendMessageResponse(id, time);
   }
 
   @Override

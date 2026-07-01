@@ -3,17 +3,16 @@ package code.shared.bootstrap
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.core.test.TestType
 import io.kotest.extensions.spring.SpringExtension
+import java.net.ServerSocket
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import redis.embedded.RedisServer
-import java.net.ServerSocket
 
 @DataRedisTest
 abstract class RedisDaoTestSupport : BehaviorSpec() {
 
-  @Autowired
-  private lateinit var connectionFactory: RedisConnectionFactory
+  @Autowired private lateinit var connectionFactory: RedisConnectionFactory
 
   init {
     extension(SpringExtension)

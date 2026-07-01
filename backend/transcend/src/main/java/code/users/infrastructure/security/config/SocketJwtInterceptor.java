@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,7 +39,7 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
       // 1. Fail if token is missing
       if (jwtToken.isEmpty()) {
         log.error("Authentication failed: No token provided");
-        throw new MessageDeliveryException("Missing authentication token");
+        throw new BadCredentialsException("Missing authentication token");
       }
 
       // 2. Attempt to authenticate
@@ -48,7 +48,7 @@ public class SocketJwtInterceptor implements ChannelInterceptor {
       // 3. Fail if handleToken did not result in a valid user
       if (accessor.getUser() == null) {
         log.error("Authentication failed: Invalid token");
-        throw new MessageDeliveryException("Invalid authentication token");
+        throw new BadCredentialsException("Invalid authentication token");
       }
     }
     return message;

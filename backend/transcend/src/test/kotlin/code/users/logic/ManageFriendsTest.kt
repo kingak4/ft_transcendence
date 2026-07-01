@@ -10,16 +10,11 @@ import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
 
-@Import(
-  ManageFriends::class
-)
-class ManageFriendsTest(
-  private val service: ManageFriendsUseCase
-) : FriendDaoTestSupport() {
+@Import(ManageFriends::class)
+class ManageFriendsTest(private val service: ManageFriendsUseCase) : FriendDaoTestSupport() {
 
   init {
     Given("a user and existing potential friends") {
-
       When("the add friend service is executed for friend 1") {
         service.addFriend(USER_ID_FIXTURE, FRIEND1_CLASS_ID_FIXTURE)
 
