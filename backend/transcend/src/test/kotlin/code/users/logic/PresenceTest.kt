@@ -24,31 +24,28 @@ class PresenceTest(
       When("the setUserOnline service is executed") {
         val command =
           UpdatePresenceUseCase.SetUserOnlineCommand(
-            SESSION_ID_FIXTURE, USER_UUID_FIXTURE, DEVICE_INFO_FIXTURE
+            SESSION_ID_FIXTURE,
+            USER_UUID_FIXTURE,
+            DEVICE_INFO_FIXTURE
           )
         service.setUserOnline(command)
         val isOnline = presenceDao.isUserOnline(USER_ID_FIXTURE)
 
-        Then("the presence DAO should report the user as online") {
-          isOnline shouldBe true
-        }
+        Then("the presence DAO should report the user as online") { isOnline shouldBe true }
       }
     }
 
     Given("a user is currently online") {
-      presenceDao.setSessionOnline(
-        SessionFixtures.SESSION
-      )
+      presenceDao.setSessionOnline(SessionFixtures.SESSION)
       presenceDao.isUserOnline(USER_ID_FIXTURE) shouldBe true
 
       When("the setUserOffline service is executed") {
-        val command = UpdatePresenceUseCase.SetUserOfflineCommand(SESSION_ID_FIXTURE, USER_UUID_FIXTURE)
+        val command =
+          UpdatePresenceUseCase.SetUserOfflineCommand(SESSION_ID_FIXTURE, USER_UUID_FIXTURE)
         service.setUserOffline(command)
         val isOnline = presenceDao.isUserOnline(USER_ID_FIXTURE)
 
-        Then("the user should be offline in the database") {
-          isOnline shouldBe false
-        }
+        Then("the user should be offline in the database") { isOnline shouldBe false }
       }
     }
   }

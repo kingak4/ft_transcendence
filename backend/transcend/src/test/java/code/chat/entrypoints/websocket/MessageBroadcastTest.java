@@ -13,15 +13,20 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
 import code.chat.domain.model.ChatFixtures;
+import code.chat.domain.model.MessageId;
+import code.chat.entrypoints.websocket.ChatEventListener.SendMessageEventResponse;
 import code.chat.ports.in.ManageMessagesUseCase;
 import code.shared.config.WebSocketAutoConfig;
 import code.shared.config.WebSocketTest;
 import code.shared.domain.model.WebSocketFixtures;
 import java.lang.reflect.Type;
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,7 +39,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {WebSocketAutoConfig.class, ChatWebSocketController.class})
+    classes = {WebSocketAutoConfig.class, ChatWebSocketController.class, ChatEventListener.class})
+@Slf4j
 class MessageBroadcastTest extends WebSocketTest {
 
   @LocalServerPort private int port;
@@ -64,12 +70,16 @@ class MessageBroadcastTest extends WebSocketTest {
     observerTwo = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
     sender = connectWithToken(stompClient, wsUrl, WebSocketFixtures.TOKEN_FIXTURE);
 
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> observerOneEvents =
-        subscribe(observerOne, topic);
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> observerTwoEvents =
-        subscribe(observerTwo, topic);
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> senderEvents =
-        subscribe(sender, topic);
+    MessageId expectedId = MessageId.generate();
+    Mockito.when(manageMessagesUseCase.sendMessage(any()))
+        .thenReturn(
+            new ManageMessagesUseCase.SendMessageResponse(expectedId, OffsetDateTime.now()));
+
+    BlockingQueue<SendMessageEventResponse> observerOneEvents = subscribe(observerOne, topic);
+    BlockingQueue<SendMessageEventResponse> observerTwoEvents = subscribe(observerTwo, topic);
+    BlockingQueue<SendMessageEventResponse> senderEvents = subscribe(sender, topic);
+
+    sendMessage(sender, chatId, messageContent);
 
     // When & Then
     await()
@@ -77,23 +87,30 @@ class MessageBroadcastTest extends WebSocketTest {
         .pollInterval(Duration.ofMillis(500))
         .untilAsserted(
             () -> {
-              sendMessage(sender, chatId, messageContent);
-
-              // Assert that every subscriber has received at least one message matching our content
               assertThat(observerOneEvents)
-                  .anySatisfy(msg -> assertThat(msg.content()).isEqualTo(messageContent));
+                  .anySatisfy(
+                      msg -> {
+                        assertThat(msg.content()).isEqualTo(messageContent);
+                        assertThat(msg.messageId()).isEqualTo(expectedId.val());
+                      });
+
               assertThat(observerTwoEvents)
-                  .anySatisfy(msg -> assertThat(msg.content()).isEqualTo(messageContent));
+                  .anySatisfy(
+                      msg -> {
+                        assertThat(msg.content()).isEqualTo(messageContent);
+                        assertThat(msg.messageId()).isEqualTo(expectedId.val());
+                      });
+
               assertThat(senderEvents)
-                  .anySatisfy(msg -> assertThat(msg.content()).isEqualTo(messageContent));
+                  .anySatisfy(
+                      msg -> {
+                        assertThat(msg.content()).isEqualTo(messageContent);
+                        assertThat(msg.messageId()).isEqualTo(expectedId.val());
+                      });
             });
 
-    // Verify mock call occurred after we know messages were delivered
     verify(manageMessagesUseCase, atLeastOnce())
         .sendMessage(any(ManageMessagesUseCase.SendMessageCommand.class));
-
-    ChatWebSocketController.ChatMessageResponse received = observerOneEvents.poll();
-    assertThat(received.chatId()).isEqualTo(ChatFixtures.CHAT_UUID_FIXTURE);
   }
 
   private void sendMessage(StompSession session, String chatId, String content) {
@@ -102,20 +119,21 @@ class MessageBroadcastTest extends WebSocketTest {
         new ChatWebSocketController.SendMessageRequest(content));
   }
 
-  private BlockingQueue<ChatWebSocketController.ChatMessageResponse> subscribe(
+  private BlockingQueue<SendMessageEventResponse> subscribe(
       StompSession session, String destination) {
-    BlockingQueue<ChatWebSocketController.ChatMessageResponse> queue = new LinkedBlockingQueue<>();
+    BlockingQueue<SendMessageEventResponse> queue = new LinkedBlockingQueue<>();
     session.subscribe(
         destination,
         new StompFrameHandler() {
           @Override
-          public Type getPayloadType(StompHeaders headers) {
-            return ChatWebSocketController.ChatMessageResponse.class;
+          public @NonNull Type getPayloadType(@NonNull StompHeaders headers) {
+            return SendMessageEventResponse.class;
           }
 
           @Override
-          public void handleFrame(StompHeaders headers, Object payload) {
-            queue.add((ChatWebSocketController.ChatMessageResponse) payload);
+          public void handleFrame(@NonNull StompHeaders headers, Object payload) {
+            log.info("Received message: {}", payload);
+            queue.add((SendMessageEventResponse) payload);
           }
         });
     return queue;

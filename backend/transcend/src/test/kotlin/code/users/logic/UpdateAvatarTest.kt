@@ -11,12 +11,8 @@ import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
 import org.springframework.security.authorization.AuthorizationDeniedException
 
-@Import(
-  UpdateAvatar::class
-)
-class UpdateAvatarTest(
-  private val service: UpdateAvatarUseCase
-) : UserDaoTestSupport() {
+@Import(UpdateAvatar::class)
+class UpdateAvatarTest(private val service: UpdateAvatarUseCase) : UserDaoTestSupport() {
 
   init {
 

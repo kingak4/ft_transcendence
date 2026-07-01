@@ -45,20 +45,16 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 @Transactional
 class ChatDaoTestSupport : BehaviorSpec() {
 
-  @Autowired
-  lateinit var chatDao: ChatDao
+  @Autowired lateinit var chatDao: ChatDao
 
-  @Autowired
-  lateinit var userDao: UserDao
+  @Autowired lateinit var userDao: UserDao
 
   protected lateinit var chatId: ChatId
 
   protected fun authenticateAs(userId: UserId, role: Role) {
     val authority = SimpleGrantedAuthority(role.name)
-    val auth = UsernamePasswordAuthenticationToken(
-      userId.`val`().toString(),
-      null, listOf(authority)
-    )
+    val auth =
+      UsernamePasswordAuthenticationToken(userId.`val`().toString(), null, listOf(authority))
     SecurityContextHolder.getContext().authentication = auth
   }
 
@@ -67,14 +63,12 @@ class ChatDaoTestSupport : BehaviorSpec() {
   }
 
   private fun createChatWithMessages(participants: Set<UserId>, messageCount: Int): ChatId {
-    val chat = Chat.builder()
-      .participants(participants)
-      .build()
+    val chat = Chat.builder().participants(participants).build()
     val chatId = chatDao.createChat(chat)
     repeat(messageCount) { _ ->
       val randomSenderId = participants.random()
       val message = ChatFixtures.aMessageBuilder(randomSenderId).build()
-      chatDao.saveMessage(message);
+      chatDao.saveMessage(message)
     }
     return chatId
   }
@@ -88,8 +82,6 @@ class ChatDaoTestSupport : BehaviorSpec() {
       val participants = setOf(CHAT_USER_ID_FIXTURE, CHAT_MEMBER1_ID_FIXTURE)
       val chatId = createChatWithMessages(participants, 5)
     }
-    afterSpec {
-      clearAuthentication()
-    }
+    afterSpec { clearAuthentication() }
   }
 }
