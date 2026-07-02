@@ -6,7 +6,7 @@ BLUE        = \033[0;34m
 GREEN       = \033[0;32m
 RESET       = \033[0m
 
--include .env.local
+include .env.local
 .PHONY: install dev build start lint format check clean fclean re
 
 all: local

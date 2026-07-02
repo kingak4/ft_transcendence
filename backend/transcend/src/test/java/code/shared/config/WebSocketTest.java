@@ -7,12 +7,15 @@ import code.shared.util.WebSocketSecurityUtil;
 import code.users.bootstrap.DefaultAvatarInitializer;
 import code.users.infrastructure.persistence.UserJpaRepository;
 import code.users.infrastructure.security.JwtTokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -21,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+@SpringBootTest
 public class WebSocketTest extends EmbeddedRedisTestSupport {
 
   protected WebSocketStompClient stompClient;
@@ -34,10 +38,14 @@ public class WebSocketTest extends EmbeddedRedisTestSupport {
 
   @MockitoBean private UserJpaRepository userJpaRepository;
 
+  @Autowired private ObjectMapper mapper;
+
   @BeforeEach
   void setUp() {
     this.stompClient = createStompClient();
-    this.stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+    MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
+    messageConverter.setObjectMapper(mapper);
+    this.stompClient.setMessageConverter(messageConverter);
 
     WebSocketSecurityUtil.mockAuth(
         jwtTokenService,

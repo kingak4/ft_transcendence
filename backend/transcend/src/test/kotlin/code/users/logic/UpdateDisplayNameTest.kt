@@ -9,12 +9,8 @@ import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
 import org.springframework.security.authorization.AuthorizationDeniedException
 
-@Import(
-  UpdateDisplayName::class
-)
-class UpdateDisplayNameTest(
-  private val service: UpdateDisplayNameUseCase
-) : UserDaoTestSupport() {
+@Import(UpdateDisplayName::class)
+class UpdateDisplayNameTest(private val service: UpdateDisplayNameUseCase) : UserDaoTestSupport() {
 
   init {
 

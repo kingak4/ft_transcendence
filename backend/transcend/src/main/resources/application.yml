@@ -45,7 +45,7 @@ springwolf:
       description: Documentation
     servers:
       local:
-        host: localhost:8080
+        host: ${LOCAL_HOST}:${server.port}
         protocol: ws
         protocol-version: "13"
         description: "Local WebSocket server"
