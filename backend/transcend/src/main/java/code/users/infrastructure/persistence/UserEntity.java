@@ -33,8 +33,6 @@ public class UserEntity {
   @Column(name = "user_details_id")
   private UUID userDetailsId;
 
-  //  private byte[] avatar;
-
   @ElementCollection
   @CollectionTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "friend_id", nullable = false)
