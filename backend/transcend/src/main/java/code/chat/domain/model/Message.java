@@ -12,6 +12,7 @@ import lombok.With;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Message {
   @EqualsAndHashCode.Include MessageId id;
+  ChatId chatId;
   UserId senderId;
   String content;
 

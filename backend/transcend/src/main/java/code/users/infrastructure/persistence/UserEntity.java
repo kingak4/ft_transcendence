@@ -31,6 +31,9 @@ public class UserEntity implements Persistable<UserIdEntity> {
   @Column(nullable = false)
   private Role role;
 
+  @Column(name = "user_details_id")
+  private UUID userDetailsId;
+
   @ElementCollection
   @CollectionTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "friend_id", nullable = false)
