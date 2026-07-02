@@ -10,12 +10,8 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
 
-@Import(
-  GetProfile::class
-)
-class GetProfileTest(
-  private val service: GetProfileUseCase
-) : UserDaoTestSupport() {
+@Import(GetProfile::class)
+class GetProfileTest(private val service: GetProfileUseCase) : UserDaoTestSupport() {
 
   init {
 
@@ -32,12 +28,9 @@ class GetProfileTest(
     }
 
     Given("a non-existent user ID") {
-
       When("the get details service is executed") {
         Then("it should throw a UserNotFoundException") {
-          shouldThrow<UserNotFoundException> {
-            service.getDetails(NON_EXISTENT_USER)
-          }
+          shouldThrow<UserNotFoundException> { service.getDetails(NON_EXISTENT_USER) }
         }
       }
     }
