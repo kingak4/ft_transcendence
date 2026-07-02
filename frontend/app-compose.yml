@@ -4,8 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile.apigen
     container_name: transcend-apigen
-    environment:
-      - BACKEND_URL=${BACKEND_URL}
+    env_file:
+      - .env
     volumes:
       - generated-types:/generated-types
     depends_on:
@@ -17,6 +17,7 @@ services:
       context: .
       args:
         BACKEND_URL: ${BACKEND_URL}
+        NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL}
     container_name: transcend-frontend
     volumes:
       - generated-types:/build/app/types

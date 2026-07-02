@@ -8,7 +8,7 @@ while ! curl -s "${BACKEND_URL}/api-docs" > /dev/null; do
 done
 
 echo "Generating API types..."
-npm run generate:all:dev
+npm run generate:all
 
 echo "Copying generated types to shared volume..."
 cp -r app/types/. /generated-types/
