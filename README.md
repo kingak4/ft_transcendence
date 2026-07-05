@@ -72,8 +72,13 @@ TODO
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
 TODO
 
-### [Zyta](https://github.com/) — Frontend Developer & Designer
-TODO
+### [Zyta](https://github.com/aktyz) — Frontend Developer & Designer
+
+Translated Kacper's Figma designs into working, responsive pages within the Next.js application.
+
+*   **Login Page:** Implemented the styled login page from the Figma mockup.
+*   **Register Page:** Implemented the styled register page from the Figma mockup.
+*   **User Profile Page:** Implemented the full user profile page, including an inline-editable display name component with client-side validation and a server action for persistence.
 
 
 ## 🛠️ Technical Stack
