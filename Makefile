@@ -35,6 +35,7 @@ nginx-build:
 down:
 	${COMPOSE} down
 	$(MAKE) -C infra down
+	docker network rm transcend-net 2>/dev/null || true
 
 frontend-local: infra-up backend-up
 	$(MAKE) -C frontend local
