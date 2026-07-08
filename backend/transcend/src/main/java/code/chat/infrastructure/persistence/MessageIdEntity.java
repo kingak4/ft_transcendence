@@ -5,4 +5,4 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Embeddable
-public record ChatIdEntity(UUID val) implements Serializable {}
+public record MessageIdEntity(UUID val) implements Serializable {}
