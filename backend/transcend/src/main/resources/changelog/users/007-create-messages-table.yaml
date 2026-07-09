@@ -18,10 +18,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                name: sender_id
-                type: UUID
-                constraints:
-                  nullable: false
+                  name: sender_id
+                  type: UUID
+                  constraints:
+                    nullable: false
               - column:
                   name: content
                   type: TEXT
@@ -35,7 +35,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: messages
             baseColumnNames: chat_id
-            referencedTableName: chats
+            referencedTableName: chat
             referencedColumnNames: val
             constraintName: fk_messages_chat
             onDelete: CASCADE

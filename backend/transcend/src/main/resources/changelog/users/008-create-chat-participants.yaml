@@ -11,7 +11,7 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     nullable: false
-              - user_id:
+              - column:
                   name: user_id
                   type: UUID
                   constraints:
@@ -23,7 +23,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: chat_participants
             baseColumnNames: chat_id
-            referencedTableName: chats
-            referencedColumnNames: id
+            referencedTableName: chat
+            referencedColumnNames: val
             constraintName: fk_chat_participants_chat
             onDelete: CASCADE

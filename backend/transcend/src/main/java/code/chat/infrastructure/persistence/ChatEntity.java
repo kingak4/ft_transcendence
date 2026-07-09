@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "chats")
+@Table(name = "chat")
 public class ChatEntity {
     @EmbeddedId @EqualsAndHashCode.Include ChatIdEntity id;
 
