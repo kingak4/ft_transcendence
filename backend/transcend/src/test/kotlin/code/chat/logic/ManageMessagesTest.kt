@@ -19,7 +19,7 @@ import java.util.UUID
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-@Ignored
+//@Ignored
 @Import(ManageMessages::class)
 class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTestSupport() {
 
