@@ -12,7 +12,7 @@ import io.kotest.matchers.shouldNotBe
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-@Ignored
+//@Ignored
 @Import(StartChat::class)
 class StartChatTest(private val service: StartChatUseCase) : ChatDaoTestSupport() {
 

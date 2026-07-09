@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-chats-table
+      author: dev
+      changes:
+        - createTable:
+            tableName: chat
+            columns:
+              - column:
+                  name: val
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
