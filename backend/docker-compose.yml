@@ -14,7 +14,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
       interval: 5s
       timeout: 10s
-      retries: 10
+      retries: 5
+      start_period: 210s
     restart: unless-stopped
 
   transcend-backend-test:

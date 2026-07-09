@@ -18,14 +18,14 @@ export default function LoginPage() {
       }
       return;
     }
-    window.location.href = '/home';
+    window.location.href = `/${response.message}`;
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-login-page">
-      <div className="w-80 rounded-2xl bg-brand-reversed-main-color p-8">
-        <h1 className="mb-1 text-2xl font-bold text-brand-main-color">Login</h1>
-        <p className="mb-6 text-sm text-brand-main-color/60">Welcome back!</p>
+    <div className="bg-gradient-login-page flex min-h-screen items-center justify-center">
+      <div className="bg-brand-reversed-main-color w-80 rounded-2xl p-8">
+        <h1 className="text-brand-main-color mb-1 text-2xl font-bold">Login</h1>
+        <p className="text-brand-main-color/60 mb-6 text-sm">Welcome back!</p>
 
         <input
           id="user-name"
@@ -33,7 +33,7 @@ export default function LoginPage() {
           value={loginValue}
           onChange={(e) => setLogin(e.target.value)}
           placeholder="Username"
-          className="mb-3 w-full rounded-lg bg-white/10 px-4 py-3 text-sm text-brand-main-color outline-none placeholder:text-brand-main-color/40 focus:ring-1 focus:ring-brand-secondary-color"
+          className="text-brand-main-color placeholder:text-brand-main-color/40 focus:ring-brand-secondary-color mb-3 w-full rounded-lg bg-white/10 px-4 py-3 text-sm outline-none focus:ring-1"
         />
 
         <input
@@ -42,27 +42,27 @@ export default function LoginPage() {
           value={passwordValue}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="mb-2 w-full rounded-lg bg-white/10 px-4 py-3 text-sm text-brand-main-color outline-none placeholder:text-brand-main-color/40 focus:ring-1 focus:ring-brand-secondary-color"
+          className="text-brand-main-color placeholder:text-brand-main-color/40 focus:ring-brand-secondary-color mb-2 w-full rounded-lg bg-white/10 px-4 py-3 text-sm outline-none focus:ring-1"
         />
 
         <div className="mb-6 text-right">
-          <span className="cursor-not-allowed text-xs text-brand-main-color/50">
+          <span className="text-brand-main-color/50 cursor-not-allowed text-xs">
             Forgot password?
           </span>
         </div>
 
         <button
           onClick={handleLogin}
-          className="mb-4 w-full rounded-lg bg-brand-secondary-color py-3 text-sm font-bold text-brand-additional-color-2 transition-colors hover:brightness-125"
+          className="bg-brand-secondary-color text-brand-additional-color-2 mb-4 w-full rounded-lg py-3 text-sm font-bold transition-colors hover:brightness-125"
         >
           Login
         </button>
 
-        <p className="text-center text-xs text-brand-main-color/50">
+        <p className="text-brand-main-color/50 text-center text-xs">
           Don&apos;t have an account?{' '}
           <Link
             href="/register"
-            className="font-bold text-brand-additional-color transition-colors hover:text-brand-secondary-color"
+            className="text-brand-additional-color hover:text-brand-secondary-color font-bold transition-colors"
           >
             Register
           </Link>

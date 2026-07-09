@@ -20,6 +20,18 @@ public class DefaultAvatarInitializer implements ApplicationRunner {
 
   private final UserDao userDao;
 
+  @Override
+  public void run(ApplicationArguments args) {
+    log.info("Initializing default avatar");
+    try {
+      byte[] content = loadDefaultAvatarContent();
+      userDao.saveAvatar(new Avatar(AvatarId.DEFAULT_AVATAR_ID, content));
+      ensureDefaultAvatarUserExists();
+    } catch (Exception e) {
+      log.warn("Failed to initialize default avatar: {}", e.getMessage(), e);
+    }
+  }
+
   private void ensureDefaultAvatarUserExists() {
     if (userDao.findById(AvatarId.DEFAULT_AVATAR_ID).isEmpty()) {
       throw new RuntimeException("Avatar does not exist after initialization");

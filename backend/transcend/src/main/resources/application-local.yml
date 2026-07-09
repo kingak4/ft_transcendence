@@ -17,12 +17,19 @@ spring:
       port: 6380
 logging:
   level:
+    org.hibernate:
+        orm:
+          jdbc:
+            bind: TRACE
+        SQL: DEBUG
+        hql: DEBUG
+        jdbc: DEBUG
     com.zaxxer.hikari: INFO
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
     code: DEBUG
-    org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: INFO
     com.giffing.bucket4j: DEBUG
+
 server:
   port: 8080

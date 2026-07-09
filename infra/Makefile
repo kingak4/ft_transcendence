@@ -1,7 +1,7 @@
 include .env
-.PHONY: up build down rebuild re
+.PHONY: up build down rebuild re network
 
-up:
+up: network
 	make -C nginx up
 	make -C postgres up
 	make -C redis up
@@ -15,6 +15,7 @@ down:
 	make -C nginx down
 	make -C postgres down
 	make -C redis down
+	-docker network rm transcend-net
 
 rebuild: down build up
 
@@ -33,3 +34,6 @@ ps:
 
 killall:
 	ids=$$(docker ps -aq); [ -n "$$ids" ] && docker rm -f $$ids
+
+network:
+	-docker network create transcend-net

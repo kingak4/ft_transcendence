@@ -10,7 +10,7 @@ up: network
 down:
 	${COMPOSE} down
 
-build: network 
+build
 	${COMPOSE} build
 
 rebuild: down build up
@@ -26,9 +26,6 @@ env:
 		cp $$file $$dir/.env; \
 		echo "Created $$dir/.env from $$file"; \
 	done
-
-network:
-	docker network create transcend-net 2>/dev/null || true
 
 # Utils
 .PHONY: frontend-local

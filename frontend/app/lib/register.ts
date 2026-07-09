@@ -17,7 +17,7 @@ export async function register(
     if (!response.ok) {
       /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const errAny = error as any;
-      console.error('Register Error:', response.body);
+      console.error('Register Error:', error);
       return {
         success: false,
         status: error?.status,
