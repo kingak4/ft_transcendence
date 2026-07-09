@@ -19,10 +19,10 @@ make build up
 - **Springwolf UI**: [http://localhost:8080/springwolf/asyncapi-ui.html](http://localhost:8080/springwolf/asyncapi-ui.html)
 - **AsyncAPI Raw JSON**: [http://localhost:8080/springwolf/docs](http://localhost:8080/springwolf/docs)
 
-## Backend AsciiDoc Documentation
+## Backend Documentation
 **Generate the docs**
 ```bash
-make test
+make -f Makefile.local docs
 ```
 - **Documentation UI**: transcend/build/docs/asciidoc/index.html
 
