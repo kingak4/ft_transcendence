@@ -14,7 +14,7 @@ local: generate
 install:
 	@npm install
 
-generate:
+generate: install
 	@mkdir -p app/types
 	@./node_modules/.bin/openapi-typescript $(BACKEND_URL)/api-docs -o app/types/api.d.ts
 	@BACKEND_URL=$(BACKEND_URL) node scripts/generate-asyncapi.mjs

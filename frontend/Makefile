@@ -9,7 +9,7 @@ CONTAINER := transcend-frontend
 
 up:
 	make -f Makefile.local generate
-	$(COMPOSE) up ${CONTAINER} -d
+	$(COMPOSE) up --build ${CONTAINER} -d
 
 down:
 	$(COMPOSE) down ${CONTAINER}

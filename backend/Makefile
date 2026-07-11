@@ -6,7 +6,7 @@ export COMPOSE_IGNORE_ORPHANS
 CONTAINER := transcend-backend
 
 up:
-	${COMPOSE} up --wait ${CONTAINER} -d
+	${COMPOSE} up --build --wait ${CONTAINER} -d
 
 build:
 	${COMPOSE} build 

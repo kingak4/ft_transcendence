@@ -5,7 +5,7 @@ export COMPOSE_IGNORE_ORPHANS
 CONTAINER := nginx
 
 up:
-	${COMPOSE} up -d
+	${COMPOSE} up --build -d
 
 build:
 	${COMPOSE} build
