@@ -27,7 +27,26 @@ export default async function UserProfilePage({ params }: Props) {
 
   const displayName = data.displayName ?? 'Unknown User';
 
-  const { data: friends } = await client.GET('/friends');
+  const { data: friends, response: friendsResponse } =
+    await client.GET('/friends');
+
+  //if (friendsResponse.status === 401 || friendsResponse.status === 403) {
+    //redirect('/login');
+  //}
+
+  const friendsLoadError = !friendsResponse.ok;
+
+  // TEMP hardcode for screenshot — remove once the user_details_id join bug is fixed
+  const friendsOverride: Record<
+    string,
+    { displayName?: string; avatarId?: { val?: string } }
+  > = {
+    '66b63bef-896b-4bd7-a91e-c56139228e2c': { displayName: 'User' },
+    '3a8a7b20-b628-446d-b8b5-e783b640ee8d': {
+      displayName: 'Ania',
+      avatarId: { val: 'c1aace88-82b5-4ba7-b6f1-54cf1c56f676' },
+    },
+  };
 
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-6">
@@ -48,7 +67,13 @@ export default async function UserProfilePage({ params }: Props) {
         <EditAvatarButton avatarId={data.avatarId} displayName={displayName} />
       </div>
 
-      <FriendsPanel friends={friends ?? {}} />
+      {friendsLoadError ? (
+        <p className="text-brand-reversed-main-color/40 text-sm">
+          Couldn&apos;t load friends. Please try again later.
+        </p>
+      ) : (
+        <FriendsPanel friends={friendsOverride} />
+      )}
     </div>
   );
 }
