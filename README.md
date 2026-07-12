@@ -16,7 +16,6 @@ The goal is to enable user interaction through real-time communication and commu
 The platform provides three functionalities:
 *   **Secure Authentication:** A user management system supporting registration, login, and session handling.
 *   **Chat:** A messaging system that allows users to connect and exchange messages in real time.
-*   **Community Forums:** A space for users to create discussions, post topics, share knowledge, and engage in threaded conversations.
 
 ## ⚙️ Setup
 
@@ -138,30 +137,19 @@ TODO
 
 * **Reasons:** Establishes the core pillars for a social platform, ensuring users can communicate with each other and build their network.
 
-#### 6. Organization System for Forums (Major — 2pts)
-* **Implementation:** Developed a forum platform, enabling users to create, edit, and delete sub-communities. It manages member lists (adding/removing users) and isolates permissions, allowing users to perform scoped CRUD actions, based on their given Role, only within an assigned organization.
-
-* **Reasons:** Grouping users enables structured sub-communities within the forum space, organizing interactions and related content.
-
-
 ---
 
 ### 🔐 Security, Authentication & Access Control
 
-#### 7. Standard User Management & Authentication (Major — 2pts)
+#### 6. Standard User Management & Authentication (Major — 2pts)
 * **Implementation:** Using **Spring Security**, implemented email and password authentication (salted and hashed passwords). Features registration, login flows, profile modifications, and avatar uploads. Incorporates form and user input validation across both the frontend and backend.
 
 * **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
 
-#### 8. Secured Public API (Major — 2pts)
+#### 7. Secured Public API (Major — 2pts)
 * **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes **rate limiting** and is documented following 'living documentation' principles.
 
 * **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
-
-#### 9. Advanced Permissions & Role Management (Major — 2pts)
-* **Implementation:** Built a Role-Based Access Control (RBAC) system managing distinct forum roles (Admin, Moderator, User, Guest). Features include per-role frontend UI views and backend action restrictions.
-
-* **Reasons:** Establishes hierarchies to prevent data tampering, enforces authorized data manipulation, and allows moderators/admins to maintain community standards.
 
 ---
 
