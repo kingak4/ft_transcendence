@@ -35,5 +35,7 @@ clean:
 	$(MAKE) -C backend clean
 	$(MAKE) -C frontend clean
 
-frontend-local: infra-up backend-up
-	$(MAKE) -C frontend local
+frontend-local:
+	$(MAKE) -C infra up
+	$(MAKE) -C backend up
+	$(MAKE) -C frontend -f Makefile.local local
