@@ -20,8 +20,8 @@ public interface UserEntityMapper {
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")
-  @Mapping(target = "userDetailsId", ignore = true)
   @Mapping(target = "friends", ignore = true)
+  @Mapping(target = "new", ignore = true)
   UserEntity toEntity(User user);
 
   default AvatarId map(UUID value) {
@@ -56,13 +56,13 @@ public interface UserEntityMapper {
     return id == null ? null : FriendId.of(id.val());
   }
 
-  default UserIdEntity mapFromFriendId(FriendId id) {
-    return id == null ? null : new UserIdEntity(id.val());
-  }
+  default UserIdEntity mapFromFriendId(FriendId id) { return id == null ? null : new UserIdEntity(id.val()); }
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "user", source = "user")
   @Mapping(target = "avatarId", qualifiedByName = "toAvatarIdEntity")
-  UserDetailsEntity toEntity(UserDetails details);
+  @Mapping(target = "new", ignore = true)
+  UserDetailsEntity toEntity(UserDetails details, UserEntity user);
 
   @Mapping(source = "id", target = "id")
   Avatar toDomain(AvatarEntity avatarEntity);

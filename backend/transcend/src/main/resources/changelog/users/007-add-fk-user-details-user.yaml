@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-add-fk-user-details-user.yaml
+      author: ft_transcendence
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: user_details
+            baseColumnNames: val
+            constraintName: fk_user_details_user
+            referencedTableName: users
+            referencedColumnNames: val
