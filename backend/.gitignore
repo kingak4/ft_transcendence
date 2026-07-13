@@ -2,6 +2,9 @@
 .gradle
 build
 
+# Make build-stamp cache
+.build.stamp
+
 # Compiled class file
 *.class
 

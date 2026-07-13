@@ -2,13 +2,15 @@ include ./infra/.env
 
 .PHONY: up down re build rebuild
 
-up: network
+up:
 	$(MAKE) -C infra up
 	$(MAKE) -C backend up
 	$(MAKE) -C frontend up
 
 down:
-	${COMPOSE} down
+	$(MAKE) -C frontend down
+	$(MAKE) -C backend down
+	$(MAKE) -C infra down
 
 build:
 	${COMPOSE} build
@@ -18,7 +20,7 @@ rebuild: down build up
 re: down up
 
 # Setup
-.PHONY: env network
+.PHONY: env
 
 env:
 	find . -name ".env.example" -type f | while read file; do \

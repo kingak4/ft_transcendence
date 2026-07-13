@@ -16,8 +16,22 @@ CONTAINER := transcend-frontend
 # from a dotenv file.
 CODEGEN_URL := https://localhost:8443/api
 
-up: generate
-	$(COMPOSE) up --build ${CONTAINER} -d
+BUILD_STAMP := .build.stamp
+# app/types is excluded: `generate` rewrites it on every `up` regardless of
+# content, which would make the stamp look permanently stale. See project
+# notes on the idempotent-write alternative if this ever needs revisiting.
+BUILD_SOURCES := $(shell find . -type f \
+	-not -path './node_modules/*' \
+	-not -path './.next/*' \
+	-not -path './app/types/*' \
+	-not -name '$(BUILD_STAMP)')
+
+up: generate $(BUILD_STAMP)
+	$(COMPOSE) up ${CONTAINER} -d
+
+$(BUILD_STAMP): $(BUILD_SOURCES)
+	$(COMPOSE) build ${CONTAINER}
+	@touch $(BUILD_STAMP)
 
 # nginx uses a self-signed cert in the dev build; NODE_TLS_REJECT_UNAUTHORIZED=0
 # is scoped to just these two one-shot codegen calls (plain Node fetch, not
@@ -32,7 +46,8 @@ down:
 	$(COMPOSE) down ${CONTAINER}
 
 build:
-	$(COMPOSE) build 
+	$(COMPOSE) build
+	@touch $(BUILD_STAMP)
 
 rebuild: down build up
 
