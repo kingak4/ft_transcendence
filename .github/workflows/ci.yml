@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Create .env.local for frontend
         run: |
-          echo "BACKEND_URL=http://localhost:5001"     > frontend/.env.local
+          echo "BACKEND_URL=http://localhost:5001" > frontend/.env.local
 
       - name: Set up Docker Buildx Cache
         uses: docker/setup-buildx-action@v3
@@ -43,6 +43,10 @@ jobs:
           tags: transcend-backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Start backend container
+        working-directory: backend
+        run: make up
 
       # ── Frontend ─────────────────────────────────────────────────────────
       - name: Setup Node.js
@@ -59,8 +63,9 @@ jobs:
       - name: Generate API types
         working-directory: frontend
         # Fetches OpenAPI spec from /api-docs and AsyncAPI spec from /springwolf/docs
-        # then writes app/types/api.d.ts and app/types/asyncapi.d.ts
-        run: npm run generate:all
+        # directly from the backend's loopback-only port (see .env.local above), then
+        # writes app/types/api.d.ts and app/types/asyncapi.d.ts
+        run: npm run generate:all:dev
 
       - name: Lint
         working-directory: frontend

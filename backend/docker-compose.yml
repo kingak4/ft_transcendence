@@ -6,8 +6,6 @@ services:
       dockerfile: transcend/Dockerfile
     env_file:
       - transcend/.env
-    ports:
-      - "5001:5000"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     healthcheck:
