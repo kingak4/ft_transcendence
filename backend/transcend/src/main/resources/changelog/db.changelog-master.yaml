@@ -10,8 +10,12 @@ databaseChangeLog:
   - include:
       file: changelog/users/005-create-user-friends-table.yaml
   - include:
-      file: changelog/users/006-create-chat-table.yaml
+      file: changelog/users/006-drop-user-details-id-from-users.yaml
   - include:
-      file: changelog/users/007-create-messages-table.yaml
+      file: changelog/users/007-add-fk-user-details-user.yaml
   - include:
-      file: changelog/users/008-create-chat-participants.yaml
+      file: changelog/users/010-create-chat-table.yaml
+  - include:
+      file: changelog/users/009-create-messages-table.yaml
+  - include:
+      file: changelog/users/010-create-chat-participants.yaml

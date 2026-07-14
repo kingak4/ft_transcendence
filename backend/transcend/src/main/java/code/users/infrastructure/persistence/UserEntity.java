@@ -8,6 +8,7 @@ import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.data.domain.Persistable;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -15,7 +16,7 @@ import org.hibernate.type.SqlTypes;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity implements Persistable<UserIdEntity> {
 
   @EmbeddedId @EqualsAndHashCode.Include private UserIdEntity id;
 
@@ -30,11 +31,27 @@ public class UserEntity {
   @Column(nullable = false)
   private Role role;
 
-  @Column(name = "user_details_id")
-  private UUID userDetailsId;
-
   @ElementCollection
   @CollectionTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "friend_id", nullable = false)
   private Set<UUID> friends = new HashSet<>();
+
+  @Transient
+  private boolean isNew = true;
+
+  @Override
+  public UserIdEntity getId() {
+    return id;
+  }
+
+  @Override
+  public boolean isNew() {
+    return isNew;
+  }
+
+  @PostPersist
+  @PostLoad
+  void markNotNew() {
+    this.isNew = false;
+  }
 }
