@@ -1,6 +1,6 @@
 package code.users.infrastructure.security;
 
-import code.users.domain.model.UserId;
+import code.chat.domain.model.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
