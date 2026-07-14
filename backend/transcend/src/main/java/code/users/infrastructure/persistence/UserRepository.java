@@ -36,11 +36,9 @@ public class UserRepository implements UserDao {
   @Override
   public void createUser(User user) {
     UserEntity entity = mapper.toEntity(user);
-    UserDetailsEntity detailsEntity = mapper.toEntity(user.getDetails());
-    detailsEntity.setId(mapper.map(user.getId()));
-    userDetailsJpaRepository.save(detailsEntity);
-    entity.setUserDetailsId(detailsEntity.getId().val());
+    UserDetailsEntity detailsEntity = mapper.toEntity(user.getDetails(), entity);
     userJpaRepository.save(entity);
+    userDetailsJpaRepository.save(detailsEntity);
   }
 
   @Override
@@ -59,7 +57,6 @@ public class UserRepository implements UserDao {
 
     if (user.getDetails() != null) {
       updateDetails(user.getId(), user.getDetails());
-      userEntity.setUserDetailsId(userIdEntity.val());
     }
   }
 

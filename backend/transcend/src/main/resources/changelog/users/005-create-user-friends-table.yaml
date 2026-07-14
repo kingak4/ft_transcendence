@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 005-create-users-friends-table
-      author: dev
+      author: ft_transcendence
       changes:
         - createTable:
             tableName: user_friends
