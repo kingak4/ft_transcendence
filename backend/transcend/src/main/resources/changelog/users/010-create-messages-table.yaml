@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 009-create-messages-table
+      id: 010-create-messages-table
       author: dev
       changes:
         - createTable:

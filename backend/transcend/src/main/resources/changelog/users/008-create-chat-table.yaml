@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 010-create-chat-table
+      id: 008-create-chat-table
       author: dev
       changes:
         - createTable:
