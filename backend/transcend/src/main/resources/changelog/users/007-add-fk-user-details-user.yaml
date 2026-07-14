@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 007-add-fk-user-details-user.yaml
+      id: 007-add-fk-user-details-user
       author: ft_transcendence
       changes:
         - addForeignKeyConstraint:
