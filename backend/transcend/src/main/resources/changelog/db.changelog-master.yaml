@@ -14,4 +14,8 @@ databaseChangeLog:
   - include:
       file: changelog/users/007-create-messages-table.yaml
   - include:
-      file: changelog/users/008-create-chat-participants.yaml
+      file: changelog/users/008-create-chat-table.yaml
+  - include:
+      file: changelog/users/009-create-chat-participants-table.yaml
+  - include:
+      file: changelog/users/010-create-messages-table.yaml

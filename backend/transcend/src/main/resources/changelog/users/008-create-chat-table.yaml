@@ -1,6 +1,10 @@
 databaseChangeLog:
   - changeSet:
+<<<<<<<< HEAD:backend/transcend/src/main/resources/changelog/users/006-create-chat-table.yaml
       id: 001-create-chats-table
+========
+      id: 008-create-chat-table
+>>>>>>>> a3fdf28 (Merge branch 'main' into feat/chat-repository):backend/transcend/src/main/resources/changelog/users/008-create-chat-table.yaml
       author: dev
       changes:
         - createTable:
