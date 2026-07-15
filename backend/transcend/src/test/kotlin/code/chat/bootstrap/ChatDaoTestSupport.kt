@@ -75,7 +75,7 @@ class ChatDaoTestSupport : BehaviorSpec() {
     val chatId = chatDao.createChat(chat)
     repeat(messageCount) { _ ->
       val randomSenderId = participants.random()
-      val message = ChatFixtures.aMessageBuilder(randomSenderId).build()
+      val message = ChatFixtures.aMessageBuilder(randomSenderId).chatId(chatId).build()
       chatDao.saveMessage(message)
     }
     return chatId
