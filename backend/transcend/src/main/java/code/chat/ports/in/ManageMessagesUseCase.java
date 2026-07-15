@@ -8,11 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ManageMessagesUseCase {
   @PreAuthorize(
-      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.sender())")
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.sender().val())")
   SendMessageResponse sendMessage(SendMessageCommand command);
 
   @PreAuthorize(
-      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.sender())")
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.sender().val())")
   void deleteMessage(DeleteMessageCommand command);
 
   record SendMessageResponse(MessageId id, OffsetDateTime createdAt) {}

@@ -83,6 +83,7 @@ class ChatDaoTestSupport : BehaviorSpec() {
 
   init {
     extension(SpringExtension)
+    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL)
     beforeSpec {
       userDao.createUser(aChatDaoUser())
       userDao.createUser(aChatMember1DaoUser())
