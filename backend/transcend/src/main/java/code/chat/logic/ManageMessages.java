@@ -29,6 +29,7 @@ public class ManageMessages implements ManageMessagesUseCase {
     Message message =
         Message.builder()
             .id(id)
+            .chatId(command.chatId())
             .senderId(command.sender())
             .createdAt(time)
             .content(command.content())

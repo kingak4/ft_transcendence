@@ -18,7 +18,6 @@ public class ChatRepository implements ChatDao {
   private final MessageJpaRepository messageJpaRepository;
   private final ChatMapper chatMapper;
   private final MessageMapper messageMapper;
-  private ChatId currentChatId;
 
   @Override
   public Optional<ChatId> findChat(UserId initiator, UserId recipient) {
@@ -68,16 +67,11 @@ public class ChatRepository implements ChatDao {
 
     ChatEntity entity = chatMapper.toEntity(chat.withId(chatId));
     ChatEntity saved = chatJpaRepository.save(entity);
-    currentChatId = ChatId.of(saved.getId().val());
-    return currentChatId;
+    return ChatId.of(saved.getId().val());
   }
 
   @Override
   public void saveMessage(Message message) {
-    if (message.getChatId() == null) {
-      message = message.withChatId(currentChatId);
-    }
-
     messageJpaRepository.save(messageMapper.toEntity(message));
   }
 
