@@ -32,6 +32,7 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
 
         When("sending a valid message") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val command = SendMessageCommand(CHAT_USER_ID_FIXTURE, chatId, "Hello")
           val response = service.sendMessage(command)
 
@@ -42,6 +43,7 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         }
 
         When("sending an empty message") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val command = SendMessageCommand(CHAT_USER_ID_FIXTURE, chatId, "   ")
 
           Then("it should throw EmptyMessageException") {
@@ -50,6 +52,7 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         }
 
         When("sending to a non-existent chat") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val nonExistentChatId = ChatId.of(UUID.randomUUID())
           val command = SendMessageCommand(CHAT_USER_ID_FIXTURE, nonExistentChatId, "Hello")
 
@@ -92,6 +95,7 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         val response = service.sendMessage(commandSend)
 
         When("deleting the message") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val commandDelete = DeleteMessageCommand(CHAT_USER_ID_FIXTURE, response.id())
           service.deleteMessage(commandDelete)
 
@@ -101,6 +105,7 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         }
 
         When("deleting a non-existent message") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val commandDelete = DeleteMessageCommand(CHAT_USER_ID_FIXTURE, MessageId.generate())
 
           Then("it should throw MessageNotFoundException") {
@@ -114,9 +119,8 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         val commandSend = SendMessageCommand(CHAT_USER_ID_FIXTURE, chatId, "Not yours")
         val response = service.sendMessage(commandSend)
 
-        authenticateAs(CHAT_MEMBER1_ID_FIXTURE, Role.USER)
-
         When("deleting the message") {
+          authenticateAs(CHAT_MEMBER1_ID_FIXTURE, Role.USER)
           val commandDelete = DeleteMessageCommand(CHAT_MEMBER1_ID_FIXTURE, response.id())
 
           Then("it should throw NotMessageOwnerException") {
@@ -141,8 +145,6 @@ class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTe
         authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
         val commandSend = SendMessageCommand(CHAT_USER_ID_FIXTURE, chatId, "Admin will delete")
         val response = service.sendMessage(commandSend)
-
-        authenticateAs(CHAT_MEMBER2_ID_FIXTURE, Role.ADMIN)
 
         When("deleting the message") {
           val commandDelete = DeleteMessageCommand(CHAT_USER_ID_FIXTURE, response.id())
