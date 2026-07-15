@@ -7,15 +7,6 @@ export BACKEND_URL
 
 CONTAINER := transcend-frontend
 
-# Host-reachable address for the dev/eval build's backend. Unlike .env's
-# BACKEND_URL (Docker-internal DNS, used by the transcend-frontend
-# container's own runtime), this must be resolvable from the host, since
-# `generate` below runs on the host before the frontend image is built.
-# nginx's port (8443) is a fixed mapping in infra/nginx/docker-compose.yml,
-# not per-environment config, so it's hardcoded here rather than sourced
-# from a dotenv file.
-CODEGEN_URL := https://localhost:8443/api
-
 BUILD_STAMP := .build.stamp
 # app/types is excluded: `generate` rewrites it on every `up` regardless of
 # content, which would make the stamp look permanently stale. See project
@@ -37,7 +28,7 @@ $(BUILD_STAMP): $(BUILD_SOURCES)
 # is scoped to just these two one-shot codegen calls (plain Node fetch, not
 # next dev's internal rewrite proxy, which ignores this variable).
 generate:
-	$(MAKE) -f Makefile.local install
+	@npm install
 	@mkdir -p app/types
 	@NODE_TLS_REJECT_UNAUTHORIZED=0 ./node_modules/.bin/openapi-typescript $(CODEGEN_URL)/api-docs -o app/types/api.d.ts
 	@NODE_TLS_REJECT_UNAUTHORIZED=0 BACKEND_URL=$(CODEGEN_URL) node scripts/generate-asyncapi.mjs

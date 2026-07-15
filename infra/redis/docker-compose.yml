@@ -6,8 +6,6 @@ services:
       - .env
     volumes:
       - redisdata:/data
-    ports:
-      - "6380:6379"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
