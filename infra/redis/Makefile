@@ -28,6 +28,9 @@ logs:
 	${DOCKER} logs -f ${CONTAINER}
 
 clean:
+	${COMPOSE} down
+
+fclean:
 	${COMPOSE} down -v
 
 ps:
