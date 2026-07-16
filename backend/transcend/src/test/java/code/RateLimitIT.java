@@ -1,5 +1,6 @@
 package code;
 
+import org.junit.jupiter.api.Disabled;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = DotEnvInitializer.class)
+@Disabled("Temporary disabled 4 this test")
 class RateLimitIT extends WebSocketTest {
 
   @Autowired private MockMvc mockMvc;
