@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/.gradle-docker-cache
-          key: gradle-docker-${{ runner.os }}-${{ hashFiles('backend/**/*.gradle.kts', 'backend/gradle/**') }}
+          key: gradle-docker-${{ runner.os }}-${{ hashFiles('backend/transcend/build.gradle.kts') }}
           restore-keys: |
             gradle-docker-${{ runner.os }}-
 
