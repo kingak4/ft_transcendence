@@ -131,6 +131,7 @@ tasks {
 
       filter {
          includeTestsMatching("code.SpecGeneratorTest")
+         isFailOnNoMatchingTests = false
       }
 
       outputs.dir(layout.buildDirectory.dir("reports/specs"))
