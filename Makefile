@@ -1,46 +1,26 @@
 include ./infra/.env
 
-.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build env network
+.PHONY: up down re build rebuild
 
-up: network infra-up backend-up frontend-up nginx-up
+up:
+	$(MAKE) -C infra up
+	$(MAKE) -C backend up
+	$(MAKE) -C frontend up
 
-build: network infra-build backend-build frontend-build nginx-build
+down:
+	$(MAKE) -C frontend down
+	$(MAKE) -C backend down
+	$(MAKE) -C infra down
+
+build:
+	${COMPOSE} build
 
 rebuild: down build up
 
-infra-up:
-	${COMPOSE} up -d --wait db redis
-
-infra-build:
-	${COMPOSE} up --build -d --wait db redis
-
-backend-up:
-	${COMPOSE} up -d --wait backend
-
-backend-build:
-	${COMPOSE} up --build -d --wait backend
-
-frontend-up:
-	${COMPOSE} up -d frontend
-
-frontend-build:
-	${COMPOSE} up --build -d frontend
-
-nginx-up:
-	${COMPOSE} up -d nginx
-
-nginx-build:
-	${COMPOSE} up --build -d nginx
-
-down:
-	${COMPOSE} down
-	$(MAKE) -C infra down
-	docker network rm transcend-net 2>/dev/null || true
-
-frontend-local: infra-up backend-up
-	$(MAKE) -C frontend local
-
 re: down up
+
+# Setup
+.PHONY: env
 
 env:
 	find . -name ".env.example" -type f | while read file; do \
@@ -49,5 +29,15 @@ env:
 		echo "Created $$dir/.env from $$file"; \
 	done
 
-network:
-	docker network create transcend-net 2>/dev/null || true
+# Utils
+.PHONY: frontend-local
+
+clean:
+	$(MAKE) -C infra clean
+	$(MAKE) -C backend clean
+	$(MAKE) -C frontend clean
+
+frontend-local:
+	$(MAKE) -C infra up
+	$(MAKE) -C backend -f Makefile.local up
+	$(MAKE) -C frontend -f Makefile.local local

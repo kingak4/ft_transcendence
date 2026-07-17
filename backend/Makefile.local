@@ -1,0 +1,49 @@
+include .env
+include ./../infra/.env
+.PHONY: run up build format test docs verify
+PROFILE := local
+export SPRING_PROFILES_ACTIVE=local
+
+CONTAINER := transcend-backend
+COMPOSE_LOCAL := ${COMPOSE} -f docker-compose.yml -f docker-compose.local.yml
+BUILD_STAMP := .build.stamp
+BUILD_SOURCES := $(shell find transcend -type f -not -path 'transcend/build/*' -not -path 'transcend/.gradle/*')
+
+run:
+	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'
+
+# Docker-based alternative to `run`, for machines without a local JDK —
+# what the root `frontend-local` flow actually uses. Publishes the backend's
+# port bound to 127.0.0.1 only (not 0.0.0.0), via docker-compose.local.yml,
+# so host-side tooling (codegen, next dev's rewrite) can reach it directly
+# without nginx — but it stays unreachable from any other machine/the
+# network. The dev/eval build's plain `backend/Makefile`'s `up` never
+# publishes this port at all.
+up: $(BUILD_STAMP)
+	${COMPOSE_LOCAL} up --wait ${CONTAINER} -d
+
+# Same freshness guard as the dev Makefile: rebuild the image only when a
+# source file under transcend/ is newer than the stamp. Both flavours build
+# the same image (the local overlay only publishes a port), so they share
+# one stamp file — and CI can `touch` it to mark its pre-built image fresh.
+$(BUILD_STAMP): $(BUILD_SOURCES)
+	${COMPOSE_LOCAL} build ${CONTAINER}
+	@touch $(BUILD_STAMP)
+
+build:
+	${GRADLE} build -Pprofile=$(PROFILE)
+
+format:
+	${GRADLE} spotlessApply -Pprofile=$(PROFILE)
+
+clean:
+	${GRADLE} clean
+
+test:
+	${GRADLE} jacocoTestReport -Pprofile=$(PROFILE)
+
+docs:
+	${GRADLE} docs -Pprofile=$(PROFILE)
+
+verify:
+	${GRADLE} test --tests "code.SpringContextTest" -Pprofile=$(PROFILE)

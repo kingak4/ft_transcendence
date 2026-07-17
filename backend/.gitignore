@@ -2,6 +2,9 @@
 .gradle
 build
 
+# Make build-stamp cache
+.build.stamp
+
 # Compiled class file
 *.class
 
@@ -29,3 +32,5 @@ replay_pid*
 
 # Environment
 transcend/.env
+transcend/.env.local
+

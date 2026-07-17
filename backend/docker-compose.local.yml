@@ -1,0 +1,9 @@
+services:
+  transcend-backend:
+    ports:
+      - "127.0.0.1:5001:5000"
+
+networks:
+  default:
+    external: true
+    name: transcend-net
