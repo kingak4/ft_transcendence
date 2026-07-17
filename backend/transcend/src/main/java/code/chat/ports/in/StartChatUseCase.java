@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface StartChatUseCase {
   @PreAuthorize(
-      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #command.initiator().val())")
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @membershipValidator.isSameUser(authentication, #command.initiator())")
   ChatId startChat(StartChatCommand command);
 
   record StartChatCommand(UserId initiator, UserId recipient) {}

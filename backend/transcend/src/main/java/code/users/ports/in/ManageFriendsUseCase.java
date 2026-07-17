@@ -8,11 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ManageFriendsUseCase {
   @PreAuthorize(
-      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #userId.val())")
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #userId)")
   void addFriend(UserId userId, FriendId friendId);
 
   @PreAuthorize(
-      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #userId.val())")
+      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #userId)")
   void removeFriend(UserId userId, FriendId friendId);
 
   Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);

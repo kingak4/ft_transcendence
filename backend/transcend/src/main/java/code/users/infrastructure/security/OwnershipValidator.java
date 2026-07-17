@@ -1,5 +1,6 @@
 package code.users.infrastructure.security;
 
+import code.users.domain.model.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OwnershipValidator {
 
-  public boolean isSameUser(Authentication authentication, Object userId) {
+  public boolean isSameUser(Authentication authentication, UserId userId) {
     if (authentication == null || authentication.getName() == null || userId == null) {
       return false;
     }
