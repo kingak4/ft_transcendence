@@ -87,7 +87,13 @@ Designed and maintained the project's infrastructure and database layer
 
 
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
-TODO
+
+Led the initial frontend setup and established core integrations for REST API and WebSocket communication.
+
+*   **Frontend Architecture:** Bootstrapped the Next.js application and development environment, including linters, formatters, and initial HTTPS configuration.
+*   **API Integration:** Developed the integration layer between the Next.js frontend and the Spring Boot backend. Implemented the BFF (Backend-for-Frontend) pattern, API web clients, and robust error handling for authentication flows (login/register).
+*   **Real-Time Communication:** Integrated WebSocket (STOMP) connections on the client side, enabling real-time chat functionality and live user presence (online/offline) updates.
+*   **UI/UX Design:** Designed and developed the foundational layout and aesthetics for the platform's landing page and user profile views.
 
 ### [Zyta](https://github.com/aktyz) — Frontend Developer & Designer
 Designed the application's UI and implemented core frontend features, then took ownership of the project's build environments and their verification.
