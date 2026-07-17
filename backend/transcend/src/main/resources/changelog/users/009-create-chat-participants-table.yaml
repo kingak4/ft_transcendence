@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-create-chat-participants-table
+      author: dev
+      changes:
+        - createTable:
+            tableName: chat_participants
+            columns:
+              - column:
+                  name: chat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: chat_participants
+            columnNames: chat_id, user_id
+            constraintName: pk_chat_participants
+        - addForeignKeyConstraint:
+            baseTableName: chat_participants
+            baseColumnNames: chat_id
+            referencedTableName: chat
+            referencedColumnNames: val
+            constraintName: fk_chat_participants_chat
+            onDelete: CASCADE
