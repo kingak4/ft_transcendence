@@ -20,6 +20,9 @@
 # production
 /build
 
+# Make build-stamp cache
+.build.stamp
+
 # misc
 .DS_Store
 *.pem

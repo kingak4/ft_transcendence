@@ -8,7 +8,7 @@ Welcome to the Next.js frontend application for `ft_transcendence`.
 
 To start the full development environment with automatic API type generation, use:
 ```bash
-make local
+make -f Makefile.local local
 ```
 **What this command does:**
 1. Installs all NPM dependencies.
@@ -20,14 +20,14 @@ make local
 
 If you prefer to run the frontend inside Docker:
 ```bash
-make -f Makefile.dev build up
+make build up
 ```
 
 ## Generated API Types
 
 We maintain strict type safety between the backend and frontend by automatically generating TypeScript interfaces directly from the backend's live documentation.
 
-**Do not edit these files manually!** They are overwritten automatically every time you run `make local` or `npm run generate:all`.
+**Do not edit these files manually!** They are overwritten automatically every time you run `make -f Makefile.local local` or `npm run generate:all`.
 
 ### 1. OpenAPI (REST)
 - **Path:** `app/types/api.d.ts`

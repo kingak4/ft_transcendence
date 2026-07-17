@@ -1,1 +1,4 @@
 .env
+
+# Make build-stamp cache (see nginx/Makefile)
+.build.stamp

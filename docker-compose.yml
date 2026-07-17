@@ -1,8 +1,6 @@
 name: transcend
 
 include:
-  - infra/postgres/docker-compose.yml
-  - infra/redis/docker-compose.yml
-  - infra/nginx/docker-compose.yml
-  - backend/app-compose.yml
-  - frontend/app-compose.yml
+  - infra/docker-compose.yml
+  - backend/docker-compose.yml
+  - frontend/docker-compose.yml

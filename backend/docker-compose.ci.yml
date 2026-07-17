@@ -1,0 +1,9 @@
+# CI-only override: persists Gradle's dependency cache between CI runs.
+# Activated by setting COMPOSE_FILE=docker-compose.yml:docker-compose.ci.yml
+# (see .github/workflows/ci.yml, "Run backend tests in docker" step).
+services:
+  transcend-backend-test:
+    environment:
+      - GRADLE_USER_HOME=/home/gradle/.gradle
+    volumes:
+      - ./.gradle-docker-cache:/home/gradle/.gradle

@@ -27,6 +27,7 @@ Create and configure the environment files before running the project:
 - [infra/redis/.env](infra/redis/.env) and [infra/redis/.env.example](infra/redis/.env.example)
 - [backend/.env](backend/.env) and [backend/.env.example](backend/.env.example)
 - [backend/transcend/.env](backend/transcend/.env) and [backend/transcend/.env.example](backend/transcend/.env.example)
+- [frontend/.env](frontend/.env) and [frontend/.env.example](frontend/.env.example)
 
 ## ▶️ Run the Project
 
