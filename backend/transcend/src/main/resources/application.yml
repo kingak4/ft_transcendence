@@ -29,6 +29,7 @@ spring:
 server:
   servlet:
     context-path: /
+  forward-headers-strategy: framework
 
 springdoc:
   api-docs:
@@ -37,6 +38,8 @@ springdoc:
     path: /swagger-ui.html
 
 springwolf:
+  paths:
+    docs: /springwolf/docs
   use-fqn: true
   docket:
     base-package: code

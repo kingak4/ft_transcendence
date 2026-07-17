@@ -3,13 +3,15 @@
 ## API Documentation (Swagger / OpenAPI)
 
 `Ensure the infra is running before runnning the application or tests`
-**Run the application locally with**
+**Run the backend locally with**
 ```bash
-make run
+make -f Makefile.local run
 ```
+The .env will be overriden with .env.local if present
+
 **or run in docker**
 ```bash
-make -f Makefile.dev build up
+make build up
 ```
 
 - **Swagger Interactive UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
@@ -17,10 +19,10 @@ make -f Makefile.dev build up
 - **Springwolf UI**: [http://localhost:8080/springwolf/asyncapi-ui.html](http://localhost:8080/springwolf/asyncapi-ui.html)
 - **AsyncAPI Raw JSON**: [http://localhost:8080/springwolf/docs](http://localhost:8080/springwolf/docs)
 
-## Backend AsciiDoc Documentation
+## Backend Documentation
 **Generate the docs**
 ```bash
-make test
+make -f Makefile.local docs
 ```
 - **Documentation UI**: transcend/build/docs/asciidoc/index.html
 
@@ -35,5 +37,5 @@ make check
 
 **Run tests in docker**
 ```bash
-make -f Makefile.dev test
+make test
 ```

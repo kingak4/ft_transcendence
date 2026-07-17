@@ -1,60 +1,51 @@
-NAME        = ft_transcendence
-PRETTIER    = npx prettier
-ESLINT      = npx eslint
+include .env
+include ./../infra/.env
+export COMPOSE_IGNORE_ORPHANS
+export BACKEND_URL
 
-BLUE        = \033[0;34m
-GREEN       = \033[0;32m
-RESET       = \033[0m
+.PHONY: up down re build rebuild generate
 
-include .env.local
-.PHONY: install dev build start lint format check clean fclean re
+CONTAINER := transcend-frontend
 
-all: local
+BUILD_STAMP := .build.stamp
+# app/types is excluded: `generate` rewrites it on every `up` regardless of
+# content, which would make the stamp look permanently stale. See project
+# notes on the idempotent-write alternative if this ever needs revisiting.
+BUILD_SOURCES := $(shell find . -type f \
+	-not -path './node_modules/*' \
+	-not -path './.next/*' \
+	-not -path './app/types/*' \
+	-not -name '$(BUILD_STAMP)')
 
-install:
-	@echo "$(BLUE)Installing npm dependencies...$(RESET)"
+up: generate $(BUILD_STAMP)
+	$(COMPOSE) up ${CONTAINER} -d
+
+$(BUILD_STAMP): $(BUILD_SOURCES)
+	$(COMPOSE) build ${CONTAINER}
+	@touch $(BUILD_STAMP)
+
+# nginx uses a self-signed cert in the dev build; NODE_TLS_REJECT_UNAUTHORIZED=0
+# is scoped to just these two one-shot codegen calls (plain Node fetch, not
+# next dev's internal rewrite proxy, which ignores this variable).
+generate:
 	@npm install
+	@mkdir -p app/types
+	@NODE_TLS_REJECT_UNAUTHORIZED=0 ./node_modules/.bin/openapi-typescript $(CODEGEN_URL)/api-docs -o app/types/api.d.ts
+	@NODE_TLS_REJECT_UNAUTHORIZED=0 BACKEND_URL=$(CODEGEN_URL) node scripts/generate-asyncapi.mjs
 
-dev: install
-	@echo "$(BLUE)Starting Next.js development server...$(RESET)"
-	@npm run dev
+down:
+	$(COMPOSE) down ${CONTAINER}
 
-local: install
-	@echo "$(BLUE)Waiting for backend API to be ready...$(RESET)"
-	@while ! curl -s ${BACKEND_URL}/api-docs > /dev/null; do sleep 1; done
-	@echo "$(BLUE)Generating all API types (OpenAPI & AsyncAPI)...$(RESET)"
-	@npm run generate:all:dev
-	@echo "$(BLUE)Starting Next.js local...$(RESET)"
-	@npm run dev
+build:
+	$(COMPOSE) build
+	@touch $(BUILD_STAMP)
 
-build: install
-	@echo "$(BLUE)️Building Next.js for production...$(RESET)"
-	@npm run build
+rebuild: down build up
 
-start: install
-	@echo "$(GREEN)Starting production server...$(RESET)"
-	@npm run start
+re: down up
 
-lint:
-	@echo "$(BLUE)Running Linter...$(RESET)"
-	@npm run lint
-
-format:
-	@echo "$(BLUE)Formatting code and sorting Tailwind classes...$(RESET)"
-	@$(PRETTIER) --write "./**/*.{ts,tsx,css}"
-
-check: lint
-	@echo "$(BLUE)Checking formatting...$(RESET)"
-	@npx prettier --check "./**/*.{ts,tsx,css}"
+# Utils
+.PHONY: clean
 
 clean:
-	@echo "$(BLUE)Cleaning build artifacts...$(RESET)"
-	@rm -rf .next
-
-fclean: clean
-	@echo "$(BLUE)Removing node_modules...$(RESET)"
-	@rm -rf app/types/api.d.ts
-	@rm -rf app/types/asyncapi.d.ts
-	@rm -rf node_modules
-
-re: fclean all
+	$(COMPOSE) down -v

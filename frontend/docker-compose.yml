@@ -1,9 +1,7 @@
 services:
-  frontend:
+  transcend-frontend:
     build:
       context: .
-      args:
-        BACKEND_URL: ${BACKEND_URL}
     container_name: transcend-frontend
     env_file:
       - .env

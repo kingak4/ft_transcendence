@@ -9,3 +9,7 @@ databaseChangeLog:
       file: changelog/users/002-create-users-table.yaml
   - include:
       file: changelog/users/005-create-user-friends-table.yaml
+  - include:
+      file: changelog/users/006-drop-user-details-id-from-users.yaml
+  - include:
+      file: changelog/users/007-add-fk-user-details-user.yaml

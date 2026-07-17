@@ -14,7 +14,7 @@ public interface UserDetailsJpaRepository extends JpaRepository<UserDetailsEntit
             SELECT uf.friend_id, ud.display_name, ud.avatar_id
             FROM user_friends uf
             JOIN users u ON u.val = uf.friend_id
-            JOIN user_details ud ON ud.val = u.user_details_id
+            JOIN user_details ud ON ud.val = u.val
             WHERE uf.user_id = :userId
             """,
       nativeQuery = true)
