@@ -89,8 +89,23 @@ Designed and maintained the project's infrastructure and database layer
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
 TODO
 
-### [Zyta](https://github.com/) — Frontend Developer & Designer
-TODO
+### [Zyta](https://github.com/aktyz) — Frontend Developer & Designer
+Designed the application's UI and implemented core frontend features, then took ownership of the project's build environments and their verification.
+
+#### 🎨 Frontend & Design
+
+*   **Design System:** Built a semantic design-token layer (surface, accent, on-surface roles) so pages and components consume theme roles instead of hardcoded palette colors.
+*   **Theming:** Implemented runtime theme switching between the brand theme and Catppuccin variants (Mocha/Latte), auditing every page and component to route colors through the token layer.
+*   **UI Components:** Designed and implemented the application's UI components consumed across the SPA.
+*   **Friends System:** Implemented the friends list UI (avatars, names, live rendering) and friend removal via Next.js Server Actions calling the backend REST API.
+
+#### ⚙️ Build & Environment Engineering
+
+*   **Dual Build Profiles:** Established the two supported builds as single-command flows — the Docker dev/eval build (`make`, fully nginx-fronted over HTTPS on port 8443) and the local frontend-development build (`make frontend-local`, host-run `next dev` against a loopback-only backend).
+*   **HTTPS Enforcement:** Closed the backend's host-published port so it is reachable exclusively through nginx's TLS termination, satisfying the HTTPS-only requirement.
+*   **nginx Routing:** Introduced dynamic upstream resolution and explicit prefix rewriting in nginx, breaking a startup circular dependency between nginx, the frontend image build, and API type generation.
+*   **Build Reliability:** Repaired the root-to-service Makefile chain and added content-based staleness tracking, so `make up` rebuilds images only when their build context actually changed.
+*   **Automated Verification:** Authored `docs/env_verification.sh` — an end-to-end check of both builds covering HTTPS routes, closed backend ports, loopback isolation, and cross-build leak checks.
 
 ## 🔄 Development Lifecycle & Practices
 
