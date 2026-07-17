@@ -2,8 +2,8 @@ package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_UUID_FIXTURE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +50,7 @@ class RegisterControllerTest {
     // given
     var request = new RegisterRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
     var command = new RegisterCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var uuid = ID_FIXTURE;
+    var uuid = USER_UUID_FIXTURE;
     var registeredUser = new RegisteredUser(UserId.of(uuid));
     var response = new RegisterController.RegisterResponse(uuid);
 

@@ -9,9 +9,7 @@ export default function StompProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // NEXT_PUBLIC_ prefix required so Next.js embeds this value in the browser bundle.
-  // SockJS starts with an HTTP negotiation, so the URL uses http:// (or https:// behind TLS).
-  const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? 'http://localhost:5001/ws';
+  const wsUrl = '/api/ws';
 
   return (
     <StompSessionProvider

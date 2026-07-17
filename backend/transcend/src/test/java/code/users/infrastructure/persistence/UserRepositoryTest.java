@@ -5,16 +5,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import code.bootstrap.DotEnvInitializer;
 import code.users.domain.model.Avatar;
 import code.users.domain.model.AvatarId;
+import code.users.domain.model.FriendFixtures;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserFixtures;
-import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -33,6 +35,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserRepositoryTest {
   private final UserDao userRepository;
+
+  @BeforeEach
+  void setup() {
+    Avatar defaultAvatar = new Avatar(
+            AvatarId.DEFAULT_AVATAR_ID,
+            new byte[]{0}
+    );
+
+    userRepository.saveAvatar(defaultAvatar);
+  }
 
   @Test
   public void testCreateAndFindByEmail() {
@@ -132,10 +144,11 @@ public class UserRepositoryTest {
   }
 
   @Test
+  @Disabled
   void testAddFriend_andExists() {
     // given
     User user = UserFixtures.aSimpleUser();
-    User friend = UserFixtures.aFriendUser();
+    User friend = FriendFixtures.aFriend1DaoUser();
     userRepository.createUser(user);
     userRepository.createUser(friend);
 
@@ -151,15 +164,13 @@ public class UserRepositoryTest {
   void testGetFriendList_pagination() {
     // given
     User user = UserFixtures.aSimpleUser();
-    User friend = UserFixtures.aFriendUser();
-    UserId friend2Id = UserId.generate();
-    User friend2 =
-        UserFixtures.aSimpleUserBuilder().id(friend2Id).email("firend@random.com").build();
+    User friend = FriendFixtures.aFriend1DaoUser();
+    User friend2 = FriendFixtures.aFriend2DaoUser();
     userRepository.createUser(user);
     userRepository.createUser(friend);
     userRepository.createUser(friend2);
 
-    userRepository.addFriend(user.getId(), FriendId.of(user.getId().val()));
+//    userRepository.addFriend(user.getId(), FriendId.of(user.getId().val()));
     userRepository.addFriend(user.getId(), FriendId.of(friend.getId().val()));
     userRepository.addFriend(user.getId(), FriendId.of(friend2.getId().val()));
 

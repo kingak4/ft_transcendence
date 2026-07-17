@@ -2,10 +2,10 @@ package code.users.entrypoints.http;
 
 import static code.bootstrap.config.TokenConfig.TOKEN_TYPE;
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
+import static code.users.domain.model.AuthFixtures.TOKEN_FIXTURE;
 import static code.users.domain.model.UserFixtures.EMAIL_FIXTURE;
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.PASSWORD_FIXTURE;
-import static code.users.domain.model.UserFixtures.TOKEN_FIXTURE;
+import static code.users.domain.model.UserFixtures.USER_UUID_FIXTURE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,9 +44,9 @@ class LoginControllerTest {
     // given
     var loginRequest = new LoginController.LoginRequest(EMAIL_FIXTURE, PASSWORD_FIXTURE);
     var loginCommand = new LoginCommand(EMAIL_FIXTURE, PASSWORD_FIXTURE);
-    var loginResult = new LoginResult(TOKEN_FIXTURE, TOKEN_TYPE, ID_FIXTURE.toString());
+    var loginResult = new LoginResult(TOKEN_FIXTURE, TOKEN_TYPE, USER_UUID_FIXTURE.toString());
     var loginResponse =
-        new LoginController.LoginResponse(TOKEN_FIXTURE, TOKEN_TYPE, ID_FIXTURE.toString());
+        new LoginController.LoginResponse(TOKEN_FIXTURE, TOKEN_TYPE, USER_UUID_FIXTURE.toString());
 
     when(loginMapper.toCommand(loginRequest)).thenReturn(loginCommand);
     when(loginUseCase.login(loginCommand)).thenReturn(loginResult);
@@ -61,7 +61,7 @@ class LoginControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.accessToken").value(TOKEN_FIXTURE))
         .andExpect(jsonPath("$.tokenType").value(TOKEN_TYPE))
-        .andExpect(jsonPath("$.userId").value(ID_FIXTURE.toString()));
+        .andExpect(jsonPath("$.userId").value(USER_UUID_FIXTURE.toString()));
 
     // then
     verify(loginMapper).toCommand(loginRequest);

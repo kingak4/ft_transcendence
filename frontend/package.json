@@ -45,7 +45,6 @@
   },
   "overrides": {
     "jsonpath-plus": "^10.3.0",
-    "postcss": "^8.5.10",
-    "ajv": "^8.12.0"
+    "postcss": "^8.5.10"
   }
 }

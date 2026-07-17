@@ -1,10 +1,10 @@
 include ./infra/.env
 
-.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build env
+.PHONY: up down re build rebuild infra-up backend-up frontend-up nginx-up infra-build backend-build frontend-build nginx-build env network
 
-up: infra-up backend-up frontend-up nginx-up
+up: network infra-up backend-up frontend-up nginx-up
 
-build: infra-build backend-build frontend-build nginx-build
+build: network infra-build backend-build frontend-build nginx-build
 
 rebuild: down build up
 
@@ -33,12 +33,12 @@ nginx-build:
 	${COMPOSE} up --build -d nginx
 
 down:
-	${COMPOSE} down -v
+	${COMPOSE} down
 	$(MAKE) -C infra down
+	docker network rm transcend-net 2>/dev/null || true
 
-local:
-	$(MAKE) -C infra up
-	@bash -c 'trap "$(MAKE) -C infra down; kill 0" EXIT; $(MAKE) -C backend & $(MAKE) -C frontend local & wait'
+frontend-local: infra-up backend-up
+	$(MAKE) -C frontend local
 
 re: down up
 
@@ -48,3 +48,6 @@ env:
 		cp $$file $$dir/.env; \
 		echo "Created $$dir/.env from $$file"; \
 	done
+
+network:
+	docker network create transcend-net 2>/dev/null || true

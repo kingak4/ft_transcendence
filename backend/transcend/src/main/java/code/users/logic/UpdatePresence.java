@@ -26,7 +26,6 @@ class UpdatePresence implements UpdatePresenceUseCase {
             .deviceInfo(command.deviceInfo())
             .createdAt(OffsetDateTime.now())
             .build();
-
     presenceDao.setSessionOnline(session);
   }
 

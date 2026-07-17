@@ -4,12 +4,10 @@ import { cookies } from 'next/headers';
 // import { postData } from './post';
 import { client } from './api-clients';
 
-
 export async function login(
   name: string,
   password: string,
 ): Promise<ActionResponse> {
-
   try {
     const { data, error, response } = await client.POST('/users/login', {
       body: {
@@ -19,7 +17,7 @@ export async function login(
     });
 
     if (!response.ok) {
-      console.error('Login Error:', response.body);
+      console.error('Login Error:', error);
       return {
         success: false,
         status: error?.status,
@@ -28,6 +26,7 @@ export async function login(
     }
 
     const token = data?.accessToken;
+    const id = data?.userId;
 
     if (!token) {
       return {
@@ -39,11 +38,21 @@ export async function login(
     const cookieStore = await cookies();
     cookieStore.set('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use HTTPS in prod
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
     });
-    return { success: true, status: 200 };
+
+    if (id) {
+      cookieStore.set('user_id', id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+      });
+    }
+
+    return { success: true, status: 200, message: id };
   } catch (error: unknown) {
     console.error('Network or Unexpected Error:', error);
     return {

@@ -1,28 +1,32 @@
 package code.users.bootstrap;
 
 import code.users.domain.model.Avatar;
-import code.users.domain.model.UserDetails;
+import code.users.domain.model.AvatarId;
 import code.users.ports.out.UserDao;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+//import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DefaultAvatarInitializer implements CommandLineRunner {
+@Order(1)
+public class DefaultAvatarInitializer implements ApplicationRunner {
 
   private final UserDao userDao;
 
   @Override
-  public void run(String... args) {
+  public void run(ApplicationArguments args) {
     log.info("Initializing default avatar");
     try {
       byte[] content = loadDefaultAvatarContent();
-      userDao.saveAvatar(new Avatar(UserDetails.DEFAULT_AVATAR_ID, content));
+      userDao.saveAvatar(new Avatar(AvatarId.DEFAULT_AVATAR_ID, content));
       ensureDefaultAvatarUserExists();
     } catch (Exception e) {
       log.warn("Failed to initialize default avatar: {}", e.getMessage(), e);
@@ -30,7 +34,7 @@ public class DefaultAvatarInitializer implements CommandLineRunner {
   }
 
   private void ensureDefaultAvatarUserExists() {
-    if (userDao.findById(UserDetails.DEFAULT_AVATAR_ID).isPresent()) {
+    if (userDao.findById(AvatarId.DEFAULT_AVATAR_ID).isEmpty()) {
       throw new RuntimeException("Avatar does not exist after initialization");
     }
   }

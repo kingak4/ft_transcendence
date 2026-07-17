@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     volumes:
-      - pgdata:/var/lib/postgresql
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: unless-stopped
@@ -23,5 +23,5 @@ volumes:
 
 networks:
   default:
+    external: true
     name: transcend-net
-    driver: bridge

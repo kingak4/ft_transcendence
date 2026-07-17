@@ -1,12 +1,10 @@
 package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
-import static code.users.domain.model.UserFixtures.AVATAR_ID_FIXTURE;
 import static code.users.domain.model.UserFixtures.DISPLAY_NAME_FIXTURE;
-import static code.users.domain.model.UserFixtures.ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.NAME_FIXTURE;
 import static code.users.domain.model.UserFixtures.USER_ID_FIXTURE;
-import static code.users.domain.model.UserFixtures.aDefaultUser;
+import static code.users.domain.model.UserFixtures.USER_UUID_FIXTURE;
+import static code.users.domain.model.UserFixtures.aDaoUser;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,7 +12,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserDetails;
+import code.users.domain.model.UserFixtures;
 import code.users.domain.model.UserId;
 import code.users.entrypoints.http.mappers.UsersApiMapper;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
@@ -52,10 +52,10 @@ class UserDetailsControllerTest {
   @Test
   void getDetailsSuccessfully() throws Exception {
     // given
-    UserDetails details = aDefaultUser().getDetails();
+    UserDetails details = aDaoUser().getDetails();
     var response =
         new UserDetailsController.GetUserDetailsResponse(
-            DISPLAY_NAME_FIXTURE, AVATAR_ID_FIXTURE.val());
+            DISPLAY_NAME_FIXTURE, AvatarId.DEFAULT_AVATAR_ID.val());
 
     when(getProfileUseCase.getDetails(USER_ID_FIXTURE)).thenReturn(details);
     when(mapper.toResponse(details)).thenReturn(response);
@@ -67,17 +67,19 @@ class UserDetailsControllerTest {
                 buildUrl(
                     UserDetailsController.BASE_URL,
                     UserDetailsController.DETAILS_ENDPOINT,
-                    ID_FIXTURE)))
+                    USER_UUID_FIXTURE)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.displayName").value(DISPLAY_NAME_FIXTURE))
-        .andExpect(jsonPath("$.avatarId").value(AVATAR_ID_FIXTURE.val().toString()));
+        .andExpect(jsonPath("$.avatarId").value(AvatarId.DEFAULT_AVATAR_ID.val().toString()));
   }
 
   @Test
   void updateDisplayNameSuccessfully() throws Exception {
     // given
-    var request = new UserDetailsController.UpdateDisplayNameRequest(NAME_FIXTURE);
-    var command = new UpdateDisplayNameUseCase.UpdateDisplayNameCommand(NAME_FIXTURE);
+    var request =
+        new UserDetailsController.UpdateDisplayNameRequest(UserFixtures.DISPLAY_NAME_FIXTURE);
+    var command =
+        new UpdateDisplayNameUseCase.UpdateDisplayNameCommand(UserFixtures.DISPLAY_NAME_FIXTURE);
 
     when(mapper.toCommand(request)).thenReturn(command);
 

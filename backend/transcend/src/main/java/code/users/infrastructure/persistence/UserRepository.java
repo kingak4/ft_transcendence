@@ -8,11 +8,14 @@ import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.out.UserDao;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +36,9 @@ public class UserRepository implements UserDao {
   @Override
   public void createUser(User user) {
     UserEntity entity = mapper.toEntity(user);
-    UserDetailsEntity detailsEntity = mapper.toEntity(user.getDetails());
-    detailsEntity.setId(mapper.map(user.getId()));
-    userDetailsJpaRepository.save(detailsEntity);
+    UserDetailsEntity detailsEntity = mapper.toEntity(user.getDetails(), entity);
     userJpaRepository.save(entity);
+    userDetailsJpaRepository.save(detailsEntity);
   }
 
   @Override
@@ -46,33 +48,36 @@ public class UserRepository implements UserDao {
 
   @Override
   public void updateUser(User user) {
-    UserEntity entity =
-        userJpaRepository
-            .findById(mapper.map(user.getId()))
-            .orElseThrow(EntityNotFoundException::new);
-    entity.setHash(user.getPassword());
+    UserIdEntity userIdEntity = mapper.map(user.getId());
+
+    UserEntity userEntity =
+        userJpaRepository.findById(userIdEntity).orElseThrow(EntityNotFoundException::new);
+
+    userEntity.setHash(user.getPassword());
 
     if (user.getDetails() != null) {
-      UserIdEntity userIdEntity = mapper.map(user.getId());
-      UserDetailsEntity details =
-          userDetailsJpaRepository
-              .findById(userIdEntity)
-              .orElseGet(
-                  () -> {
-                    UserDetailsEntity d = new UserDetailsEntity();
-                    d.setId(userIdEntity);
-                    return d;
-                  });
-      details.setDisplayName(user.getDetails().getDisplayName());
-      userDetailsJpaRepository.save(details);
-      entity.setUserDetailsId(userIdEntity.val());
+      updateDetails(user.getId(), user.getDetails());
     }
+  }
+
+  @Override
+  public void updateDetails(UserId id, UserDetails newDetails) {
+    UserIdEntity userIdEntity = mapper.map(id);
+
+    UserDetailsEntity details =
+        userDetailsJpaRepository.findById(userIdEntity).orElseGet(UserDetailsEntity::new);
+
+    details.setId(userIdEntity);
+    details.setAvatarId(mapper.map(newDetails.getAvatarId()));
+    details.setDisplayName(newDetails.getDisplayName());
+
+    userDetailsJpaRepository.save(details);
   }
 
   @Override
   public void saveAvatar(Avatar avatar) {
     AvatarEntity avatarEntity = new AvatarEntity();
-    avatarEntity.setVal(avatar.id().val());
+    avatarEntity.setId(new AvatarIdEntity(avatar.id().val())); // was setVal()
     avatarEntity.setContent(avatar.content());
     avatarJpaRepository.save(avatarEntity);
   }
@@ -82,6 +87,7 @@ public class UserRepository implements UserDao {
     UserEntity entity =
         userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
     entity.getFriends().add(friendId.val());
+    userJpaRepository.save(entity);
   }
 
   @Override
@@ -98,34 +104,28 @@ public class UserRepository implements UserDao {
 
   @Override
   public Optional<Avatar> findById(AvatarId avatarId) {
-    Optional<AvatarEntity> avatarEntity = avatarJpaRepository.findById(avatarId.val());
+    Optional<AvatarEntity> avatarEntity =
+        avatarJpaRepository.findById(new AvatarIdEntity(avatarId.val())); // was avatarId.val()
     return avatarEntity.map(mapper::toDomain);
   }
 
   @Override
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    UserEntity entity =
-        userJpaRepository.findById(mapper.map(userId)).orElseThrow(EntityNotFoundException::new);
-    return entity.getFriends().stream()
-        .skip((long) page * size)
-        .limit(size)
+    Pageable pageable = PageRequest.of(page, size);
+
+    List<Object[]> rows =
+        userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
+
+    return rows.stream()
         .collect(
             Collectors.toMap(
-                FriendId::of,
-                friendUuid -> {
-                  UserIdEntity friendIdEntity = new UserIdEntity(friendUuid);
-                  Optional<UserDetailsEntity> detailsOpt =
-                      userDetailsJpaRepository.findById(friendIdEntity);
-
-                  String displayName = detailsOpt.map(UserDetailsEntity::getDisplayName).orElse("");
-                  UUID avatarId =
-                      detailsOpt
-                          .map(UserDetailsEntity::getAvatarId)
-                          .orElse(UserDetails.DEFAULT_AVATAR_ID.val());
-
+                row -> FriendId.of((UUID) row[0]),
+                row -> {
+                  Object[] r = (Object[]) row; // explicit cast
                   return UserDetails.builder()
-                      .displayName(displayName)
-                      .avatarId(AvatarId.of(avatarId))
+                      .displayName(r[1] != null ? (String) r[1] : "")
+                      .avatarId(
+                          r[2] != null ? AvatarId.of((UUID) r[2]) : AvatarId.DEFAULT_AVATAR_ID)
                       .build();
                 }));
   }

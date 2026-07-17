@@ -9,6 +9,7 @@ import code.users.domain.model.UserId;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
@@ -19,8 +20,8 @@ public interface UserEntityMapper {
   User toDomain(UserEntity entity);
 
   @Mapping(source = "password", target = "hash")
-  @Mapping(target = "userDetailsId", ignore = true)
   @Mapping(target = "friends", ignore = true)
+  @Mapping(target = "new", ignore = true)
   UserEntity toEntity(User user);
 
   default AvatarId map(UUID value) {
@@ -28,15 +29,23 @@ public interface UserEntityMapper {
     return AvatarId.of(value);
   }
 
-  default UUID map(AvatarId value) {
-    if (value == null) return null;
-    return value.val();
+  default AvatarId map(AvatarIdEntity entity) {
+    return entity == null ? null : AvatarId.of(entity.val());
+  }
+
+  @Named("toAvatarIdEntity")
+  default AvatarIdEntity mapToAvatarIdEntity(AvatarId id) {
+    return id == null ? null : new AvatarIdEntity(id.val());
   }
 
   UserDetails toDomain(UserDetailsEntity entity);
 
   default UserId map(UserIdEntity id) {
     return id == null ? null : UserId.of(id.val());
+  }
+
+  default AvatarIdEntity map(AvatarId id) {
+    return id == null ? null : new AvatarIdEntity(id.val());
   }
 
   default UserIdEntity map(UserId id) {
@@ -47,13 +56,14 @@ public interface UserEntityMapper {
     return id == null ? null : FriendId.of(id.val());
   }
 
-  default UserIdEntity mapFromFriendId(FriendId id) {
-    return id == null ? null : new UserIdEntity(id.val());
-  }
+  default UserIdEntity mapFromFriendId(FriendId id) { return id == null ? null : new UserIdEntity(id.val()); }
 
   @Mapping(target = "id", ignore = true)
-  UserDetailsEntity toEntity(UserDetails details);
+  @Mapping(target = "user", source = "user")
+  @Mapping(target = "avatarId", qualifiedByName = "toAvatarIdEntity")
+  @Mapping(target = "new", ignore = true)
+  UserDetailsEntity toEntity(UserDetails details, UserEntity user);
 
-  @Mapping(source = "val", target = "id")
+  @Mapping(source = "id", target = "id")
   Avatar toDomain(AvatarEntity avatarEntity);
 }

@@ -27,7 +27,17 @@ bucket4j:
 
 logging:
   level:
-    org:
-      springframework:
-        messaging:
-          TRACE
+    org.springframework.messaging: TRACE
+    org.hibernate:
+      orm:
+        jdbc:
+          bind: TRACE
+      SQL: DEBUG
+      hql: DEBUG
+      jdbc: DEBUG
+    com.zaxxer.hikari: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    code: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    com.giffing.bucket4j: DEBUG

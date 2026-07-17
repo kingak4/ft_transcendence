@@ -3,6 +3,7 @@ package code.users.logic;
 import static code.users.domain.model.Role.USER;
 
 import code.users.domain.exceptions.EmailAlreadyRegisteredException;
+import code.users.domain.model.AvatarId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
@@ -29,8 +30,8 @@ class Register implements RegisterUseCase {
       throw new EmailAlreadyRegisteredException(command.email());
     UserDetails details =
         UserDetails.builder()
-            .displayName("Default User")
-            .avatarId(UserDetails.DEFAULT_AVATAR_ID)
+            .displayName(UserDetails.DEFAULT_DISPLAY_NAME)
+            .avatarId(AvatarId.DEFAULT_AVATAR_ID)
             .build();
     User newUser =
         User.builder()

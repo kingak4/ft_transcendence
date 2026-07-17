@@ -17,6 +17,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+      start_period: 210s
     restart: unless-stopped
 
   backend-test:
@@ -36,5 +37,5 @@ services:
 
 networks:
   default:
-    name: transcend-net
-    driver: bridge
+    external: true
+    name:  transcend-net

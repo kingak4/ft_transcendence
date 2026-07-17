@@ -2,10 +2,7 @@ import createClient from 'openapi-fetch';
 import type { paths } from '../types/api';
 
 export const client = createClient<paths>({
-  baseUrl:
-    typeof window === 'undefined'
-      ? process.env.BACKEND_URL
-      : '/api',
+  baseUrl: typeof window === 'undefined' ? process.env.BACKEND_URL : '/api',
   headers: {
     Accept: 'application/json',
   },
@@ -15,7 +12,7 @@ client.use({
   async onRequest({ request }) {
     if (typeof window === 'undefined') {
       try {
-        // Importujemy cookies dynamicznie tylko na serwerze
+        // Import cookies dynamically — only available on the server
         const { cookies } = await import('next/headers');
         const cookieStore = await cookies();
         const token = cookieStore.get('auth_token')?.value;

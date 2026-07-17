@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-drop-user-details-id-from-users
+      author: ft_transcendence
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: users
+            constraintName: fk_users_details
+        - dropColumn:
+            tableName: users
+            columnName: user_details_id

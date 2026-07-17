@@ -66,7 +66,25 @@ Established structured workflow for team coordination and task execution:
 TODO
 
 ### [Alina](https://github.com/alrltgit) — DevOps, Database Engineer
-TODO
+
+Designed and maintained the project's infrastructure and database layer
+
+#### DevOps
+
+*   **Containerization:** Containerized the backend and frontend applications using Docker.
+*   **Infrastructure:** Configured PostgreSQL and the Docker Compose environment for local development.
+*   **Environment Management:** Established a shared, idempotent Docker network and coordinated environment configuration across Docker Compose and Makefiles.
+*   **Build & Compatibility:** Improved the Docker build process.
+
+#### Database Engineer
+
+*   **Database Design:** Designed and updated the database schema as new features were added.
+*   **Persistence:** Integrated PostgreSQL with the backend using Spring Data JPA and implemented the repositories.
+*   **Transactions:** Researched and applied transaction management to keep data consistent.
+*   **Migrations:** Set up database migrations and managed schema changes over time.
+*   **Testing:** Wrote integration tests for the repository layer.
+*   **Documentation:** Created and maintained database documentation, including the entity-relationship diagram.
+
 
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
 TODO
