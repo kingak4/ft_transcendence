@@ -117,12 +117,17 @@ All feature development followed a structured, API-first approach that enabled p
   * **Client Layer (Frontend):** Designing the UI components (**Zyta**) and consuming the exposed backend endpoints (**Kacper**).
 
 ### Code Quality & Version Control Standards
-Due to project time constraints that prevented setting up a full CI/CD GitOps pipeline, integration standards were enforced strictly through team policies and repository configuration:
+Integration standards were enforced through an automated CI pipeline combined with team policies and repository configuration:
 
+* **Continuous Integration (GitHub Actions):** Every push and pull request targeting `main` runs a three-job pipeline that goes beyond compilation checks:
+  * **Backend tests** — the Gradle test suite executed inside Docker against real PostgreSQL and Redis containers, not mocks.
+  * **Dev/eval build verification** — brings up the full containerized stack and asserts the security topology: REST and STOMP endpoints must answer through nginx's HTTPS proxy while the backend's direct ports are confirmed closed. It then generates API types from the live OpenAPI/AsyncAPI specs, lints and builds the Next.js frontend, and verifies the homepage is served end-to-end through nginx.
+  * **Local build verification** — validates the frontend developer workflow: the backend must be published on loopback only (`127.0.0.1:5001`, invisible to the network) with health and STOMP endpoints reachable for a host-run dev server.
+  * Docker layer, Gradle, and Next.js caches keep full pipeline runs to a few minutes.
 * **Automated Formatters & Linters:** Integrated static analysis tools to eliminate stylistic debates, catch logical bugs before runtime, and enforce framework best practices. This allowed peer reviews to focus entirely on architecture and business logic.
 * **Strict GitHub Flow:** Adopted an isolated feature-branching strategy. Developers frequently synced with the main branch to preempt massive merge conflicts, submitting all work exclusively through Pull Requests.
 * **Conventional Commits:** Enforced structured commit messaging. This provided instant context for changes, streamlined debugging, and prepped the repository for automated release changelogs.
-* **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable pushes to  main and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
+* **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable pushes to main and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
 
 
 ## 🛠️ Technical Stack
