@@ -10,7 +10,5 @@ public interface SearchUsersUseCase {
 
   record UserSearchResult(UserId id, String displayName, AvatarId avatarId) {}
 
-  @PreAuthorize(
-      "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #initiator)")
-  Page<UserSearchResult> searchUsers(UserId initiator, String query, Pageable pageable);
+  Page<UserSearchResult> searchUsers(String query, Pageable pageable);
 }

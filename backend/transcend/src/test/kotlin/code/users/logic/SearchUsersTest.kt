@@ -18,13 +18,13 @@ class SearchUsersTest(private val service: SearchUsersUseCase) : UserDaoTestSupp
       val pageable = PageRequest.of(0, 10)
 
       When("searching users with an empty string") {
-        val result = service.searchUsers(USER_ID_FIXTURE, "", pageable)
+        val result = service.searchUsers("", pageable)
 
         Then("it should return an empty page") { result.content.shouldBeEmpty() }
       }
 
       When("searching users with spaces") {
-        val result = service.searchUsers(USER_ID_FIXTURE, "   ", pageable)
+        val result = service.searchUsers("   ", pageable)
 
         Then("it should return an empty page") { result.content.shouldBeEmpty() }
       }
@@ -34,10 +34,9 @@ class SearchUsersTest(private val service: SearchUsersUseCase) : UserDaoTestSupp
       val pageable = PageRequest.of(0, 10)
 
       When("searching users with a matching query (full or partial match)") {
-        val resultFull = service.searchUsers(USER_ID_FIXTURE, DISPLAY_NAME_FIXTURE, pageable)
+        val resultFull = service.searchUsers(DISPLAY_NAME_FIXTURE, pageable)
         val resultPartial =
           service.searchUsers(
-            USER_ID_FIXTURE,
             DISPLAY_NAME_FIXTURE.substring(0, 3).lowercase(),
             pageable
           )
@@ -55,7 +54,7 @@ class SearchUsersTest(private val service: SearchUsersUseCase) : UserDaoTestSupp
       }
 
       When("searching users with a non-matching query") {
-        val result = service.searchUsers(USER_ID_FIXTURE, "NonMatchingQueryTextXYZ", pageable)
+        val result = service.searchUsers("NonMatchingQueryTextXYZ", pageable)
 
         Then("it should return an empty page") { result.content.shouldBeEmpty() }
       }

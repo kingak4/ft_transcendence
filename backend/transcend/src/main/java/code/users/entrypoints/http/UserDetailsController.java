@@ -59,7 +59,7 @@ public class UserDetailsController {
     Pageable pageable = PageRequest.of(page, size);
     UUID userId = UUID.fromString(authentication.getName());
     Page<SearchUsersUseCase.UserSearchResult> result =
-        searchUsersUseCase.searchUsers(UserId.of(userId), query, pageable);
+        searchUsersUseCase.searchUsers(query, pageable);
     return ResponseEntity.ok(result);
   }
 

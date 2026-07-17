@@ -15,7 +15,7 @@ public class SearchUsers implements SearchUsersUseCase {
   private final UserDao userDao;
 
   @Override
-  public Page<UserSearchResult> searchUsers(UserId initiator, String query, Pageable pageable) {
+  public Page<UserSearchResult> searchUsers(String query, Pageable pageable) {
     if (query == null || query.trim().isEmpty()) {
       return Page.empty();
     }
