@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -27,6 +28,22 @@ public class UserRepository implements UserDao {
   private final UserDetailsJpaRepository userDetailsJpaRepository;
   private final AvatarJpaRepository avatarJpaRepository;
   private final UserEntityMapper mapper;
+
+  @Override
+  public Page<User> searchUsers(String query, Pageable pageable) {
+    Page<UserDetailsEntity> detailsPage =
+        userDetailsJpaRepository.findByDisplayNameContainingIgnoreCase(query, pageable);
+
+    return detailsPage.map(
+        detailsEntity -> {
+          UserIdEntity userIdEntity = detailsEntity.getId();
+          UserEntity userEntity =
+              userJpaRepository.findById(userIdEntity).orElseThrow(EntityNotFoundException::new);
+
+          User user = mapper.toDomain(userEntity);
+          return user.withDetails(mapper.toDomain(detailsEntity));
+        });
+  }
 
   @Override
   public Optional<User> findByEmail(String email) {
