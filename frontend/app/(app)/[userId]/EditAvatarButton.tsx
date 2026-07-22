@@ -93,7 +93,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
         )}
         <button
           onClick={handleOpen}
-          className="hover:bg-brand-main-color absolute bottom-0 right-0 rounded-full bg-white p-1.5 text-xs shadow transition-colors"
+          className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs shadow transition-colors hover:brightness-90"
         >
           Edit
         </button>
@@ -102,11 +102,11 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-brand-reversed-main-color w-96 rounded-2xl p-8 shadow-xl">
-            <h2 className="text-brand-main-color mb-1 text-2xl font-bold">
+          <div className="bg-inverse-surface text-on-inverse-surface w-96 rounded-2xl p-8 shadow-xl">
+            <h2 className="mb-1 text-2xl font-bold">
               Change avatar
             </h2>
-            <p className="text-brand-main-color/60 mb-6 text-sm">
+            <p className="text-on-inverse-surface/60 mb-6 text-sm">
               Pick a new photo for your profile.
             </p>
 
@@ -115,7 +115,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="relative h-24 w-24 overflow-hidden rounded-full bg-white/10 transition-opacity hover:opacity-75"
+                  className="bg-on-inverse-surface/10 relative h-24 w-24 overflow-hidden rounded-full transition-opacity hover:opacity-75"
                   title="Click to choose a photo"
                 >
                   {avatarPreview ? (
@@ -136,12 +136,12 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-brand-main-color/40 flex h-full w-full items-center justify-center text-xs">
+                    <span className="text-on-inverse-surface/40 flex h-full w-full items-center justify-center text-xs">
                       Add photo
                     </span>
                   )}
                 </button>
-                <p className="text-brand-main-color/40 text-xs">
+                <p className="text-on-inverse-surface/40 text-xs">
                   Click to choose a photo
                 </p>
                 <input
@@ -159,14 +159,14 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="text-brand-main-color/70 flex-1 rounded-lg bg-white/10 py-3 text-sm font-medium transition-colors hover:bg-white/20"
+                  className="text-on-inverse-surface/70 bg-on-inverse-surface/10 hover:bg-on-inverse-surface/20 flex-1 rounded-lg py-3 text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-brand-secondary-color text-brand-additional-color-2 flex-1 rounded-lg py-3 text-sm font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="bg-primary text-on-primary flex-1 rounded-lg py-3 text-sm font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving…' : 'Save'}
                 </button>

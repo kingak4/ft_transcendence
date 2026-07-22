@@ -35,7 +35,7 @@ export default function RemoveFriendButton({ friendId }: Props) {
       <button
         onClick={handleClick}
         disabled={isRemoving}
-        className="text-brand-main-color/60 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+        className="text-on-inverse-surface/60 bg-on-inverse-surface/10 hover:bg-on-inverse-surface/20 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isRemoving ? 'Removing…' : 'Remove'}
       </button>

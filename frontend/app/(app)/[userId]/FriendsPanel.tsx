@@ -25,11 +25,11 @@ export default function FriendsPanel({ friends }: Props) {
 
   return (
     <section>
-      <h2 className="text-brand-reversed-main-color mb-3 text-xl font-bold">
+      <h2 className="text-on-surface mb-3 text-xl font-bold">
         Friends
       </h2>
       {entries.length === 0 ? (
-        <p className="text-brand-reversed-main-color/40 text-sm">
+        <p className="text-on-surface/40 text-sm">
           No friends yet.
         </p>
       ) : (
@@ -43,7 +43,7 @@ export default function FriendsPanel({ friends }: Props) {
             return (
               <li
                 key={friendId}
-                className="bg-brand-reversed-main-color flex items-center justify-between gap-3 rounded-xl p-3"
+                className="bg-inverse-surface text-on-inverse-surface flex items-center justify-between gap-3 rounded-xl p-3"
               >
                 <div className="flex items-center gap-3">
                   {avatarSrc ? (
@@ -57,7 +57,7 @@ export default function FriendsPanel({ friends }: Props) {
                   ) : (
                     <div className="h-10 w-10 rounded-full bg-blue-200" />
                   )}
-                  <p className="text-brand-main-color font-medium">
+                  <p className="font-medium">
                     {friend.displayName ?? 'Unknown User'}
                   </p>
                 </div>

@@ -35,13 +35,13 @@ export default async function UserProfilePage({ params }: Props) {
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-6">
       {/* Profile banner */}
-      <div className="bg-brand-secondary-color flex items-start justify-between rounded-2xl p-6">
+      <div className="bg-primary flex items-start justify-between rounded-2xl p-6">
         <div>
           <EditDisplayNameButton displayName={displayName} />
           <form action={logout}>
             <button
               type="submit"
-              className="bg-brand-reversed-main-color text-brand-main-color rounded-lg px-4 py-2 text-sm font-bold transition-colors hover:brightness-90"
+              className="bg-inverse-surface text-on-inverse-surface rounded-lg px-4 py-2 text-sm font-bold transition-colors hover:brightness-90"
             >
               Log Out
             </button>
@@ -52,7 +52,7 @@ export default async function UserProfilePage({ params }: Props) {
       </div>
 
       {friendsLoadError ? (
-        <p className="text-brand-reversed-main-color/40 text-sm">
+        <p className="text-on-surface/40 text-sm">
           Couldn&apos;t load friends. Please try again later.
         </p>
       ) : (
