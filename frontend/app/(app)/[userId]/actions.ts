@@ -30,3 +30,14 @@ export async function uploadAvatarAction(
   if (response.ok) return { success: true };
   return { success: false, message: 'Failed to upload avatar.' };
 }
+
+export async function removeFriendAction(
+  friendId: string,
+): Promise<ActionResult> {
+  const { response } = await client.DELETE('/friends/{friendId}', {
+    params: { path: { friendId } },
+  });
+
+  if (response.ok) return { success: true };
+  return { success: false, message: 'Failed to remove friend.' };
+}
