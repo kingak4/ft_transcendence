@@ -39,28 +39,30 @@ Supporting documentation:
 
 Application will be available via nginx proxy on port 8443.
 
-## 👥 Team Information
 ### [Kinga](https://github.com/kingak4) — Project Manager & Developer
 
-Lead the project through full development lifecycle while contributing as a developer.
+Lead the project through the full development lifecycle while contributing as a developer.
 
-*   **Team Organization:** Structured task distribution and hybrid meetings, establishing the shared workspace and cross-functional coordination.
-*   **Documentation:** Created Confluence articles, architecture diagrams, and visual guides (Canva) for knowledge base. Coordinated documentation and knowledge sharing across the whole team.
-*   **Chat Module:** Implemented the Real-Time Chat Module feature.
-*   **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
-*   **Legal & Compliance:** Drafted Privacy Policy and integrated Open-Source License into the repository.
+* **Team Organization:** Structured task distribution and hybrid meetings, establishing the shared workspace and cross-functional coordination.
+* **Documentation:** Created Confluence articles, architecture diagrams, feature specifications, and visual guides for the project knowledge base. Coordinated documentation and knowledge sharing across the entire team.
+* **UI/UX Design:** Designed the application's visual identity and user interface, creating high-fidelity mockups and feature visualizations in Canva. Planned the layout, user flows, and overall user experience to ensure a consistent design across all modules.
+* **Design Documentation:** Documented UI concepts, workflows, and feature specifications in Confluence, providing implementation guidelines and maintaining design consistency throughout development.
+* **Chat Module:** Implemented the Real-Time Chat Module feature.
+* **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
+* **Legal & Compliance:** Drafted the Privacy Policy and integrated the Open-Source License into the repository.
 
 #### 📊 Project Management
 
-Established structured workflow for team coordination and task execution:
+Established a structured workflow for team coordination and task execution:
 
-*   **Kick-off Meeting:** Defined application concept and allocated roles through team brainstorming.
-*   **Task Distribution:** Assigned tasks by role and agreed upon collaboratively.
-*   **Synchronization:** Held full-team and sub-team meetings throughout the development lifecycle.
-*   **Hybrid Meetings:** Conducted in-person sessions at 42 Warsaw campus and online.
-*   **Timeline Management:** Monitored project progress and adapted scope based on time constraints, conducting concept pivots when necessary.
+* **Kick-off Meeting:** Defined the application concept, project scope, and allocated team roles through collaborative brainstorming.
+* **Task Distribution:** Assigned development tasks based on team members' responsibilities and agreed priorities.
+* **Synchronization:** Organized regular full-team and sub-team meetings to monitor progress and resolve blockers.
+* **Hybrid Meetings:** Coordinated both on-site sessions at the 42 Warsaw campus and remote meetings.
+* **Timeline Management:** Monitored project progress, adapted priorities to meet deadlines, and coordinated scope adjustments when necessary.
+* **Design Coordination:** Planned the application's interface and feature designs before implementation, ensuring developers followed a unified vision documented in Confluence.
 
-**Tools:** Jira (task tracking), Confluence (knowledge base & architecture), Slack (project communication), Messenger (rapid updates).
+**Tools:** Jira (task tracking), Confluence (project documentation, architecture & design specifications), Canva (UI/UX mockups and feature visualizations), Slack (project communication), Messenger (rapid team updates).
 
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
 TODO
