@@ -1,5 +1,4 @@
-import Image from 'next/image';
-
+import Avatar from '../../components/Avatar';
 import RemoveFriendButton from './RemoveFriendButton';
 
 interface Friend {
@@ -46,17 +45,11 @@ export default function FriendsPanel({ friends }: Props) {
                 className="bg-inverse-surface text-on-inverse-surface flex items-center justify-between gap-3 rounded-xl p-3"
               >
                 <div className="flex items-center gap-3">
-                  {avatarSrc ? (
-                    <Image
-                      src={avatarSrc}
-                      alt={`${friend.displayName ?? 'Friend'}'s avatar`}
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-10 w-10 rounded-full bg-blue-200" />
-                  )}
+                  <Avatar
+                    src={avatarSrc}
+                    alt={`${friend.displayName ?? 'Friend'}'s avatar`}
+                    size={40}
+                  />
                   <p className="font-medium">
                     {friend.displayName ?? 'Unknown User'}
                   </p>

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import Avatar from '../../components/Avatar';
 import { uploadAvatarAction } from './actions';
 
 interface Props {
@@ -80,17 +81,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
     <>
       {/* Avatar display + edit trigger */}
       <div className="relative shrink-0">
-        {currentSrc ? (
-          <Image
-            src={currentSrc}
-            alt={`${displayName}'s avatar`}
-            width={96}
-            height={96}
-            className="h-24 w-24 rounded-full object-cover"
-          />
-        ) : (
-          <div className="h-24 w-24 rounded-full bg-blue-200" />
-        )}
+        <Avatar src={currentSrc} alt={`${displayName}'s avatar`} size={96} />
         <button
           onClick={handleOpen}
           className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs shadow transition-colors hover:brightness-90"
