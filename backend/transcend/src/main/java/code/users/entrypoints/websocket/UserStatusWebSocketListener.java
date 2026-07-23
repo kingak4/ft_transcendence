@@ -73,13 +73,17 @@ class UserStatusWebSocketListener {
     Principal principal = headerAccessor.getUser();
 
     if (sessionId != null && principal != null) {
-      UUID userId = UUID.fromString(principal.getName());
-      SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
-      updatePresenceUseCase.setUserOffline(command);
-      messagingTemplate.convertAndSend(
-          UserWebSocketConfig.userPresenceTopic(userId),
-          new PresenceWebSocketController.PresenceStatusResponse(userId, false));
-      log.info("User {} disconnected", userId);
+      try {
+        UUID userId = UUID.fromString(principal.getName());
+        SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
+        updatePresenceUseCase.setUserOffline(command);
+        messagingTemplate.convertAndSend(
+                UserWebSocketConfig.userPresenceTopic(userId),
+                new PresenceWebSocketController.PresenceStatusResponse(userId, false));
+        log.info("User {} disconnected", userId);
+      } catch (IllegalArgumentException | org.springframework.security.access.AccessDeniedException e) {
+        log.warn("Failed to process disconnect for session {}: {}", sessionId, e.getMessage());
+      }
     }
   }
 
