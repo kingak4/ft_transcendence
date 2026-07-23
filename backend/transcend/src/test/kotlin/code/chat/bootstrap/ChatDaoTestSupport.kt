@@ -6,13 +6,16 @@ import code.chat.domain.model.ChatFixtures
 import code.chat.domain.model.ChatId
 import code.chat.domain.model.ChatUserFixtures.*
 import code.chat.domain.model.UserId
+import code.chat.infrastructure.persistence.ChatMapper
 import code.chat.infrastructure.persistence.ChatRepository
+import code.chat.infrastructure.persistence.MessageMapper
 import code.chat.logic.MembershipValidator
 import code.chat.ports.out.ChatDao
 import code.users.bootstrap.DefaultAvatarInitializer
 import code.users.domain.model.Role
 import code.users.infrastructure.persistence.UserEntityMapperImpl
 import code.users.infrastructure.persistence.UserRepository
+import code.users.infrastructure.security.OwnershipValidator
 import code.users.ports.out.UserDao
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringExtension
@@ -36,6 +39,11 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 @Import(
   UserRepository::class,
   ChatRepository::class,
+
+  ChatMapper::class,
+  MessageMapper::class,
+  OwnershipValidator::class,
+
   UserEntityMapperImpl::class,
   DefaultAvatarInitializer::class,
   MembershipValidator::class,
@@ -52,7 +60,7 @@ class ChatDaoTestSupport : BehaviorSpec() {
   protected lateinit var chatId: ChatId
 
   protected fun authenticateAs(userId: UserId, role: Role) {
-    val authority = SimpleGrantedAuthority(role.name)
+    val authority = SimpleGrantedAuthority("ROLE_${role.name}")
     val auth =
       UsernamePasswordAuthenticationToken(userId.`val`().toString(), null, listOf(authority))
     SecurityContextHolder.getContext().authentication = auth
@@ -67,7 +75,7 @@ class ChatDaoTestSupport : BehaviorSpec() {
     val chatId = chatDao.createChat(chat)
     repeat(messageCount) { _ ->
       val randomSenderId = participants.random()
-      val message = ChatFixtures.aMessageBuilder(randomSenderId).build()
+      val message = ChatFixtures.aMessageBuilder(randomSenderId).chatId(chatId).build()
       chatDao.saveMessage(message)
     }
     return chatId
@@ -75,12 +83,14 @@ class ChatDaoTestSupport : BehaviorSpec() {
 
   init {
     extension(SpringExtension)
+    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL)
     beforeSpec {
       userDao.createUser(aChatDaoUser())
       userDao.createUser(aChatMember1DaoUser())
       userDao.createUser(aChatMember2DaoUser())
       val participants = setOf(CHAT_USER_ID_FIXTURE, CHAT_MEMBER1_ID_FIXTURE)
-      val chatId = createChatWithMessages(participants, 5)
+//      val chatId = createChatWithMessages(participants, 5)
+      chatId = createChatWithMessages(participants, 5)
     }
     afterSpec { clearAuthentication() }
   }

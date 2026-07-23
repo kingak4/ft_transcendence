@@ -12,7 +12,7 @@ import io.kotest.matchers.shouldNotBe
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-@Ignored
+//@Ignored
 @Import(StartChat::class)
 class StartChatTest(private val service: StartChatUseCase) : ChatDaoTestSupport() {
 
@@ -22,9 +22,10 @@ class StartChatTest(private val service: StartChatUseCase) : ChatDaoTestSupport(
 
     Given("a user wants to start a chat") {
       And("the user is authenticated and starting a chat as themselves (initiator)") {
-        authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
+//        authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
 
         When("starting a chat with a new recipient") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val command = StartChatCommand(CHAT_USER_ID_FIXTURE, CHAT_MEMBER2_ID_FIXTURE)
           val result = service.startChat(command)
 
@@ -32,6 +33,7 @@ class StartChatTest(private val service: StartChatUseCase) : ChatDaoTestSupport(
         }
 
         When("starting a chat with a recipient they already have a chat with") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val command = StartChatCommand(CHAT_USER_ID_FIXTURE, CHAT_MEMBER1_ID_FIXTURE)
           val result = service.startChat(command)
 

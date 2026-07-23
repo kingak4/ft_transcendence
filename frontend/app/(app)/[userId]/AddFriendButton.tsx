@@ -2,23 +2,23 @@
 
 import { useRouter } from 'next/navigation';
 
-import { removeFriendAction } from './actions';
+import { addFriendAction } from './actions';
 import { useAsyncAction } from './useAsyncAction';
 
 interface Props {
   friendId: string;
-  onRemoved: () => void;
+  onAdded: () => void;
 }
 
-export default function RemoveFriendButton({ friendId, onRemoved }: Props) {
+export default function AddFriendButton({ friendId, onAdded }: Props) {
   const router = useRouter();
   const { isLoading, error, run } = useAsyncAction();
 
   function handleClick() {
     run(
-      () => removeFriendAction(friendId),
+      () => addFriendAction(friendId),
       () => {
-        onRemoved();
+        onAdded();
         router.refresh();
       },
     );
@@ -29,9 +29,9 @@ export default function RemoveFriendButton({ friendId, onRemoved }: Props) {
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className="text-brand-main-color/60 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-brand-secondary-color text-brand-additional-color-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isLoading ? 'Removing…' : 'Remove'}
+        {isLoading ? 'Adding…' : 'Add'}
       </button>
       {error && <p className="text-xs text-red-400">{error}</p>}
     </div>

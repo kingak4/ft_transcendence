@@ -21,4 +21,11 @@ public class MembershipValidator {
         .map(chat -> chat.getParticipants().contains(userId))
         .orElseThrow(ChatNotFoundException::new);
   }
+
+  public boolean isSameUser(Authentication authentication, UserId userId) {
+    if (authentication == null || authentication.getName() == null || userId == null) {
+      return false;
+    }
+    return authentication.getName().equals(userId.toString());
+  }
 }
