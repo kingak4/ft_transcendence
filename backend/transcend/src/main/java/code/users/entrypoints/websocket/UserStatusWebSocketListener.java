@@ -14,8 +14,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Component
 @RequiredArgsConstructor
@@ -36,12 +38,15 @@ class UserStatusWebSocketListener {
                       description =
                           "Event payload containing the user ID, session ID, and device information.")))
   @EventListener
-  public void handleWebSocketConnectListener(SessionConnectEvent event) {
+  public void handleWebSocketConnectListener(SessionConnectedEvent event) {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String sessionId = headerAccessor.getSessionId();
     Principal principal = headerAccessor.getUser();
 
     if (sessionId != null && principal != null && principal.getName() != null) {
+      if (principal instanceof Authentication auth) {
+        SecurityContextHolder.getContext().setAuthentication(auth);
+      }
       try {
         UUID userId = UUID.fromString(principal.getName());
         String deviceInfo = extractDeviceInfo(headerAccessor);
@@ -53,6 +58,8 @@ class UserStatusWebSocketListener {
             new PresenceWebSocketController.PresenceStatusResponse(userId, true));
         log.info("User {} connected from device: {}", userId, deviceInfo);
       } catch (IllegalArgumentException ignored) {
+      } finally {
+        SecurityContextHolder.clearContext();
       }
     }
   }
@@ -73,22 +80,32 @@ class UserStatusWebSocketListener {
     Principal principal = headerAccessor.getUser();
 
     if (sessionId != null && principal != null) {
+      if (principal instanceof Authentication auth) {
+        SecurityContextHolder.getContext().setAuthentication(auth);
+      }
       try {
         UUID userId = UUID.fromString(principal.getName());
         SetUserOfflineCommand command = new SetUserOfflineCommand(sessionId, userId);
         updatePresenceUseCase.setUserOffline(command);
         messagingTemplate.convertAndSend(
-                UserWebSocketConfig.userPresenceTopic(userId),
-                new PresenceWebSocketController.PresenceStatusResponse(userId, false));
+            UserWebSocketConfig.userPresenceTopic(userId),
+            new PresenceWebSocketController.PresenceStatusResponse(userId, false));
         log.info("User {} disconnected", userId);
-      } catch (IllegalArgumentException | org.springframework.security.access.AccessDeniedException e) {
-        log.warn("Failed to process disconnect for session {}: {}", sessionId, e.getMessage());
+      } catch (IllegalArgumentException ignored) {
+      } finally {
+        SecurityContextHolder.clearContext();
       }
     }
   }
 
   private String extractDeviceInfo(StompHeaderAccessor headerAccessor) {
-    String userAgent = headerAccessor.getFirstNativeHeader("user-agent");
+    String userAgent = null;
+    if (headerAccessor.getSessionAttributes() != null) {
+      userAgent = (String) headerAccessor.getSessionAttributes().get("user-agent");
+    }
+    if (userAgent == null) {
+      userAgent = headerAccessor.getFirstNativeHeader("user-agent");
+    }
     return userAgent != null ? userAgent : "Unknown Device";
   }
 }
