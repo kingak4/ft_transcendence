@@ -23,7 +23,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +42,7 @@ class UserStatusWebSocketListenerTest {
     String userAgent = "test-agent";
 
     // When
-    listener.handleWebSocketConnectListener(connectEvent(sessionId, userId, userAgent));
+    listener.handleWebSocketConnectListener(connectedEvent(sessionId, userId, userAgent));
 
     // Then
     await()
@@ -80,13 +80,19 @@ class UserStatusWebSocketListenerTest {
             });
   }
 
-  private SessionConnectEvent connectEvent(String sessionId, UUID userId, String userAgent) {
-    StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.CONNECT);
+  private SessionConnectedEvent connectedEvent(String sessionId, UUID userId, String userAgent) {
+    StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.CONNECTED);
     accessor.setSessionId(sessionId);
-    accessor.setUser(new UsernamePasswordAuthenticationToken(userId.toString(), null));
-    accessor.addNativeHeader("user-agent", userAgent);
-
-    return new SessionConnectEvent(this, message(accessor));
+    var principal = new UsernamePasswordAuthenticationToken(userId.toString(), null);
+    accessor.setUser(principal);
+    if (accessor.getSessionAttributes() != null) {
+        accessor.getSessionAttributes().put("user-agent", userAgent);
+    } else {
+        accessor.setSessionAttributes(new java.util.HashMap<>());
+        accessor.getSessionAttributes().put("user-agent", userAgent);
+    }
+    
+    return new SessionConnectedEvent(this, message(accessor), principal);
   }
 
   private SessionDisconnectEvent disconnectEvent(String sessionId, UUID userId) {
