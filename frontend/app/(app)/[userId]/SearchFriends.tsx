@@ -127,33 +127,42 @@ export default function SearchFriends({
     const trimmed = query.trim();
     if (!trimmed) return;
 
+    // Take a ticket from the same counter the debounce effect uses, so a
+    // query change while this fetch loop is in flight (or a second
+    // "Load more" click) invalidates this run's state updates below.
+    const requestId = ++latestRequestId.current;
     setIsLoadingMore(true);
 
     let accumulated = results;
     let fetchedPage = page;
     let more = hasMore;
 
-    while (more) {
-      fetchedPage += 1;
-      const result = await searchUsersAction(trimmed, fetchedPage, PAGE_SIZE);
+    try {
+      while (more) {
+        fetchedPage += 1;
+        const result = await searchUsersAction(trimmed, fetchedPage, PAGE_SIZE);
+        if (requestId !== latestRequestId.current) return;
 
-      if (!result.success) {
-        setIsLoadingMore(false);
-        setError(result.message);
-        return;
+        if (!result.success) {
+          setError(result.message);
+          return;
+        }
+
+        const visibleBefore = accumulated.filter(isVisibleLatest).length;
+        accumulated = [...accumulated, ...result.results];
+        more = result.hasMore;
+
+        if (accumulated.filter(isVisibleLatest).length > visibleBefore) break;
       }
 
-      const visibleBefore = accumulated.filter(isVisibleLatest).length;
-      accumulated = [...accumulated, ...result.results];
-      more = result.hasMore;
-
-      if (accumulated.filter(isVisibleLatest).length > visibleBefore) break;
+      if (requestId === latestRequestId.current) {
+        setPage(fetchedPage);
+        setResults(accumulated);
+        setHasMore(more);
+      }
+    } finally {
+      setIsLoadingMore(false);
     }
-
-    setIsLoadingMore(false);
-    setPage(fetchedPage);
-    setResults(accumulated);
-    setHasMore(more);
   }
 
   const visibleResults = results.filter(isVisible);
