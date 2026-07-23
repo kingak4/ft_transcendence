@@ -17,8 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Repository
@@ -28,6 +30,7 @@ public class UserRepository implements UserDao {
   private final UserDetailsJpaRepository userDetailsJpaRepository;
   private final AvatarJpaRepository avatarJpaRepository;
   private final UserEntityMapper mapper;
+  private static final int MAX_PAGE_SIZE = 20;
 
   @Override
   public Page<User> searchUsers(String query, Pageable pageable) {
@@ -128,6 +131,13 @@ public class UserRepository implements UserDao {
 
   @Override
   public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
+    if (size < 0 || size > MAX_PAGE_SIZE) {
+      throw new ResponseStatusException(
+              HttpStatus.BAD_REQUEST,
+              "size must be between 0 and " + MAX_PAGE_SIZE
+      );
+    }
+
     Pageable pageable = PageRequest.of(page, size);
 
     List<Object[]> rows =
