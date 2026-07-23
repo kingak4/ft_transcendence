@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import AddFriendSearch from './AddFriendSearch';
 import RemoveFriendButton from './RemoveFriendButton';
 
 interface Friend {
@@ -9,6 +10,7 @@ interface Friend {
 
 interface Props {
   friends: Record<string, Friend>;
+  currentUserId: string;
 }
 
 // Workaround for a backend serialization quirk: Jackson serializes the
@@ -20,14 +22,21 @@ function extractFriendId(rawKey: string): string {
   return rawKey.match(/val=([^\]]+)/)?.[1] ?? rawKey;
 }
 
-export default function FriendsPanel({ friends }: Props) {
+export default function FriendsPanel({ friends, currentUserId }: Props) {
   const entries = Object.entries(friends);
+  const friendIds = new Set(
+    entries.map(([rawFriendId]) => extractFriendId(rawFriendId)),
+  );
 
   return (
     <section>
       <h2 className="text-brand-reversed-main-color mb-3 text-xl font-bold">
         Friends
       </h2>
+      <AddFriendSearch
+        currentUserId={currentUserId}
+        existingFriendIds={friendIds}
+      />
       {entries.length === 0 ? (
         <p className="text-brand-reversed-main-color/40 text-sm">
           No friends yet.

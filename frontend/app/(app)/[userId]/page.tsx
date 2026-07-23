@@ -56,7 +56,7 @@ export default async function UserProfilePage({ params }: Props) {
           Couldn&apos;t load friends. Please try again later.
         </p>
       ) : (
-        <FriendsPanel friends={friends ?? {}} />
+        <FriendsPanel friends={friends ?? {}} currentUserId={userId} />
       )}
     </div>
   );
