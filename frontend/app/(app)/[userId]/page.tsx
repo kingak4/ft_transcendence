@@ -27,8 +27,16 @@ export default async function UserProfilePage({ params }: Props) {
 
   const displayName = data.displayName ?? 'Unknown User';
 
-  const { data: friends, response: friendsResponse } =
-    await client.GET('/friends');
+  // Workaround for the backend not reporting a total count on this endpoint:
+  // there's no way to know from the response whether more friends exist
+  // beyond the current page, so a real "load more" control can't be built.
+  // Request the largest page the backend allows (size is capped at 20)
+  // instead as a stopgap. Remove this once the backend returns paging
+  // metadata (e.g. totalElements) alongside the friends map.
+  const { data: friends, response: friendsResponse } = await client.GET(
+    '/friends',
+    { params: { query: { size: 20 } } },
+  );
 
   const friendsLoadError = !friendsResponse.ok;
 

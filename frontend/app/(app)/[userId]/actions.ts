@@ -58,14 +58,16 @@ export type SearchUserResult = {
 };
 
 type SearchUsersResult =
-  | { success: true; results: SearchUserResult[] }
+  | { success: true; results: SearchUserResult[]; hasMore: boolean }
   | { success: false; message: string };
 
 export async function searchUsersAction(
   query: string,
+  page = 0,
+  size = 10,
 ): Promise<SearchUsersResult> {
   const { data, response } = await client.GET('/users/search', {
-    params: { query: { query } },
+    params: { query: { query, page, size } },
   });
 
   if (!response.ok || !data) {
@@ -78,5 +80,5 @@ export async function searchUsersAction(
     avatarId: user.avatarId?.val,
   }));
 
-  return { success: true, results };
+  return { success: true, results, hasMore: !(data.last ?? true) };
 }

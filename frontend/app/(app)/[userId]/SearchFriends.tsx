@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 import AddFriendButton from './AddFriendButton';
+import UserList from './UserList';
 import { searchUsersAction, type SearchUserResult } from './actions';
 
 interface Props {
@@ -12,8 +12,9 @@ interface Props {
 }
 
 const SEARCH_DEBOUNCE_MS = 300;
+const PAGE_SIZE = 10;
 
-export default function AddFriendSearch({
+export default function SearchFriends({
   currentUserId,
   existingFriendIds,
 }: Props) {
@@ -21,7 +22,10 @@ export default function AddFriendSearch({
   const [results, setResults] = useState<SearchUserResult[]>([]);
   const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
   const latestRequestId = useRef(0);
 
   // Debounce: wait until the user pauses typing before hitting the backend,
@@ -33,6 +37,8 @@ export default function AddFriendSearch({
       setResults([]);
       setError(null);
       setIsSearching(false);
+      setPage(0);
+      setHasMore(false);
       return;
     }
 
@@ -40,21 +46,43 @@ export default function AddFriendSearch({
     setIsSearching(true);
 
     const handle = setTimeout(async () => {
-      const result = await searchUsersAction(trimmed);
+      const result = await searchUsersAction(trimmed, 0, PAGE_SIZE);
       if (requestId !== latestRequestId.current) return;
 
       setIsSearching(false);
+      setPage(0);
       if (!result.success) {
         setError(result.message);
         setResults([]);
+        setHasMore(false);
         return;
       }
       setError(null);
       setResults(result.results);
+      setHasMore(result.hasMore);
     }, SEARCH_DEBOUNCE_MS);
 
     return () => clearTimeout(handle);
   }, [query]);
+
+  async function handleLoadMore() {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    const nextPage = page + 1;
+    setIsLoadingMore(true);
+
+    const result = await searchUsersAction(trimmed, nextPage, PAGE_SIZE);
+
+    setIsLoadingMore(false);
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+    setPage(nextPage);
+    setResults((prev) => [...prev, ...result.results]);
+    setHasMore(result.hasMore);
+  }
 
   const visibleResults = results.filter(
     (user) =>
@@ -76,53 +104,30 @@ export default function AddFriendSearch({
 
       {error && <p className="text-xs text-red-400">{error}</p>}
 
-      {query.trim() &&
-        !isSearching &&
-        !error &&
-        visibleResults.length === 0 && (
-          <p className="text-brand-reversed-main-color/40 text-sm">
-            No users found.
-          </p>
-        )}
-
-      {visibleResults.length > 0 && (
-        <ul className="flex flex-col gap-2">
-          {visibleResults.map((user) => {
-            const avatarSrc = user.avatarId
-              ? `/api/users/avatar/${user.avatarId}`
-              : null;
-
-            return (
-              <li
-                key={user.id}
-                className="bg-brand-reversed-main-color flex items-center justify-between gap-3 rounded-xl p-3"
-              >
-                <div className="flex items-center gap-3">
-                  {avatarSrc ? (
-                    <Image
-                      src={avatarSrc}
-                      alt={`${user.displayName}'s avatar`}
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-10 w-10 rounded-full bg-blue-200" />
-                  )}
-                  <p className="text-brand-main-color font-medium">
-                    {user.displayName}
-                  </p>
-                </div>
-                <AddFriendButton
-                  friendId={user.id}
-                  onAdded={() =>
-                    setAddedIds((prev) => new Set(prev).add(user.id))
-                  }
-                />
-              </li>
-            );
-          })}
-        </ul>
+      {query.trim() && !isSearching && !error && (
+        <>
+          <UserList
+            users={visibleResults}
+            emptyMessage="No users found."
+            renderAction={(user) => (
+              <AddFriendButton
+                friendId={user.id}
+                onAdded={() =>
+                  setAddedIds((prev) => new Set(prev).add(user.id))
+                }
+              />
+            )}
+          />
+          {hasMore && (
+            <button
+              onClick={handleLoadMore}
+              disabled={isLoadingMore}
+              className="text-brand-reversed-main-color/60 self-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isLoadingMore ? 'Loading…' : 'Load more'}
+            </button>
+          )}
+        </>
       )}
     </div>
   );
