@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { updateDisplayNameAction } from './actions';
+import { useAsyncAction } from './useAsyncAction';
 
 interface Props {
   displayName: string;
@@ -13,8 +14,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { isLoading, error, setError, run } = useAsyncAction();
 
   function handleEdit() {
     setValue(displayName);
@@ -34,19 +34,13 @@ export default function EditDisplayNameButton({ displayName }: Props) {
       setError('Display name cannot be empty.');
       return;
     }
-    setIsSubmitting(true);
-    setError(null);
-    try {
-      const result = await updateDisplayNameAction(trimmed);
-      if (!result.success) {
-        setError(result.message);
-        return;
-      }
-      setIsEditing(false);
-      router.refresh();
-    } finally {
-      setIsSubmitting(false);
-    }
+    await run(
+      () => updateDisplayNameAction(trimmed),
+      () => {
+        setIsEditing(false);
+        router.refresh();
+      },
+    );
   }
 
   if (isEditing) {
@@ -71,10 +65,10 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           </button>
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className="bg-brand-secondary-color text-brand-additional-color-2 rounded-lg px-3 py-1.5 text-sm font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? 'Saving…' : 'Save'}
+            {isLoading ? 'Saving…' : 'Save'}
           </button>
         </div>
       </form>

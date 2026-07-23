@@ -1,11 +1,13 @@
+'use client';
+
+import { useState } from 'react';
+
+import type { components } from '../../types/api';
 import SearchFriends from './SearchFriends';
 import UserList from './UserList';
 import RemoveFriendButton from './RemoveFriendButton';
 
-interface Friend {
-  displayName?: string;
-  avatarId?: { val?: string };
-}
+type Friend = components['schemas']['UserDetails'];
 
 interface Props {
   friends: Record<string, Friend>;
@@ -22,11 +24,15 @@ function extractFriendId(rawKey: string): string {
 }
 
 export default function FriendsPanel({ friends, currentUserId }: Props) {
-  const friendCards = Object.entries(friends).map(([rawFriendId, friend]) => ({
-    id: extractFriendId(rawFriendId),
-    displayName: friend.displayName ?? 'Unknown User',
-    avatarId: friend.avatarId?.val,
-  }));
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
+
+  const friendCards = Object.entries(friends)
+    .map(([rawFriendId, friend]) => ({
+      id: extractFriendId(rawFriendId),
+      displayName: friend.displayName ?? 'Unknown User',
+      avatarId: friend.avatarId?.val,
+    }))
+    .filter((friend) => !removedIds.has(friend.id));
   const friendIds = new Set(friendCards.map((friend) => friend.id));
 
   return (
@@ -38,7 +44,14 @@ export default function FriendsPanel({ friends, currentUserId }: Props) {
       <UserList
         users={friendCards}
         emptyMessage="No friends yet."
-        renderAction={(user) => <RemoveFriendButton friendId={user.id} />}
+        renderAction={(user) => (
+          <RemoveFriendButton
+            friendId={user.id}
+            onRemoved={() =>
+              setRemovedIds((prev) => new Set(prev).add(user.id))
+            }
+          />
+        )}
       />
     </section>
   );
