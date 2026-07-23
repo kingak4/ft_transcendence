@@ -13,7 +13,7 @@ import java.util.*
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-@Ignored
+//@Ignored
 @Import(GetChatMessages::class)
 class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDaoTestSupport() {
 
@@ -26,12 +26,14 @@ class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDao
         authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
 
         When("requesting the chat messages") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val result = service.getChatMessages(chatId, 0, 10)
 
           Then("it should return all 5 messages") { result shouldHaveSize 5 }
         }
 
         When("requesting messages with pagination (size 2)") {
+          authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
           val result = service.getChatMessages(chatId, 0, 2)
 
           Then("it should return only the first 2 messages") { result shouldHaveSize 2 }
@@ -42,6 +44,7 @@ class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDao
         authenticateAs(CHAT_MEMBER2_ID_FIXTURE, Role.USER)
 
         When("requesting the chat messages") {
+          authenticateAs(CHAT_MEMBER2_ID_FIXTURE, Role.USER)
           Then("it should throw AccessDeniedException due to security rules") {
             shouldThrow<AccessDeniedException> { service.getChatMessages(chatId, 0, 10) }
           }
@@ -52,6 +55,7 @@ class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDao
         authenticateAs(CHAT_MEMBER2_ID_FIXTURE, role = Role.ADMIN)
 
         When("requesting the chat messages") {
+          authenticateAs(CHAT_MEMBER2_ID_FIXTURE, role = Role.ADMIN)
           val result = service.getChatMessages(chatId, 0, 10)
 
           Then("it should bypass membership check and return the messages") {
@@ -68,7 +72,8 @@ class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDao
         authenticateAs(CHAT_MEMBER2_ID_FIXTURE, Role.ADMIN)
 
         When("requesting messages") {
-          service.getChatMessages(nonExistentChatId, 0, 10)
+          authenticateAs(CHAT_MEMBER2_ID_FIXTURE, Role.ADMIN)
+//          service.getChatMessages(nonExistentChatId, 0, 10)
 
           Then("it should throw ChatNotFoundException") {
             shouldThrow<ChatNotFoundException> { service.getChatMessages(nonExistentChatId, 0, 10) }

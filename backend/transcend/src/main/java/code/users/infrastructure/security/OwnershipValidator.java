@@ -10,10 +10,9 @@ import org.springframework.stereotype.Component;
 public class OwnershipValidator {
 
   public boolean isSameUser(Authentication authentication, UserId userId) {
-    if (authentication == null || authentication.getName() == null) {
+    if (authentication == null || authentication.getName() == null || userId == null) {
       return false;
     }
-    String userIdFromAuth = authentication.getName();
-    return userIdFromAuth.equals(userId.val().toString());
+    return authentication.getName().equals(userId.toString());
   }
 }
