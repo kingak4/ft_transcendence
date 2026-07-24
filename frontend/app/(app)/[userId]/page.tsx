@@ -58,7 +58,7 @@ export default async function UserProfilePage({ params }: Props) {
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-6">
       {/* Profile banner */}
-      <div className="bg-primary flex items-start justify-between rounded-2xl p-6">
+      <div className="bg-brand-secondary-color flex items-start justify-between rounded-2xl p-6">
         <div>
           {isOwnProfile ? (
             <EditDisplayNameButton displayName={displayName} />
