@@ -14,19 +14,40 @@ This folder contains custom React hooks that isolate all the complex logic of co
 
 ## Available Hooks
 
-<!-- ### 1. `useChat`
-Used to send new messages and delete existing ones in a specific chat.
+### `useChat` & `useChatSubscription`
+A complete set of hooks for implementing a real-time chat. To use them properly, you first need to obtain a `chatId` via the REST API.
 
-**How to use:**
+**Step 1: Obtain a Chat ID (REST API)**
+Before connecting to a WebSocket room, create or fetch a chat session via HTTP:
 ```tsx
-const { sendMessage, deleteMessage, isConnected } = useChat();
+// Example POST request to start a chat with another user
+const res = await fetch(`/api/chats/${recipientId}`, { method: 'POST' });
+const { chatId } = await res.json();
+```
+
+**Step 2: Listen for Messages (`useChatSubscription`)**
+Use this hook to receive incoming messages (and deletion events) in real-time.
+```tsx
+const [messages, setMessages] = useState<ChatEventPayload[]>([]);
+
+useChatSubscription(chatId, (event) => {
+    // event contains: senderId, messageId, content, time
+    // Note: If content is missing, it is a DeleteMessageEvent
+    setMessages((prev) => [...prev, event]);
+});
+```
+
+**Step 3: Send & Delete Messages (`useChat`)**
+Use this hook to publish actions to the chat room.
+```tsx
+const { sendMessage, deleteMessage } = useChat();
 
 // Sending a message
-<button disabled={!isConnected} onClick={() => sendMessage('chat-id', 'Hello!')}>Send</button>
+<button onClick={() => sendMessage(chatId, 'Hello!')}>Send</button>
 
 // Deleting a message
-<button disabled={!isConnected} onClick={() => deleteMessage('msg-id')}>Delete</button>
-``` -->
+<button onClick={() => deleteMessage(chatId, 'msg-id')}>Delete</button>
+```
 
 ### `usePresence`
 Allows you to listen to whether given users are currently Online, and manually ping the server to check their status.

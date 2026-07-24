@@ -17,6 +17,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -44,10 +45,15 @@ public class ChatWebSocketController {
 
     var command = new SendMessageCommand(sender, chat, request.content());
 
-    ManageMessagesUseCase.SendMessageResponse response = manageMessagesUseCase.sendMessage(command);
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    try {
+      ManageMessagesUseCase.SendMessageResponse response = manageMessagesUseCase.sendMessage(command);
 
-    eventPublisher.publishEvent(
-        new MessageSentEvent(chat, sender, response.id(), request.content(), response.createdAt()));
+      eventPublisher.publishEvent(
+          new MessageSentEvent(chat, sender, response.id(), request.content(), response.createdAt()));
+    } finally {
+      SecurityContextHolder.clearContext();
+    }
   }
 
   @MessageMapping(MESSAGE_DELETE)
@@ -65,9 +71,14 @@ public class ChatWebSocketController {
     MessageId message = MessageId.of(messageId);
 
     var command = new DeleteMessageCommand(sender, message);
-    manageMessagesUseCase.deleteMessage(command);
 
-    eventPublisher.publishEvent(new MessageDeletedEvent(chat, sender, message));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    try {
+      manageMessagesUseCase.deleteMessage(command);
+      eventPublisher.publishEvent(new MessageDeletedEvent(chat, sender, message));
+    } finally {
+      SecurityContextHolder.clearContext();
+    }
   }
 
   @Schema(description = "Request to send a message in a chat")
