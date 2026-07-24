@@ -24,6 +24,7 @@ export function useTheme() {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (isTheme(stored)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is browser-only; the SSR pass renders the 'brand' default, and this post-mount read reconciles it with the real stored theme. A lazy useState initializer would read localStorage during the client's hydration render too, producing a server/client text mismatch in ThemeToggle.
       setTheme(stored);
     }
   }, []);
