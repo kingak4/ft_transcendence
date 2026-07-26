@@ -22,7 +22,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-gradient-login-page flex min-h-screen items-center justify-center">
+    <div className="bg-gradient-login-page flex flex-1 items-center justify-center">
       <div className="bg-brand-reversed-main-color w-80 rounded-2xl p-8">
         <h1 className="text-brand-main-color mb-1 text-2xl font-bold">Login</h1>
         <p className="text-brand-main-color/60 mb-6 text-sm">Welcome back!</p>

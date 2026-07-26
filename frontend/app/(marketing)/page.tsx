@@ -12,7 +12,7 @@ export default async function LandingPage() {
   const userId = cookieStore.get('user_id')?.value ?? null;
 
   return (
-    <div className="flex min-h-full flex-wrap items-center justify-center gap-16">
+    <div className="flex flex-1 flex-wrap items-center justify-center gap-16">
       <Hero />
 
       {/* Card — right */}

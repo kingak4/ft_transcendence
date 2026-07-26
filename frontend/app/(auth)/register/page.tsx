@@ -33,7 +33,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="bg-gradient-register-page flex min-h-screen items-center justify-center">
+    <div className="bg-gradient-register-page flex flex-1 items-center justify-center">
       <div className="bg-brand-reversed-main-color w-80 rounded-2xl p-8">
         <h1 className="text-brand-main-color mb-1 text-2xl font-bold">
           Register

@@ -37,7 +37,7 @@ export default function FriendsPanel({ friends, currentUserId }: Props) {
 
   return (
     <section>
-      <h2 className="text-brand-reversed-main-color mb-3 text-xl font-bold">
+      <h2 className="text-on-surface mb-3 text-xl font-bold">
         Friends
       </h2>
       <SearchFriends currentUserId={currentUserId} existingFriendIds={friendIds} />

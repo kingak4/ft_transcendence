@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { usePresence } from '../../hooks/usePresence';
-// import { useChat } from '../hooks/useChat';
+// import { useChat } from '../../hooks/useChat';
 
 export default function HomePage() {
   // const [chatId, setChatId] = useState('test-chat-id');
@@ -17,7 +17,7 @@ export default function HomePage() {
   // const { sendMessage, deleteMessage } = useChat();
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center gap-6 p-8 text-black dark:text-white">
+    <div className="flex h-full w-full flex-col items-center gap-6 p-8 text-black dark:text-white">
       <h1 className="text-3xl font-bold">STOMP WebSocket Test</h1>
 
       <div className="flex items-center gap-2">

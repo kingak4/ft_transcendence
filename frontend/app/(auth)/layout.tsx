@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
+import BareLayout from '../components/BareLayout';
 import BrandLink from '../components/BrandLink';
 import Footer from '../components/Footer';
 import { logout } from '../lib/logout';
@@ -47,10 +48,8 @@ export default async function AuthLayout({
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <BrandLink className="text-brand-main-color absolute left-6 top-6" />
-      <div className="flex-1">{children}</div>
-      <Footer />
-    </div>
+    <BareLayout brandLinkClassName="text-brand-main-color absolute left-6 top-6">
+      {children}
+    </BareLayout>
   );
 }

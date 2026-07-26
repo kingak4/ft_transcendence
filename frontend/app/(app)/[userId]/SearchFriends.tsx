@@ -174,7 +174,7 @@ export default function SearchFriends({
         value={query}
         onChange={handleQueryChange}
         placeholder="Search users by name…"
-        className="text-brand-reversed-main-color placeholder:text-brand-reversed-main-color/40 focus:ring-brand-secondary-color w-full rounded-lg bg-white/10 px-3 py-2 text-sm outline-none focus:ring-1"
+        className="text-on-surface placeholder:text-on-surface/40 focus:ring-primary w-full rounded-lg bg-on-surface/10 px-3 py-2 text-sm outline-none focus:ring-1"
       />
 
       {error && <p className="text-xs text-red-400">{error}</p>}
@@ -197,7 +197,7 @@ export default function SearchFriends({
             <button
               onClick={handleLoadMore}
               disabled={isLoadingMore}
-              className="text-brand-reversed-main-color/60 self-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="text-on-surface/60 bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoadingMore ? 'Loading…' : 'Load more'}
             </button>
