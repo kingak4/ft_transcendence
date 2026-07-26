@@ -39,6 +39,8 @@ Supporting documentation:
 
 Application will be available via nginx proxy on port 8443.
 
+
+## 👥 Team Information
 ### [Kinga](https://github.com/kingak4) — Project Manager & Developer
 
 Lead the project through the full development lifecycle while contributing as a developer.
