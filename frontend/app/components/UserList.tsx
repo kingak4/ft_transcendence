@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import Avatar from '../../components/Avatar';
+import Avatar from './Avatar';
 
 export interface UserListItem {
   id: string;
@@ -16,11 +16,7 @@ interface Props {
 
 export default function UserList({ users, emptyMessage, renderAction }: Props) {
   if (users.length === 0) {
-    return (
-      <p className="text-on-surface/40 text-sm">
-        {emptyMessage}
-      </p>
-    );
+    return <p className="text-on-surface/40 text-sm">{emptyMessage}</p>;
   }
 
   return (
@@ -41,9 +37,7 @@ export default function UserList({ users, emptyMessage, renderAction }: Props) {
                 alt={`${user.displayName}'s avatar`}
                 size={40}
               />
-              <p className="font-medium">
-                {user.displayName}
-              </p>
+              <p className="font-medium">{user.displayName}</p>
             </div>
             {renderAction(user)}
           </li>
