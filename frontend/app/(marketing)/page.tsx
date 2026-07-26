@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 
+import AccentLink from '../components/AccentLink';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Hero from '../components/Hero';
@@ -43,12 +43,7 @@ export default async function LandingPage() {
           </div>
           <p className="text-center text-xs">
             Don&apos;t have an account yet?{' '}
-            <Link
-              href="/register"
-              className="text-primary font-bold transition-colors hover:brightness-125"
-            >
-              Register
-            </Link>
+            <AccentLink href="/register">Register</AccentLink>
           </p>
         </Card>
       )}

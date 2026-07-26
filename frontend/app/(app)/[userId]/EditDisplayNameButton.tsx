@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { useAsyncAction } from '../../hooks/useAsyncAction';
+
 import { updateDisplayNameAction } from './actions';
-import { useAsyncAction } from './useAsyncAction';
 
 interface Props {
   displayName: string;

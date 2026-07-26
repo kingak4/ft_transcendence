@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useAsyncAction } from '../../hooks/useAsyncAction';
+
 import { removeFriendAction } from './actions';
-import { useAsyncAction } from './useAsyncAction';
 
 interface Props {
   friendId: string;

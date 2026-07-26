@@ -1,10 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, type FormEvent } from 'react';
 
+import AccentLink from '../../components/AccentLink';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import TextField from '../../components/TextField';
 import { login } from '../../lib/login';
 
 export default function LoginPage() {
@@ -32,22 +33,24 @@ export default function LoginPage() {
         <p className="text-on-inverse-surface/60 mb-6 text-sm">Welcome back!</p>
 
         <form onSubmit={handleLogin}>
-          <input
+          <TextField
             id="user-name"
             type="text"
             value={loginValue}
             onChange={(e) => setLogin(e.target.value)}
             placeholder="Username"
-            className="text-on-inverse-surface placeholder:text-on-inverse-surface/40 focus:ring-primary mb-3 w-full rounded-lg bg-on-inverse-surface/10 px-4 py-3 text-sm outline-none focus:ring-1"
+            tone="inverse"
+            className="mb-3"
           />
 
-          <input
+          <TextField
             id="user-password"
             type="password"
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="text-on-inverse-surface placeholder:text-on-inverse-surface/40 focus:ring-primary mb-2 w-full rounded-lg bg-on-inverse-surface/10 px-4 py-3 text-sm outline-none focus:ring-1"
+            tone="inverse"
+            className="mb-2"
           />
 
           <div className="mb-6 text-right">
@@ -61,12 +64,7 @@ export default function LoginPage() {
 
         <p className="text-on-inverse-surface/50 mt-4 text-center text-xs">
           Don&apos;t have an account?{' '}
-          <Link
-            href="/register"
-            className="text-primary font-bold transition-colors hover:brightness-125"
-          >
-            Register
-          </Link>
+          <AccentLink href="/register">Register</AccentLink>
         </p>
       </Card>
     </div>

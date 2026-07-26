@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { useState, type FormEvent } from 'react';
 
+import AccentLink from '../../components/AccentLink';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import TextField from '../../components/TextField';
 import { register } from '../../lib/register';
 
 export default function RegisterPage() {
@@ -45,31 +47,34 @@ export default function RegisterPage() {
         </p>
 
         <form onSubmit={handleRegister}>
-          <input
+          <TextField
             id="user-name"
             type="text"
             value={nameValue}
             onChange={(e) => setName(e.target.value)}
             placeholder="Username"
-            className="text-on-inverse-surface placeholder:text-on-inverse-surface/40 focus:ring-primary mb-3 w-full rounded-lg bg-on-inverse-surface/10 px-4 py-3 text-sm outline-none focus:ring-1"
+            tone="inverse"
+            className="mb-3"
           />
 
-          <input
+          <TextField
             id="user-password"
             type="password"
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="text-on-inverse-surface placeholder:text-on-inverse-surface/40 focus:ring-primary mb-3 w-full rounded-lg bg-on-inverse-surface/10 px-4 py-3 text-sm outline-none focus:ring-1"
+            tone="inverse"
+            className="mb-3"
           />
 
-          <input
+          <TextField
             id="user-confirm-password"
             type="password"
             value={confirmPasswordValue}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm password"
-            className="text-on-inverse-surface placeholder:text-on-inverse-surface/40 focus:ring-primary mb-5 w-full rounded-lg bg-on-inverse-surface/10 px-4 py-3 text-sm outline-none focus:ring-1"
+            tone="inverse"
+            className="mb-5"
           />
 
           <label className="mb-6 flex cursor-pointer items-start gap-2">
@@ -102,12 +107,7 @@ export default function RegisterPage() {
 
         <p className="text-on-inverse-surface/50 mt-4 text-center text-xs">
           Already have an account?{' '}
-          <Link
-            href="/login"
-            className="text-primary font-bold transition-colors hover:brightness-125"
-          >
-            Login
-          </Link>
+          <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>
     </div>

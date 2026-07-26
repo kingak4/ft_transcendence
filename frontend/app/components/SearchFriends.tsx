@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
+import TextField from './TextField';
 import UserList, { type UserListItem } from './UserList';
 
 // The contract a caller's search action must satisfy. Declared here rather
@@ -209,12 +210,12 @@ export default function SearchFriends({
 
   return (
     <div className="mb-4 flex flex-col gap-2">
-      <input
+      <TextField
         type="text"
         value={query}
         onChange={handleQueryChange}
         placeholder={placeholder}
-        className="text-on-surface placeholder:text-on-surface/40 focus:ring-primary bg-on-surface/10 w-full rounded-lg px-3 py-2 text-sm outline-none focus:ring-1"
+        size="sm"
       />
 
       {error && <p className="text-xs text-red-400">{error}</p>}

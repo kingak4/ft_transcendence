@@ -3,15 +3,13 @@
 import { useState } from 'react';
 
 import Button from '../../components/Button';
+import TextField from '../../components/TextField';
 
 import { usePresence } from '../../hooks/usePresence';
 // import { useChat } from '../../hooks/useChat';
 
 const PANEL_CLASSES =
   'bg-inverse-surface text-on-inverse-surface border-on-inverse-surface/15 flex-1 rounded-2xl border p-4';
-
-const INPUT_CLASSES =
-  'text-on-inverse-surface placeholder:text-on-inverse-surface/40 focus:ring-primary w-full rounded-lg bg-on-inverse-surface/10 px-4 py-2 text-sm outline-none focus:ring-1';
 
 export default function HomePage() {
   // const [chatId, setChatId] = useState('test-chat-id');
@@ -43,19 +41,21 @@ export default function HomePage() {
         <div className={PANEL_CLASSES}>
           <h2 className="mb-4 text-xl font-bold">Chat</h2>
           <div className="flex flex-col gap-3">
-            <input
+            <TextField
               type="text"
               placeholder="Chat ID"
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
-              className={INPUT_CLASSES}
+              tone="inverse"
+              size="sm"
             />
-            <input
+            <TextField
               type="text"
               placeholder="Wiadomość"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
-              className={INPUT_CLASSES}
+              tone="inverse"
+              size="sm"
             />
             <Button
               onClick={() => sendMessage(chatId, messageContent)}
@@ -77,12 +77,13 @@ export default function HomePage() {
       <div className={PANEL_CLASSES}>
         <h2 className="mb-4 text-xl font-bold">Presence</h2>
         <div className="flex flex-col gap-3">
-          <input
+          <TextField
             type="text"
             placeholder="User ID (UUID)"
             value={presenceUserId}
             onChange={(e) => setPresenceUserId(e.target.value)}
-            className={INPUT_CLASSES}
+            tone="inverse"
+            size="sm"
           />
           <Button
             onClick={() => checkPresence(presenceUserId)}

@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 // import { postData } from './post';
+import type { ActionResponse } from './action-response';
 import { client } from './api-clients';
 
 export async function login(
@@ -62,25 +63,3 @@ export async function login(
     };
   }
 }
-
-export interface loginError {
-  status: number;
-  error: string;
-  message: string;
-}
-
-export interface CreateUserPayload {
-  email: string;
-  password: string;
-}
-
-export interface CreateUserResponse {
-  accessToken: string;
-  tokenType: string;
-}
-
-export type ActionResponse = {
-  success: boolean;
-  status?: number;
-  message?: string;
-};
