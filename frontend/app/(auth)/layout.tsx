@@ -1,9 +1,8 @@
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 
 import BareLayout from '../components/BareLayout';
-import BrandLink from '../components/BrandLink';
-import Footer from '../components/Footer';
+import Button from '../components/Button';
+import Card from '../components/Card';
 import { logout } from '../lib/logout';
 
 export default async function AuthLayout({
@@ -16,40 +15,26 @@ export default async function AuthLayout({
 
   if (userId) {
     return (
-      <div className="bg-brand-main-color relative flex min-h-screen flex-col">
-        <BrandLink className="text-brand-reversed-main-color absolute left-6 top-6" />
+      <BareLayout>
         <div className="flex flex-1 items-center justify-center">
-          <div className="bg-brand-reversed-main-color w-80 rounded-2xl p-8">
-            <h1 className="text-brand-main-color mb-1 text-2xl font-bold">
-              Already logged in
-            </h1>
-            <p className="text-brand-main-color/60 mb-6 text-sm">
+          <Card>
+            <h1 className="mb-1 text-2xl font-bold">Already logged in</h1>
+            <p className="text-on-inverse-surface/60 mb-6 text-sm">
               You are currently logged in to your account.
             </p>
-            <Link
-              href={`/${userId}`}
-              className="bg-brand-secondary-color text-brand-additional-color-2 mb-3 block rounded-lg py-3 text-center text-sm font-bold transition-colors hover:brightness-125"
-            >
-              Go to my profile
-            </Link>
+            <div className="mb-3">
+              <Button href={`/${userId}`}>Go to my profile</Button>
+            </div>
             <form action={logout}>
-              <button
-                type="submit"
-                className="text-brand-main-color/70 w-full rounded-lg bg-white/10 py-3 text-sm font-medium transition-colors hover:bg-white/20"
-              >
+              <Button type="submit" variant="outline">
                 Log out
-              </button>
+              </Button>
             </form>
-          </div>
+          </Card>
         </div>
-        <Footer />
-      </div>
+      </BareLayout>
     );
   }
 
-  return (
-    <BareLayout brandLinkClassName="text-brand-main-color absolute left-6 top-6">
-      {children}
-    </BareLayout>
-  );
+  return <BareLayout>{children}</BareLayout>;
 }
