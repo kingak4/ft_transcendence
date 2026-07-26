@@ -45,7 +45,7 @@ export default async function LandingPage() {
             Don&apos;t have an account yet?{' '}
             <Link
               href="/register"
-              className="text-brand-additional-color hover:text-brand-secondary-color font-bold transition-colors"
+              className="text-primary font-bold transition-colors hover:brightness-125"
             >
               Register
             </Link>

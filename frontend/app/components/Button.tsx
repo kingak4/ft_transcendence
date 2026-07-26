@@ -10,13 +10,15 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 };
 
 const BASE_CLASSES =
-  'block w-full rounded-lg py-3 text-center text-sm font-bold transition-colors';
+  'block w-full rounded-lg py-3 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
 type ButtonProps = {
   children: ReactNode;
   variant?: ButtonVariant;
   href?: string;
   type?: 'button' | 'submit';
+  onClick?: () => void;
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -24,6 +26,8 @@ export default function Button({
   variant = 'primary',
   href,
   type = 'button',
+  onClick,
+  disabled,
 }: ButtonProps) {
   const className = `${BASE_CLASSES} ${VARIANT_CLASSES[variant]}`;
 
@@ -36,7 +40,12 @@ export default function Button({
   }
 
   return (
-    <button type={type} className={className}>
+    <button
+      type={type}
+      className={className}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </button>
   );

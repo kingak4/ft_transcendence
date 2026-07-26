@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 @import '@catppuccin/tailwindcss/mocha.css';
 
+/*
+ * Rebind Tailwind's `dark` variant from the OS setting to our own class.
+ * mocha.css ships latte on plain :root and its dark flavor inside
+ * `@variant dark`, so out of the box the flavor followed prefers-color-scheme
+ * and useTheme's .mocha/.latte classes had no effect on it. Pointing the
+ * variant at .mocha hands that switch to the toggle instead.
+ */
+@custom-variant dark (&:where(.mocha, .mocha *));
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -25,6 +34,8 @@
   --color-on-inverse-surface: var(--theme-on-inverse-surface);
   --color-primary: var(--theme-primary);
   --color-on-primary: var(--theme-on-primary);
+  --color-success: var(--theme-success);
+  --color-danger: var(--theme-danger);
 }
 
 /* Default theme: original 42Hub look, active when no theme class is set */
@@ -35,6 +46,8 @@
   --theme-on-inverse-surface: var(--color-brand-main-color);
   --theme-primary: var(--color-brand-secondary-color);
   --theme-on-primary: var(--color-brand-additional-color-2);
+  --theme-success: var(--color-brand-secondary-color);
+  --theme-danger: #e5484d;
 }
 
 /* Catppuccin flavors: --color-ctp-* already flip between these two
@@ -48,6 +61,16 @@
   --theme-on-inverse-surface: var(--color-ctp-text);
   --theme-primary: var(--color-ctp-mauve-400);
   --theme-on-primary: var(--color-ctp-crust);
+}
+
+.mocha {
+  --theme-success: var(--color-ctp-green-400);
+  --theme-danger: var(--color-ctp-red-400);
+}
+
+.latte {
+  --theme-success: var(--color-ctp-green-700);
+  --theme-danger: var(--color-ctp-red-700);
 }
 
 @utility bg-gradient-start-page {

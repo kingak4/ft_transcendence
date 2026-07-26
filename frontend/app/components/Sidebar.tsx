@@ -8,7 +8,7 @@ import BrandLink from './BrandLink';
 const navItems = [
   { label: 'Terms of service', href: '/terms-of-service' },
   { label: 'Privacy policy', href: '/privacy-policy' },
-  { label: 'Dev: STOMP WebSocket Test', href: '/home' },
+  { label: 'Dev: STOMP WebSocket Test', href: '/stomp' },
 ];
 
 interface Props {
