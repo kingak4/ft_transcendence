@@ -6,16 +6,13 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
+import code.users.ports.in.ManageFriendsUseCase;
 import code.users.ports.out.UserDao;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -130,31 +127,24 @@ public class UserRepository implements UserDao {
   }
 
   @Override
-  public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    if (size < 0 || size > MAX_PAGE_SIZE) {
+  public Page<ManageFriendsUseCase.FriendResult> getFriendList(UserId userId, Pageable pageable) {
+    if (pageable.getPageSize() < 0 || pageable.getPageSize() > MAX_PAGE_SIZE) {
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST,
               "size must be between 0 and " + MAX_PAGE_SIZE
       );
     }
 
-    Pageable pageable = PageRequest.of(page, size);
+    Page<Object[]> rows =
+            userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
 
-    List<Object[]> rows =
-        userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
-
-    return rows.stream()
-        .collect(
-            Collectors.toMap(
-                row -> FriendId.of((UUID) row[0]),
-                row -> {
-                  Object[] r = (Object[]) row; // explicit cast
-                  return UserDetails.builder()
-                      .displayName(r[1] != null ? (String) r[1] : "")
-                      .avatarId(
-                          r[2] != null ? AvatarId.of((UUID) r[2]) : AvatarId.DEFAULT_AVATAR_ID)
-                      .build();
-                }));
+    return rows.map(row -> new ManageFriendsUseCase.FriendResult(
+            FriendId.of((UUID) row[0]),
+            UserDetails.builder()
+                    .displayName(row[1] != null ? (String) row[1] : "")
+                    .avatarId(row[2] != null ? AvatarId.of((UUID) row[2]) : AvatarId.DEFAULT_AVATAR_ID)
+                    .build()
+    ));
   }
 
   @Override

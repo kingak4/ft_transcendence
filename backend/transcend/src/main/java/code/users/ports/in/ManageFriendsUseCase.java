@@ -3,8 +3,9 @@ package code.users.ports.in;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import java.util.Map;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ManageFriendsUseCase {
   @PreAuthorize(
@@ -15,5 +16,7 @@ public interface ManageFriendsUseCase {
       "hasRole(T(code.users.domain.model.Role).ADMIN.name) or @ownershipValidator.isSameUser(authentication, #userId)")
   void removeFriend(UserId userId, FriendId friendId);
 
-  Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);
+  Page<FriendResult> getFriendList(UserId userId, Pageable pageable);
+
+  record FriendResult(FriendId id, UserDetails details) {}
 }
