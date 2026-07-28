@@ -106,8 +106,7 @@ export default function RegisterPage() {
         </form>
 
         <p className="text-on-inverse-surface/50 mt-4 text-center text-xs">
-          Already have an account?{' '}
-          <AccentLink href="/login">Login</AccentLink>
+          Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>
     </div>

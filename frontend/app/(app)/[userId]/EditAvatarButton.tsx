@@ -74,7 +74,10 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
   const currentSrc = avatarId ? `/api/users/avatar/${avatarId}` : null;
 
   useEffect(() => {
-    return () => { if (avatarPreviewRef.current) URL.revokeObjectURL(avatarPreviewRef.current); };
+    return () => {
+      if (avatarPreviewRef.current)
+        URL.revokeObjectURL(avatarPreviewRef.current);
+    };
   }, []);
 
   return (
@@ -94,9 +97,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-inverse-surface text-on-inverse-surface w-96 rounded-2xl p-8 shadow-xl">
-            <h2 className="mb-1 text-2xl font-bold">
-              Change avatar
-            </h2>
+            <h2 className="mb-1 text-2xl font-bold">Change avatar</h2>
             <p className="text-on-inverse-surface/60 mb-6 text-sm">
               Pick a new photo for your profile.
             </p>

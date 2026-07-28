@@ -38,7 +38,9 @@ export default async function UserProfilePage({ params }: Props) {
   // no userId in its path, so it always returns the caller's own friends
   // regardless of whose profile is being viewed. Fetching it for anyone
   // else's page would just show your friends mislabeled as theirs.
-  let friends: Record<string, { displayName?: string; avatarId?: { val?: string } }> | undefined;
+  let friends:
+    | Record<string, { displayName?: string; avatarId?: { val?: string } }>
+    | undefined;
   let friendsLoadError = false;
   if (isOwnProfile) {
     // Workaround for the backend not reporting a total count on this endpoint:
@@ -80,7 +82,10 @@ export default async function UserProfilePage({ params }: Props) {
         </div>
 
         {isOwnProfile ? (
-          <EditAvatarButton avatarId={data.avatarId} displayName={displayName} />
+          <EditAvatarButton
+            avatarId={data.avatarId}
+            displayName={displayName}
+          />
         ) : (
           <Avatar src={avatarSrc} alt={`${displayName}'s avatar`} size={96} />
         )}

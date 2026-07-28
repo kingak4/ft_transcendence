@@ -4,6 +4,7 @@ import AccentLink from '../components/AccentLink';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Hero from '../components/Hero';
+import SessionCard from '../components/SessionCard';
 
 import { clearSession } from '../lib/logout';
 
@@ -17,18 +18,12 @@ export default async function LandingPage() {
 
       {/* Card — right */}
       {userId ? (
-        <Card>
-          <h2 className="mb-1 text-2xl font-bold">Welcome back!</h2>
-          <p className="mb-8 text-sm">Continue your journey.</p>
-          <div className="mb-4">
-            <Button href={`/${userId}`}>Go to my profile</Button>
-          </div>
-          <form action={clearSession}>
-            <Button type="submit" variant="outline">
-              Log out
-            </Button>
-          </form>
-        </Card>
+        <SessionCard
+          title="Welcome back!"
+          subtitle="Continue your journey."
+          userId={userId}
+          logoutAction={clearSession}
+        />
       ) : (
         <Card>
           <h2 className="mb-1 text-2xl font-bold">Hello!</h2>
