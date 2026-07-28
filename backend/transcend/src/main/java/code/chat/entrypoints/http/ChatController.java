@@ -53,8 +53,12 @@ public class ChatController {
     UUID userId = UUID.fromString(authentication.getName());
     List<ChatResponse> chats =
         getChatsUseCase.getChatList(UserId.of(userId), page, size).stream()
-            .map(chatId -> new ChatResponse(chatId.val()))
-            .toList();
+                .map(cs -> new ChatResponse(
+                        cs.chatId().val(),
+                        cs.otherUserId().val(),
+                        cs.displayName(),
+                        cs.avatarId()))
+                .toList();
     return ResponseEntity.ok(chats);
   }
 
@@ -81,7 +85,7 @@ public class ChatController {
 
   public record StartChatResponse(UUID chatId) {}
 
-  public record ChatResponse(UUID chatId) {}
+  public record ChatResponse(UUID chatId, UUID otherUserId, String displayName, UUID avatarId) {}
 
   public record MessageResponse(
       UUID messageId, UUID senderId, String content, OffsetDateTime createdAt) {}

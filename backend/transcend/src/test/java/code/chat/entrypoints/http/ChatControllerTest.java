@@ -68,8 +68,19 @@ class ChatControllerTest {
 
   @Test
   void getChatsSuccessfully() throws Exception {
-    List<ChatId> chatIdFixture = List.of(ChatId.of(CHAT_UUID_FIXTURE));
-    when(getChatsUseCase.getChatList(UserId.of(AUTH_USER_ID), 0, 10)).thenReturn(chatIdFixture);
+    UUID otherUserId = UUID.randomUUID();
+    String displayName = "Kinga";
+    UUID avatarId = UUID.randomUUID();
+
+    List<GetChatsUseCase.ChatSummary> chatSummaryFixture =
+            List.of(
+                    new GetChatsUseCase.ChatSummary(
+                            ChatId.of(CHAT_UUID_FIXTURE),
+                            UserId.of(otherUserId),
+                            displayName,
+                            avatarId));
+
+    when(getChatsUseCase.getChatList(UserId.of(AUTH_USER_ID), 0, 10)).thenReturn(chatSummaryFixture);
 
     mockMvc
         .perform(
@@ -78,7 +89,10 @@ class ChatControllerTest {
                 .param("size", "10")
                 .principal(authentication()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].chatId").value(CHAT_UUID_FIXTURE.toString()));
+            .andExpect(jsonPath("$[0].chatId").value(CHAT_UUID_FIXTURE.toString()))
+            .andExpect(jsonPath("$[0].otherUserId").value(otherUserId.toString()))
+            .andExpect(jsonPath("$[0].displayName").value(displayName))
+            .andExpect(jsonPath("$[0].avatarId").value(avatarId.toString()));
 
     verify(getChatsUseCase).getChatList(UserId.of(AUTH_USER_ID), 0, 10);
   }

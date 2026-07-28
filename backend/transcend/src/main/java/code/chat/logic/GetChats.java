@@ -15,7 +15,7 @@ public class GetChats implements GetChatsUseCase {
   private final ChatDao dao;
 
   @Override
-  public List<ChatId> getChatList(UserId userId, int page, int size) {
+  public List<ChatSummary> getChatList(UserId userId, int page, int size) {
     return dao.getChatList(userId, page, size);
   }
 }
