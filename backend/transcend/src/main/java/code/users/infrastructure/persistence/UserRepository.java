@@ -128,13 +128,6 @@ public class UserRepository implements UserDao {
 
   @Override
   public Page<ManageFriendsUseCase.FriendResult> getFriendList(UserId userId, Pageable pageable) {
-    if (pageable.getPageSize() < 0 || pageable.getPageSize() > MAX_PAGE_SIZE) {
-      throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST,
-              "size must be between 0 and " + MAX_PAGE_SIZE
-      );
-    }
-
     Page<Object[]> rows =
             userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
 

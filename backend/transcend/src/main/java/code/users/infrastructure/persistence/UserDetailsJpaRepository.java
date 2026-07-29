@@ -20,6 +20,7 @@ public interface UserDetailsJpaRepository extends JpaRepository<UserDetailsEntit
               JOIN users u ON u.val = uf.friend_id
               JOIN user_details ud ON ud.val = u.val
               WHERE uf.user_id = :userId
+              ORDER BY ud.display_name, uf.friend_id
             """,
       countQuery =
             """

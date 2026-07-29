@@ -39,9 +39,13 @@ public class FriendsPaginationController {
       @RequestParam(value = "page", defaultValue = "0") int page,
       @RequestParam(value = "size", defaultValue = "10") int size) {
 
-    if (size < 0 || size > MAX_PAGE_SIZE) {
+    if (page < 0) {
       throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "size must be between 0 and " + MAX_PAGE_SIZE);
+              HttpStatus.BAD_REQUEST, "page must be >= 0");
+    }
+    if (size < 1 || size > MAX_PAGE_SIZE) {
+      throw new ResponseStatusException(
+              HttpStatus.BAD_REQUEST, "size must be between 1 and " + MAX_PAGE_SIZE);
     }
 
     UUID userId = UUID.fromString(authentication.getName());
