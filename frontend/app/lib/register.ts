@@ -1,5 +1,6 @@
 'use server';
 
+import type { ActionResponse } from './action-response';
 import { client } from './api-clients';
 
 export async function register(
@@ -34,9 +35,3 @@ export async function register(
     };
   }
 }
-
-export type ActionResponse = {
-  success: boolean;
-  status?: number;
-  message?: string;
-};

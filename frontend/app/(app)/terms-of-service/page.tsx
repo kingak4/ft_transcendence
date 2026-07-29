@@ -1,3 +1,6 @@
+import ContactBlock from '../../components/ContactBlock';
+import LegalSection from '../../components/LegalSection';
+
 export default function TermsOfService() {
   return (
     <main className="text mx-auto max-w-4xl px-6 py-12">
@@ -5,9 +8,7 @@ export default function TermsOfService() {
 
       <p className="mb-6">Last updated: May 2026</p>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">1. Introduction</h2>
-
+      <LegalSection title="1. Introduction">
         <p>Welcome to ft_transcendence.</p>
 
         <p className="mt-4">
@@ -19,11 +20,9 @@ export default function TermsOfService() {
           ft_transcendence is a student project created as part of the 42 Warsaw
           curriculum.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">2. User Accounts</h2>
-
+      <LegalSection title="2. User Accounts">
         <p>
           Users are responsible for maintaining the security of their accounts
           and authentication credentials.
@@ -33,11 +32,9 @@ export default function TermsOfService() {
           You agree not to impersonate other users or attempt unauthorized
           access to accounts, systems, or data.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">3. Acceptable Use</h2>
-
+      <LegalSection title="3. Acceptable Use">
         <p>By using the application, you agree not to:</p>
 
         <ul className="mt-4 list-disc space-y-2 pl-6">
@@ -48,23 +45,17 @@ export default function TermsOfService() {
           <li>Harass, abuse, or threaten other users</li>
           <li>Attempt unauthorized access to the system</li>
         </ul>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">
-          4. Intellectual Property
-        </h2>
-
+      <LegalSection title="4. Intellectual Property">
         <p>
           All project content, source code, branding, interface elements, and
           application assets remain the property of their respective creators
           unless otherwise stated.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">5. Service Availability</h2>
-
+      <LegalSection title="5. Service Availability">
         <p>
           The application is provided on an &quot;as is&quot; and &quot;as
           available&quot; basis.
@@ -74,33 +65,25 @@ export default function TermsOfService() {
           We do not guarantee uninterrupted availability, error-free operation,
           or permanent access to the service.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">
-          6. Limitation of Liability
-        </h2>
-
+      <LegalSection title="6. Limitation of Liability">
         <p>
           The creators of ft_transcendence are not liable for any damages, data
           loss, interruptions, or issues resulting from the use of the
           application.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">7. Account Termination</h2>
-
+      <LegalSection title="7. Account Termination">
         <p>
           We reserve the right to suspend or terminate user accounts that
           violate these Terms of Service or compromise the security and
           stability of the application.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">8. Changes to Terms</h2>
-
+      <LegalSection title="8. Changes to Terms">
         <p>
           These Terms of Service may be updated or modified at any time without
           prior notice.
@@ -110,20 +93,11 @@ export default function TermsOfService() {
           Continued use of the application after changes constitutes acceptance
           of the updated terms.
         </p>
-      </section>
+      </LegalSection>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">9. Contact</h2>
-
-        <div className="space-y-2">
-          <p>ft_transcendence</p>
-          <p>42 Warsaw</p>
-          <p>Al. Solidarności 171B</p>
-          <p>00-877 Warszawa</p>
-          <p>Poland</p>
-          <p>Email: kinga.kwasniak5@gmail.com</p>
-        </div>
-      </section>
+      <LegalSection title="9. Contact">
+        <ContactBlock />
+      </LegalSection>
     </main>
   );
 }

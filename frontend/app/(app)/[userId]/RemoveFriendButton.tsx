@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useAsyncAction } from '../../hooks/useAsyncAction';
+
 import { removeFriendAction } from './actions';
-import { useAsyncAction } from './useAsyncAction';
 
 interface Props {
   friendId: string;
@@ -29,7 +30,7 @@ export default function RemoveFriendButton({ friendId, onRemoved }: Props) {
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className="text-brand-main-color/60 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+        className="text-on-elevated-surface/60 bg-on-elevated-surface/10 hover:bg-on-elevated-surface/20 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? 'Removing…' : 'Remove'}
       </button>

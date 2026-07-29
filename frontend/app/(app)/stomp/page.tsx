@@ -1,10 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { usePresence } from '../../hooks/usePresence';
-// import { useChat } from '../hooks/useChat';
 
-export default function HomePage() {
+import Button from '../../components/Button';
+import TextField from '../../components/TextField';
+
+import { usePresence } from '../../hooks/usePresence';
+// import { useChat } from '../../hooks/useChat';
+
+const PANEL_CLASSES =
+  'bg-elevated-surface text-on-elevated-surface border-elevated-border flex-1 rounded-2xl border p-4';
+
+export default function StompTestPage() {
   // const [chatId, setChatId] = useState('test-chat-id');
   // const [messageContent, setMessageContent] = useState('');
   const [presenceUserId, setPresenceUserId] = useState(
@@ -17,88 +24,91 @@ export default function HomePage() {
   // const { sendMessage, deleteMessage } = useChat();
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center gap-6 p-8 text-black dark:text-white">
+    <div className="flex h-full w-full flex-col items-center gap-6 p-8">
       <h1 className="text-3xl font-bold">STOMP WebSocket Test</h1>
 
       <div className="flex items-center gap-2">
         <span className="font-semibold">Status połączenia:</span>
         {isConnected ? (
-          <span className="font-bold text-green-500">Połączono</span>
+          <span className="text-success font-bold">Połączono</span>
         ) : (
-          <span className="font-bold text-red-500">Brak połączenia</span>
+          <span className="text-danger font-bold">Brak połączenia</span>
         )}
       </div>
 
       {/* <div className="flex w-full max-w-4xl gap-8">
         {}
-        <div className="flex-1 rounded border bg-gray-100 p-4 dark:bg-gray-800">
+        <div className={PANEL_CLASSES}>
           <h2 className="mb-4 text-xl font-bold">Chat</h2>
           <div className="flex flex-col gap-3">
-            <input
+            <TextField
               type="text"
               placeholder="Chat ID"
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
-              className="rounded border p-2 text-black"
+              tone="elevated"
+              size="sm"
             />
-            <input
+            <TextField
               type="text"
               placeholder="Wiadomość"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
-              className="rounded border p-2 text-black"
+              tone="elevated"
+              size="sm"
             />
-            <button
+            <Button
               onClick={() => sendMessage(chatId, messageContent)}
               disabled={!isConnected || !messageContent}
-              className="rounded bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
             >
               Wyślij wiadomość
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => deleteMessage('test-message-id')}
               disabled={!isConnected}
-              className="rounded bg-red-500 p-2 text-white transition-colors hover:bg-red-600 disabled:opacity-50"
             >
               Wyślij żądanie usunięcia
-            </button>
+            </Button>
           </div>
         </div> */}
 
       {/* Presence Test Section */}
-      <div className="flex-1 rounded border bg-gray-100 p-4 dark:bg-gray-800">
+      <div className={PANEL_CLASSES}>
         <h2 className="mb-4 text-xl font-bold">Presence</h2>
         <div className="flex flex-col gap-3">
-          <input
+          <TextField
             type="text"
             placeholder="User ID (UUID)"
             value={presenceUserId}
             onChange={(e) => setPresenceUserId(e.target.value)}
-            className="rounded border p-2 text-black"
+            tone="elevated"
+            size="sm"
           />
-          <button
+          <Button
             onClick={() => checkPresence(presenceUserId)}
             disabled={!isConnected}
-            className="rounded bg-purple-500 p-2 text-white transition-colors hover:bg-purple-600 disabled:opacity-50"
           >
             Sprawdź obecność (wysyłka)
-          </button>
+          </Button>
 
           <div className="mt-4">
-            <h3 className="mb-2 border-b pb-2 font-semibold">
+            <h3 className="border-elevated-border mb-2 border-b pb-2 font-semibold">
               Status monitorowanego użytkownika:
             </h3>
             <div className="mt-2 text-lg">
               UUID:{' '}
-              <span className="text-sm text-gray-500">{presenceUserId}</span>
+              <span className="text-on-elevated-surface/60 text-sm">
+                {presenceUserId}
+              </span>
               <br />
               Status:{' '}
               {onlineStatus[presenceUserId] === true ? (
-                <span className="font-bold text-green-500">Online</span>
+                <span className="text-success font-bold">Online</span>
               ) : onlineStatus[presenceUserId] === false ? (
-                <span className="font-bold text-red-500">Offline</span>
+                <span className="text-danger font-bold">Offline</span>
               ) : (
-                <span className="italic text-gray-500">
+                <span className="text-on-elevated-surface/60 italic">
                   Nieznany (oczekiwanie...)
                 </span>
               )}

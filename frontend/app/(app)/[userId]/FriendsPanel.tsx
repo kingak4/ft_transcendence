@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 
+import UserList from '../../components/UserList';
+import UserSearch from '../../components/UserSearch';
 import type { components } from '../../types/api';
-import SearchFriends from './SearchFriends';
-import UserList from './UserList';
+import AddFriendButton from './AddFriendButton';
 import RemoveFriendButton from './RemoveFriendButton';
+import { searchUsersAction } from './actions';
 
 type Friend = components['schemas']['UserDetails'];
 
@@ -37,10 +39,15 @@ export default function FriendsPanel({ friends, currentUserId }: Props) {
 
   return (
     <section>
-      <h2 className="text-brand-reversed-main-color mb-3 text-xl font-bold">
-        Friends
-      </h2>
-      <SearchFriends currentUserId={currentUserId} existingFriendIds={friendIds} />
+      <h2 className="text-on-surface mb-3 text-xl font-bold">Friends</h2>
+      <UserSearch
+        currentUserId={currentUserId}
+        excludedIds={friendIds}
+        searchAction={searchUsersAction}
+        renderAction={(user, dismiss) => (
+          <AddFriendButton friendId={user.id} onAdded={dismiss} />
+        )}
+      />
       <UserList
         users={friendCards}
         emptyMessage="No friends yet."

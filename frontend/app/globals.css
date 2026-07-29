@@ -1,4 +1,14 @@
 @import 'tailwindcss';
+@import '@catppuccin/tailwindcss/mocha.css';
+
+/*
+ * Rebind Tailwind's `dark` variant from the OS setting to our own class.
+ * mocha.css ships latte on plain :root and its dark flavor inside
+ * `@variant dark`, so out of the box the flavor followed prefers-color-scheme
+ * and useTheme's .mocha/.latte classes had no effect on it. Pointing the
+ * variant at .mocha hands that switch to the toggle instead.
+ */
+@custom-variant dark (&:where(.mocha, .mocha *));
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
@@ -11,6 +21,64 @@
   --color-brand-additional-color-2: #4c603a;
   --color-brand-accent-color: #15c8f7;
   --color-brand-reversed-main-color: #333333;
+
+  /*
+   * Semantic tokens: what components should actually use.
+   * `inline` mode makes Tailwind reference these by name at runtime
+   * instead of baking in a value at build time - required since their
+   * real value depends on which theme class is active on <html>.
+   */
+  --color-surface: var(--theme-surface);
+  --color-on-surface: var(--theme-on-surface);
+  --color-elevated-surface: var(--theme-elevated-surface);
+  --color-on-elevated-surface: var(--theme-on-elevated-surface);
+  --color-elevated-border: var(--theme-elevated-border);
+  --color-primary: var(--theme-primary);
+  --color-on-primary: var(--theme-on-primary);
+  --color-success: var(--theme-success);
+  --color-danger: var(--theme-danger);
+}
+
+/* Default theme: original 42Hub look, active when no theme class is set */
+:root {
+  --theme-surface: var(--color-brand-main-color);
+  --theme-on-surface: var(--color-brand-additional-color-2);
+  --theme-elevated-surface: var(--color-brand-reversed-main-color);
+  --theme-on-elevated-surface: var(--color-brand-main-color);
+  --theme-elevated-border: var(--color-brand-reversed-main-color);
+  --theme-primary: var(--color-brand-secondary-color);
+  --theme-on-primary: var(--color-brand-additional-color-2);
+  --theme-success: var(--color-brand-secondary-color);
+  --theme-danger: #e5484d;
+}
+
+/* Catppuccin flavors: --color-ctp-* already flip between these two
+   selectors via the imported mocha.css, so we just point our
+   semantic tokens at them. */
+.mocha,
+.latte {
+  --theme-surface: var(--color-ctp-base);
+  --theme-on-surface: var(--color-ctp-text);
+  /* Catppuccin's neutrals are an elevation ladder:
+     crust < mantle < base < surface0 < surface1 < surface2.
+     Panels lift one rung above the page (base -> surface0) and take
+     the next rung as their edge; mantle/crust sit *below* base and
+     are for chrome behind the page, not for cards. */
+  --theme-elevated-surface: var(--color-ctp-surface0);
+  --theme-on-elevated-surface: var(--color-ctp-text);
+  --theme-elevated-border: var(--color-ctp-surface1);
+  --theme-primary: var(--color-ctp-mauve-400);
+  --theme-on-primary: var(--color-ctp-crust);
+}
+
+.mocha {
+  --theme-success: var(--color-ctp-green-400);
+  --theme-danger: var(--color-ctp-red-400);
+}
+
+.latte {
+  --theme-success: var(--color-ctp-green-700);
+  --theme-danger: var(--color-ctp-red-700);
 }
 
 @utility bg-gradient-start-page {
@@ -22,16 +90,8 @@
   );
 }
 
-@utility bg-gradient-login-page {
-  background: linear-gradient(to bottom left, #a0d860 0%, #3a5e30 100%);
-}
-
-@utility bg-gradient-register-page {
-  background: linear-gradient(to bottom left, #0a0f15 0%, #159090 100%);
-}
-
 body {
   font-family: var(--font-geist-sans), Arial, sans-serif;
-  background-color: var(--color-brand-main-color);
-  color: var(--color-brand-additional-color-2);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
 }

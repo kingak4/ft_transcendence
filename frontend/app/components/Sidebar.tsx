@@ -8,7 +8,7 @@ import BrandLink from './BrandLink';
 const navItems = [
   { label: 'Terms of service', href: '/terms-of-service' },
   { label: 'Privacy policy', href: '/privacy-policy' },
-  { label: 'Dev: STOMP WebSocket Test', href: '/home' },
+  { label: 'Dev: STOMP WebSocket Test', href: '/stomp' },
 ];
 
 interface Props {
@@ -19,16 +19,16 @@ export default function Sidebar({ userId }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-52 shrink-0 flex-col bg-white px-3 py-6 shadow-sm">
-      <BrandLink className="text-brand-reversed-main-color mb-3 px-3" />
+    <aside className="bg-surface flex w-52 shrink-0 flex-col px-3 py-6 shadow-sm">
+      <BrandLink className="text-on-surface mb-3 px-3" />
 
       {userId && (
         <Link
           href={`/${userId}`}
           className={`mb-6 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
             pathname === `/${userId}`
-              ? 'bg-brand-secondary-color text-brand-reversed-main-color'
-              : 'text-brand-reversed-main-color hover:bg-brand-main-color'
+              ? 'bg-primary text-on-primary'
+              : 'text-on-surface hover:bg-primary/10'
           }`}
         >
           My Profile
@@ -44,8 +44,8 @@ export default function Sidebar({ userId }: Props) {
               href={item.href}
               className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-brand-secondary-color text-brand-reversed-main-color'
-                  : 'text-brand-reversed-main-color hover:bg-brand-main-color'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-on-surface hover:bg-primary/10'
               }`}
             >
               {item.label}
