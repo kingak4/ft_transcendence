@@ -90,7 +90,7 @@ export async function searchUsersAction(
   }
 
   const results = (data.content ?? []).map((user) => ({
-    id: user.id?.val ?? '',
+    id: user.id ?? '',
     displayName: user.displayName ?? 'Unknown User',
     avatarId: user.avatarId?.val,
   }));

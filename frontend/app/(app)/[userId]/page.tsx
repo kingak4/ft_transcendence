@@ -6,14 +6,59 @@ import { client } from '../../lib/api-clients';
 import { logout } from '../../lib/logout';
 import EditAvatarButton from './EditAvatarButton';
 import EditDisplayNameButton from './EditDisplayNameButton';
-import FriendsPanel from './FriendsPanel';
+import FriendsPanel, { type FriendCard } from './FriendsPanel';
 
 interface Props {
   params: Promise<{ userId: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
-export default async function UserProfilePage({ params }: Props) {
+// The backend caps `size` at 20 and rejects 0; 10 matches its own default.
+const FRIENDS_PAGE_SIZE = 10;
+
+interface FriendsPage {
+  cards: FriendCard[];
+  page: number;
+  totalPages: number;
+  loadError: boolean;
+}
+
+// `?page=` is user-controlled, and the backend has no guard against a negative
+// page (PageRequest.of throws, surfacing as a 500). Anything that isn't a
+// non-negative integer falls back to page 0 before it reaches the API.
+function parsePageParam(raw: string | undefined): number {
+  const parsed = Number(raw);
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
+}
+
+// Unwraps the backend's Spring `Page` envelope so FriendsPanel never has to
+// know about it. Every field is optional in the generated types because Java
+// can't express non-nullability to the OpenAPI generator, hence the fallbacks.
+async function loadFriendsPage(page: number): Promise<FriendsPage> {
+  const { data, response } = await client.GET('/friends', {
+    params: { query: { page, size: FRIENDS_PAGE_SIZE } },
+  });
+
+  if (!response.ok) {
+    return { cards: [], page, totalPages: 1, loadError: true };
+  }
+
+  return {
+    cards: (data?.content ?? []).map((friend) => ({
+      id: friend.id ?? '',
+      displayName: friend.details?.displayName ?? 'Unknown User',
+      avatarId: friend.details?.avatarId?.val,
+    })),
+    page: data?.number ?? page,
+    totalPages: data?.totalPages ?? 1,
+    loadError: false,
+  };
+}
+
+export default async function UserProfilePage({ params, searchParams }: Props) {
   const { userId } = await params;
+  const { page: pageParam } = await searchParams;
+  const requestedPage = parsePageParam(pageParam);
 
   const cookieStore = await cookies();
   const signedInUserId = cookieStore.get('user_id')?.value ?? null;
@@ -38,23 +83,19 @@ export default async function UserProfilePage({ params }: Props) {
   // no userId in its path, so it always returns the caller's own friends
   // regardless of whose profile is being viewed. Fetching it for anyone
   // else's page would just show your friends mislabeled as theirs.
-  let friends:
-    | Record<string, { displayName?: string; avatarId?: { val?: string } }>
-    | undefined;
-  let friendsLoadError = false;
-  if (isOwnProfile) {
-    // Workaround for the backend not reporting a total count on this endpoint:
-    // there's no way to know from the response whether more friends exist
-    // beyond the current page, so a real "load more" control can't be built.
-    // Request the largest page the backend allows (size is capped at 20)
-    // instead as a stopgap. Remove this once the backend returns paging
-    // metadata (e.g. totalElements) alongside the friends map.
-    const { data: friendsData, response: friendsResponse } = await client.GET(
-      '/friends',
-      { params: { query: { size: 20 } } },
-    );
-    friends = friendsData ?? undefined;
-    friendsLoadError = !friendsResponse.ok;
+  const friendsPage = isOwnProfile
+    ? await loadFriendsPage(requestedPage)
+    : null;
+
+  // Removing the last friend on a page leaves that page addressable but empty.
+  // Bounce to the last page that still has rows instead of rendering nothing.
+  if (
+    friendsPage &&
+    !friendsPage.loadError &&
+    friendsPage.cards.length === 0 &&
+    friendsPage.page > 0
+  ) {
+    redirect(`/${userId}?page=${Math.max(0, friendsPage.totalPages - 1)}`);
   }
 
   return (
@@ -91,13 +132,19 @@ export default async function UserProfilePage({ params }: Props) {
         )}
       </div>
 
-      {isOwnProfile &&
-        (friendsLoadError ? (
+      {friendsPage &&
+        (friendsPage.loadError ? (
           <p className="text-on-surface/40 text-sm">
             Couldn&apos;t load friends. Please try again later.
           </p>
         ) : (
-          <FriendsPanel friends={friends ?? {}} currentUserId={userId} />
+          <FriendsPanel
+            key={friendsPage.page}
+            friends={friendsPage.cards}
+            currentUserId={userId}
+            page={friendsPage.page}
+            totalPages={friendsPage.totalPages}
+          />
         ))}
     </div>
   );
