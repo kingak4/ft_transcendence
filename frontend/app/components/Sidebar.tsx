@@ -17,13 +17,12 @@ interface Props {
 
 export default function Sidebar({ userId }: Props) {
   const pathname = usePathname();
-  const isLandingPage = pathname === '/';
 
   return (
     <aside className="bg-surface flex w-52 shrink-0 flex-col px-3 py-6 shadow-sm">
       <BrandLink className="text-on-surface mb-3 px-3" />
 
-      {!isLandingPage && userId && (
+      {userId && (
         <Link
           href={`/${userId}`}
           className={`mb-6 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
@@ -36,26 +35,24 @@ export default function Sidebar({ userId }: Props) {
         </Link>
       )}
 
-      {!isLandingPage && (
-        <nav className="flex flex-col gap-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-primary text-on-primary'
-                    : 'text-on-surface hover:bg-primary/10'
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-      )}
+      <nav className="flex flex-col gap-1">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? 'bg-primary text-on-primary'
+                  : 'text-on-surface hover:bg-primary/10'
+              }`}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
     </aside>
   );
 }

@@ -42,7 +42,7 @@ export default function RegisterPage() {
     <div className="flex flex-1 items-center justify-center">
       <Card>
         <h1 className="mb-1 text-2xl font-bold">Register</h1>
-        <p className="text-on-inverse-surface/60 mb-6 text-sm">
+        <p className="text-on-elevated-surface/60 mb-6 text-sm">
           Nice to meet you!
         </p>
 
@@ -53,7 +53,7 @@ export default function RegisterPage() {
             value={nameValue}
             onChange={(e) => setName(e.target.value)}
             placeholder="Username"
-            tone="inverse"
+            tone="elevated"
             className="mb-3"
           />
 
@@ -63,7 +63,7 @@ export default function RegisterPage() {
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            tone="inverse"
+            tone="elevated"
             className="mb-3"
           />
 
@@ -73,7 +73,7 @@ export default function RegisterPage() {
             value={confirmPasswordValue}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm password"
-            tone="inverse"
+            tone="elevated"
             className="mb-5"
           />
 
@@ -84,18 +84,18 @@ export default function RegisterPage() {
               onChange={(e) => setAgreedToTerms(e.target.checked)}
               className="accent-primary mt-0.5"
             />
-            <span className="text-on-inverse-surface/60 text-xs">
+            <span className="text-on-elevated-surface/60 text-xs">
               I agree to the{' '}
               <Link
                 href="/terms-of-service"
-                className="text-on-inverse-surface/80 hover:text-on-inverse-surface underline transition-colors"
+                className="text-on-elevated-surface/80 hover:text-on-elevated-surface underline transition-colors"
               >
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link
                 href="/privacy-policy"
-                className="text-on-inverse-surface/80 hover:text-on-inverse-surface underline transition-colors"
+                className="text-on-elevated-surface/80 hover:text-on-elevated-surface underline transition-colors"
               >
                 Privacy Policy
               </Link>
@@ -105,7 +105,7 @@ export default function RegisterPage() {
           <Button type="submit">Register</Button>
         </form>
 
-        <p className="text-on-inverse-surface/50 mt-4 text-center text-xs">
+        <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>

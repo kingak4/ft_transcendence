@@ -1,6 +1,6 @@
 import type { InputHTMLAttributes } from 'react';
 
-type TextFieldTone = 'surface' | 'inverse';
+type TextFieldTone = 'surface' | 'elevated';
 type TextFieldSize = 'sm' | 'md';
 
 // Which surface the field sits on. Mirrors the design tokens rather than
@@ -8,8 +8,8 @@ type TextFieldSize = 'sm' | 'md';
 // the token set does.
 const TONE_CLASSES: Record<TextFieldTone, string> = {
   surface: 'text-on-surface placeholder:text-on-surface/40 bg-on-surface/10',
-  inverse:
-    'text-on-inverse-surface placeholder:text-on-inverse-surface/40 bg-on-inverse-surface/10',
+  elevated:
+    'text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-on-elevated-surface/10',
 };
 
 const SIZE_CLASSES: Record<TextFieldSize, string> = {

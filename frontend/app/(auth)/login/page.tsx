@@ -30,7 +30,9 @@ export default function LoginPage() {
     <div className="flex flex-1 items-center justify-center">
       <Card>
         <h1 className="mb-1 text-2xl font-bold">Login</h1>
-        <p className="text-on-inverse-surface/60 mb-6 text-sm">Welcome back!</p>
+        <p className="text-on-elevated-surface/60 mb-6 text-sm">
+          Welcome back!
+        </p>
 
         <form onSubmit={handleLogin}>
           <TextField
@@ -39,7 +41,7 @@ export default function LoginPage() {
             value={loginValue}
             onChange={(e) => setLogin(e.target.value)}
             placeholder="Username"
-            tone="inverse"
+            tone="elevated"
             className="mb-3"
           />
 
@@ -49,12 +51,12 @@ export default function LoginPage() {
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            tone="inverse"
+            tone="elevated"
             className="mb-2"
           />
 
           <div className="mb-6 text-right">
-            <span className="text-on-inverse-surface/50 cursor-not-allowed text-xs">
+            <span className="text-on-elevated-surface/50 cursor-not-allowed text-xs">
               Forgot password?
             </span>
           </div>
@@ -62,7 +64,7 @@ export default function LoginPage() {
           <Button type="submit">Login</Button>
         </form>
 
-        <p className="text-on-inverse-surface/50 mt-4 text-center text-xs">
+        <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
           Don&apos;t have an account?{' '}
           <AccentLink href="/register">Register</AccentLink>
         </p>

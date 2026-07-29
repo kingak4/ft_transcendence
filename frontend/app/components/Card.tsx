@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 export default function Card({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-inverse-surface text-on-inverse-surface w-72 rounded-2xl p-8">
+    <div className="bg-elevated-surface text-on-elevated-surface border-elevated-border w-72 rounded-2xl border p-8">
       {children}
     </div>
   );

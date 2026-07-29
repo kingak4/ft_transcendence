@@ -96,9 +96,9 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-inverse-surface text-on-inverse-surface w-96 rounded-2xl p-8 shadow-xl">
+          <div className="bg-elevated-surface text-on-elevated-surface border-elevated-border w-96 rounded-2xl border p-8 shadow-xl">
             <h2 className="mb-1 text-2xl font-bold">Change avatar</h2>
-            <p className="text-on-inverse-surface/60 mb-6 text-sm">
+            <p className="text-on-elevated-surface/60 mb-6 text-sm">
               Pick a new photo for your profile.
             </p>
 
@@ -107,7 +107,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="bg-on-inverse-surface/10 relative h-24 w-24 overflow-hidden rounded-full transition-opacity hover:opacity-75"
+                  className="bg-on-elevated-surface/10 relative h-24 w-24 overflow-hidden rounded-full transition-opacity hover:opacity-75"
                   title="Click to choose a photo"
                 >
                   {avatarPreview ? (
@@ -128,12 +128,12 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-on-inverse-surface/40 flex h-full w-full items-center justify-center text-xs">
+                    <span className="text-on-elevated-surface/40 flex h-full w-full items-center justify-center text-xs">
                       Add photo
                     </span>
                   )}
                 </button>
-                <p className="text-on-inverse-surface/40 text-xs">
+                <p className="text-on-elevated-surface/40 text-xs">
                   Click to choose a photo
                 </p>
                 <input
@@ -151,7 +151,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="text-on-inverse-surface/70 bg-on-inverse-surface/10 hover:bg-on-inverse-surface/20 flex-1 rounded-lg py-3 text-sm font-medium transition-colors"
+                  className="text-on-elevated-surface/70 bg-on-elevated-surface/10 hover:bg-on-elevated-surface/20 flex-1 rounded-lg py-3 text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>

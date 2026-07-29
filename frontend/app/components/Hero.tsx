@@ -1,6 +1,6 @@
 import Tag from './Tag';
 
-const tags = [
+const TAGS = [
   'Time tracking',
   'Task planning',
   'Progress tracking',
@@ -26,7 +26,7 @@ export default function Hero() {
         &quot;getting things done&quot; and &quot;getting better&quot;.
       </p>
       <div className="flex flex-wrap justify-center gap-2">
-        {tags.map((tag) => (
+        {TAGS.map((tag) => (
           <Tag key={tag}>{tag}</Tag>
         ))}
       </div>

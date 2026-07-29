@@ -29,7 +29,7 @@ export default function UserList({ users, emptyMessage, renderAction }: Props) {
         return (
           <li
             key={user.id}
-            className="bg-inverse-surface text-on-inverse-surface flex items-center justify-between gap-3 rounded-xl p-3"
+            className="bg-elevated-surface text-on-elevated-surface border-elevated-border flex items-center justify-between gap-3 rounded-xl border p-3"
           >
             <div className="flex items-center gap-3">
               <Avatar

@@ -22,7 +22,7 @@ export default function SessionCard({
   return (
     <Card>
       <Heading className="mb-1 text-2xl font-bold">{title}</Heading>
-      <p className="text-on-inverse-surface/60 mb-6 text-sm">{subtitle}</p>
+      <p className="text-on-elevated-surface/60 mb-6 text-sm">{subtitle}</p>
       <div className="flex flex-col gap-3">
         <Button href={`/${userId}`}>Go to my profile</Button>
         <form action={logoutAction}>

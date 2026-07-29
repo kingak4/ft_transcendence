@@ -9,9 +9,9 @@ import { usePresence } from '../../hooks/usePresence';
 // import { useChat } from '../../hooks/useChat';
 
 const PANEL_CLASSES =
-  'bg-inverse-surface text-on-inverse-surface border-on-inverse-surface/15 flex-1 rounded-2xl border p-4';
+  'bg-elevated-surface text-on-elevated-surface border-elevated-border flex-1 rounded-2xl border p-4';
 
-export default function HomePage() {
+export default function StompTestPage() {
   // const [chatId, setChatId] = useState('test-chat-id');
   // const [messageContent, setMessageContent] = useState('');
   const [presenceUserId, setPresenceUserId] = useState(
@@ -46,7 +46,7 @@ export default function HomePage() {
               placeholder="Chat ID"
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
-              tone="inverse"
+              tone="elevated"
               size="sm"
             />
             <TextField
@@ -54,7 +54,7 @@ export default function HomePage() {
               placeholder="Wiadomość"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
-              tone="inverse"
+              tone="elevated"
               size="sm"
             />
             <Button
@@ -82,7 +82,7 @@ export default function HomePage() {
             placeholder="User ID (UUID)"
             value={presenceUserId}
             onChange={(e) => setPresenceUserId(e.target.value)}
-            tone="inverse"
+            tone="elevated"
             size="sm"
           />
           <Button
@@ -93,12 +93,12 @@ export default function HomePage() {
           </Button>
 
           <div className="mt-4">
-            <h3 className="border-on-inverse-surface/15 mb-2 border-b pb-2 font-semibold">
+            <h3 className="border-elevated-border mb-2 border-b pb-2 font-semibold">
               Status monitorowanego użytkownika:
             </h3>
             <div className="mt-2 text-lg">
               UUID:{' '}
-              <span className="text-on-inverse-surface/60 text-sm">
+              <span className="text-on-elevated-surface/60 text-sm">
                 {presenceUserId}
               </span>
               <br />
@@ -108,7 +108,7 @@ export default function HomePage() {
               ) : onlineStatus[presenceUserId] === false ? (
                 <span className="text-danger font-bold">Offline</span>
               ) : (
-                <span className="text-on-inverse-surface/60 italic">
+                <span className="text-on-elevated-surface/60 italic">
                   Nieznany (oczekiwanie...)
                 </span>
               )}

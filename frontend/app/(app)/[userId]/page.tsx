@@ -73,7 +73,7 @@ export default async function UserProfilePage({ params }: Props) {
             <form action={logout}>
               <button
                 type="submit"
-                className="bg-inverse-surface text-on-inverse-surface rounded-lg px-4 py-2 text-sm font-bold transition-colors hover:brightness-90"
+                className="bg-elevated-surface text-on-elevated-surface rounded-lg px-4 py-2 text-sm font-bold transition-colors hover:brightness-90"
               >
                 Log Out
               </button>

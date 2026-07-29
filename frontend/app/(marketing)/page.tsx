@@ -28,14 +28,9 @@ export default async function LandingPage() {
         <Card>
           <h2 className="mb-1 text-2xl font-bold">Hello!</h2>
           <p className="mb-8 text-sm">Do your thing. Grind.</p>
-          <div className="mb-4">
-            <Button href="/login">Login</Button>
-          </div>
-          <div className="mb-8">
-            <Button href="/home" variant="outline">
-              Continue as guest
-            </Button>
-          </div>
+          <Button href="/login" className="mb-4">
+            Login
+          </Button>
           <p className="text-center text-xs">
             Don&apos;t have an account yet?{' '}
             <AccentLink href="/register">Register</AccentLink>

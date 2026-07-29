@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import SearchFriends from '../../components/SearchFriends';
 import UserList from '../../components/UserList';
+import UserSearch from '../../components/UserSearch';
 import type { components } from '../../types/api';
 import AddFriendButton from './AddFriendButton';
 import RemoveFriendButton from './RemoveFriendButton';
@@ -40,7 +40,7 @@ export default function FriendsPanel({ friends, currentUserId }: Props) {
   return (
     <section>
       <h2 className="text-on-surface mb-3 text-xl font-bold">Friends</h2>
-      <SearchFriends
+      <UserSearch
         currentUserId={currentUserId}
         excludedIds={friendIds}
         searchAction={searchUsersAction}

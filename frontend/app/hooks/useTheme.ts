@@ -2,40 +2,45 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-export type Theme = 'brand' | 'mocha' | 'latte';
+import {
+  DEFAULT_THEME,
+  THEME_CLASSES,
+  THEME_ORDER,
+  THEME_STORAGE_KEY,
+  type Theme,
+} from '../lib/theme';
 
-const STORAGE_KEY = 'theme';
-const THEME_ORDER: Theme[] = ['brand', 'mocha', 'latte'];
-
-function isTheme(value: string | null): value is Theme {
-  return value === 'brand' || value === 'mocha' || value === 'latte';
-}
+export type { Theme };
 
 function applyTheme(theme: Theme) {
-  document.documentElement.classList.remove('mocha', 'latte');
-  if (theme !== 'brand') {
-    document.documentElement.classList.add(theme);
+  const { classList } = document.documentElement;
+  classList.remove(...THEME_CLASSES);
+  if (theme !== DEFAULT_THEME) {
+    classList.add(theme);
   }
 }
 
+function readAppliedTheme(): Theme {
+  const { classList } = document.documentElement;
+  return (
+    THEME_CLASSES.find((theme) => classList.contains(theme)) ?? DEFAULT_THEME
+  );
+}
+
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>('brand');
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (isTheme(stored)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is browser-only; the SSR pass renders the 'brand' default, and this post-mount read reconciles it with the real stored theme. A lazy useState initializer would read localStorage during the client's hydration render too, producing a server/client text mismatch in ThemeToggle.
-      setTheme(stored);
-    }
+    setTheme(readAppliedTheme());
   }, []);
 
-  useEffect(() => {
-    applyTheme(theme);
-    localStorage.setItem(STORAGE_KEY, theme);
-  }, [theme]);
-
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => THEME_ORDER[(THEME_ORDER.indexOf(prev) + 1) % THEME_ORDER.length]);
+    const current = readAppliedTheme();
+    const next =
+      THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+    applyTheme(next);
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+    setTheme(next);
   }, []);
 
   return { theme, toggleTheme };

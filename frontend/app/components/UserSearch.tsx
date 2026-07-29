@@ -31,7 +31,7 @@ interface Props {
 const SEARCH_DEBOUNCE_MS = 300;
 const PAGE_SIZE = 10;
 
-export default function SearchFriends({
+export default function UserSearch({
   currentUserId,
   excludedIds,
   searchAction,
