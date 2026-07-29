@@ -131,7 +131,7 @@ class UserDetailsControllerTest {
                 .principal(authentication()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content[0].displayName").value(DISPLAY_NAME_FIXTURE))
-        .andExpect(jsonPath("$.content[0].id.val").value(USER_UUID_FIXTURE.toString()))
+        .andExpect(jsonPath("$.content[0].id").value(USER_UUID_FIXTURE.toString()))
         .andExpect(
             jsonPath("$.content[0].avatarId.val")
                 .value(AvatarId.DEFAULT_AVATAR_ID.val().toString()));

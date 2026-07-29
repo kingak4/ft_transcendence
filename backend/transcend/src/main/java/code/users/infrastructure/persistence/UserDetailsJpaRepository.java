@@ -1,6 +1,5 @@
 package code.users.infrastructure.persistence;
 
-import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,13 +14,20 @@ public interface UserDetailsJpaRepository extends JpaRepository<UserDetailsEntit
 
   @Query(
       value =
-          """
-            SELECT uf.friend_id, ud.display_name, ud.avatar_id
-            FROM user_friends uf
-            JOIN users u ON u.val = uf.friend_id
-            JOIN user_details ud ON ud.val = u.val
-            WHERE uf.user_id = :userId
+            """
+              SELECT uf.friend_id, ud.display_name, ud.avatar_id
+              FROM user_friends uf
+              JOIN users u ON u.val = uf.friend_id
+              JOIN user_details ud ON ud.val = u.val
+              WHERE uf.user_id = :userId
+              ORDER BY ud.display_name, uf.friend_id
+            """,
+      countQuery =
+            """
+              SELECT count(*)
+              FROM user_friends uf
+              WHERE uf.user_id = :userId
             """,
       nativeQuery = true)
-  List<Object[]> findFriendDetailsByUserId(@Param("userId") UUID userId, Pageable pageable);
+    Page<Object[]> findFriendDetailsByUserId(@Param("userId") UUID userId, Pageable pageable);
 }

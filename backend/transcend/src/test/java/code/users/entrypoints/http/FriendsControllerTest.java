@@ -2,6 +2,7 @@ package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
 import static code.users.domain.model.UserFixtures.aDaoUser;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -14,13 +15,18 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.ManageFriendsUseCase;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import java.util.List;
+import static org.mockito.ArgumentMatchers.any;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -82,20 +88,31 @@ class FriendsControllerTest {
     FriendId friendId = FriendId.of(UUID.randomUUID());
     UserDetails friendDetails = aDaoUser().getDetails();
 
-    Map<FriendId, UserDetails> friendsMap = Map.of(friendId, friendDetails);
+    ManageFriendsUseCase.FriendResult friendResult =
+            new ManageFriendsUseCase.FriendResult(friendId, friendDetails);
 
-    when(manageFriendsUseCase.getFriendList(code.users.domain.model.UserId.of(AUTH_USER_ID), 0, 10))
-        .thenReturn(friendsMap);
+    Page<ManageFriendsUseCase.FriendResult> friendsPage =
+            new PageImpl<>(List.of(friendResult), PageRequest.of(0, 10), 1);
+
+    when(manageFriendsUseCase.getFriendList(
+            eq(code.users.domain.model.UserId.of(AUTH_USER_ID)), any(Pageable.class)))
+            .thenReturn(friendsPage);
 
     // when & then
     mockMvc
-        .perform(
-            get(buildUrl(FriendsController.FRIENDS_ENDPOINT, null))
-                .param("page", "0")
-                .param("size", "10")
-                .principal(authentication()))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.*").exists());
+            .perform(
+                    get(buildUrl(FriendsController.FRIENDS_ENDPOINT, null))
+                            .param("page", "0")
+                            .param("size", "10")
+                            .principal(authentication()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content.length()").value(1))
+            .andExpect(jsonPath("$.content[0].id").value(friendId.val().toString()))
+            .andExpect(jsonPath("$.content[0].details.displayName").value(friendDetails.getDisplayName()))
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.totalPages").value(1))
+            .andExpect(jsonPath("$.number").value(0));
   }
 
   private UsernamePasswordAuthenticationToken authentication() {
