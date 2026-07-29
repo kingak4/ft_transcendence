@@ -10,7 +10,7 @@ export default function Avatar({ src, alt, size }: Props) {
   if (!src) {
     return (
       <div
-        className="shrink-0 rounded-full bg-blue-200"
+        className="shrink-0 rounded-full bg-elevated-border"
         style={{ width: size, height: size }}
       />
     );

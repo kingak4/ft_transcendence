@@ -24,9 +24,11 @@ export default function SessionCard({
       <Heading className="mb-1 text-2xl font-bold">{title}</Heading>
       <p className="text-on-elevated-surface/60 mb-6 text-sm">{subtitle}</p>
       <div className="flex flex-col gap-3">
-        <Button href={`/${userId}`}>Go to my profile</Button>
+        <Button href={`/${userId}`} fullWidth>
+          Go to my profile
+        </Button>
         <form action={logoutAction}>
-          <Button type="submit" variant="outline">
+          <Button type="submit" variant="outline" fullWidth className="mb-4">
             Log out
           </Button>
         </form>

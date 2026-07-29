@@ -28,7 +28,7 @@ export default async function LandingPage() {
         <Card>
           <h2 className="mb-1 text-2xl font-bold">Hello!</h2>
           <p className="mb-8 text-sm">Do your thing. Grind.</p>
-          <Button href="/login" className="mb-4">
+          <Button href="/login" fullWidth>
             Login
           </Button>
           <p className="text-center text-xs">

@@ -61,7 +61,9 @@ export default function LoginPage() {
             </span>
           </div>
 
-          <Button type="submit">Login</Button>
+          <Button type="submit" fullWidth>
+            Login
+          </Button>
         </form>
 
         <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">

@@ -10,11 +10,17 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 };
 
 const BASE_CLASSES =
-  'block w-full rounded-lg py-3 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-block rounded-lg py-3 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
-function buttonClasses(variant: ButtonVariant, extra?: string) {
-  const classes = `${BASE_CLASSES} ${VARIANT_CLASSES[variant]}`;
-  return extra ? `${classes} ${extra}` : classes;
+function buttonClasses(
+  variant: ButtonVariant,
+  fullWidth: boolean,
+  extra?: string,
+) {
+  const width = fullWidth ? 'block w-full' : 'px-3';
+  return [BASE_CLASSES, VARIANT_CLASSES[variant], width, extra]
+    .filter(Boolean)
+    .join(' ');
 }
 
 /**
@@ -29,6 +35,10 @@ function buttonClasses(variant: ButtonVariant, extra?: string) {
 type BaseProps = {
   children: ReactNode;
   variant?: ButtonVariant;
+  // Appearance is the component's; layout is the caller's. Width can't be left
+  // to `className` because `w-full` and `w-auto` tie on specificity and resolve
+  // by stylesheet order, not by the order they're written in the string.
+  fullWidth?: boolean;
   className?: string;
 };
 
@@ -39,10 +49,21 @@ type ButtonAsLink = BaseProps & Omit<ComponentProps<typeof Link>, 'className'>;
 
 export default function Button(props: ButtonAsButton | ButtonAsLink) {
   if (props.href !== undefined) {
-    const { children, variant = 'primary', className, ...linkProps } = props;
+    // `fullWidth` is destructured to keep it out of the spread as much as to
+    // read it — an unknown `fullwidth` attribute on the DOM node would warn.
+    const {
+      children,
+      variant = 'primary',
+      fullWidth = false,
+      className,
+      ...linkProps
+    } = props;
 
     return (
-      <Link {...linkProps} className={buttonClasses(variant, className)}>
+      <Link
+        {...linkProps}
+        className={buttonClasses(variant, fullWidth, className)}
+      >
         {children}
       </Link>
     );
@@ -53,6 +74,7 @@ export default function Button(props: ButtonAsButton | ButtonAsLink) {
   const {
     children,
     variant = 'primary',
+    fullWidth = false,
     className,
     type = 'button',
     ...buttonProps
@@ -62,7 +84,7 @@ export default function Button(props: ButtonAsButton | ButtonAsLink) {
     <button
       {...buttonProps}
       type={type}
-      className={buttonClasses(variant, className)}
+      className={buttonClasses(variant, fullWidth, className)}
     >
       {children}
     </button>

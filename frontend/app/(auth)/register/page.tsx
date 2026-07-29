@@ -102,7 +102,9 @@ export default function RegisterPage() {
             </span>
           </label>
 
-          <Button type="submit">Register</Button>
+          <Button type="submit" fullWidth>
+            Register
+          </Button>
         </form>
 
         <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
