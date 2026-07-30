@@ -37,6 +37,43 @@
   --color-on-primary: var(--theme-on-primary);
   --color-success: var(--theme-success);
   --color-danger: var(--theme-danger);
+
+  /*
+   * 42Hub chat palette. Additive: nothing above is redefined, so every
+   * existing component keeps its current colours.
+   *
+   * TODO(design-migration): when the whole app moves to this design, these
+   * stop being a parallel set. Fold hub-* into the semantic tokens above
+   * (--color-surface, --color-elevated-surface, ...) and retire the
+   * --color-brand-* block, so components name one palette rather than two.
+   *
+   * Fixed brand hues - these *are* the brand, so they do not take theme
+   * indirection. A teal-to-blue bubble stays teal-to-blue in any flavor.
+   */
+  --color-hub-ink: #0d2b47;
+  --color-hub-ink-deep: #0a3348;
+  --color-hub-teal: #146b7a;
+  --color-hub-blue: #2f9bcf;
+  --color-hub-mint: #4ac9a0;
+  --color-hub-lime: #a3e635;
+
+  /*
+   * Themeable semantics. Same pattern as the block above: the name is
+   * stable, the value lives on --theme-hub-* under :root. Adding
+   * .mocha/.latte support later means adding those overrides in one
+   * place, not editing every component that names a colour.
+   */
+  --color-hub-surface: var(--theme-hub-surface);
+  --color-hub-panel: var(--theme-hub-panel);
+  --color-hub-panel-sunken: var(--theme-hub-panel-sunken);
+  --color-hub-field: var(--theme-hub-field);
+  --color-hub-border: var(--theme-hub-border);
+  --color-hub-on-surface: var(--theme-hub-on-surface);
+  --color-hub-muted: var(--theme-hub-muted);
+  --color-hub-time: var(--theme-hub-time);
+  --color-hub-row-active: var(--theme-hub-row-active);
+  --color-hub-online: var(--theme-hub-online);
+  --color-hub-status: var(--theme-hub-status);
 }
 
 /* Default theme: original 42Hub look, active when no theme class is set */
@@ -50,6 +87,26 @@
   --theme-on-primary: var(--color-brand-additional-color-2);
   --theme-success: var(--color-brand-secondary-color);
   --theme-danger: #e5484d;
+
+  /* 42Hub chat semantics. Defined here only - the chat surface is
+     deliberately a fixed-light island for now, so .mocha/.latte do not
+     override these. See PLAN-static-chat-page.md section 7.
+     TODO(design-migration): the chat page currently ignores ThemeToggle.
+     Add a --theme-hub-* override block to the .mocha, .latte rule below
+     (panel -> ctp-surface0, surface -> ctp-base, border -> ctp-surface1,
+     muted/time -> ctp-subtext0/overlay1). This indirection exists so that
+     is one added block here and zero JSX edits. */
+  --theme-hub-surface: #f3f6f4;
+  --theme-hub-panel: #ffffff;
+  --theme-hub-panel-sunken: #f8faf9;
+  --theme-hub-field: #f6f9f7;
+  --theme-hub-border: #eef2ef;
+  --theme-hub-on-surface: #0d2b47;
+  --theme-hub-muted: #7c8a92;
+  --theme-hub-time: #9aa5a0;
+  --theme-hub-row-active: #eaf4fa;
+  --theme-hub-online: #49b47a;
+  --theme-hub-status: #1a8a7a;
 }
 
 /* Catppuccin flavors: --color-ctp-* already flip between these two
@@ -87,6 +144,36 @@
     #7de8b4 0%,
     #56876f 44%,
     var(--color-brand-reversed-main-color) 100%
+  );
+}
+
+/* Dark app rail behind the sidebar. */
+@utility bg-hub-shell {
+  background: linear-gradient(165deg, #0b2b3a, #0d3339 55%, #0d2b3f);
+}
+
+/* Outgoing message bubble, and the Send button that produces them. */
+@utility bg-hub-bubble {
+  background: linear-gradient(
+    135deg,
+    var(--color-hub-teal),
+    var(--color-hub-blue)
+  );
+}
+
+/* Primary CTA treatment. Unused by the chat page: the design gives CTAs a
+   mint-lime fill while Send keeps the teal-blue bubble, and a single
+   --theme-primary cannot express both. Recorded here so the distinction
+   lives in the token layer rather than being rediscovered later.
+   TODO(design-migration): currently used only by Sidebar's active nav item.
+   When Button's `primary` variant adopts the new design it should take this
+   gradient, at which point `send` and `primary` become genuinely distinct
+   treatments rather than one being a stand-in. */
+@utility bg-hub-cta {
+  background: linear-gradient(
+    135deg,
+    var(--color-hub-mint),
+    var(--color-hub-lime)
   );
 }
 
