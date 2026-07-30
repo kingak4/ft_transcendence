@@ -26,6 +26,7 @@
   "devDependencies": {
     "@asyncapi/modelina": "^3.0.0",
     "@asyncapi/parser": "^3.0.0",
+    "@catppuccin/tailwindcss": "^1.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

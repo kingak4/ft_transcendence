@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useAsyncAction } from '../../hooks/useAsyncAction';
+
 import { addFriendAction } from './actions';
-import { useAsyncAction } from './useAsyncAction';
 
 interface Props {
   friendId: string;
@@ -29,7 +30,7 @@ export default function AddFriendButton({ friendId, onAdded }: Props) {
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className="bg-brand-secondary-color text-brand-additional-color-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-primary text-on-primary rounded-lg px-3 py-1.5 text-xs font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? 'Adding…' : 'Add'}
       </button>

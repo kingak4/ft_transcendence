@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 
+import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 
 export default async function AppLayout({
@@ -11,9 +12,12 @@ export default async function AppLayout({
   const userId = cookieStore.get('user_id')?.value ?? null;
 
   return (
-    <div className="bg-brand-main-color flex min-h-screen">
+    <div className="bg-surface text-on-surface flex min-h-screen">
       <Sidebar userId={userId} />
-      <main className="flex-1 overflow-y-auto p-8">{children}</main>
+      <div className="flex flex-1 flex-col">
+        <main className="flex-1 p-8">{children}</main>
+        <Footer />
+      </div>
     </div>
   );
 }

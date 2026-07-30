@@ -1,5 +1,6 @@
-import Image from 'next/image';
 import type { ReactNode } from 'react';
+
+import Avatar from './Avatar';
 
 export interface UserListItem {
   id: string;
@@ -15,11 +16,7 @@ interface Props {
 
 export default function UserList({ users, emptyMessage, renderAction }: Props) {
   if (users.length === 0) {
-    return (
-      <p className="text-brand-reversed-main-color/40 text-sm">
-        {emptyMessage}
-      </p>
-    );
+    return <p className="text-on-surface/40 text-sm">{emptyMessage}</p>;
   }
 
   return (
@@ -32,23 +29,15 @@ export default function UserList({ users, emptyMessage, renderAction }: Props) {
         return (
           <li
             key={user.id}
-            className="bg-brand-reversed-main-color flex items-center justify-between gap-3 rounded-xl p-3"
+            className="bg-elevated-surface text-on-elevated-surface border-elevated-border flex items-center justify-between gap-3 rounded-xl border p-3"
           >
             <div className="flex items-center gap-3">
-              {avatarSrc ? (
-                <Image
-                  src={avatarSrc}
-                  alt={`${user.displayName}'s avatar`}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-              ) : (
-                <div className="h-10 w-10 rounded-full bg-blue-200" />
-              )}
-              <p className="text-brand-main-color font-medium">
-                {user.displayName}
-              </p>
+              <Avatar
+                src={avatarSrc}
+                alt={`${user.displayName}'s avatar`}
+                size={40}
+              />
+              <p className="font-medium">{user.displayName}</p>
             </div>
             {renderAction(user)}
           </li>

@@ -3,7 +3,9 @@
 import { client } from '../../lib/api-clients';
 import type { operations } from '../../types/api';
 
-export type ActionResult = { success: true } | { success: false; message: string };
+export type ActionResult =
+  | { success: true }
+  | { success: false; message: string };
 
 // openapi-typescript models a `multipart/form-data` binary field as a plain
 // `{ file: string }` shape (it has no concept of the browser's FormData).
@@ -88,7 +90,7 @@ export async function searchUsersAction(
   }
 
   const results = (data.content ?? []).map((user) => ({
-    id: user.id?.val ?? '',
+    id: user.id ?? '',
     displayName: user.displayName ?? 'Unknown User',
     avatarId: user.avatarId?.val,
   }));

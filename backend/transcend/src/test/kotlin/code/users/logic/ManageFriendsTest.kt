@@ -6,9 +6,10 @@ import code.users.domain.model.FriendFixtures.*
 import code.users.domain.model.UserFixtures.USER_ID_FIXTURE
 import code.users.ports.`in`.ManageFriendsUseCase
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.maps.shouldHaveSize
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
+import org.springframework.data.domain.PageRequest
 
 @Import(ManageFriends::class)
 class ManageFriendsTest(private val service: ManageFriendsUseCase) : FriendDaoTestSupport() {
@@ -19,8 +20,8 @@ class ManageFriendsTest(private val service: ManageFriendsUseCase) : FriendDaoTe
         service.addFriend(USER_ID_FIXTURE, FRIEND1_CLASS_ID_FIXTURE)
 
         Then("friend 1 should be in the user's friend list") {
-          val friends = userDao.getFriendList(USER_ID_FIXTURE, 0, 10)
-          friends.containsKey(FRIEND1_CLASS_ID_FIXTURE) shouldBe true
+          val friends = userDao.getFriendList(USER_ID_FIXTURE, PageRequest.of(0, 10))
+          friends.content.any { it.id == FRIEND1_CLASS_ID_FIXTURE } shouldBe true
         }
       }
     }
@@ -32,8 +33,8 @@ class ManageFriendsTest(private val service: ManageFriendsUseCase) : FriendDaoTe
         service.removeFriend(USER_ID_FIXTURE, FRIEND2_CLASS_ID_FIXTURE)
 
         Then("friend 2 should be removed from the database") {
-          val friends = userDao.getFriendList(USER_ID_FIXTURE, 0, 10)
-          friends.containsKey(FRIEND2_CLASS_ID_FIXTURE) shouldBe false
+          val friends = userDao.getFriendList(USER_ID_FIXTURE, PageRequest.of(0, 10))
+          friends.content.any { it.id == FRIEND2_CLASS_ID_FIXTURE } shouldBe false
         }
       }
     }
@@ -43,12 +44,14 @@ class ManageFriendsTest(private val service: ManageFriendsUseCase) : FriendDaoTe
       userDao.addFriend(USER_ID_FIXTURE, FRIEND2_CLASS_ID_FIXTURE)
 
       When("requesting page 0") {
-        val result = service.getFriendList(USER_ID_FIXTURE, 0, 10)
+        val result = service.getFriendList(USER_ID_FIXTURE, PageRequest.of(0, 10))
 
         Then("it should return both friends") {
-          result shouldHaveSize 2
-          result[FRIEND1_CLASS_ID_FIXTURE]?.displayName shouldBe FRIEND1_NAME_FIXTURE
-          result[FRIEND2_CLASS_ID_FIXTURE]?.displayName shouldBe FRIEND2_NAME_FIXTURE
+          result.content shouldHaveSize 2
+          result.content.first { it.id == FRIEND1_CLASS_ID_FIXTURE }.details.displayName shouldBe
+                  FRIEND1_NAME_FIXTURE
+          result.content.first { it.id == FRIEND2_CLASS_ID_FIXTURE }.details.displayName shouldBe
+                  FRIEND2_NAME_FIXTURE
         }
       }
     }
