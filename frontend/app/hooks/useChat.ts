@@ -1,33 +1,54 @@
-// import { useStompClient } from 'react-stomp-hooks';
+import { useCallback } from 'react';
+import { useStompClient, useSubscription } from 'react-stomp-hooks';
 
-// const APP_PREFIX = '/transcend';
+const APP_PREFIX = '/transcend';
 
-// export function useChat() {
-//   const stompClient = useStompClient();
+export type ChatEventPayload = {
+  messageId: string;
+  senderId: string;
+  content?: string;
+  time?: string;
+};
 
-//   const sendMessage = (chatId: string, content: string) => {
-//     if (stompClient) {
-//       const request = { content };
-//       stompClient.publish({
-//         destination: `${APP_PREFIX}/chat/${chatId}/send`,
-//         body: JSON.stringify(request),
-//       });
-//     } else {
-//       console.warn('STOMP client is not connected.');
-//     }
-//   };
+export function useChat() {
+  const stompClient = useStompClient();
 
-//   const deleteMessage = (messageId: string) => {
-//     if (stompClient) {
-//       const request = {};
-//       stompClient.publish({
-//         destination: `${APP_PREFIX}/chat/messages/${messageId}/delete`,
-//         body: JSON.stringify(request),
-//       });
-//     } else {
-//       console.warn('STOMP client is not connected.');
-//     }
-//   };
+  const sendMessage = useCallback((chatId: string, content: string) => {
+    if (stompClient) {
+      const request = { content };
+      stompClient.publish({
+        destination: `${APP_PREFIX}/chat/${chatId}/send`,
+        body: JSON.stringify(request),
+      });
+    } else {
+      console.warn('STOMP client is not connected.');
+    }
+  }, [stompClient]);
 
-//   return { sendMessage, deleteMessage, isConnected: !!stompClient };
-// }
+  const deleteMessage = useCallback((chatId: string, messageId: string) => {
+    if (stompClient) {
+      const request = {};
+      stompClient.publish({
+        destination: `${APP_PREFIX}/chat/${chatId}/messages/${messageId}/delete`,
+        body: JSON.stringify(request),
+      });
+    } else {
+      console.warn('STOMP client is not connected.');
+    }
+  }, [stompClient]);
+
+  return { sendMessage, deleteMessage, isConnected: !!stompClient };
+}
+
+export function useChatSubscription(chatId: string, onMessage: (message: ChatEventPayload) => void) {
+  const destination = `/topic/chat/${chatId}/messages`;
+  
+  useSubscription(chatId ? destination : [], (message) => {
+    try {
+      const parsed = JSON.parse(message.body) as ChatEventPayload;
+      onMessage(parsed);
+    } catch (err) {
+      console.error('Failed to parse chat message', err);
+    }
+  });
+}

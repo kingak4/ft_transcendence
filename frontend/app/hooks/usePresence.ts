@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useStompClient, useSubscription } from 'react-stomp-hooks';
 
 const APP_PREFIX = '/transcend';
@@ -27,7 +27,7 @@ export function usePresence(userIdsToWatch: string[] = []) {
     }
   });
 
-  const checkPresence = (userId: string) => {
+  const checkPresence = useCallback((userId: string) => {
     if (stompClient) {
       const request = { userId };
       stompClient.publish({
@@ -37,7 +37,7 @@ export function usePresence(userIdsToWatch: string[] = []) {
     } else {
       console.warn('STOMP client is not connected.');
     }
-  };
+  }, [stompClient]);
 
   return { checkPresence, onlineStatus, isConnected: !!stompClient };
 }

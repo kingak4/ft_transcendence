@@ -1,75 +1,118 @@
+import { cookies } from 'next/headers';
+import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
 import FriendRail from './FriendRail';
-import { friends, messagesByFriendId } from './fixtures';
+import type { Friend } from './types';
 
 export const metadata = {
   title: 'Chat',
 };
 
-/**
- * Static chat screen. No REST, no STOMP - `fixtures.ts` is the seam where real
- * data arrives.
- *
- * Selection lives in `?friend=` rather than component state, which keeps this
- * whole subtree a Server Component: no client JS ships, and the selected
- * conversation survives a reload and can be linked to.
- *
- * In Next.js 15+ `searchParams` is a Promise and must be awaited - older
- * tutorials show it as a plain object.
- *
- * TODO(stomp): this is where the data source changes. Keep this component a
- * Server Component: fetch friends and message history here, and push the live
- * socket down into the smallest possible Client Component (the message list
- * and the composer). Marking this whole file `'use client'` would ship the
- * entire chat UI to the browser and lose the URL-driven selection below.
- *
- * TODO(stomp): `?friend=` currently identifies a *friend*. The send
- * destination is `/transcend/chat/{chatId}/send`, so a chat id must be
- * resolved from the friend - decide whether the URL should carry the chat id
- * instead, and whether an unknown `?friend=` should 404 rather than silently
- * falling back to the first friend as it does below.
- */
+async function loadFriends(): Promise<Friend[]> {
+  const { data, response } = await client.GET('/friends', {
+    params: { query: { page: 0, size: 20 } },
+  });
+
+  if (!response.ok || !data) {
+    return [];
+  }
+
+  // Map the response based on the backend structure.
+  // Assuming data is a Page<FriendResult> with content array.
+  // FriendResult contains id and details (displayName, avatarId).
+  return (data?.content ?? []).map((friend: any) => ({
+    id: friend.id ?? '',
+    name: friend.details?.displayName ?? 'Unknown User',
+    initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
+    color: 'bg-blue-500', // Assign a default or dynamic color
+    avatarId: friend.details?.avatarId?.val ?? null,
+    online: false, // We'll handle this in ChatInterface
+    status: 'Offline',
+  }));
+}
+
+async function loadChats(friends: Friend[]): Promise<{ chatId: string; friend: Friend }[]> {
+  const { data, response } = await client.GET('/chats', {
+    params: { query: { page: 0, size: 20 } },
+  });
+  if (!response.ok || !data) return [];
+
+  return data.map((chat: any) => {
+    let friendId = chat.otherUserId;
+    let friend = friendId ? friends.find((f) => f.id === friendId) : null;
+
+    if (!friend) {
+      // Mock friend when otherUserId is missing
+      friend = {
+        id: chat.chatId, // Use chatId to avoid duplicate keys
+        name: chat.chatId,
+        initial: chat.chatId.charAt(0).toUpperCase(),
+        color: 'bg-hub-panel',
+        online: false,
+        status: 'Offline',
+      };
+    }
+
+    return { chatId: chat.chatId, friend };
+  });
+}
+
 export default async function ChatPage({
   searchParams,
 }: {
-  searchParams: Promise<{ friend?: string | string[] }>;
+  searchParams: Promise<{ friend?: string | string[]; chat?: string | string[] }>;
 }) {
-  const { friend } = await searchParams;
-  // A repeated query key (`?friend=a&friend=b`) arrives as an array.
+  const { friend, chat } = await searchParams;
   const friendId = Array.isArray(friend) ? friend[0] : friend;
+  const urlChatId = Array.isArray(chat) ? chat[0] : chat;
 
-  const activeFriend = friends.find((f) => f.id === friendId) ?? friends[0];
+  const cookieStore = await cookies();
+  const myUserId = cookieStore.get('user_id')?.value ?? null;
 
-  if (!activeFriend) {
+  const allFriends = await loadFriends();
+  const activeChats = await loadChats(allFriends);
+
+  // Find the active friend either by friendId or by looking up the chatId
+  let activeFriend = allFriends.find((f) => f.id === friendId) || null;
+  let activeChatId = urlChatId || null;
+
+  if (!activeFriend && activeChatId) {
+    const chatSession = activeChats.find((c) => c.chatId === activeChatId);
+    if (chatSession) activeFriend = chatSession.friend;
+  }
+
+  if (!activeFriend && friendId) {
+    // Handle the case where friendId in URL is actually a chatId from the mock
+    const chatSession = activeChats.find((c) => c.chatId === friendId || c.friend.id === friendId);
+    if (chatSession) {
+      activeFriend = chatSession.friend;
+      activeChatId = chatSession.chatId;
+    }
+  }
+
+  if (activeFriend && !activeChatId) {
+    const chatSession = activeChats.find((c) => c.friend.id === activeFriend?.id);
+    if (chatSession) activeChatId = chatSession.chatId;
+  }
+
+  if (allFriends.length === 0) {
     return (
       <div className="bg-hub-panel text-hub-muted flex h-[calc(100vh-4rem)] items-center justify-center rounded-2xl text-sm">
-        No conversations yet.
+        No friends yet. Add friends to start chatting.
       </div>
     );
   }
 
-  const messages = messagesByFriendId[activeFriend.id] ?? [];
-
   return (
-    /*
-     * The height must be *definite* for the message list to scroll: a
-     * percentage or h-full resolves against the parent, and `(app)/layout.tsx`
-     * sets `min-h-screen`, which does not make a height definite. So we compute
-     * one from the viewport instead.
-     *
-     * 4rem = the `p-8` on <main> in app/(app)/layout.tsx, counted top and
-     * bottom. If that padding changes, this number must change with it.
-     *
-     * TODO(design-migration): known bug - the page scrolls instead of the
-     * message list, because <main> takes exactly 100vh and <Footer /> is
-     * stacked below it. The fix is a footer-less `(chat)` route group with
-     * `h-screen`, after which this calc() and the rounded-2xl inset both go
-     * away and the panel sits edge-to-edge as designed. Also add
-     * `overscroll-contain` to the message list in Conversation.tsx.
-     */
     <div className="border-hub-border flex h-[calc(100vh-4rem)] overflow-hidden rounded-2xl border">
-      <FriendRail friends={friends} activeFriendId={activeFriend.id} />
-      <Conversation friend={activeFriend} messages={messages} />
+      <FriendRail activeChats={activeChats} allFriends={allFriends} activeFriendId={activeFriend?.id || ''} />
+      {activeFriend ? (
+        <Conversation friend={activeFriend} initialChatId={activeChatId} myUserId={myUserId} />
+      ) : (
+        <div className="bg-hub-panel-sunken flex flex-1 items-center justify-center text-sm text-hub-muted">
+          Select a chat to start messaging
+        </div>
+      )}
     </div>
   );
 }

@@ -42,7 +42,7 @@ public class ChatEventListener {
               description = "Broadcasts message deletion notification to chat subscribers",
               payloadType = DeleteMessageEventResponse.class))
   @StompAsyncOperationBinding
-  public void handleMessageDeleted(MessageSentEvent event) {
+  public void handleMessageDeleted(MessageDeletedEvent event) {
     messagingTemplate.convertAndSend(
         chatMessagesTopic(event.chatId().val()),
         new DeleteMessageEventResponse(event.senderId().val(), event.messageId().val()));
