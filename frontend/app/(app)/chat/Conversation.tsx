@@ -37,6 +37,11 @@ export default function Conversation({ friend, initialChatId, myUserId }: Props)
         </div>
       </header>
 
+      {/* 
+       * TODO(stomp): History is finite. Loading older messages on upward scroll 
+       * means preserving scroll position while prepending, or the view jumps.
+       * Needs an IntersectionObserver on the top of the message list.
+       */}
       <ChatInterface friend={friend} initialChatId={initialChatId} myUserId={myUserId} />
     </section>
   );

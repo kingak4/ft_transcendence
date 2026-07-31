@@ -14,9 +14,9 @@ interface Props {
  * the page a Server Component with no client JS, and hands us keyboard access,
  * history and shareable URLs from the browser instead of from code.
  *
- * TODO(stomp): a real row carries more than a name - last-message preview,
- * its timestamp, and an unread badge driven by the message feed. Add them as
- * optional props so this stays renderable without a live socket.
+ * TODO(stomp): A real row carries more than a name - last-message preview,
+ * its timestamp, and an unread badge driven by the message feed.
+ * Await the backend `/chats` PR to provide this data, then pass it down as optional props.
  */
 export default function FriendRow({ friend, isActive, onClick }: Props) {
   const avatarSrc = friend.avatarId ? `/api/users/avatar/${friend.avatarId}` : null;

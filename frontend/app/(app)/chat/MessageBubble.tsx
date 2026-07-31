@@ -9,8 +9,9 @@ interface Props {
   isMine: boolean;
   onDelete?: () => void;
   /*
-   * TODO(stomp): real messages need delivery state (sending / sent / failed).
-   * Both are per-message presentation, so they belong here rather than in Conversation.
+   * TODO(stomp): Real messages need delivery state (sending / sent / failed).
+   * This requires the backend to accept and echo a `clientMessageId` (correlation ID)
+   * so the frontend can reconcile optimistic messages reliably.
    */
 }
 

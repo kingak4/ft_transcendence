@@ -90,6 +90,11 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
         )}
       </div>
 
+      {/* min-h-0 lets this shrink below its content so overflow-y-auto can
+       * actually engage; without it the list would push the rail taller.
+       * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
+       * not every friend. Needs infinite scroll on this container to load subsequent pages.
+       */}
       <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
         {activeChatFriends.map((friend) => {
           return (
