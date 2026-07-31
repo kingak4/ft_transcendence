@@ -580,3 +580,340 @@ zamiast przechodzić dalej. Każdy kolejny krok pogłębia skutki niezrozumienia
 3. **Czy `.mocha` / `.latte` powinny w ogóle przetrwać migrację**, czy nowy design ma
    zastąpić obsługę motywów, zamiast samemu jej podlegać? W zależności od odpowiedzi Krok
    5 jest rzeczywistym zadaniem albo usunięciem istniejącego rozwiązania.
+
+---
+
+## Część 5 — Krok 1 w szczegółach
+
+*Dopisane 2026-07-31, po zakończeniu Kroku 0. Wejściem dla tej części jest artefakt Kroku 0:
+`MIGRATION-INVENTORY.md`. Bez niego ta część nie ma na czym pracować.*
+
+Budżet: **pół dnia (2–4 godziny).** Rezultatem jest tabela i kolejność, nie diff. Nie
+edytujesz **ani jednego** pliku aplikacji. Jedyny plik, który w tym kroku zmieniasz, to
+`MIGRATION-INVENTORY.md`.
+
+### 5.0 Dlaczego ten krok nie jest biurokracją
+
+Krok 1 wygląda na wypełnianie tabelki i łatwo go potraktować jako formalność do
+odhaczenia. Jego rzeczywista funkcja jest inna: **Krok 4 to ciąg niezależnych jednostek
+pracy, a kolejność tych jednostek decyduje o tym, gdzie popełnisz pierwsze błędy.** Błędy
+popełnisz na pewno — pytanie brzmi tylko, czy zobaczysz je na stronie regulaminu, czy na
+ekranie logowania.
+
+Analogia: nauki jazdy nie zaczyna się na autostradzie. Nie dlatego, że autostrada jest
+trudniejsza technicznie, tylko dlatego, że koszt pomyłki jest tam nieporównywalnie wyższy.
+Krok 1 to wskazanie parkingu.
+
+Jest jeszcze drugi, mniej oczywisty powód. Migracja wizualna ma naturalny **kierunek
+zależności**: strona składa się z komponentów, a nie odwrotnie. Jeśli ostylujesz stronę
+logowania przed komponentem `Button`, to po dojściu do `Button` wrócisz do strony logowania
+po raz drugi. Krok 1 ustala kolejność zgodną z tym kierunkiem, żeby każde miejsce dotknąć
+dokładnie raz.
+
+### 5.1 Ustalenia wejściowe — trzy rzeczy już rozstrzygnięte
+
+Definicja ukończenia Kroku 0 (§3.7) wymieniała elementy, które od tego czasu zostały
+rozstrzygnięte inaczej, niż zakładał pierwotny plan. Nie są to luki do domknięcia; są to
+decyzje, które zmieniają sposób pracy w Krokach 2–4, dlatego zapisujemy je tutaj.
+
+**① Weryfikacja przez równoległe branche, nie przez screenshoty.**
+Krok 2 wymaga dowodu, że refaktoryzacja **niczego nie zmieniła wizualnie**. Zamiast zdjęć
+bazowych porównanie odbywa się na żywo: stary branch i branch migracyjny uruchomione
+jednocześnie, dwa okna obok siebie, ta sama trasa w obu.
+
+Ta metoda jest lepsza w jednym istotnym wymiarze i gorsza w innym — warto znać oba.
+Screenshot jest artefaktem *zamrożonym*: pokazuje stan z dnia, w którym powstał, i po
+tygodniu przestaje odpowiadać czemukolwiek, jeśli w międzyczasie ktoś domerguje zmianę do
+punktu odniesienia. Uruchomiony branch jest zawsze aktualny i pozwala porównać rzeczy,
+których zdjęcie nie łapie — hover, focus, zachowanie przy zmianie szerokości okna,
+przełączenie motywu. W zamian wymaga, żeby branch odniesienia **pozostawał uruchamialny**
+przez cały czas trwania migracji. To warunek, o którym łatwo zapomnieć, bo łamie się go
+przypadkiem, a nie świadomie.
+
+Praktycznie: drugi serwer deweloperski musi wystartować na innym porcie, bo domyślny 3000
+jest już zajęty przez pierwszy.
+
+```bash
+npm run dev -- -p 3001
+```
+
+*„Uruchom skrypt `dev`, ale przekaż mu dodatkowy argument. Podwójny myślnik `--` to
+granica: wszystko po nim npm przestaje traktować jako własne opcje i przekazuje dalej, do
+uruchamianego programu. `-p 3001` mówi serwerowi Next.js, żeby nasłuchiwał na porcie 3001
+zamiast domyślnego 3000. Dzięki temu dwie wersje aplikacji działają obok siebie pod
+`localhost:3000` i `localhost:3001`.”*
+
+**② Ryzyko R2 (lint) jest zamknięte.** Lint działa jako check CI przy każdym PR i przy
+każdym pushu do `main`. Nie ma więc potrzeby uruchamiania go ręcznie „na wszelki wypadek”
+przed Krokiem 2 ani zapisywania wyniku w inwentaryzacji — jeśli `@utility` i klasy
+`bg-hub-*` miałyby wywracać linter, byłoby to widoczne już przy PR, który je wprowadził.
+Pozycję R2 w rejestrze ryzyk można traktować jako nieaktualną.
+
+**③ Oba miejsca z surowym hexem idą do poprawki.** Sekcja 8 inwentaryzacji zostawiała
+`globals.css:144–145` jako „do sprawdzenia ręcznego”. Sprawdzenie zostało wykonane: to ten
+sam typ problemu co linia 152. Zakres Kroku 2 jest zatem **zamknięty i liczy trzy pozycje**:
+
+| # | Miejsce | Co jest nie tak |
+|---|---|---|
+| 1 | `app/globals.css` :152 (`bg-hub-shell`) | gradient na surowych `#0b2b3a`, `#0d3339`, `#0d2b3f` zamiast `var(--color-hub-*)` |
+| 2 | `app/globals.css` :144–145 | gradient na surowych hexach poza `:root` |
+| 3 | `app/components/Sidebar.tsx` :27 | hardkodowane `white/70` jako placeholder |
+
+To jest cały Krok 2 — trzy miejsca, jeden commit. Warto to zapamiętać przy planowaniu
+kolejności w §5.5: Krok 2 nie jest fazą, tylko drobiazgiem, a jego jedyna trudność polega
+na tym, że pozycja 1 i 2 wymagają **dodania tokenów** dla odcieni powłoki, a nie tylko
+podmiany nazw.
+
+### 5.2 Zamień trzy kategorie ryzyka w pytania rozstrzygalne
+
+Krok 1 w Części 2 podaje trzy kategorie opisowo („niewiele komponentów”, „wszystko, z czym
+użytkownik styka się przed zalogowaniem”). To za mało, żeby dwie osoby doszły do tej samej
+odpowiedzi — a tabela ryzyka, którą da się wypełnić dowolnie, zawsze zostaje wypełniona tak,
+żeby pasowała do kolejności, którą ktoś już wcześniej sobie założył.
+
+Dlatego rozbijamy to na **sześć pytań zamkniętych**. Dla każdej trasy odpowiadasz TAK/NIE.
+
+| # | Pytanie | Jeśli TAK |
+|---|---|---|
+| P1 | Czy zepsucie tej strony **uniemożliwia** użytkownikowi korzystanie z aplikacji? (logowanie, rejestracja, jedyne wejście do aplikacji) | **Wysokie** |
+| P2 | Czy strona renderuje **treści pochodzące od użytkownika** (nazwa wyświetlana, avatar, lista znajomych, wiadomości)? | **Wysokie** |
+| P3 | Czy strona zawiera komponenty `'use client'` wykonujące **akcje zmieniające dane** (dodaj znajomego, zmień avatar)? | co najmniej **Średnie** |
+| P4 | Czy strona używa **5 lub więcej** komponentów współdzielonych? | co najmniej **Średnie** |
+| P5 | Czy strona dzieli layout z innymi trasami (jest w grupie z własnym `layout.tsx`)? | co najmniej **Średnie** |
+| P6 | Czy dla tej trasy **istnieje** ekran w eksporcie designu? | jeśli **NIE** → trasa jest **zablokowana**, nie planuj jej w Kroku 4 |
+
+**Zasada agregacji: wygrywa najwyższa kategoria, nie średnia.** Jedno TAK w P1 czyni stronę
+wysokiego ryzyka niezależnie od tego, jak niewinnie wypada w pozostałych pięciu pytaniach.
+To nie jest punktacja — ryzyko się nie uśrednia. Strona z jedną krytyczną właściwością i
+pięcioma nieszkodliwymi nie jest „średnio ryzykowna”; jest ryzykowna.
+
+**Dlaczego akurat te sześć pytań.** P1 i P2 mierzą **koszt błędu** — co się stanie, jeśli
+strona będzie wyglądać źle. P3, P4 i P5 mierzą **prawdopodobieństwo błędu** — ile ruchomych
+części ma strona i jak daleko sięga pomyłka. To dwie niezależne osie, mnożone przez siebie.
+P6 nie mierzy ryzyka w ogóle; jest bramką wykonalności i siedzi w tej samej tabeli tylko
+dlatego, że tabelę i tak wypełniasz trasa po trasie, a lepiej odkryć brak designu teraz niż
+w połowie Kroku 4.
+
+**Uwaga o P5.** Wszystkie trasy w grupie `(app)` dzielą `app/(app)/layout.tsx`, a ten
+layout renderuje `Sidebar` — czyli komponent, w którym inwentaryzacja (sekcja 7) znalazła
+hardkodowane `white/70`. To jedyny znany „bezpiecznik pominięty” w warstwie widocznej na
+**każdej** stronie aplikacji. Sam w sobie nie podnosi ryzyka pojedynczej trasy, ale
+przesądza o kolejności: `Sidebar` musi zostać domknięty w Kroku 2, zanim ocenisz wygląd
+którejkolwiek strony z grupy `(app)`, bo inaczej za każdym razem będziesz patrzeć na jeden
+i ten sam błąd i zastanawiać się, czy to wina strony.
+
+### 5.3 Zbuduj mapę zależności: trasa → komponenty
+
+Do pytania P4 potrzebujesz wiedzieć, ile i jakich komponentów używa każda trasa. Do
+ustalenia kolejności (§5.5) potrzebujesz odwrotności: ile tras zależy od danego komponentu.
+To ta sama informacja czytana z dwóch stron i warto mieć obie.
+
+Polecenia uruchom z katalogu **`/root/design/frontend`**:
+
+```bash
+grep -rn --include='*.tsx' -F 'components/' app | sort
+```
+
+*„Przeszukaj rekurencyjnie katalog `app`, tylko pliki `.tsx`, szukając dosłownego tekstu
+`components/`, i posortuj wynik. `-F` znaczy »traktuj wzorzec dosłownie«, więc `/` nie jest
+interpretowane jako nic specjalnego. Ponieważ każdy import komponentu zawiera w ścieżce
+`components/` — niezależnie od tego, czy zapisano go jako `@/app/components/Button`, czy
+jako `../../components/Button` — to wyszukiwanie daje listę »który plik importuje co«.”*
+
+To jest mapa w kierunku **trasa → komponent**. Teraz kierunek odwrotny:
+
+```bash
+grep -rno --include='*.tsx' -E '<(AccentLink|Avatar|BareLayout|BrandLink|Button|Card|ContactBlock|Footer|Hero|LegalSection|PresenceAvatar|SessionCard|Sidebar|Tag|TextField|ThemeToggle|UserList|UserSearch)\b' app | sort
+```
+
+*„To samo przeszukiwanie, ale szukamy **użycia** komponentu w JSX, czyli znaku `<` z nazwą
+komponentu. `-E` włącza rozszerzone wzorce, dzięki czemu `(A|B|C)` znaczy »A albo B albo
+C«. `\b` to »granica słowa« — pilnuje, żeby `<Card` nie dopasowało się do `<CardHeader`.
+`-o` wypisuje samo dopasowanie zamiast całej linii, przez co wynik jest krótki i łatwo w
+nim policzyć wystąpienia.”*
+
+Z tego drugiego wyniku policz, **ile różnych plików** używa każdego komponentu. Ta liczba
+(nazywa się to *fan-in* — ilu ma odbiorców) jest jedynym rzetelnym miernikiem tego, które
+komponenty należy ostylować najpierw. Komponent używany w sześciu miejscach ostylowany
+poprawnie załatwia sześć miejsc naraz; ostylowany błędnie psuje sześć miejsc naraz.
+
+Jedna trasa nie da się w ten sposób zmierzyć rzetelnie: `/(app)/[userId]` trzyma część
+elementów interfejsu w plikach obok siebie (`FriendsPanel.tsx`, `AddFriendButton.tsx`,
+`EditAvatarButton.tsx`, …), a nie w `app/components`. Nie są to komponenty współdzielone,
+więc nie liczą się do P4, ale **są** pracą w Kroku 4. Policz je osobno jako „komponenty
+lokalne trasy”, inaczej niedoszacujesz jej rozmiaru.
+
+### 5.4 Proponowana klasyfikacja — do zweryfikowania, nie do przepisania
+
+Poniżej punkt wyjścia oparty na tym, co już wynika z `MIGRATION-INVENTORY.md`. Kolumny
+oznaczone `?` wymagają rozstrzygnięcia po wykonaniu §5.3 — nie da się ich odpowiedzialnie
+wypełnić bez mapy zależności.
+
+| Trasa | P1 blokada | P2 treści użytkownika | P3 akcje | P4 komponenty | P5 wspólny layout | Ryzyko |
+|---|---|---|---|---|---|---|
+| `(app)/stomp` | NIE | NIE | TAK (klient) | ? | TAK | **Niskie** |
+| `(app)/privacy-policy` | NIE | NIE | NIE | ? | TAK | **Niskie** |
+| `(app)/terms-of-service` | NIE | NIE | NIE | ? | TAK | **Niskie** |
+| `(marketing)/` | TAK | NIE | NIE | ? | ? | **Wysokie** |
+| `(app)/[userId]` | NIE | TAK | TAK | ? (+5 lokalnych) | TAK | **Wysokie** |
+| `(auth)/login` | TAK | NIE | TAK | ? | ? | **Wysokie** |
+| `(auth)/register` | TAK | NIE | TAK | ? | ? | **Wysokie** |
+
+Uzasadnienia wymagające komentarza:
+
+- **`(app)/stomp` jest najniższego ryzyka mimo `'use client'` i akcji.** To strona
+  diagnostyczna, nie produktowa. Jeśli po migracji będzie wyglądać dziwnie, zobaczy to
+  developer, a nie użytkownik. To czyni ją idealnym miejscem na pierwszą pomyłkę — z tego
+  samego powodu, dla którego jest bezwartościowa jako dowód, że migracja się udała.
+- **Strony prawne są niskiego ryzyka, ale nie zerowego.** Renderują długi tekst ciągły,
+  czyli jedyne miejsce w aplikacji, gdzie realnie zobaczysz problem z typografią i
+  kontrastem tekstu podstawowego. To dobre pierwsze *prawdziwe* strony.
+- **`(marketing)/` to jedyny przypadek naprawdę sporny.** Wg litery kryterium z Części 2
+  („wszystko, z czym użytkownik styka się przed zalogowaniem”) jest wysokiego ryzyka. Wg
+  P1 również — to wejście do aplikacji. Ale jej ryzyko ma inną naturę niż ryzyko strony
+  logowania: zepsuta strona marketingowa **wygląda** źle, zepsuta strona logowania
+  **blokuje**. Dodatkowo to jedyne miejsce (`Hero.tsx`, `Tag.tsx`) używające jeszcze starej
+  palety `brand-*`, więc i tak musi zostać dotknięte. **Rekomendacja:** zostaw ją w kategorii
+  wysokiej, ale ustaw jako **pierwszą** wśród wysokich — ma najwyższy koszt wizerunkowy i
+  najniższy koszt funkcjonalny z całej trójki.
+- **`(app)/[userId]` jest wysokiego ryzyka mimo braku P1.** Renderuje treści od
+  użytkownika (P2) i ma najwięcej ruchomych części ze wszystkich tras (pięć lokalnych
+  komponentów klienckich z akcjami mutującymi). To najdroższa pojedyncza jednostka pracy w
+  całym Kroku 4 — zaplanuj ją jako osobny, samodzielny kawałek, nie jako „jeszcze jedną
+  stronę”.
+
+**Zweryfikuj tę tabelę, nie ufaj jej.** Powstała z inwentaryzacji, a nie z lektury tras.
+Jeśli twoja odpowiedź na któreś pytanie różni się od powyższej — twoja wygrywa; dopisz
+jednozdaniowe uzasadnienie, bo za trzy tygodnie nikt nie odtworzy, dlaczego kolejność
+wygląda tak, a nie inaczej.
+
+### 5.5 Kolejność prac — cztery etapy
+
+Kategoria ryzyka mówi, **jak ostrożnie** pracować. Kolejność wynika z **zależności**, a te
+biegną od komponentów do stron. Stąd kolejność „od liści”: najpierw rzeczy, które nic nie
+zawierają, potem rzeczy, które je zawierają.
+
+**Etap A — komponenty-liście o najwyższym fan-in.** `Button`, `TextField`, `Card`,
+`Avatar`, `Tag`, `AccentLink`. Nie mają w sobie innych komponentów współdzielonych, a używa
+ich niemal wszystko. Ostyluj je pierwsze, bo inaczej każda strona da ci ten sam werdykt
+(„przyciski wyglądają staro”) siedem razy.
+
+**Etap B — trasy niskiego ryzyka.** `stomp` → `privacy-policy` → `terms-of-service`. To
+pierwsza okazja, żeby zobaczyć Etap A w rzeczywistym użyciu. Znalezione tu problemy są
+problemami Etapu A, nie tych stron — wracaj do komponentu.
+
+**Etap C — chrome, czyli layout i nawigacja.** `Sidebar`, `Footer`, `BareLayout`,
+`ThemeToggle`. Widoczne na wszystkich stronach naraz, więc pomyłka jest natychmiast
+widoczna wszędzie — ale właśnie dlatego jest natychmiast zauważalna, a nie utajona. Idą po
+Etapie B, bo do tego momentu masz już zaufanie do warstwy komponentów i wiesz, że to, co
+widzisz, jest winą chrome’u.
+
+**Etap D — trasy wysokiego ryzyka**, w kolejności: `(marketing)/` → `(auth)/login` →
+`(auth)/register` → `(app)/[userId]`. Uzasadnienie kolejności wewnątrz etapu: marketing ma
+najniższy koszt funkcjonalny; `login` i `register` dzielą wygląd, więc drugą z nich zrobisz
+niemal za darmo po pierwszej; `[userId]` na końcu, bo jest największa i najbardziej korzysta
+z tego, że wszystko inne jest już ustabilizowane.
+
+**Kompromis, który tu przyjmujesz:** kolejność „od liści” oznacza, że przez Etap A i część
+Etapu B aplikacja jest wizualnie **niespójna** — nowe przyciski na starych stronach. To
+wygląda gorzej niż stan wyjściowy i jest to normalne. Alternatywa (strona po stronie,
+z dociąganiem komponentów w miarę potrzeb) daje ładniejsze stany pośrednie kosztem
+wielokrotnego wracania do tych samych plików i sprzeczek o to, który wariant komponentu jest
+ten właściwy. Wybieramy brzydsze stany pośrednie i mniej pracy.
+
+### 5.6 Format artefaktu
+
+Dopisz do `MIGRATION-INVENTORY.md` nową sekcję. Szkielet:
+
+```markdown
+## 9. Krok 1 — ryzyko i kolejność
+
+### 9.1 Klasyfikacja tras
+
+| Trasa | P1 | P2 | P3 | P4 (liczba) | P5 | P6 design | Ryzyko | Etap | Uzasadnienie |
+|---|---|---|---|---|---|---|---|---|---|
+
+### 9.2 Fan-in komponentów współdzielonych
+
+| Komponent | Liczba miejsc użycia | Etap |
+|---|---|---|
+
+### 9.3 Proponowana kolejność wykonania Kroku 4
+
+1. Etap A: …
+2. Etap B: …
+3. Etap C: …
+4. Etap D: …
+
+### 9.4 Trasy zablokowane (brak ekranu w eksporcie designu)
+
+### 9.5 Odchylenia od propozycji z §5.4 planu i ich uzasadnienie
+```
+
+Sekcja 9.5 jest ważniejsza, niż wygląda. Każde miejsce, w którym twoja ocena różni się od
+propozycji w planie, jest informacją dla osoby, która będzie to reviewować — bez niej
+review sprowadza się do „czemu w innej kolejności?”.
+
+### 5.7 Otwarte pytania — teraz jest moment, żeby je zadać
+
+Trzy pytania z końca Części 4 przestają być teoretyczne dokładnie w tym kroku, bo od
+odpowiedzi zależy zakres i kolejność:
+
+| Pytanie | Co blokuje | Co zrobić, jeśli brak odpowiedzi |
+|---|---|---|
+| Docelowe szerokości ekranu | Krok 4 dla **każdej** trasy — stylowanie strony przed ustaleniem breakpointów oznacza jej ponowne stylowanie później | Zapisz założenie („tylko desktop, ≥1280px”) w 9.5 i pracuj na nim jawnie. Nieudokumentowane założenie to nie to samo co udokumentowane |
+| Pokrycie tras eksportem designu | Kolumnę P6 i tym samym listę 9.4 | To jedyne z trzech pytań, które **musisz** zamknąć w Kroku 1 — bez niego nie wiesz, czy Krok 4 ma 7 pozycji, czy 4 |
+| Los `.mocha` / `.latte` | Krok 5 w całości: jest zadaniem do wykonania albo usunięciem istniejącego rozwiązania — to dwa różne kawałki pracy o różnym rozmiarze | Do czasu odpowiedzi porównuj branche w obu motywach (§5.1). Przy porównaniu na żywo przełączenie motywu kosztuje jedno kliknięcie, więc zakładanie, że motywy zostają, nic nie kosztuje — a odwrotne założenie jest nieodwracalne |
+
+Pytanie o pokrycie designem zamykasz, otwierając `42Hub UIUX design/Forti2Hub.dc.html` w
+przeglądarce i przechodząc przez ekrany z listą 8 tras w ręku. To zajmuje kwadrans i jest
+jedyną częścią Kroku 1, której nie da się zastąpić żadnym poleceniem.
+
+### 5.8 Czego nie wolno robić w Kroku 1
+
+- **Nie edytuj żadnego pliku aplikacji.** Ani `.tsx`, ani `globals.css`. Zmieniasz wyłącznie
+  `MIGRATION-INVENTORY.md`. Krok 1 to nadal planowanie — pierwsza linia kodu należy do
+  Kroku 2.
+- **Nie „poprawiaj przy okazji” `white/70` w `Sidebar.tsx`.** Wiesz już, gdzie to jest, i
+  poprawka zajęłaby minutę. To jest praca Kroku 2 i tam ma trafić — razem z resztą, w jednym
+  możliwym do zreviewowania kawałku. Zasada B.
+- **Nie ustalaj kolejności pod to, co wydaje się najciekawsze.** Najciekawsza strona jest
+  zwykle najbardziej złożona, a złożona strona jako pierwsza oznacza, że uczysz się nowego
+  systemu i debugujesz trudny layout jednocześnie.
+- **Nie łącz etapów, „bo to małe zmiany”.** Etapy są jednostkami review, nie jednostkami
+  wysiłku. Dwa małe, ale niezwiązane etapy w jednym kawałku to kawałek, którego nie da się
+  częściowo cofnąć.
+
+### 5.9 Definicja ukończenia Kroku 1
+
+Krok jest ukończony, gdy istnieją wszystkie cztery elementy:
+
+1. `MIGRATION-INVENTORY.md` zawiera sekcję 9 z wypełnioną kolumną `Ryzyko` dla wszystkich
+   7 tras — bez pustych pól i bez `?`.
+2. Istnieje policzony fan-in dla komponentów współdzielonych, a nie oszacowany.
+3. Istnieje ponumerowana kolejność Kroku 4 z przypisaniem każdej trasy i każdego komponentu
+   do etapu A–D.
+4. Pytanie o pokrycie eksportem designu jest zamknięte, a trasy bez designu są wypisane
+   w 9.4 jako zablokowane.
+
+Do tego jeden warunek, który nie kończy się wraz z Krokiem 1, tylko obowiązuje aż do końca
+Kroku 4: **branch odniesienia musi pozostać uruchamialny.** Metoda weryfikacji z §5.1 opiera
+się na tym, że w dowolnym momencie da się postawić obok siebie stary i nowy wygląd. Nie
+wymaga to niczego poza niełamaniem tego branche’a — ale skoro nie ma już screenshotów,
+w momencie, w którym przestanie się uruchamiać, punkt odniesienia znika bezpowrotnie.
+
+**Pytania kontrolne** — odpowiedz na piśmie, z pamięci:
+
+- Dlaczego `Button` jest stylowany przed stroną logowania, a nie odwrotnie?
+- Trasa `X` ma jedno TAK w P1 i pięć NIE w pozostałych pytaniach. Jakie ma ryzyko i dlaczego
+  nie jest to średnia?
+- Dlaczego `(app)/stomp` jest dobrym miejscem na pierwszą migrację, a jednocześnie złym
+  dowodem na to, że migracja działa?
+- Który jeden komponent, ostylowany błędnie, popsuje wygląd wszystkich siedmiu tras naraz —
+  i w którym etapie go dotykasz?
+- Co konkretnie trzeba by powtórzyć, gdyby odpowiedź na pytanie o breakpointy przyszła
+  dopiero po zakończeniu Kroku 4?
+
+Jeśli nie potrafisz odpowiedzieć na pytanie drugie i czwarte, wróć do §5.2 i §5.3 — to na
+nich opiera się cała kolejność, a błąd w kolejności jest tym rodzajem błędu, który ujawnia
+się dopiero wtedy, gdy jest już drogi do naprawienia.
