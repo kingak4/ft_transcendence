@@ -478,3 +478,141 @@ layoutu — czyli w praktyce powtórzyć całą wizualną część Kroku 4, bo
 te decyzje były podejmowane bez wiedzy o docelowych szerokościach ekranu.
 Nie chodzi o dopisanie CSS-a od razu — chodzi o ponowną ocenę każdej
 strony pod nowym kątem.
+
+---
+
+## 10. Krok 2 — usunięcie kolorów wpisanych na sztywno
+
+Zakres: trzy pozycje ustalone w Kroku 0/1 (sekcja 8 i notatka Sidebar.tsx:27
+w sekcji 7). Wszystkie trzy dotyczą `app/globals.css` i jednego pliku
+komponentu.
+
+### 10.1 Dodane tokeny
+
+| Token (`--theme-*`) | Wartość | Rola / dlaczego taka nazwa |
+|---|---|---|
+| `--theme-hub-shell-start` | `#0b2b3a` | Pierwszy stop gradientu powłoki Sidebara (`bg-hub-shell`). Nazwa pozycyjna — stop gradientu nie ma roli poza pozycją. |
+| `--theme-hub-shell-mid` | `#0d3339` | Środkowy stop tego samego gradientu (na 55%). |
+| `--theme-hub-shell-end` | `#0d2b3f` | Ostatni stop tego samego gradientu. |
+| `--theme-start-page-gradient-start` | `#7de8b4` | Pierwszy stop gradientu tła karty na stronie marketingowej (`bg-gradient-start-page`). |
+| `--theme-start-page-gradient-mid` | `#56876f` | Środkowy stop (na 44%) tego samego gradientu. Trzeci stop utility celowo nietknięty — to już istniejący token starej palety (`--color-brand-reversed-main-color`), jego wymiana należy do Kroku 3. |
+| `--theme-hub-on-shell-muted` | `rgba(255, 255, 255, 0.7)` | Tekst nieaktywnego linku nawigacji w Sidebarze, na ciemnej powłoce. **Placeholder** — żaden istniejący token `hub-*` nie pasował (wszystkie zaprojektowane pod jasny panel czatu, nie ciemną powłokę). Wartość identyczna z zastąpionym `white/70`. Patrz 10.4. |
+| `--theme-hub-shell-hover` | `rgba(255, 255, 255, 0.1)` | Tło linku nawigacji pod hoverem, na powłoce. **Placeholder**, patrz 10.4. |
+| `--theme-hub-on-shell` | `#ffffff` | Tekst linku nawigacji pod hoverem (pełna biel), na powłoce. **Placeholder**, patrz 10.4. |
+
+### 10.2 Trzy pozycje — przed i po
+
+| # | Plik : linia | Było | Jest | Commit |
+|---|---|---|---|---|
+| 1 | `app/globals.css` :152 (`bg-hub-shell`) | `background: linear-gradient(165deg, #0b2b3a, #0d3339 55%, #0d2b3f);` | `background: linear-gradient(165deg, var(--color-hub-shell-start), var(--color-hub-shell-mid) 55%, var(--color-hub-shell-end));` | 1 |
+| 2 | `app/globals.css` :143–149 (`bg-gradient-start-page`) | `... #7de8b4 0%, #56876f 44%, var(--color-brand-reversed-main-color) 100% ...` | `... var(--color-start-page-gradient-start) 0%, var(--color-start-page-gradient-mid) 44%, var(--color-brand-reversed-main-color) 100% ...` | 2 |
+| 3 | `app/components/Sidebar.tsx` :27 (`navLinkClasses`) | `'text-white/70 hover:bg-white/10 hover:text-white'` | `'text-hub-on-shell-muted hover:bg-hub-shell-hover hover:text-hub-on-shell'` | 3 |
+
+Geometria obu gradientów (kąt, pozycje stopów) nie została ruszona w żadnej
+z pozycji 1 i 2 — zmienione wyłącznie wartości kolorów.
+
+### 10.3 Weryfikacja (porównanie wartości wyliczonych między branchami)
+
+| Element | Trasa | Metoda (Computed / kroplomierz) | Wynik |
+|---|---|---|---|
+| Powłoka (`bg-hub-shell`) | `/chat` | Computed → `background-image` | **DO POTWIERDZENIA** |
+| `bg-gradient-start-page` | strona marketingowa (Hero) | Computed → `background-image` | **DO POTWIERDZENIA** |
+| Tekst nieaktywnego linku w Sidebarze | dowolna strona `(app)` | kroplomierz → `color` | **DO POTWIERDZENIA** |
+| Tło linku pod hoverem | jw. | kroplomierz → `background-color` | **DO POTWIERDZENIA** |
+| Tekst linku pod hoverem | jw. | kroplomierz → `color` | **DO POTWIERDZENIA** |
+| Sidebar w obu motywach | przełącznik motywu | wzrokowo + Computed | **DO POTWIERDZENIA** |
+
+**Uwaga:** ta tabela nie jest jeszcze zamknięta. Zgodnie z §6.10 (kryterium 4),
+Krok 2 formalnie kończy się dopiero, gdy każdy wiersz ma realny wynik
+("zgodne" / opis rozbieżności), nie placeholder. Weryfikacja Pozycji 3
+wymaga kroplomierza, nie samego porównania tekstu — Tailwind renderuje
+`/70` przez `color-mix()`, a nowy token to zwykły `rgba()`, więc zapisy
+mogą się różnić tekstowo przy identycznej barwie piksela.
+
+### 10.4 Decyzje odesłane do designu
+
+**Pozycja 3 — kolory tekstu/hover w Sidebarze na powłoce.** Żaden istniejący
+token z rodziny `hub-*` nie opisuje roli "tekst na ciemnym tle" — cała
+istniejąca rodzina (`hub-muted`, `hub-time`, `hub-on-surface`, …) została
+zaprojektowana pod jasny panel czatu (jasne tło + ciemny tekst), a Sidebar ma
+układ odwrotny (ciemna powłoka + jasny tekst).
+
+Zdecydowano (za zgodą osoby prowadzącej migrację) o Opcji B: stworzyć trzy
+nowe tokeny (`--theme-hub-on-shell-muted`, `--theme-hub-shell-hover`,
+`--theme-hub-on-shell`) z wartościami **identycznymi** jak zastąpione klasy
+Tailwinda (`white/70`, `white/10`, `white`), oznaczone jako **placeholder**.
+
+**Otwarte pytanie do designu:** czy te wartości (biel przy różnym kryciu) są
+docelowo poprawne, czy design przewiduje inny kolor dla tekstu/hover na
+powłoce Sidebara? Do czasu odpowiedzi tokeny pozostają placeholderami —
+działają identycznie jak wcześniej, ale ich nazwa obiecuje rolę, której
+wartość nie została jeszcze świadomie zatwierdzona.
+
+### 10.5 Znalezione, ale NIE naprawione (Zasada B)
+
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+| `text-white` (pełna biel, bez modyfikatora) na `BrandLink` wewnątrz Sidebara | `app/components/Sidebar.tsx`, linia z `<BrandLink className="mb-3 px-3 text-white" />` | Ta sama kategoria problemu co Pozycja 3 (nazwana wartość zamiast roli), ale świadomie poza zakresem trzech pozycji ustalonych w Kroku 0/1. Do rozważenia przy Etapie C (Krok 4), gdy Sidebar jako całość dostanie pełny redesign. |
+
+---
+
+## Odpowiedzi na pytania kontrolne Kroku 2
+
+**1. Dlaczego `#0b2b3a` w linii 152 jest problemem, skoro dokładnie ta sama
+wartość w bloku `:root` problemem nie jest?**
+
+Bo rola tych dwóch miejsc jest różna. `:root` to właśnie miejsce, gdzie
+surowe wartości hex mają być zdefiniowane — to "żarówka i jej opis" w
+skrzynce bezpiecznikowej. Linia 152 to miejsce *użycia* koloru — gdyby
+zostało tam wpisane na sztywno, zmiana wartości w `:root` (Krok 3) nie
+miałaby na nie żadnego wpływu, bo nie ma tam żadnego odwołania do zmiennej.
+Ten sam kolor w dwóch miejscach, ale tylko jedno z nich jest "podłączone do
+sieci bezpiecznikowej".
+
+**2. `white/70` nie zawiera znaku `#`. Dlaczego mimo to jest kolorem
+wpisanym na sztywno — i co z tego wynika dla wyszukiwań, na których opierał
+się Krok 0?**
+
+Bo hardkodowany kolor to nie kwestia składni, tylko nazywania. `white`
+nazywa wartość (kolor), a nie rolę (np. "tekst drugorzędny na powłoce") —
+dokładnie tak samo jak `#ffffff` by to robił, tylko zapisany inną składnią.
+Wynika z tego, że wyszukiwania oparte na `#`, `rgb(`, `hsl(` z Kroku 0 mają
+ślepy punkt: nie złapią nazwanych kolorów Tailwinda (`white`, `black`,
+`transparent`, `slate-800` itd.). Wniosek "zero hardkodowanych kolorów w
+`.tsx`" z Kroku 0 był oparty na dowodach, ale niepełny — bo grep znajduje
+składnię, nie intencję.
+
+**3. Które fragmenty zapisu `linear-gradient(165deg, …, … 55%, …)`
+tokenizujesz, a które przepisujesz dosłownie i dlaczego akurat te?**
+
+Tokenizuję wyłącznie trzy wartości kolorów (color stops) — to jedyna część
+tego zapisu, która jest kolorem. Kąt (`165deg`) i pozycję stopu (`55%`)
+przepisuję dosłownie, bez zmian — to geometria, nie kolor, i token
+kolorystyczny nie potrafi (i nie powinien) opisywać geometrii. Ruszenie
+którejkolwiek z tych wartości byłoby zmianą wizualną, czyli złamaniem
+kontraktu Kroku 2.
+
+**4. Dlaczego weryfikacja odbywa się w zakładce Computed, a nie Styles?**
+
+Bo Styles pokazuje regułę tak, jak została napisana w kodzie — po
+refaktorze zobaczyłbym tam `var(--color-hub-shell-start)`, a na starym
+branchu `#0b2b3a`, i takie porównanie nic by nie powiedziało (oczywiście
+zapis się różni, o to w refaktorze chodziło). Computed pokazuje wartość
+*po rozwiązaniu* wszystkich zmiennych przez przeglądarkę — czyli dokładnie
+to, co faktycznie zostanie narysowane na ekranie. Tylko to jest dowodem, że
+efekt końcowy się nie zmienił.
+
+**5. Dodajesz token tylko do `:root`, pomijając `@theme inline`. Gradient
+działa poprawnie. Co w takim razie straciłaś?**
+
+Nic nie zepsuje się natychmiast — to jest jedyne pytanie kontrolne, na
+które prawidłowa odpowiedź nie brzmi "coś się zepsuje". Tracę spójność:
+sąsiednie utilities w tym samym pliku sięgają po `var(--color-hub-*)`, więc
+pominięcie warstwy `@theme inline` dla nowego tokenu wprowadza trzeci,
+niespójny sposób zapisu, który każdy kolejny czytający plik musi dodatkowo
+rozszyfrować. Tracę też przewidywalność na przyszłość — Krok 5 nadpisuje
+wartości `--theme-hub-*` w regule `.mocha`/`.latte`, i choć technicznie
+zadziała niezależnie od tego, czy warstwa `@theme inline` istnieje, mieszany
+zapis sprawia, że przy pisaniu tamtego bloku trzeba pamiętać, które tokeny są
+którego rodzaju. Koszt jest realny, tylko odroczony — poniesie go ktoś inny
+za kilka kroków, nie ja teraz.
