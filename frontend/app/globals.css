@@ -88,8 +88,8 @@
 
   --color-start-page-gradient-start: var(--theme-start-page-gradient-start);
   --color-start-page-gradient-mid: var(--theme-start-page-gradient-mid);
+  --color-start-page-gradient-end: var(--theme-start-page-gradient-end);
 
-  /* ===== ZMIANA — KROK 2, Pozycja 3 — DODANE ===== */
   /*
    * On-shell text/hover roles. Placeholder values identical to the
    * hardcoded white/70, white/10 and white they replace in Sidebar.tsx.
@@ -101,19 +101,40 @@
   --color-hub-on-shell-muted: var(--theme-hub-on-shell-muted);
   --color-hub-shell-hover: var(--theme-hub-shell-hover);
   --color-hub-on-shell: var(--theme-hub-on-shell);
-  /* ===== KONIEC ZMIANY ===== */
 }
 
 /* Default theme: original 42Hub look, active when no theme class is set */
 :root {
-  --theme-surface: var(--color-brand-main-color);
-  --theme-on-surface: var(--color-brand-additional-color-2);
-  --theme-elevated-surface: var(--color-brand-reversed-main-color);
-  --theme-on-elevated-surface: var(--color-brand-main-color);
-  --theme-elevated-border: var(--color-brand-reversed-main-color);
-  --theme-primary: var(--color-brand-secondary-color);
-  --theme-on-primary: var(--color-brand-additional-color-2);
-  --theme-success: var(--color-brand-secondary-color);
+  /* ===== ZMIANA — KROK 3, Para 1 ===== */
+  --theme-surface: #f3f6f4;      /* wcześniej var(--color-brand-main-color) */
+  --theme-on-surface: #0d2b47;   /* wcześniej var(--color-brand-additional-color-2) */
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* ===== ZMIANA — KROK 3, Para 2 ===== */
+  --theme-elevated-surface: #ffffff;      /* wcześniej var(--color-brand-reversed-main-color) */
+  --theme-on-elevated-surface: #0d2b47;   /* wcześniej var(--color-brand-main-color) */
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* ===== ZMIANA — KROK 3, elevated-border (towarzyszy Parze 2) ===== */
+  --theme-elevated-border: #eef2ef;   /* wcześniej var(--color-brand-reversed-main-color) */
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* ===== ZMIANA — KROK 3, Para 3 ===== */
+  --theme-primary: #a3e635;      /* wcześniej var(--color-brand-secondary-color) */
+  --theme-on-primary: #0d2b47;   /* wcześniej var(--color-brand-additional-color-2) */
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* ===== ZMIANA — KROK 3, success — DECYZJA PODJĘTA BEZPOŚREDNIO ===== */
+  /* Brak ekranu w eksporcie designu pokazującego generyczny stan "success".
+     Wartość wybrana bezpośrednio (nie potwierdzona w eksporcie) - taka sama
+     jak --color-hub-online, najbliższa istniejąca "pozytywna" zieleń w
+     systemie. Patrz MIGRATION-INVENTORY.md sekcja 11.4. */
+  --theme-success: #49b47a;   /* wcześniej var(--color-brand-secondary-color) */
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* NIE ZMIENIONE — już niezależne od --color-brand-*, poza zakresem
+     Kroku 3. Patrz MIGRATION-INVENTORY.md 11.5 (obserwacja o rozbieżności
+     z designem, do Kroku 4/6). */
   --theme-danger: #e5484d;
 
   /* 42Hub chat semantics. Defined here only - the chat surface is
@@ -143,14 +164,13 @@
 
   --theme-start-page-gradient-start: #7de8b4;
   --theme-start-page-gradient-mid: #56876f;
+  --theme-start-page-gradient-end: #0d2b47;   /* = dawne --color-brand-reversed-main-color (#333333); wartość wybrana bezpośrednio (= dawne --color-hub-ink), brak dopasowania w eksporcie designu */
 
-  /* ===== ZMIANA — KROK 2, Pozycja 3 — DODANE ===== */
   /* Placeholder values - identical to the white/70, white/10, white they
      replace. See matching comment in @theme inline above. */
   --theme-hub-on-shell-muted: rgba(255, 255, 255, 0.7);
   --theme-hub-shell-hover: rgba(255, 255, 255, 0.1);
   --theme-hub-on-shell: #ffffff;
-  /* ===== KONIEC ZMIANY ===== */
 }
 
 /* Catppuccin flavors: --color-ctp-* already flip between these two
@@ -187,7 +207,7 @@
     to bottom left,
     var(--color-start-page-gradient-start) 0%,
     var(--color-start-page-gradient-mid) 44%,
-    var(--color-brand-reversed-main-color) 100%
+    var(--color-start-page-gradient-end) 100%
   );
 }
 
