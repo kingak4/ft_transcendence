@@ -1333,3 +1333,474 @@ Krok jest ukończony, gdy zachodzi wszystkie pięć:
 Ostatnie pytanie jest jedynym, na które prawidłowa odpowiedź nie brzmi „coś się zepsuje” —
 warto to zauważyć. Nie każda konwencja broni się natychmiastową awarią; część broni się
 dopiero kosztem, który poniesie ktoś inny za trzy miesiące.
+
+---
+
+## Część 7 — Krok 3 w szczegółach
+
+*Dopisane 2026-07-31, po zakończeniu Kroku 2. Wejściem jest sekcja 10
+`MIGRATION-INVENTORY.md` — a w szczególności to, co Krok 2 świadomie zostawił w niej
+otwarte. Rezultatem jest kilkanaście zmienionych linii w `app/globals.css`, **zero**
+zmienionych plików `.tsx` oraz sekcja 11 w inwentaryzacji.*
+
+Budżet: **jeden dzień.** Samo pisanie kodu zajmie kilkanaście minut. Cała reszta to
+oglądanie skutków — i to jest właściwa praca tego kroku, a nie jej efekt uboczny.
+
+### 7.0 Kontrakt tego kroku: teraz różnica jest sukcesem
+
+Krok 2 miał kontrakt „kod się zmienia, piksele nie”. Krok 3 ma kontrakt odwrotny i warto
+powiedzieć to sobie na głos, bo przyzwyczajenie z poprzedniego kroku jest świeże: **po tym
+kroku aplikacja ma wyglądać inaczej.** Brak zmiany jest tu błędem dokładnie tak samo, jak
+w Kroku 2 błędem była zmiana.
+
+Kontrakt ma jednak drugą połowę, mniej oczywistą i ważniejszą: **zmienić mają się wyłącznie
+kolory.** Odstępy, promienie zaokrągleń, obramowania, cienie, typografia i układ zostają
+nietknięte aż do Kroku 4. Aplikacja po Kroku 3 jest więc w stanie pośrednim: **nowa paleta
+na starym layoucie.** To będzie wyglądać niezgrabnie i jest to przewidziane — nie jest to
+sygnał, że coś poszło źle, ani zaproszenie do „poprawienia przy okazji” odstępów.
+
+Trzecia rzecz w tym kontrakcie jest najbardziej zaskakująca: **to jest redesign wykonany
+bez dotknięcia choćby jednego pliku `.tsx`.** Nie zmieniasz `bg-hub-panel` na
+`bg-elevated-surface` w komponentach. Zmieniasz **wartości**, na które wskazują tokeny
+semantyczne — a nazwy klas w komponentach zostają dokładnie takie, jakie były. To jest cała
+korzyść z warstwy pośredniej opisanej w pojęciu ② (§3.3) i z tego, że 20 plików było już
+poprawnie podłączonych (sekcja 4 inwentaryzacji). Jeśli w trakcie tego kroku otwierasz plik
+`.tsx`, żeby zmienić w nim klasę koloru, robisz Krok 4 zamiast Kroku 3.
+
+### 7.1 Warunki wejścia — trzy rzeczy zostawione otwarte przez Krok 2
+
+**① Tabela 10.3 musi mieć realne wyniki, zanim tu wejdziesz.** W momencie pisania tej części
+wszystkie sześć wierszy weryfikacji Kroku 2 zawiera `DO POTWIERDZENIA`, a §6.10 (kryterium 4)
+mówi wprost, że bez nich Krok 2 nie jest ukończony.
+
+To nie jest formalność i nie da się tego nadrobić później. Metoda weryfikacji Kroku 2 polega
+na tym, że **oba branche pokazują tę samą wartość wyliczoną**. Po Kroku 3 branche będą się
+różnić wszędzie i to zgodnie z zamiarem — porównanie przestanie cokolwiek rozstrzygać, bo
+każda różnica będzie miała dwa możliwe źródła zamiast jednego. Innymi słowy: **okno, w którym
+da się udowodnić poprawność Kroku 2, zamyka się w chwili rozpoczęcia Kroku 3.** Domknij
+tabelę 10.3 najpierw.
+
+**② Trzeci stop gradientu `bg-gradient-start-page` czeka na ten krok.** W 10.2 (pozycja 2)
+dwa pierwsze stopy dostały nowe tokeny, a trzeci celowo został na
+`var(--color-brand-reversed-main-color)`. To jedyna pozostała referencja do starej palety
+w CSS i należy do tego kroku — szczegóły w §7.6.
+
+**③ Trzy tokeny-placeholdery z 10.4 nie są przedmiotem tego kroku.**
+`--theme-hub-on-shell-muted`, `--theme-hub-shell-hover` i `--theme-hub-on-shell` należą do
+rodziny `hub-*` i opisują wygląd powłoki Sidebara, której Krok 3 nie dotyka (§7.7).
+Otwarte pytanie do designu pozostaje otwarte, ale **nie blokuje** tego kroku.
+
+### 7.2 Pojęcie: token może wskazywać na inny token — i dlaczego ten łańcuch ma mieć koniec
+
+Zajrzyj na chwilę do tego, jak wygląda dzisiaj token semantyczny. Zgodnie ze szkicem
+w Części 2:
+
+```css
+--theme-elevated-surface: var(--color-brand-reversed-main-color);
+```
+
+Zwróć uwagę, że po prawej stronie **nie ma wartości, tylko odwołanie do innej nazwy**.
+CSS na to pozwala: `var()` można zagnieżdżać dowolnie głęboko, a przeglądarka rozwija cały
+łańcuch w momencie rysowania. Dzisiejszy łańcuch wygląda tak:
+
+```
+klasa bg-elevated-surface
+  → --color-elevated-surface        (warstwa @theme inline, nazwa dla Tailwinda)
+    → --theme-elevated-surface      (warstwa :root, wartość runtime)
+      → --color-brand-reversed-main-color   ← ogniwo, które ma zniknąć
+        → #ffffff (albo cokolwiek tam jest)
+```
+
+Ostatnie ogniwo przed wartością jest tu problemem, ale **nie dlatego, że łańcuch jest
+długi** — dlatego, że wskazuje na nazwę zaplanowaną do usunięcia w Kroku 8. Krok 3 polega
+dokładnie na wycięciu tego ogniwa.
+
+**Trzy sposoby, na jakie można to zrobić — i który wybrać:**
+
+| Zapis | Ocena |
+|---|---|
+| `--theme-elevated-surface: #ffffff;` | **Tak to robimy.** Wartość ląduje tam, gdzie docelowo ma mieszkać. Łańcuch kończy się na warstwie `:root` — czyli tam, gdzie kończą się wszystkie pozostałe |
+| `--theme-elevated-surface: var(--color-hub-panel);` | **Nie.** Wygląda oszczędniej („jedno źródło prawdy”), ale wskazuje na nazwę, którą Krok 8 usuwa. Zbudowałabyś łańcuch po to, żeby za pięć kroków go rozwijać — ta sama praca dwa razy. Dodatkowo strzałka biegnie pod prąd: konwencja w tym pliku to `--color-X: var(--theme-X)`, a nie odwrotnie |
+| `--theme-elevated-surface: var(--theme-hub-panel);` | **Nie, z tego samego powodu.** Ta wersja przynajmniej nie odwraca strzałki, ale nadal wiąże token, który zostaje, z tokenem, który znika |
+
+Zapis, który dziś istnieje (`--theme-*` wskazujące na `--color-brand-*`), jest właśnie
+przykładem tej odwróconej strzałki — to pozostałość po starej palecie. Krok 3 przy okazji ją
+prostuje: po nim **`--theme-*` trzyma wartości, `--color-*` wskazuje na `--theme-*`, i nic
+nie biegnie w drugą stronę.**
+
+Cena wyboru pierwszej opcji jest realna i warto ją nazwać: przez Kroki 3–7 ta sama wartość
+(np. biel panelu) będzie zapisana w dwóch miejscach — raz jako `--theme-hub-panel`, raz jako
+`--theme-elevated-surface`. Duplikat jest tymczasowy z założenia i znika w Kroku 8 razem
+z całą rodziną `hub-*`. Żeby nie był tajemniczy, **zapisz pochodzenie w komentarzu**:
+
+```css
+:root {
+  --theme-elevated-surface:    #ffffff;   /* = dawne --theme-hub-panel */
+  --theme-on-elevated-surface: #0d2b47;   /* = dawne --theme-hub-ink   */
+}
+```
+
+Komentarz kosztuje sekundę, a jest jedynym zapisem tego, skąd wartość przyszła. Bez niego
+Krok 8 sprowadza się do zgadywania, czy dwie identyczne biele to ta sama biel, czy zbieg
+okoliczności.
+
+### 7.3 Zbuduj mapę par: stary token → nowa wartość
+
+To jest właściwa praca przygotowawcza tego kroku. Nie zaczynaj od edycji — zacznij od tabeli.
+
+#### Krok A: wypisz obie warstwy w całości
+
+Z katalogu **`/root/design/frontend`**:
+
+```bash
+grep -n -E '^\s*--(color|theme)-' app/globals.css
+```
+
+*„Przeszukaj `app/globals.css` i pokaż z numerami linii każdą linię, która **zaczyna się**
+od `--color-` lub `--theme-` (z ewentualnym wcięciem). `^` znaczy »początek linii«, `\s*`
+znaczy »dowolna liczba białych znaków, także zero«, a `-E` włącza rozszerzone wzorce, dzięki
+czemu `(color|theme)` znaczy »color albo theme«. Zakotwiczenie na początku linii jest tu
+istotne: dzięki niemu widzisz wyłącznie miejsca, w których token jest **definiowany**, a nie
+te, w których jest używany w środku innej reguły.”*
+
+Wynik tego jednego polecenia to kompletna mapa obu skrzynek bezpiecznikowych. Przepisz ją
+do tabeli — jeden wiersz na token semantyczny:
+
+| Token semantyczny | Na co wskazuje dziś | Wartość docelowa | Skąd ta wartość (który token `hub-*`) | Para |
+|---|---|---|---|---|
+
+Lista tokenów semantycznych jest znana z wyszukiwania w §3.4: `surface`, `on-surface`,
+`elevated-surface`, `on-elevated-surface`, `elevated-border`, `primary`, `on-primary`,
+`success`, `danger`. Dziewięć pozycji — tyle wierszy ma mieć ta tabela.
+
+**Kolumna „Skąd ta wartość” jest najtrudniejsza i to ona jest istotą tego kroku.** Dla
+`elevated-surface` odpowiedź jest oczywista (panel czatu). Dla `success` czy
+`elevated-border` — już nie, bo rodzina `hub-*` powstała pod jedną stronę i może nie mieć
+odpowiednika. **Gdy odpowiednika nie ma, obowiązuje ta sama zasada co w Kroku 2: zatrzymaj
+się i zapytaj.** Nie wymyślaj wartości pod token, który akurat nie ma pary — to pytanie do
+eksportu designu, a nie do kodu. Wpisz w tabeli `BRAK ODPOWIEDNIKA` i zostaw ten token
+nietknięty; nietknięty token nadal działa, tylko wygląda staro, a wymyślony na poczekaniu
+działa źle w sposób, którego nikt później nie odtworzy.
+
+#### Krok B: znajdź bliźniaczy blok motywów
+
+To jest pułapka, której opis w Części 2 nie wspomina, a która potrafi wyglądać jak sukces
+przez pierwsze pół godziny.
+
+Przełącznik motywu **działa dziś** w całej aplikacji poza czatem. Skoro działa, to gdzieś
+musi istnieć reguła nadpisująca wartości tokenów semantycznych — i wiemy nawet gdzie, bo
+komentarz `TODO(design-migration)` z linii 94–98 mówi o „poniższej regule `.mocha, .latte`”.
+
+```bash
+grep -n -A 40 -e '\.mocha' app/globals.css
+```
+
+*„Znajdź linię zawierającą `.mocha` i wypisz ją razem z 40 kolejnymi liniami. `-A` znaczy
+»after«, czyli »pokaż też tyle linii po dopasowaniu« — używamy tego, gdy interesuje nas nie
+sama linia, tylko cały blok, który się od niej zaczyna. Kropka w `\.mocha` jest
+poprzedzona backslashem, bo w wyrażeniu regularnym `.` samo w sobie znaczy »dowolny znak«.”*
+
+Jeśli ten blok nadpisuje tokeny semantyczne (a niemal na pewno nadpisuje — inaczej
+przełącznik nie miałby czego przełączać), to **każda para, którą przenosisz w `:root`, ma
+swojego bliźniaka tam.** Przeniesienie tylko jednej z dwóch wersji daje aplikację, która
+wygląda poprawnie do pierwszego kliknięcia w przełącznik i pokazuje starą paletę po nim.
+
+Zasada praktyczna: **para tokenów przenosi się w obu blokach, w tym samym commicie.**
+
+Jest tu jedno zastrzeżenie związane z otwartym pytaniem nr 3 z Części 4 (czy `.mocha` /
+`.latte` mają w ogóle przetrwać migrację). Jeśli odpowiedź nadal nie przyszła — **utrzymuj
+oba bloki w zgodzie**, mimo że przy odpowiedzi „usuwamy motywy” ta praca przepadnie.
+Asymetria kosztów jest wyraźna: utrzymanie zgodności to jedna dodatkowa linia na parę,
+a odkrycie po Kroku 4, że połowa aplikacji ma zepsuty ciemny motyw, to przejście od nowa
+przez wszystkie trasy.
+
+### 7.4 Dlaczego para, a nie pojedynczy token
+
+Część 2 poleca przenosić tokeny parami (`surface` razem z `on-surface`). Powód warto
+rozumieć, bo z niego wynika reszta reguł tego kroku.
+
+**Kontrast nie jest właściwością koloru. Jest właściwością pary kolorów.** Pojedynczy kolor
+nie jest ani czytelny, ani nieczytelny — staje się jednym albo drugim dopiero względem tego,
+na czym leży. Dlatego cały system nazywa tokeny w pary `X` / `on-X`: nazwa `on-` dosłownie
+znaczy „to jest kolor treści leżącej **na** `X`”. Te dwa tokeny są jedną decyzją zapisaną
+w dwóch miejscach.
+
+Zmiana samego tła bez tekstu daje stan, w którym nie ma żadnej gwarancji czytelności — i to
+jest dokładnie scenariusz R1 z rejestru ryzyk („biały tekst na białym tle”), tylko wywołany
+własnoręcznie zamiast odziedziczony. Na stronie regulaminu byłby brzydki. Na `(auth)/login`
+oznaczałby formularz, którego nie da się wypełnić.
+
+**Jak dobrać pary — z nazw, nie z pamięci:**
+
+| Para | Tokeny |
+|---|---|
+| Tło strony | `surface` + `on-surface` |
+| Panel/karta | `elevated-surface` + `on-elevated-surface` + `elevated-border` |
+| Akcja główna | `primary` + `on-primary` |
+| Stany | `success`, `danger` |
+
+Trzeci wiersz pierwszej grupy nie jest pomyłką: `elevated-border` to obramowanie leżące na
+tym samym tle, więc dzieli los pary i nie ma sensu w oderwaniu od niej.
+
+**Ostatni wiersz jest wyjątkiem, który warto zauważyć.** `success` i `danger` **nie mają**
+partnera `on-`. To nie jest przeoczenie w systemie — to informacja: token bez pary jest
+używany tylko w jednej roli. Zanim go ruszysz, sprawdź w plikach z sekcji 4 inwentaryzacji,
+czy występuje jako `text-danger` (kolor tekstu na istniejącym tle — wtedy wszystko gra), czy
+jako `bg-danger` (tło, na którym coś leży). W tym drugim przypadku kolor treści leżącej na
+nim bierze się skądś indziej — i to „skądinąd” jest dokładnie miejscem, w którym chowają się
+zahardkodowane biele. Znalezione — zapisz w 11.4, nie naprawiaj (Zasada B).
+
+### 7.5 Kolejność par i podział na commity
+
+Możliwe są dwie sensowne kolejności i warto wiedzieć, dlaczego wybieramy drugą.
+
+**Kolejność (a) — od najwęższego zasięgu.** `danger` → `success` → `primary` →
+`elevated-surface` → `surface`. Logika jest ta sama co w Kroku 1: pierwsze pomyłki popełniaj
+tam, gdzie są tanie. Wada: stany pośrednie stają się coraz mniej zrozumiałe, a największa
+zmiana wypada na koniec, gdy aplikacja jest już w połowie przemalowana i nie wiadomo, co
+czego jest skutkiem.
+
+**Kolejność (b) — od podłoża w górę.** `surface` + `on-surface` → `elevated-surface` +
+`on-elevated-surface` + `elevated-border` → `primary` + `on-primary` → `success` → `danger`.
+**To jest rekomendacja.**
+
+Uzasadnienie: reguła „najtańsze pomyłki najpierw” działała w Kroku 1, bo **strony są od
+siebie niezależne**. Tokeny nie są — one leżą na sobie warstwami. Panel oceniany na starym
+tle strony jest oceniany względem tła, które za chwilę zniknie, więc ocenę trzeba będzie
+powtórzyć. To ten sam argument co fan-in w Kroku 1, tylko na innym obiekcie: **dotknij raz,
+oceń raz.** Ryzyko R1 nie jest tu przeciwwagą, bo R1 to problem *pary*, a przed nim broni
+przenoszenie pary w całości, a nie kolejność par.
+
+**Commity: jeden na parę.** Ta sama zasada co w §6.7 — granica commita przebiega tam, gdzie
+przebiega granica decyzji. Para tokenów to najmniejsza jednostka, która ma sens wizualny
+i którą da się samodzielnie cofnąć. Cztery–pięć commitów w jednym PR.
+
+Warto to docenić z praktycznego powodu: regresja kontrastu bywa zauważona kilka dni po
+fakcie, przez kogoś innego, na stronie, której nikt wtedy nie oglądał. Historia złożona
+z commitów „jedna para tokenów” pozwala wskazać winowajcę w minutę. Jeden commit
+„nowa paleta” zamienia to w śledztwo.
+
+### 7.6 Czwarta pozycja: ostatnia referencja `brand-*` w CSS
+
+Poza dziewięcioma tokenami semantycznymi jest jeszcze jedno miejsce, w którym stara paleta
+jest wywoływana z CSS — trzeci stop gradientu `bg-gradient-start-page`, zostawiony tak
+świadomie w Kroku 2 (sekcja 10.2, pozycja 2):
+
+```css
+… var(--color-start-page-gradient-start) 0%,
+  var(--color-start-page-gradient-mid)   44%,
+  var(--color-brand-reversed-main-color) 100% …
+```
+
+Sprawdź, czy nie ma innych, zanim uznasz tę za ostatnią:
+
+```bash
+grep -n -- '--color-brand-' app/globals.css
+```
+
+*„Pokaż z numerami linii każde wystąpienie tekstu `--color-brand-` w pliku. Podwójny myślnik
+`--` przed wzorcem jest tu konieczny: wzorzec sam zaczyna się od myślników, więc bez tego
+`grep` próbowałby zinterpretować go jako swoje własne opcje i zgłosiłby błąd. `--` to
+uniwersalna w powłoce granica »koniec opcji, dalej są zwykłe argumenty« — ten sam mechanizm,
+którego użyłaś w `npm run dev -- -p 3001`.”*
+
+Po tym kroku **jedynymi** wynikami tego wyszukiwania mają być same definicje w liniach
+18–23 — czyli martwy kod czekający na Krok 8.
+
+**Jak nazwać ten stop:** ma już dwóch rodzeństwa (`--theme-start-page-gradient-start` i
+`-mid`), więc trzeci powinien nazywać się `--theme-start-page-gradient-end`. Kusi, żeby
+wskazać go na `--color-elevated-surface`, skoro to ta sama wartość — nie rób tego. Stop
+gradientu nie pełni roli „podniesionej powierzchni”; związanie ich nazwą sprawia, że
+przyszła zmiana panelu po cichu przemaluje gradient na stronie marketingowej. **Ta sama
+wartość to nie ta sama rola** — to jest ten sam błąd co nazywanie tokenu od wyglądu, tylko
+widziany z drugiej strony.
+
+Uwaga na kolejność: ta zmiana **jest widoczna** (wartość docelowa różni się od
+`--color-brand-reversed-main-color`), więc idzie osobnym commitem, a nie doklejona do
+którejś z par.
+
+### 7.7 Czego w tym kroku nie robisz z `hub-*`
+
+Rodzina `hub-*` zostaje nietknięta w całości. Ani jednej wartości, ani jednej nazwy, ani
+jednej klasy w `.tsx`.
+
+Wynika z tego stan, który wygląda na niedokończony i taki właśnie jest — celowo: po Kroku 3
+w codebase istnieją **dwie nazwy dla tej samej wartości**. `bg-hub-panel` i
+`bg-elevated-surface` dają odtąd tę samą biel, a strona czatu nadal używa pierwszej.
+To jest ten scaffolding, który usuwa Krok 8, i to jest cena za to, że Krok 3 zajmuje
+kilkanaście linii zamiast tysiąca.
+
+Pokusa jest przewidywalna: skoro wartości już się zgadzają, można by „przy okazji” podmienić
+klasy na stronie czatu. Nie. To jest edycja kilkunastu plików `.tsx`, czyli inny rodzaj
+ryzyka niż zmiana wartości w `:root`, a w tym samym PR oznacza, że nie da się cofnąć jednego
+bez drugiego. Czat migruje na nazwy semantyczne w Kroku 8, gdy nie ma już czego z czym mylić.
+
+### 7.8 Co się zmieni, co się zepsuje, a co tylko będzie wyglądać na zepsute
+
+Przed uruchomieniem warto mieć **spisaną prognozę**. Prognoza zamienia oglądanie aplikacji
+w test: bez niej patrzysz i oceniasz („chyba dobrze?”), z nią sprawdzasz zgodność
+z przewidywaniem, a każda rozbieżność jest sygnałem.
+
+Wszystko w aplikacji należy do jednej z trzech grup:
+
+| Grupa | Co to jest | Co ma się stać |
+|---|---|---|
+| Na tokenach semantycznych | 20 plików z sekcji 4 inwentaryzacji | **Zmienia wygląd.** To jest cel kroku |
+| Na `hub-*` | `/chat` w całości oraz powłoka Sidebara | **Nie zmienia się wcale.** Ani o piksel |
+| Na `brand-*` | `Hero.tsx` i `Tag.tsx` (sekcja 3 inwentaryzacji) | **Nie zmienia się wcale** — wskazują na `--color-brand-*` bezpośrednio, a tych wartości nie ruszasz |
+
+Grupa druga jest jednocześnie najlepszym testem regresji w tym kroku i wrócimy do niej
+w §7.9. Grupa trzecia wymaga komentarza, bo prowadzi do poprawki w tekście Części 2.
+
+**Po Kroku 3 strona marketingowa będzie wyglądać najgorzej w całej aplikacji** — nowa paleta
+dookoła, stara w `Hero` i `Tag`. To nie jest błąd tego kroku; to praca Kroku 4, Etap D,
+pozycja pierwsza (sekcja 9.3 inwentaryzacji). Zapisz to w prognozie, żeby nie diagnozować
+tego drugi raz.
+
+**Poprawka do kryterium ukończenia w Części 2.** Krok 3 w Części 2 kończy się zdaniem:
+„`--color-brand-*` jest referencjonowane wyłącznie we własnych, obecnie martwych
+definicjach”. **To jest nieosiągalne w tym kroku i kryterium należy czytać jako zawężone do
+CSS.** Powód jest konkretny: `Hero.tsx` i `Tag.tsx` używają klas `text-brand-main-color`
+i `bg-brand-additional-color`, a te klasy generuje Tailwind z wpisów `--color-brand-*`
+w `@theme inline`. Dopóki oba pliki nie przejdą Kroku 4, referencje istnieją — tyle że
+w `.tsx`, a nie w `globals.css`. Praktyczna konsekwencja: **Krok 8 nie jest odblokowany przez
+Krok 3, tylko przez Etap D Kroku 4.** Zapisz to w 11.5, bo inaczej ktoś dojdzie do Kroku 8,
+usunie `--color-brand-*` i wywróci build strony marketingowej.
+
+### 7.9 Weryfikacja — inne pytanie niż w Kroku 2
+
+W Kroku 2 pytanie brzmiało „czy jest identycznie?” i miało jedną odpowiedź. Tutaj rozpada
+się na trzy, bo trzy różne rzeczy trzeba udowodnić.
+
+**① Czy to, co miało zostać nietknięte, zostało nietknięte.** Tu metoda z §6.6 działa bez
+zmian i jest jedynym miejscem, w którym porównanie z branchem odniesienia nadal ma sens.
+Otwórz `/chat` w obu oknach, odczytaj wartości wyliczone (zakładka **Computed**) dla panelu,
+dymka i powłoki. **Muszą być identyczne co do znaku.** Jeśli którakolwiek się różni,
+zmieniłaś nie tę warstwę, co trzeba — najprawdopodobniej ruszyłaś `--theme-hub-*` zamiast
+tokenu semantycznego. To najcenniejszy pojedynczy test w tym kroku, bo jest jedynym, który
+daje odpowiedź TAK/NIE bez oceniania.
+
+**② Czy to, co miało się zmienić, jest czytelne.** Po każdej parze, zanim przejdziesz do
+następnej. Metoda: zaznacz tekst w narzędziach deweloperskich, otwórz próbkę koloru
+w zakładce **Styles** — przeglądarka pokazuje przy niej **współczynnik kontrastu** względem
+tła i próg WCAG. Wymagane minimum to **4.5:1** dla tekstu podstawowego i **3:1** dla dużego
+tekstu oraz elementów interfejsu.
+
+To jest bezpośrednia realizacja R3 z rejestru ryzyk. Zwrot „sprawdzaj przy każdej parze, nie
+dopiero na końcu” ma tu twardy powód: gdy sprawdzasz po jednej parze, wiesz, która para jest
+winna. Gdy sprawdzasz po pięciu — masz zepsuty kontrast i pięciu podejrzanych.
+
+**③ Czy zmiana jest tą zamierzoną.** Na to pytanie nie odpowiada przeglądarka, tylko eksport
+designu (`42Hub UIUX design/Forti2Hub.dc.html`). To jedyna część weryfikacji, której nie da
+się zautomatyzować ani sprowadzić do liczby.
+
+**Obwód minimalny — po każdej parze:**
+
+| Trasa | Czego szukasz |
+|---|---|
+| `/chat` | zero zmian (test ①) |
+| `(app)/privacy-policy` | długi tekst ciągły — tu najwcześniej widać kontrast tekstu podstawowego |
+| `(app)/[userId]` | najwięcej różnych komponentów naraz (karty, avatary, listy, przyciski) |
+| `(auth)/login` | formularz — pola i przyciski, czyli `primary`, `on-primary` i `elevated-border` w jednym miejscu |
+| przełącznik motywu | to samo w obu motywach (§7.3, Krok B) |
+
+Cztery trasy, nie siedem. To świadomy kompromis: obwód, który zajmuje dwie minuty, będzie
+przechodzony po każdej parze, a taki, który zajmuje kwadrans — nie będzie. Pozostałe trasy
+i tak przejdziesz w Kroku 4, ekran po ekranie.
+
+### 7.10 Czego nie wolno robić w Kroku 3
+
+- **Nie edytuj plików `.tsx`.** Żadnego. Jeśli wygląda na to, że trzeba, patrz §7.0 —
+  robisz Krok 4.
+- **Nie zmieniaj bloku `@theme inline`.** Nazwy `--color-*` są kontraktem z każdym plikiem
+  używającym odpowiadającej im klasy. Ten krok dotyczy wyłącznie warstwy wartości.
+- **Nie przenoś par „hurtem”.** Pięć par w jednym commicie to pięć podejrzanych przy
+  pierwszej regresji kontrastu.
+- **Nie zapominaj o bliźniaczym bloku `.mocha, .latte`.** Migracja połowy motywów wygląda
+  jak sukces do pierwszego kliknięcia w przełącznik.
+- **Nie wymyślaj wartości dla tokenu, który nie ma odpowiednika w `hub-*`.** `BRAK
+  ODPOWIEDNIKA` w tabeli i pytanie do designu. Token zostawiony bez zmian wygląda staro;
+  token z wartością wymyśloną na poczekaniu wygląda dobrze i jest zły — tego drugiego nikt
+  już nie wyłapie.
+- **Nie poprawiaj odstępów, promieni ani typografii**, mimo że przy nowych kolorach będą
+  rzucać się w oczy jak nigdy dotąd. Krok 4. Zasada A.
+- **Nie ruszaj `hub-*`** w żadnym kierunku (§7.7).
+
+### 7.11 Artefakt — sekcja 11 w `MIGRATION-INVENTORY.md`
+
+```markdown
+## 11. Krok 3 — połączenie palet
+
+### 11.1 Mapa par: token semantyczny → nowa wartość
+
+| Token semantyczny | Wskazywał na | Nowa wartość | Źródło (token `hub-*`) | Para | Commit |
+|---|---|---|---|---|---|
+
+### 11.2 Tokeny bez odpowiednika (zostawione bez zmian)
+
+| Token | Dlaczego brak odpowiednika | Pytanie do designu |
+|---|---|---|
+
+### 11.3 Kontrast po każdej parze
+
+| Para | Trasa sprawdzenia | Współczynnik | Próg WCAG | Wynik |
+|---|---|---|---|---|
+
+### 11.4 Prognoza kontra rzeczywistość
+
+| Co przewidywałam | Co się stało | Wniosek |
+|---|---|---|
+
+### 11.5 Znalezione, ale NIE naprawione (Zasada B)
+
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+```
+
+Sekcja 11.4 nie ma odpowiednika w poprzednich krokach i jest dopisana świadomie. Prognoza
+z §7.8 albo się sprawdzi, albo nie — a każda rozbieżność jest informacją o tym, że model
+systemu, którym się posługujesz, ma lukę. Wyłapanie tego teraz kosztuje jedno zdanie.
+Wyłapanie tego w Kroku 4 kosztuje dzień diagnozy na stronie, która „nie chce się zmienić”.
+
+W 11.5 musi znaleźć się co najmniej jedna pozycja, znana już teraz: **Krok 8 jest zablokowany
+do czasu migracji `Hero.tsx` i `Tag.tsx` w Etapie D Kroku 4** (§7.8).
+
+### 7.12 Definicja ukończenia Kroku 3
+
+Krok jest ukończony, gdy zachodzi wszystkie sześć:
+
+1. Żaden token `--theme-*` w `app/globals.css` nie wskazuje już na `--color-brand-*` —
+   ani w `:root`, ani w bloku `.mocha, .latte`, ani w żadnej utility (§7.6).
+2. `grep -n -- '--color-brand-' app/globals.css` zwraca wyłącznie własne definicje
+   z linii 18–23.
+3. Każda para została przeniesiona w **obu** blokach — `:root` i `.mocha, .latte` — w tym
+   samym commicie.
+4. `/chat` wygląda identycznie jak na branchu odniesienia, potwierdzone wartościami
+   wyliczonymi, nie wzrokiem (§7.9, test ①).
+5. Kontrast każdej przeniesionej pary jest zmierzony i zapisany w 11.3; pary poniżej progu
+   są wypisane, a nie „poprawione przy okazji”.
+6. Sekcja 11 istnieje i jest wypełniona, wraz z 11.2 i 11.5.
+
+Kryterium 4 jest tym, które najłatwiej pominąć, bo dotyczy strony, której w tym kroku
+świadomie nie dotykasz — i właśnie dlatego jest najlepszym dowodem, że dotknęłaś dokładnie
+tego, co zamierzałaś.
+
+**Pytania kontrolne** — odpowiedz na piśmie, z pamięci:
+
+- Krok 3 zmienia wygląd siedmiu tras i nie otwiera ani jednego pliku `.tsx`. Jak to możliwe —
+  i który dokładnie mechanizm z §3.3 za to odpowiada?
+- Dlaczego `--theme-elevated-surface: var(--color-hub-panel)` jest zapisem gorszym niż
+  wpisanie wartości wprost, mimo że wygląda na mniej powtarzalny?
+- Przenosisz parę `surface` / `on-surface` tylko w `:root`. Wszystko wygląda dobrze. Co
+  odkryje pierwsza osoba, która kliknie przełącznik motywu — i dlaczego Ty tego nie
+  zobaczyłaś?
+- Po Kroku 3 strona marketingowa wygląda gorzej niż przed nim. Czy to jest błąd? Uzasadnij
+  przez trzy grupy z §7.8.
+- Dlaczego weryfikacja przez porównanie wartości wyliczonych, która była głównym narzędziem
+  w Kroku 2, działa tu **tylko** na `/chat`?
+
+Ostatnie pytanie jest sprawdzianem tego, czy rozumiesz narzędzie, a nie tylko procedurę.
+Porównanie z branchem odniesienia nie jest testem „czy jest dobrze” — jest testem „czy nie
+zmieniło się to, co miało zostać bez zmian”. W Kroku 2 dotyczyło to całej aplikacji.
+W Kroku 3 — wyłącznie tego, co stoi na `hub-*`. W Kroku 4 nie będzie dotyczyć już niczego
+i wtedy branch odniesienia można przestać utrzymywać.
