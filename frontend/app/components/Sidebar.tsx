@@ -36,7 +36,7 @@ const NAV_BASE_CLASSES =
 function navLinkClasses(isActive: boolean) {
   const state = isActive
     ? 'bg-hub-cta text-hub-ink'
-    : 'text-white/70 hover:bg-white/10 hover:text-white';
+    : 'text-hub-on-shell-muted hover:bg-hub-shell-hover hover:text-hub-on-shell';
   return `${NAV_BASE_CLASSES} ${state}`;
 }
 
