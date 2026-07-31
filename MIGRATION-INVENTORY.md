@@ -292,3 +292,189 @@ token), to po zmianie w Kroku 3 nie zmieni wyglądu razem z resztą — i może
 powstać niespójność (np. nieczytelny tekst). Krok 2 "podłącza wszystkie
 lampy do skrzynki", żeby Krok 3 rzeczywiście kontrolował cały wygląd, a nie
 tylko część.
+
+---
+
+## 9. Krok 1 — ryzyko i kolejność
+
+Dane wejściowe: dwa polecenia grep z §5.3 (mapa `trasa → komponenty` i
+odwrotna mapa fan-in) oraz ręczny przegląd `Forti2Hub.dc.html`.
+
+### 9.1 Klasyfikacja tras
+
+| Trasa | P1 blokada | P2 treści użytkownika | P3 akcje | P4 (liczba) | P5 wspólny layout | P6 design | Ryzyko | Etap | Uzasadnienie |
+|---|---|---|---|---|---|---|---|---|---|
+| (app)/stomp | NIE | NIE | TAK (klient) | 2 (Button, TextField) | TAK | **NIE** | — | **ZABLOKOWANA** | Brak jakiegokolwiek śladu w eksporcie designu (`stomp` nie pada ani razu w pliku). To strona diagnostyczna, poza produktem — P6 nadpisuje ryzyko: nie planuj jej w Kroku 4, dopóki ktoś nie zdecyduje, czy w ogóle ma dostać nowy wygląd. |
+| (app)/privacy-policy | NIE | NIE | NIE | 2 (LegalSection, ContactBlock) | TAK | TAK | Niskie | B | Ekran `privacy` istnieje w eksporcie (`isPrivacyPage`). Zgodne z propozycją planu. |
+| (app)/terms-of-service | NIE | NIE | NIE | 2 (LegalSection, ContactBlock) | TAK | TAK | Niskie | B | Ekran `terms` istnieje w eksporcie (`isTermsPage`). Zgodne z propozycją planu. |
+| (marketing)/ | TAK | NIE | NIE | 5 (AccentLink, Button, Card, Hero, SessionCard) | TAK | TAK | Wysokie | D (1.) | Ekran `landing` istnieje. Zgodne z propozycją planu — pierwsza w Etapie D. |
+| (auth)/login | TAK | NIE | TAK | 4 (AccentLink, Button, Card, TextField) | TAK | **CZĘŚCIOWO** | Wysokie | D (2.) | Design istnieje, ale nie jako osobny ekran — to zakładka `authTab: 'login'` wewnątrz karty logowania na ekranie `landing`. Trzeba to przełożyć na osobną trasę samodzielnie; sam wygląd karty jest jednak w pełni zdefiniowany. |
+| (auth)/register | TAK | NIE | TAK | 4 (AccentLink, Button, Card, TextField) | TAK | **CZĘŚCIOWO** | Wysokie | D (3.) | Ta sama sytuacja co login — zakładka `authTab: 'register'` w tej samej karcie. Login i register dzielą praktycznie cały wygląd w eksporcie, więc dzielą też ryzyko i pracę. |
+| (app)/[userId] | TAK | TAK | TAK | 3 (Avatar, UserList, UserSearch) + 5 lokalnych (FriendsPanel, AddFriendButton, EditAvatarButton, EditDisplayNameButton, RemoveFriendButton) | TAK | **CZĘŚCIOWO** | Wysokie | D (4.) | Ekran `profile` pokrywa avatar/zmianę avatara/wiersze danych/wylogowanie. Nie pokrywa jednak panelu znajomych osadzonego w tej stronie (`FriendsPanel` z wyszukiwarką i listą) — w mockupie wyszukiwanie znajomych (`isSearch`) jest osobnym ekranem nawigacyjnym, a nie panelem wewnątrz profilu. Ta różnica struktury jest decyzją do podjęcia w Kroku 4, nie błędem inwentaryzacji. |
+
+### 9.2 Fan-in komponentów współdzielonych
+
+Liczba = ile **różnych plików** używa danego komponentu (nie liczba wystąpień).
+
+| Komponent | Liczba miejsc użycia | Etap |
+|---|---|---|
+| Button | 6 | A |
+| TextField | 6 | A |
+| Avatar | 5 | A |
+| Card | 4 | A |
+| AccentLink | 3 | A |
+| Footer | 3 | C |
+| LegalSection | 2 | B (stylowany razem z privacy-policy/terms-of-service) |
+| ContactBlock | 2 | B (jw.) |
+| BareLayout | 2 | C |
+| SessionCard | 2 | D — przygotować przed (marketing)/ i (auth)/login |
+| BrandLink | 2 | C — sub-zależność Sidebar i BareLayout, stylować przed nimi |
+| UserList | 2 | D — przygotować przed (app)/[userId] |
+| PresenceAvatar | 1 | — (używany tylko w `/chat`, już gotowy, poza zakresem Kroku 4) |
+| Sidebar | 1 | C |
+| ThemeToggle | 1 | C — stylować przed Footer (Footer go zawiera) |
+| Hero | 1 | D — przygotować przed (marketing)/ |
+| Tag | 1 | A — mimo niskiego fan-in musi być gotowy przed Hero (zawiera go) |
+| UserSearch | 1 | D — przygotować przed (app)/[userId] |
+
+**Uwaga:** żaden pojedynczy komponent nie jest używany bezpośrednio we
+wszystkich 7 trasach naraz. Najszerszy zasięg mają `Button` i `TextField`
+(po 6 plików) — to one, ostylowane błędnie, narobiłyby najwięcej szkody
+naraz, nie jakiś jeden uniwersalny komponent (patrz pytanie kontrolne 4 niżej).
+
+### 9.3 Proponowana kolejność wykonania Kroku 4
+
+1. **Etap A** (kolejność wg malejącego fan-in, Tag na końcu mimo niskiego
+   fan-in — bo Hero go zawiera): TextField → Button → Avatar → Card →
+   AccentLink → Tag
+2. **Etap B**: privacy-policy → terms-of-service (przy okazji stylujemy
+   LegalSection i ContactBlock — używane tylko tu)
+   *(`stomp` usunięte z tego etapu — patrz 9.4)*
+3. **Etap C**: ThemeToggle → BrandLink → Footer → Sidebar → BareLayout
+   (ThemeToggle i BrandLink jako pierwsze, bo Footer i BareLayout/Sidebar
+   od nich zależą)
+4. **Etap D**: SessionCard + Hero (przygotowanie) → (marketing)/ →
+   (auth)/login → (auth)/register → UserList + UserSearch (przygotowanie)
+   → (app)/[userId]
+
+### 9.4 Trasy zablokowane (brak ekranu w eksporcie designu)
+
+- **(app)/stomp** — brak jakiegokolwiek odniesienia w
+  `Forti2Hub.dc.html`. To strona diagnostyczna/deweloperska, nie
+  produktowa. **Otwarte pytanie do osoby odpowiedzialnej za migrację:**
+  czy `/stomp` w ogóle wchodzi w zakres tej migracji wizualnej, czy zostaje
+  poza nią (np. ostylowana ręcznie "na oko" przez dewelopera, bez
+  eksportu designu jako źródła prawdy)? Do czasu odpowiedzi nie planuj jej
+  w żadnym etapie Kroku 4.
+
+Żadna inna trasa nie jest w pełni zablokowana — (auth)/login,
+(auth)/register i (app)/[userId] mają częściowe pokrycie (patrz 9.1) i
+mogą być realizowane, ale wymagają jednej dodatkowej decyzji projektowej
+każda (patrz 9.5).
+
+### 9.5 Odchylenia od propozycji z §5.4 planu i ich uzasadnienie
+
+1. **`(app)/stomp` przeniesione z "Niskie ryzyko / Etap B" do
+   "ZABLOKOWANA".** Propozycja z planu zakładała P6 = TAK bez sprawdzenia.
+   Realny przegląd eksportu designu pokazuje P6 = NIE. Zgodnie z zasadą
+   agregacji z §5.2 (P6 to bramka wykonalności, nie punkt do średniej),
+   brak designu **wyklucza** tę trasę z Kroku 4, niezależnie od tego, że
+   pod każdym innym względem jest ona rzeczywiście niskiego ryzyka.
+
+2. **(auth)/login i (auth)/register: P6 doprecyzowane jako "CZĘŚCIOWO",
+   nie "TAK".** Plan w §5.4 nie miał jeszcze mapy zależności ani wglądu w
+   eksport designu, więc nie mógł tego zauważyć. W realnym eksporcie login
+   i register to nie dwa osobne ekrany, tylko dwie zakładki jednej karty
+   nałożonej na ekran `landing`. Wygląd samej karty jest w pełni
+   zdefiniowany (kolory, typografia, przyciski), ale struktura "osobna
+   strona logowania z własnym tłem" wymaga decyzji: czy odtwarzamy pełną
+   stronę landing w tle za kartą logowania, czy karta dostaje własne,
+   uproszczone tło. Nie zmienia to kategorii ryzyka (nadal Wysokie z P1),
+   ale dodaje jedno pytanie projektowe do Etapu D.
+
+3. **(app)/[userId]: P6 doprecyzowane jako "CZĘŚCIOWO".** Ekran `profile`
+   w eksporcie pokrywa avatar i dane konta, ale nie pokrywa panelu
+   znajomych (`FriendsPanel`) w formie, w jakiej istnieje w kodzie
+   (osadzony w tej samej stronie). W mockupie odpowiednik — ekran
+   wyszukiwania znajomych — jest osobną trasą nawigacyjną. To dodatkowe
+   pytanie projektowe do rozstrzygnięcia przed Etapem D, nie blokada.
+
+4. **Etap A rozszerzony poza listę z planu (`Button, TextField, Card,
+   Avatar, Tag, AccentLink`) o realny ranking fan-in.** Lista w planie była
+   ilustracyjna. Rzeczywisty ranking (TextField=6, Button=6, Avatar=5,
+   Card=4, AccentLink=3, Tag=1) pokrywa się z listą planu niemal
+   dokładnie — jedyna różnica to kolejność wewnątrz etapu (TextField i
+   Button przed Avatar i Card), ustalona na podstawie policzonego,
+   a nie zgadywanego fan-in.
+
+5. **Etap C rozszerzony o `BrandLink` i `ThemeToggle` jako
+   sub-zależności.** Plan wymienia w Etapie C: Sidebar, Footer,
+   BareLayout, ThemeToggle — bez podanej kolejności wewnętrznej. Mapa
+   zależności pokazuje, że `Footer` importuje `ThemeToggle`, a `Sidebar`
+   i `BareLayout` importują `BrandLink` — więc te dwa muszą być
+   ostylowane jako pierwsze w tym etapie, inaczej komponenty nadrzędne
+   dziedziczą niedokończony wygląd.
+
+6. **Założenie robocze ws. breakpointów (pytanie otwarte z §5.7):**
+   przyjmuję **tylko desktop, ≥1280px**, zgodnie z przykładem
+   sugerowanym w planie. To założenie jest udokumentowane, ale
+   nierozstrzygnięte — wymaga potwierdzenia przed Etapem B, żeby uniknąć
+   powtórnego stylowania stron niskiego ryzyka.
+
+---
+
+## Odpowiedzi na pytania kontrolne Kroku 1
+
+**1. Dlaczego `Button` jest stylowany przed stroną logowania, a nie
+odwrotnie?**
+
+Bo `Button` ma fan-in = 6 — używa go sześć różnych plików, w tym strona
+logowania. Ostylowanie go raz naprawia (albo psuje) wygląd we wszystkich
+sześciu miejscach jednocześnie. Gdyby zacząć od strony logowania,
+trzeba by wrócić do niej drugi raz, gdy później dojdzie się do `Button` —
+podwójna praca nad tym samym plikiem.
+
+**2. Trasa X ma jedno TAK w P1 i pięć NIE w pozostałych pytaniach. Jakie
+ma ryzyko i dlaczego nie jest to średnia?**
+
+Wysokie. Zasada agregacji z §5.2 mówi wprost: wygrywa najwyższa
+kategoria, nie średnia arytmetyczna. P1 TAK oznacza "zepsucie tej strony
+blokuje użytkownikowi dostęp do aplikacji" — to jest koszt katastrofalny
+sam w sobie, niezależnie od tego, jak niewinnie wygląda reszta pytań.
+Ryzyka się nie uśrednia, bo jeden poważny sposób na zablokowanie
+użytkownika nie robi się mniej groźny przez to, że strona ma mało
+komponentów.
+
+**3. Dlaczego `(app)/stomp` jest dobrym miejscem na pierwszą migrację, a
+jednocześnie złym dowodem na to, że migracja działa?**
+
+Dobre miejsce na pomyłkę: to strona diagnostyczna, widzi ją developer, nie
+użytkownik końcowy — błąd tu nic nie kosztuje. Złe jako dowód: z tego
+samego powodu. Sukces na stronie, której nikt poza deweloperem nie
+używa i która nie ma nawet designu w eksporcie (patrz 9.4), niczego nie
+mówi o tym, czy migracja poradzi sobie z prawdziwym, złożonym ekranem
+używanym przez użytkowników.
+
+**4. Który jeden komponent, ostylowany błędnie, popsuje wygląd
+wszystkich siedmiu tras naraz — i w którym etapie go dotykasz?**
+
+Żaden. To jest pytanie kontrolne z planu sformułowane pod założenie, że
+taki komponent istnieje — nasza rzeczywista mapa zależności (9.2) pokazuje,
+że go nie ma. Najbliżej takiego statusu są `Button` i `TextField`,
+oba z fan-in = 6 (czyli 6 z 7 tras, nie 7 z 7) — dotykane jako pierwsze,
+w Etapie A. To ważna korekta względem intuicji sugerowanej przez pytanie:
+brak jednego uniwersalnego komponentu nie jest problemem — to dobra
+wiadomość, bo oznacza brak pojedynczego punktu awarii obejmującego
+całą aplikację.
+
+**5. Co konkretnie trzeba by powtórzyć, gdyby odpowiedź na pytanie o
+breakpointy przyszła dopiero po zakończeniu Kroku 4?**
+
+Trzeba by wrócić do wszystkich 7 tras (privacy-policy, terms-of-service,
+marketing, login, register, [userId], plus stomp jeśli zostanie
+odblokowana) i przejrzeć w każdej z nich decyzje o odstępach, zawijaniu
+elementów (flex-wrap), szerokościach kontenerów i punktach przełamania
+layoutu — czyli w praktyce powtórzyć całą wizualną część Kroku 4, bo
+te decyzje były podejmowane bez wiedzy o docelowych szerokościach ekranu.
+Nie chodzi o dopisanie CSS-a od razu — chodzi o ponowną ocenę każdej
+strony pod nowym kątem.
