@@ -917,3 +917,419 @@ w momencie, w którym przestanie się uruchamiać, punkt odniesienia znika bezpo
 Jeśli nie potrafisz odpowiedzieć na pytanie drugie i czwarte, wróć do §5.2 i §5.3 — to na
 nich opiera się cała kolejność, a błąd w kolejności jest tym rodzajem błędu, który ujawnia
 się dopiero wtedy, gdy jest już drogi do naprawienia.
+
+---
+
+## Część 6 — Krok 2 w szczegółach
+
+*Dopisane 2026-07-31, po zakończeniu Kroku 1. Zakres tego kroku został domknięty w §5.1 —
+są to trzy konkretne miejsca i nic poza nimi. Rezultatem jest kod (pierwszy w całej
+migracji) oraz sekcja 10 w `MIGRATION-INVENTORY.md`.*
+
+Budżet: **pół dnia.** Trzy edycje. Cały czas, który wykracza poza godzinę, pójdzie na
+decyzje o nazwach i na weryfikację — nie na pisanie.
+
+### 6.0 Kontrakt tego kroku: kod się zmienia, piksele nie
+
+Krok 2 jest **refaktoryzacją**. Definicja z Zasady A jest ostra i warto ją przeczytać
+dosłownie: po tym kroku aplikacja wygląda **identycznie co do piksela**. Nie „podobnie”,
+nie „lepiej”, nie „prawie tak samo, ale ładniej”. Identycznie.
+
+To brzmi jak praca bez wartości — skoro nic nie widać, po co ją robić? Wartość jest
+realna, tylko niewidoczna: **zmieniasz nie wygląd, lecz to, kto ten wygląd kontroluje.**
+
+Wróć do modelu skrzynki bezpiecznikowej z Części 1. Lampa podłączona bezpośrednio do sieci
+świeci dokładnie tak samo jak lampa podłączona przez skrzynkę. Różnica ujawnia się dopiero
+w momencie, gdy ktoś sięga do bezpiecznika — jedna gaśnie, druga nie. Krok 2 to
+przepięcie trzech lamp przez skrzynkę **przy zapalonym świetle**: w trakcie pracy nic nie
+mruga, a jedynym dowodem, że coś się wydarzyło, jest to, co stanie się w Kroku 3.
+
+Stąd bierze się nietypowe kryterium sukcesu tego kroku: **każda widoczna różnica jest
+błędem.** W Kroku 4 różnica będzie sukcesem. Tutaj jest regresją.
+
+### 6.1 Co robisz i czego nie robisz
+
+**Zakres — trzy pozycje, ustalone w §5.1:**
+
+| # | Miejsce | Problem |
+|---|---|---|
+| 1 | `app/globals.css` :152 (`@utility bg-hub-shell`) | gradient na surowych `#0b2b3a`, `#0d3339`, `#0d2b3f` |
+| 2 | `app/globals.css` :144–145 | gradient na surowych hexach (m.in. `#7de8b4`, `#56876f`) poza `:root` |
+| 3 | `app/components/Sidebar.tsx` :27 | `white/70` wpisane na sztywno jako placeholder |
+
+**Poza zakresem — mimo że będziesz w tych samych plikach i będzie kusić:**
+
+- usunięcie `--color-brand-*` (Krok 8),
+- usunięcie martwych tokenów `--color-hub-ink-deep`, `--color-hub-surface` (Krok 8),
+- scalenie tone’u `chat` w `TextField` i wariantu `send` w `Button` (Krok 6),
+- dodanie nadpisań `.mocha` / `.latte` dla `--theme-hub-*` (Krok 5),
+- poprawa kontrastu kolorów avatarów (Krok 7),
+- jakakolwiek zmiana kąta gradientu, pozycji stopu czy odcienia, „bo tak ładniej” (Krok 4).
+
+Ostatni punkt jest najważniejszy, bo najłatwiej go złamać nieświadomie. Gdy będziesz
+przepisywać gradient na tokeny, zobaczysz go z bliska i zauważysz w nim coś, co można by
+poprawić. To jest dokładnie ten moment, w którym działa Zasada B: **zapisz w sekcji 10.5
+inwentaryzacji, nie zmieniaj.**
+
+### 6.2 Pojęcie: co to właściwie jest gradient
+
+Dwie z trzech pozycji to gradienty, więc warto rozumieć, na co się patrzy, zanim zacznie
+się to przepisywać.
+
+```css
+background: linear-gradient(165deg, #0b2b3a, #0d3339 55%, #0d2b3f);
+```
+
+To jedna wartość CSS złożona z czterech niezależnych informacji:
+
+- **`linear-gradient(…)`** — funkcja generująca obrazek. To istotne: gradient jest w CSS
+  *obrazem*, nie kolorem. Dlatego trafia do `background` (skrót obejmujący
+  `background-image`), a nie do `background-color`. Nie da się go zapisać w tokenie
+  kolorystycznym — token opisuje jeden kolor, gradient to przepis na wiele.
+- **`165deg`** — kierunek. `0deg` to „w górę”, `90deg` „w prawo”, `180deg` „w dół”. `165deg`
+  jest więc prawie pionowo w dół, odchylone o 15° w prawo. To **geometria, nie kolor** — nie
+  tokenizujesz jej.
+- **Trzy kolory** — tzw. *color stops*. To jedyna część, która jest kolorem, i jedyna, którą
+  ruszasz.
+- **`55%`** — pozycja środkowego stopu na osi gradientu. Środkowy kolor osiąga pełną
+  intensywność w 55% drogi, a nie w 50%. Ktoś tę wartość dobrał świadomie. **Musi przetrwać
+  bez zmiany** — jej ruszenie jest zmianą wizualną, czyli złamaniem kontraktu z §6.0.
+
+Wniosek praktyczny, w jednym zdaniu: **w gradiencie podmieniasz wyłącznie trzy wartości
+kolorów, a wszystko pozostałe przepisujesz znak w znak.**
+
+Druga rzecz do zrozumienia: **`var()` działa wszędzie tam, gdzie CSS spodziewa się
+wartości** — także w środku funkcji takiej jak `linear-gradient()`. Przeglądarka podstawia
+wartość zmiennej *zanim* zinterpretuje gradient, więc dla `linear-gradient` nie ma żadnej
+różnicy, czy dostała `#0b2b3a`, czy `var(--color-hub-shell-start)`. To nie jest oczywiste
+i bywa źródłem błędnego przekonania, że zmiennych „nie można używać w gradientach”.
+
+Sąsiednie utilities w tym samym pliku (`bg-hub-bubble`, `bg-hub-cta`) robią dokładnie to i
+działają — masz więc w repozytorium działający dowód, dwie linijki obok. **Przeczytaj je
+przed napisaniem swojej wersji.** Tam, gdzie w kodzie istnieje poprawny wzorzec obok
+niepoprawnego, kopiuje się wzorzec, a nie wymyśla trzeci sposób.
+
+### 6.3 Pozycja 1 — `bg-hub-shell` (linia 152)
+
+#### Krok A: sprawdź, czy te kolory nie mają już tokenów
+
+Zasada z Części 2 („jeśli żaden token nie ma takiej wartości, **zatrzymaj się i zapytaj**”)
+ma cichy warunek wstępny: najpierw trzeba *sprawdzić*, czy ma. Wymyślenie nowego tokenu dla
+koloru, który już token ma, jest najprostszym sposobem na rozmnożenie palety do czterdziestu
+prawie identycznych odcieni.
+
+Z katalogu **`/root/design/frontend`**:
+
+```bash
+grep -n -i -F -e '0b2b3a' -e '0d3339' -e '0d2b3f' app/globals.css
+```
+
+*„Przeszukaj `app/globals.css` w poszukiwaniu trzech dosłownych tekstów naraz i pokaż numery
+linii. `-F` = traktuj wzorzec dosłownie (bez znaków specjalnych), `-i` = ignoruj wielkość
+liter (hex bywa zapisywany raz małymi, raz wielkimi literami i to ten sam kolor), a
+powtórzone `-e` pozwala podać kilka wzorców w jednym przebiegu zamiast uruchamiać `grep`
+trzy razy.”*
+
+**Jak czytać wynik:** jeśli któryś hex pojawia się **tylko** w linii 152 — nie ma tokenu,
+trzeba go utworzyć. Jeśli pojawia się również w bloku `:root` — token już istnieje, użyj
+istniejącej nazwy i **nie tworzy się nowej**.
+
+#### Krok B: nazwij tokeny
+
+Zakładając, że trzeba je utworzyć — nazwa jest tu jedyną prawdziwą decyzją, a zła nazwa
+zostaje w projekcie na lata.
+
+| Propozycja | Ocena |
+|---|---|
+| `--theme-hub-teal-dark`, `--theme-hub-teal-mid` | **Źle.** Nazwa opisuje, jak kolor *wygląda*. Po pierwszej zmianie motywu (Krok 5) token o nazwie „teal” może przestać być zielony — i wtedy nazwa aktywnie kłamie. Nazwa mówiąca o wyglądzie jest komentarzem, który dezaktualizuje się bezgłośnie |
+| `--theme-hub-shell-start`, `-mid`, `-end` | **Dobrze.** Nazwa mówi, *czym kolor jest w systemie*: pierwszym / środkowym / ostatnim stopem gradientu powłoki. Przetrwa każdą zmianę wartości |
+| `--theme-hub-shell-1/2/3` | **Do przyjęcia.** Neutralne i odporne, ale nie mówi nic o roli. `start/mid/end` niesie tę samą odporność plus czytelność |
+
+Ogólna zasada, która obowiązuje w tej migracji wszędzie: **token nazywa rolę, nie wygląd.**
+Dlatego cały istniejący system nazywa się `surface`, `on-surface`, `elevated-surface`, a
+nie `light-gray`, `dark-navy`. Gradient jest tu przypadkiem szczególnym: stop gradientu nie
+ma roli wykraczającej poza pozycję, więc pozycja *jest* jego rolą i nazwa pozycyjna jest
+uczciwa.
+
+#### Krok C: dodaj token w obu warstwach
+
+Wróć do pojęcia ② z §3.3 — istnieją dwie warstwy nazw. Nowy token trzeba dopisać w obu
+miejscach, w takim samym układzie jak istniejące:
+
+```css
+@theme inline {
+  /* … istniejące … */
+  --color-hub-shell-start: var(--theme-hub-shell-start);
+  --color-hub-shell-mid:   var(--theme-hub-shell-mid);
+  --color-hub-shell-end:   var(--theme-hub-shell-end);
+}
+
+:root {
+  /* … istniejące … */
+  --theme-hub-shell-start: #0b2b3a;
+  --theme-hub-shell-mid:   #0d3339;
+  --theme-hub-shell-end:   #0d2b3f;
+}
+```
+
+**Czy obie warstwy są tu naprawdę konieczne?** Uczciwa odpowiedź: technicznie nie. Gdyby
+te kolory miały być używane *wyłącznie* w środku tej jednej utility, wystarczyłby wpis w
+`:root` i `var(--theme-hub-shell-start)` bezpośrednio w gradiencie. Warstwa `@theme inline`
+istnieje po to, żeby Tailwind wygenerował z nazwy **klasę** (`bg-hub-shell-start`) — a tej
+klasy nikt nie potrzebuje.
+
+Mimo to rób to dwuwarstwowo, z dwóch powodów. Po pierwsze, spójność: sąsiednie utilities
+sięgają po `var(--color-hub-*)`, więc trzeci sposób zapisu w tym samym pliku to koszt
+czytania dla każdego następnego. Po drugie, Krok 5 nadpisuje wartości `--theme-hub-*`
+w regule `.mocha, .latte`, i to działa niezależnie od tego, czy pośrednia warstwa istnieje —
+ale mieszany zapis sprawia, że przy pisaniu tamtego bloku trzeba pamiętać, które tokeny są
+którego rodzaju. Jednolitość jest tu warta jednej dodatkowej linii na token.
+
+#### Krok D: przepisz utility
+
+```css
+@utility bg-hub-shell {
+  background: linear-gradient(
+    165deg,
+    var(--color-hub-shell-start),
+    var(--color-hub-shell-mid) 55%,
+    var(--color-hub-shell-end)
+  );
+}
+```
+
+Zwróć uwagę na to, czego **nie** zmieniono: `165deg` i `55%` są przepisane dosłownie.
+Zmieniły się wyłącznie trzy wartości kolorów. Jeśli w twojej wersji zmieniło się cokolwiek
+poza nimi, to nie jest ten refaktor.
+
+### 6.4 Pozycja 2 — gradient w liniach 144–145
+
+Ta pozycja różni się od poprzedniej jedną istotną rzeczą: **nie wiadomo jeszcze, czym ona
+jest.** Inwentaryzacja odnotowała surowe hexy (`#7de8b4`, `#56876f`) poza `:root`, ale nie
+nazwę bloku, w którym siedzą. Nazwa bloku jest tu całą informacją — od niej zależy, jak
+nazwiesz tokeny.
+
+```bash
+sed -n '138,158p' app/globals.css
+```
+
+*„Wypisz z pliku wyłącznie linie 138–158. `sed` to edytor strumieniowy; `-n` wyłącza
+domyślne wypisywanie całości, a `'138,158p'` znaczy »wypisz (`p` = print) ten zakres«.
+Bierzemy kilka linii zapasu w górę, bo interesuje nas nie tylko sam gradient, ale nagłówek
+bloku nad nim — to on mówi, do czego ten gradient służy.”*
+
+Następnie sprawdź, gdzie ta utility jest w ogóle używana (podstaw jej prawdziwą nazwę):
+
+```bash
+grep -rn --include='*.tsx' -F 'NAZWA-UTILITY' app
+```
+
+*„Przeszukaj rekurencyjnie `app`, tylko pliki `.tsx`, szukając dosłownie tej nazwy klasy,
+i pokaż numery linii.”*
+
+**Dlaczego to drugie wyszukiwanie ma znaczenie:** nazwa tokenu ma opisywać rolę, a rola
+wynika z użycia. Zielony gradient użyty w znaczniku obecności to `online`/`presence`; ten
+sam gradient użyty jako tło przycisku potwierdzenia to `success`. Ta sama wartość, dwie
+różne nazwy, i tylko jedna z nich przetrwa Krok 4.
+
+Jeśli wyszukiwanie **nie zwróci nic** — utility nie jest nigdzie używana. To martwy kod i
+osobny przypadek: nie tokenizuj go, tylko zapisz w sekcji 10.5 inwentaryzacji jako kandydata
+do usunięcia w Kroku 8. Zasada B działa w obie strony — nie naprawiasz, ale też nie
+inwestujesz pracy w coś, co ma zniknąć.
+
+W pozostałych przypadkach postępujesz identycznie jak w §6.3: sprawdź istniejące tokeny →
+nazwij → dodaj w dwóch warstwach → przepisz, zachowując całą geometrię bez zmian.
+
+### 6.5 Pozycja 3 — `white/70` w `Sidebar.tsx` :27
+
+To najciekawsza z trzech pozycji, bo uczy czegoś, czego dwie poprzednie nie uczą.
+
+#### Co znaczy zapis `white/70`
+
+W Tailwindzie ukośnik w nazwie klasy to **modyfikator przezroczystości**. `text-white/70`
+znaczy „biały tekst przy 70% krycia”. Tailwind generuje z tego kolor półprzezroczysty
+(w Tailwind 4 realizowane przez funkcję `color-mix()`, która miesza biel z przezroczystością
+w podanej proporcji). Nie ma znaczenia, czy `/70` stoi przy kolorze dosłownym, czy przy
+tokenie — `text-on-elevated-surface/70` jest równie poprawne.
+
+#### Dlaczego to jest hardkodowany kolor, mimo że nie ma w nim `#`
+
+Tutaj jest lekcja. Wszystkie wyszukiwania z Kroku 0 szukały składni: `#`, `rgb(`, `hsl(`,
+`bg-[…]`. Wszystkie wróciły puste — i wniosek w inwentaryzacji brzmiał „zero hardkodowanych
+kolorów w `.tsx`”. Ten wniosek był oparty na dowodach i mimo to nieprawdziwy, bo `white` nie
+zawiera żadnego z szukanych znaków.
+
+**Hardkodowany kolor to nie kwestia składni, tylko nazywania.** `#ffffff` i `white` są tym
+samym błędem zapisanym inaczej: oba nazywają *wartość*, podczas gdy system oczekuje nazwy
+*roli*. Sidebar nie chce być biały — chce mieć kolor tekstu drugorzędnego na swoim tle.
+Dziś ten kolor jest biały. Po Kroku 3 może nie być, a klasa `white/70` się o to nie zapyta.
+
+Wniosek metodologiczny, przydatny do końca migracji: **`grep` znajduje składnię, człowiek
+znajduje intencję.** Dlatego ta pozycja została wykryta nie przez wyszukiwanie, tylko przez
+komentarz `TODO(design-migration)`, który poprzedni developer zostawił obok. Gdy w Kroku 4
+będziesz przechodzić przez strony, spodziewaj się jeszcze kilku takich — `black`, `white`,
+`transparent`, `current` oraz nazwy z domyślnej palety Tailwinda (`slate-800`, `zinc-400`)
+są hardkodowanymi kolorami dokładnie w tym samym sensie.
+
+#### Jak to naprawić
+
+Kolejność postępowania, od najlepszej opcji do ostateczności:
+
+1. **Znajdź token, który już ma tę rolę.** Sidebar renderuje się na powłoce (`bg-hub-shell`),
+   więc szukasz tokenu opisującego „tekst drugorzędny na powłoce”. Rodzina `hub-*` ma tokeny
+   dla treści wyciszonych — jeśli któryś z nich daje **tę samą wartość wynikową**, użyj go i
+   pozycja jest zamknięta.
+2. **Token + modyfikator krycia**, np. `text-hub-muted/70`. Poprawne pod warunkiem, że token
+   ma wartość identyczną z bielą w tym miejscu. Jeśli token jest inny niż biel, to nie jest
+   refaktoryzacja, tylko zmiana wizualna — a więc złamanie kontraktu §6.0.
+3. **Żaden token nie pasuje → zatrzymaj się i zapytaj.** To jest jawna instrukcja z Części 2
+   i jedyne miejsce w Kroku 2, gdzie wolno się zatrzymać. Nie wymyślaj tokenu „biel przy 70%”
+   — pytanie „jaki kolor ma mieć tekst drugorzędny w sidebarze” jest pytaniem do designu, nie
+   do kodu.
+
+**Uwaga o pułapce, która czyha w opcji 1.** Zanim uznasz, że token pasuje, sprawdź *wartość
+wynikową*, a nie samą nazwę. Biel przy 70% krycia na ciemnym tle daje jasnoszary o
+konkretnej wartości; token o nazwie `muted` może dawać inny jasnoszary. Wyglądają podobnie i
+w porównaniu obok siebie to zobaczysz — dlatego §6.6 każe porównywać wartości wyliczone, a
+nie wrażenie.
+
+### 6.6 Weryfikacja — jak udowodnić, że nic się nie zmieniło
+
+„Wygląda tak samo” nie jest weryfikacją. Oko fatalnie radzi sobie z porównywaniem gradientów
+i odcieni szarości z pamięci, a Krok 2 wymaga twardszego dowodu niż wrażenie.
+
+**Metoda: porównanie wartości wyliczonych (computed values) między branchami.**
+
+Uruchom oba branche równolegle (§5.1 — drugi na porcie 3001). Następnie w obu oknach:
+
+1. Otwórz narzędzia deweloperskie (`F12`).
+2. Zaznacz ten sam element w obu (np. kontener powłoki albo tekst w sidebarze).
+3. Otwórz zakładkę **Computed** i odczytaj `background-image` (dla gradientów) lub `color`
+   (dla tekstu).
+4. Porównaj oba ciągi **znak po znaku**.
+
+**Dlaczego zakładka Computed, a nie Styles.** Styles pokazuje regułę tak, jak ją napisano —
+czyli po refaktorze zobaczysz tam `var(--color-hub-shell-start)`, a na starym branchu
+`#0b2b3a`, i porównanie nie da żadnej odpowiedzi. Computed pokazuje wartość **po
+rozwiązaniu wszystkich zmiennych**, czyli to, co przeglądarka faktycznie narysuje. Jeśli
+refaktor był poprawny, oba branche muszą pokazać w Computed *dosłownie ten sam ciąg*.
+
+To jest silniejszy dowód niż screenshot: screenshot pokazuje zgodność w jednym stanie i przy
+jednej rozdzielczości, a zgodność wartości wyliczonej obowiązuje we wszystkich.
+
+**Jeden wyjątek, o którym trzeba wiedzieć.** Jeśli w pozycji 3 zamieniłaś dosłowny kolor na
+token, ciągi mogą różnić się *zapisem* przy tej samej barwie — np. `rgb(255 255 255 / 0.7)`
+kontra `color-mix(in oklab, …)`. Wtedy porównanie tekstowe nie wystarczy i sprawdzasz
+inaczej: kroplomierzem (ikona pipety przy próbce koloru w DevTools) odczytujesz wartość
+piksela w obu oknach. Muszą być identyczne.
+
+**Co konkretnie sprawdzić — lista minimalna:**
+
+| Element | Gdzie | Czego szukasz |
+|---|---|---|
+| Powłoka (`bg-hub-shell`) | `/chat` | `background-image` identyczne co do znaku |
+| Utility z pozycji 2 | strona, którą wskazał `grep` z §6.4 | jak wyżej |
+| Tekst drugorzędny w sidebarze | dowolna strona `(app)` | `color` identyczne albo identyczne w kroplomierzu |
+| Sidebar w obu motywach | przełącznik motywu | brak różnicy w obu stanach |
+
+Ostatni wiersz jest łatwy do pominięcia, a sidebar jest widoczny na **wszystkich** trasach
+grupy `(app)` — błąd w nim to błąd na siedmiu stronach naraz, nie na jednej.
+
+### 6.7 Podział na commity
+
+**To uściśla zdanie z §5.1 („trzy miejsca, jeden commit”) i zastępuje je.** Po rozpisaniu
+okazuje się, że te trzy pozycje nie są jednorodne: pozycje 1 i 2 wymagają decyzji o nazwach
+tokenów, a pozycja 3 może wymagać decyzji designerskiej i utknąć. Jeden commit oznaczałby,
+że zablokowana pozycja 3 wstrzymuje dwie gotowe.
+
+Rekomendacja: **jeden PR, trzy commity** — po jednym na pozycję. Każdy jest wtedy
+samodzielnie zrozumiały w historii i samodzielnie odwracalny, a jeśli pozycja 3 utknie na
+pytaniu do designu, PR może pójść z dwiema pozycjami i jawną notatką, że trzecia czeka.
+
+To ogólniejsza zasada niż ten krok: **granica commita przebiega tam, gdzie przebiega granica
+decyzji.** Trzy niezależne decyzje w jednym commicie to commit, którego nie da się częściowo
+cofnąć — a cofanie zmian kolorystycznych zdarza się częściej, niż się zakłada w momencie ich
+wprowadzania.
+
+### 6.8 Czego nie wolno robić w Kroku 2
+
+- **Nie zmieniaj geometrii gradientu.** Kąt, pozycje stopów, kolejność kolorów przepisujesz
+  dosłownie. Zmiana `55%` na `50%` „bo równiej” jest zmianą wizualną.
+- **Nie twórz tokenu bez sprawdzenia, czy już istnieje.** Najpierw `grep` po wartości, potem
+  decyzja.
+- **Nie nazywaj tokenu od wyglądu.** `--theme-hub-teal` unieważnia się sam przy pierwszej
+  zmianie motywu.
+- **Nie zmieniaj nazw istniejących tokenów** ani wpisów w `@theme inline`. Nazwa `--color-*`
+  jest kontraktem z każdym plikiem `.tsx`, który używa odpowiadającej jej klasy; jej zmiana
+  to edycja wszystkich tych plików naraz, czyli zupełnie inny krok.
+- **Nie ruszaj wartości w `:root` dla istniejących tokenów.** To jest Krok 3 i ma być
+  osobnym, odwracalnym kawałkiem.
+- **Nie dodawaj `'use client'`** do `Sidebar.tsx` ani nigdzie indziej (pojęcie ⑤ z §3.3).
+  Żadna z tych trzech poprawek tego nie wymaga; gdyby wydawało się inaczej, rozwiązanie jest
+  złe.
+- **Nie naprawiaj tego, co zobaczysz po drodze.** Zasada B. Sekcja 10.5 inwentaryzacji
+  istnieje dokładnie po to.
+
+### 6.9 Artefakt — sekcja 10 w `MIGRATION-INVENTORY.md`
+
+Krok 2 zostawia po sobie kod, ale kod nie tłumaczy, dlaczego tokeny nazywają się tak, a nie
+inaczej. Dopisz do inwentaryzacji:
+
+```markdown
+## 10. Krok 2 — usunięcie kolorów wpisanych na sztywno
+
+### 10.1 Dodane tokeny
+
+| Token (`--theme-*`) | Wartość | Rola / dlaczego taka nazwa |
+|---|---|---|
+
+### 10.2 Trzy pozycje — przed i po
+
+| # | Plik : linia | Było | Jest | Commit |
+|---|---|---|---|---|
+
+### 10.3 Weryfikacja (porównanie wartości wyliczonych między branchami)
+
+| Element | Trasa | Metoda (Computed / kroplomierz) | Wynik |
+|---|---|---|---|
+
+### 10.4 Decyzje odesłane do designu (jeśli wystąpiły)
+
+### 10.5 Znalezione, ale NIE naprawione (Zasada B)
+
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+```
+
+Sekcja 10.1 jest tą, do której ktoś wróci za pół roku — nazwa tokenu bez zapisanego
+uzasadnienia po roku wygląda na arbitralną i zachęca do wymyślenia obok niej czwartej
+konwencji nazewniczej.
+
+### 6.10 Definicja ukończenia Kroku 2
+
+Krok jest ukończony, gdy zachodzi wszystkie pięć:
+
+1. Wyszukiwanie surowych hexów **poza blokiem `:root`** w `app/globals.css` nie zwraca nic
+   (poza ewentualnym martwym kodem świadomie odłożonym do Kroku 8 i odnotowanym w 10.5).
+2. `Sidebar.tsx` nie zawiera `white/70` — albo pozycja jest jawnie odesłana do designu
+   i zapisana w 10.4.
+3. Wszystkie nowe tokeny istnieją w **obu** warstwach (`@theme inline` oraz `:root`).
+4. Weryfikacja z §6.6 wykonana i zapisana w 10.3 — dla obu gradientów i dla sidebara,
+   w obu motywach. Zero różnic.
+5. Sekcja 10 w `MIGRATION-INVENTORY.md` istnieje i jest wypełniona, wraz z 10.5.
+
+**Pytania kontrolne** — odpowiedz na piśmie, z pamięci:
+
+- Dlaczego `#0b2b3a` w linii 152 jest problemem, skoro dokładnie ta sama wartość w bloku
+  `:root` problemem nie jest?
+- `white/70` nie zawiera znaku `#`. Dlaczego mimo to jest kolorem wpisanym na sztywno — i co
+  z tego wynika dla wyszukiwań, na których opierał się Krok 0?
+- Które fragmenty zapisu `linear-gradient(165deg, …, … 55%, …)` tokenizujesz, a które
+  przepisujesz dosłownie i dlaczego akurat te?
+- Dlaczego weryfikacja odbywa się w zakładce Computed, a nie Styles?
+- Dodajesz token tylko do `:root`, pomijając `@theme inline`. Gradient działa poprawnie.
+  Co w takim razie straciłaś?
+
+Ostatnie pytanie jest jedynym, na które prawidłowa odpowiedź nie brzmi „coś się zepsuje” —
+warto to zauważyć. Nie każda konwencja broni się natychmiastową awarią; część broni się
+dopiero kosztem, który poniesie ktoś inny za trzy miesiące.
