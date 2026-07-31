@@ -1,12 +1,21 @@
 import Link from 'next/link';
 import type { ComponentProps, ReactNode } from 'react';
 
-type ButtonVariant = 'primary' | 'outline';
+type ButtonVariant = 'primary' | 'outline' | 'send';
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-on-primary hover:brightness-125',
   outline:
     'border border-primary text-primary hover:bg-primary hover:text-on-primary',
+  // The chat composer's Send button. `brightness` is a filter, so it lightens
+  // the rendered gradient; a hover:bg-* utility would flatten it to one colour.
+  // TODO(stomp): the composer's Send needs a disabled state once it submits -
+  // empty input and in-flight send. The base classes already style
+  // `disabled:`, so this is a prop at the call site, not a change here.
+  // TODO(design-migration): revisit whether `send` stays its own variant or
+  // becomes `primary` once `primary` adopts bg-hub-cta. Keep it separate only
+  // if the design really does treat Send differently from other CTAs.
+  send: 'bg-hub-bubble text-white hover:brightness-125',
 };
 
 const BASE_CLASSES =
