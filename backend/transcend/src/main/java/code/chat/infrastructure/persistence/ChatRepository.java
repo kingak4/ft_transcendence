@@ -31,18 +31,15 @@ public class ChatRepository implements ChatDao {
   }
 
   @Override
-  public List<GetChatsUseCase.ChatSummary> getChatList(UserId userId, int page, int size) {
+  public Page<GetChatsUseCase.ChatSummary> getChatList(UserId userId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<Object[]> rows = chatJpaRepository.findChatSummariesByUserId(userId.val(), pageable);
-
-    return rows.getContent().stream()
-            .map(row -> new GetChatsUseCase.ChatSummary(
-                    ChatId.of((UUID) row[0]),
-                    UserId.of((UUID) row[1]),
-                    (String) row[2],
-                    (UUID) row[3]
-            ))
-            .toList();
+    return rows.map(row -> new GetChatsUseCase.ChatSummary(
+            ChatId.of((UUID) row[0]),
+            UserId.of((UUID) row[1]),
+            (String) row[2],
+            (UUID) row[3]
+    ));
   }
 
   @Override

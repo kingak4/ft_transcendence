@@ -29,6 +29,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -72,27 +75,29 @@ class ChatControllerTest {
     String displayName = "Kinga";
     UUID avatarId = UUID.randomUUID();
 
-    List<GetChatsUseCase.ChatSummary> chatSummaryFixture =
+    List<GetChatsUseCase.ChatSummary> content =
             List.of(
                     new GetChatsUseCase.ChatSummary(
                             ChatId.of(CHAT_UUID_FIXTURE),
                             UserId.of(otherUserId),
                             displayName,
                             avatarId));
-
-    when(getChatsUseCase.getChatList(UserId.of(AUTH_USER_ID), 0, 10)).thenReturn(chatSummaryFixture);
+    Page<GetChatsUseCase.ChatSummary> chatSummaryPage =
+            new PageImpl<>(content, PageRequest.of(0, 10), 1);
+    when(getChatsUseCase.getChatList(UserId.of(AUTH_USER_ID), 0, 10)).thenReturn(chatSummaryPage);
 
     mockMvc
-        .perform(
-            get(buildUrl(BASE_URL, null))
-                .param("page", "0")
-                .param("size", "10")
-                .principal(authentication()))
-        .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].chatId").value(CHAT_UUID_FIXTURE.toString()))
-            .andExpect(jsonPath("$[0].otherUserId").value(otherUserId.toString()))
-            .andExpect(jsonPath("$[0].displayName").value(displayName))
-            .andExpect(jsonPath("$[0].avatarId").value(avatarId.toString()));
+            .perform(
+                    get("/chats")
+                            .param("page", "0")
+                            .param("size", "10")
+                            .principal(authentication()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content[0].chatId").value(CHAT_UUID_FIXTURE.toString()))
+            .andExpect(jsonPath("$.content[0].otherUserId").value(otherUserId.toString()))
+            .andExpect(jsonPath("$.content[0].displayName").value(displayName))
+            .andExpect(jsonPath("$.content[0].avatarId").value(avatarId.toString()))
+            .andExpect(jsonPath("$.totalElements").value(1));
 
     verify(getChatsUseCase).getChatList(UserId.of(AUTH_USER_ID), 0, 10);
   }

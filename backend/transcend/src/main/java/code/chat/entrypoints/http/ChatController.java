@@ -11,6 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -46,19 +47,18 @@ public class ChatController {
 
   @GetMapping
   @Operation(summary = "Get chats for a user with pagination")
-  public ResponseEntity<List<ChatResponse>> getChats(
+  public ResponseEntity<Page<ChatResponse>> getChats(
       Authentication authentication,
       @RequestParam(value = "page", defaultValue = "0") int page,
       @RequestParam(value = "size", defaultValue = "10") int size) {
     UUID userId = UUID.fromString(authentication.getName());
-    List<ChatResponse> chats =
-        getChatsUseCase.getChatList(UserId.of(userId), page, size).stream()
-                .map(cs -> new ChatResponse(
-                        cs.chatId().val(),
-                        cs.otherUserId().val(),
-                        cs.displayName(),
-                        cs.avatarId()))
-                .toList();
+    Page<ChatResponse> chats =
+            getChatsUseCase.getChatList(UserId.of(userId), page, size)
+                    .map(cs -> new ChatResponse(
+                            cs.chatId().val(),
+                            cs.otherUserId().val(),
+                            cs.displayName(),
+                            cs.avatarId()));
     return ResponseEntity.ok(chats);
   }
 
