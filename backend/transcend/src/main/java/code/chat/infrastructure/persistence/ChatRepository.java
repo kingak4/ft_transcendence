@@ -4,11 +4,15 @@ import code.chat.domain.model.*;
 import code.chat.ports.out.ChatDao;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import code.chat.ports.in.GetChatsUseCase;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,12 +31,15 @@ public class ChatRepository implements ChatDao {
   }
 
   @Override
-  public List<ChatId> getChatList(UserId userId, int page, int size) {
+  public Page<GetChatsUseCase.ChatSummary> getChatList(UserId userId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    return chatJpaRepository
-            .findAllByParticipant(userId.val(), pageable)
-            .map(entity -> ChatId.of(entity.getId().val()))
-            .toList();
+    Page<Object[]> rows = chatJpaRepository.findChatSummariesByUserId(userId.val(), pageable);
+    return rows.map(row -> new GetChatsUseCase.ChatSummary(
+            ChatId.of((UUID) row[0]),
+            UserId.of((UUID) row[1]),
+            (String) row[2],
+            (UUID) row[3]
+    ));
   }
 
   @Override
