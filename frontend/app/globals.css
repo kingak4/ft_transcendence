@@ -74,6 +74,34 @@
   --color-hub-row-active: var(--theme-hub-row-active);
   --color-hub-online: var(--theme-hub-online);
   --color-hub-status: var(--theme-hub-status);
+
+  /*
+   * Gradient stops that were hardcoded raw hex values before Step 2 of
+   * the design migration. Named by position, not by hue: a gradient
+   * stop has no role beyond its position in the gradient, so naming it
+   * "start/mid/end" survives future theme changes in a way a name like
+   * "teal" would not.
+   */
+  --color-hub-shell-start: var(--theme-hub-shell-start);
+  --color-hub-shell-mid: var(--theme-hub-shell-mid);
+  --color-hub-shell-end: var(--theme-hub-shell-end);
+
+  --color-start-page-gradient-start: var(--theme-start-page-gradient-start);
+  --color-start-page-gradient-mid: var(--theme-start-page-gradient-mid);
+
+  /* ===== ZMIANA — KROK 2, Pozycja 3 — DODANE ===== */
+  /*
+   * On-shell text/hover roles. Placeholder values identical to the
+   * hardcoded white/70, white/10 and white they replace in Sidebar.tsx.
+   * Not yet confirmed by design - see MIGRATION-INVENTORY.md section 10.4.
+   * TODO(design-migration): needs a .mocha/.latte override in Step 5,
+   * same as the rest of --theme-hub-*, so the sidebar responds to
+   * ThemeToggle instead of staying a fixed dark rail.
+   */
+  --color-hub-on-shell-muted: var(--theme-hub-on-shell-muted);
+  --color-hub-shell-hover: var(--theme-hub-shell-hover);
+  --color-hub-on-shell: var(--theme-hub-on-shell);
+  /* ===== KONIEC ZMIANY ===== */
 }
 
 /* Default theme: original 42Hub look, active when no theme class is set */
@@ -107,6 +135,22 @@
   --theme-hub-row-active: #eaf4fa;
   --theme-hub-online: #49b47a;
   --theme-hub-status: #1a8a7a;
+
+  /* See matching comment in @theme inline above. */
+  --theme-hub-shell-start: #0b2b3a;
+  --theme-hub-shell-mid: #0d3339;
+  --theme-hub-shell-end: #0d2b3f;
+
+  --theme-start-page-gradient-start: #7de8b4;
+  --theme-start-page-gradient-mid: #56876f;
+
+  /* ===== ZMIANA — KROK 2, Pozycja 3 — DODANE ===== */
+  /* Placeholder values - identical to the white/70, white/10, white they
+     replace. See matching comment in @theme inline above. */
+  --theme-hub-on-shell-muted: rgba(255, 255, 255, 0.7);
+  --theme-hub-shell-hover: rgba(255, 255, 255, 0.1);
+  --theme-hub-on-shell: #ffffff;
+  /* ===== KONIEC ZMIANY ===== */
 }
 
 /* Catppuccin flavors: --color-ctp-* already flip between these two
@@ -141,15 +185,20 @@
 @utility bg-gradient-start-page {
   background: linear-gradient(
     to bottom left,
-    #7de8b4 0%,
-    #56876f 44%,
+    var(--color-start-page-gradient-start) 0%,
+    var(--color-start-page-gradient-mid) 44%,
     var(--color-brand-reversed-main-color) 100%
   );
 }
 
 /* Dark app rail behind the sidebar. */
 @utility bg-hub-shell {
-  background: linear-gradient(165deg, #0b2b3a, #0d3339 55%, #0d2b3f);
+  background: linear-gradient(
+    165deg,
+    var(--color-hub-shell-start),
+    var(--color-hub-shell-mid) 55%,
+    var(--color-hub-shell-end)
+  );
 }
 
 /* Outgoing message bubble, and the Send button that produces them. */
