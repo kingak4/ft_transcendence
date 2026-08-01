@@ -1,4 +1,7 @@
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+import { client } from '../lib/api-clients';
 
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
@@ -10,6 +13,18 @@ export default async function AppLayout({
 }) {
   const cookieStore = await cookies();
   const userId = cookieStore.get('user_id')?.value ?? null;
+
+  if (!userId) {
+    redirect('/login');
+  }
+
+  const { response } = await client.GET('/users/{userId}/details', {
+    params: { path: { userId } },
+  });
+
+  if (response.status === 401 || response.status === 403 || response.status === 404) {
+    redirect('/api/auth/logout');
+  }
 
   return (
     <div className="bg-surface text-on-surface flex min-h-screen">

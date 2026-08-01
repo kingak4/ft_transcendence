@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 import AccentLink from '../components/AccentLink';
 import Button from '../components/Button';
@@ -6,11 +7,22 @@ import Card from '../components/Card';
 import Hero from '../components/Hero';
 import SessionCard from '../components/SessionCard';
 
+import { client } from '../lib/api-clients';
 import { clearSession } from '../lib/logout';
 
 export default async function LandingPage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get('user_id')?.value ?? null;
+
+  if (userId) {
+    const { response } = await client.GET('/users/{userId}/details', {
+      params: { path: { userId } },
+    });
+
+    if (response.status === 401 || response.status === 403 || response.status === 404) {
+      redirect('/api/auth/logout');
+    }
+  }
 
   return (
     <div className="flex flex-1 flex-wrap items-center justify-center gap-16">
