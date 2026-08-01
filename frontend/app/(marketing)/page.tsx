@@ -15,12 +15,13 @@ export default async function LandingPage() {
   const userId = cookieStore.get('user_id')?.value ?? null;
 
   if (userId) {
-    const { response } = await client.GET('/users/{userId}/details', {
-      params: { path: { userId } },
+    //ping request just to check if token is valid
+    const { response } = await client.GET('/friends', {
+      params: { query: { size: 1 } },
     });
 
     if (response.status === 401 || response.status === 403 || response.status === 404) {
-      redirect('/api/auth/logout');
+      redirect('/auth/logout');
     }
   }
 
