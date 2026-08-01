@@ -5,6 +5,7 @@ import { client } from '../lib/api-clients';
 
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import StompProvider from '../components/StompProvider';
 
 export default async function AppLayout({
   children,
@@ -27,12 +28,14 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="bg-surface text-on-surface flex min-h-screen">
-      <Sidebar userId={userId} />
-      <div className="flex flex-1 flex-col">
-        <main className="flex-1 p-8">{children}</main>
-        <Footer />
+    <StompProvider>
+      <div className="bg-surface text-on-surface flex min-h-screen">
+        <Sidebar userId={userId} />
+        <div className="flex flex-1 flex-col">
+          <main className="flex-1 p-8">{children}</main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </StompProvider>
   );
 }

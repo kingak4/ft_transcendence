@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
-import StompProvider from './components/StompProvider';
 import { THEME_CLASSES, THEME_STORAGE_KEY } from './lib/theme';
 
 // Runs before paint to apply the stored flavour, avoiding a flash of the default
@@ -51,7 +50,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
-        <StompProvider>{children}</StompProvider>
+        {children}
       </body>
     </html>
   );
