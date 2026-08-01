@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useStompClient, useSubscription } from 'react-stomp-hooks';
 
 const APP_PREFIX = '/transcend';
@@ -8,8 +8,9 @@ export function usePresence(userIdsToWatch: string[] = []) {
   const stompClient = useStompClient();
   const [onlineStatus, setOnlineStatus] = useState<Record<string, boolean>>({});
 
-  const destinations = userIdsToWatch.map(
-    (id) => `${TOPIC_PREFIX}/user/${id}/presence`,
+  const destinations = useMemo(
+    () => userIdsToWatch.map((id) => `${TOPIC_PREFIX}/user/${id}/presence`),
+    [userIdsToWatch] // userIdsToWatch is already memoized in the components calling usePresence
   );
 
   useSubscription(destinations, (message) => {

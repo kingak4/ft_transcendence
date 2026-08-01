@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useChat, useChatSubscription, type ChatEventPayload } from '@/app/hooks/useChat';
+import { useChat, useChatSubscription } from '@/app/hooks/useChat';
 import { usePresence } from '@/app/hooks/usePresence';
 import { client } from '@/app/lib/api-clients';
 import MessageBubble from './MessageBubble';
 import Composer from './Composer';
-import { ChatMessage, Friend } from './types';
+import { ChatMessage, Friend, BackendChatMessage } from './types';
 
 interface Props {
   myUserId: string | null;
@@ -21,6 +21,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const creationPromiseRef = useRef<{ friendId: string; promise: Promise<string> } | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const { sendMessage, deleteMessage } = useChat();
@@ -31,15 +32,13 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
     return friendId ? [friendId] : [];
   }, [friendId]);
 
-  const { onlineStatus, checkPresence, isConnected } = usePresence(monitoredUserIds);
+  const { checkPresence, isConnected } = usePresence(monitoredUserIds);
 
   useEffect(() => {
     if (isConnected && monitoredUserIds.length > 0) {
       monitoredUserIds.forEach((id) => checkPresence(id));
     }
   }, [monitoredUserIds, isConnected, checkPresence]);
-
-  const isCompanionOnline = friend ? onlineStatus[friend.id] : false;
 
   useEffect(() => {
     let active = true;
@@ -85,11 +84,11 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
 
           if (msgsRes.ok && msgsData && active) {
             const historyMessages: ChatMessage[] = msgsData
-              .map((msg: any) => ({
-                messageId: msg.messageId,
-                senderId: msg.senderId,
-                content: msg.content,
-                time: msg.createdAt, // Optional format later
+              .map((msg: BackendChatMessage) => ({
+                messageId: msg.messageId || '',
+                senderId: msg.senderId || '',
+                content: msg.content || '',
+                time: msg.createdAt || '', // Optional format later
               }))
               .reverse();
             setMessages(historyMessages);
@@ -101,7 +100,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
 
     initChat();
     return () => { active = false; };
-  }, [friendId]);
+  }, [friendId, initialChatId, router]);
 
   useChatSubscription(chatId || '', (newMessage) => {
     if (!chatId) return;
@@ -129,6 +128,12 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (chatId) {
+      inputRef.current?.focus();
+    }
+  }, [chatId]);
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
@@ -164,6 +169,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
 
       {/* Composer */}
       <Composer
+        ref={inputRef}
         inputValue={inputValue}
         setInputValue={setInputValue}
         handleSend={handleSend}

@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react';
+import { type InputHTMLAttributes, forwardRef } from 'react';
 
 type TextFieldTone = 'surface' | 'elevated' | 'chat';
 type TextFieldSize = 'sm' | 'md';
@@ -41,19 +41,22 @@ type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   size?: TextFieldSize;
 };
 
-export default function TextField({
+const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField({
   tone = 'surface',
   size = 'md',
   className = '',
   ...inputProps
-}: TextFieldProps) {
+}, ref) {
   // `className` is appended for *layout* only (margins, grid placement).
   // Passing colour or padding utilities here fights the classes above at equal
   // specificity and resolves by stylesheet order, not by this order.
   return (
     <input
+      ref={ref}
       {...inputProps}
       className={`${BASE_CLASSES} ${TONE_CLASSES[tone]} ${SIZE_CLASSES[size]} ${className}`}
     />
   );
-}
+});
+
+export default TextField;

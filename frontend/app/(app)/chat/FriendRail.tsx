@@ -1,12 +1,11 @@
 'use client';
 
-import { useMemo, useEffect, useState, useCallback, useRef } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import TextField from '../../components/TextField';
 import FriendRow from './FriendRow';
 import type { Friend } from './types';
 import { usePresence } from '../../hooks/usePresence';
-import { client } from '../../lib/api-clients';
 
 interface Props {
   activeChats: { chatId: string; friend: Friend }[];
@@ -20,16 +19,24 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
   const searchParams = useSearchParams();
   const currentQuery = searchParams.get('q') || '';
   const [searchInput, setSearchInput] = useState(currentQuery);
+  const [isFocused, setIsFocused] = useState(false);
 
   const activeChatFriends = useMemo(() => activeChats.map((c) => c.friend), [activeChats]);
 
   const searchResults = useMemo(() => {
-    if (!currentQuery) return [];
+    if (!currentQuery) {
+      return isFocused ? allFriends.slice(0, 5) : [];
+    }
     const lowerQuery = currentQuery.toLowerCase();
     return allFriends.filter((f) => f.name.toLowerCase().includes(lowerQuery));
-  }, [allFriends, currentQuery]);
+  }, [allFriends, currentQuery, isFocused]);
 
-  const friendIds = useMemo(() => activeChatFriends.map((f) => f.id), [activeChatFriends]);
+  const friendIds = useMemo(() => {
+    const ids = new Set(activeChatFriends.map((f) => f.id));
+    searchResults.forEach((f) => ids.add(f.id));
+    return Array.from(ids);
+  }, [activeChatFriends, searchResults]);
+
   const { isConnected, onlineStatus, checkPresence } = usePresence(friendIds);
 
   useEffect(() => {
@@ -57,7 +64,14 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
     <aside className="bg-hub-panel border-hub-border flex w-[290px] shrink-0 flex-col border-e">
-      <div className="relative flex flex-col gap-3 p-4">
+      <div 
+        className="relative flex flex-col gap-3 p-4"
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+            setIsFocused(false);
+          }
+        }}
+      >
         <h2 className="text-hub-on-surface text-base font-bold">Chats</h2>
         <TextField
           tone="chat"
@@ -67,10 +81,11 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
           aria-label="Search friends to create a conversation"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          onFocus={() => setIsFocused(true)}
         />
 
         {/* Search Results Dropdown */}
-        {currentQuery && (
+        {(currentQuery || isFocused) && (
           <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
             {searchResults.length > 0 ? (
               <div className="flex flex-col p-2 gap-1">

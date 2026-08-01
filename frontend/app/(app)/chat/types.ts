@@ -6,6 +6,28 @@ export type ChatMessage = {
   isDeleted?: boolean;
 };
 
+export interface BackendFriendResponse {
+  id?: string;
+  details?: {
+    displayName?: string;
+    avatarId?: { val?: string };
+  };
+}
+
+export interface BackendChatMessage {
+  messageId?: string;
+  senderId?: string;
+  content?: string;
+  createdAt?: string;
+}
+
+export interface BackendChatResponse {
+  chatId: string;
+  otherUserId?: string;
+  displayName?: string;
+  avatarId?: string;
+}
+
 export type Friend = {
   id: string;
   name: string;

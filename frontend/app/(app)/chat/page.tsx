@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
 import FriendRail from './FriendRail';
-import type { Friend } from './types';
+import type { Friend, BackendFriendResponse, BackendChatResponse } from './types';
 
 export const metadata = {
   title: 'Chat',
@@ -20,11 +20,11 @@ async function loadFriends(): Promise<Friend[]> {
   // Map the response based on the backend structure.
   // Assuming data is a Page<FriendResult> with content array.
   // FriendResult contains id and details (displayName, avatarId).
-  return (data?.content ?? []).map((friend: any) => ({
+  return (data?.content ?? []).map((friend: BackendFriendResponse) => ({
     id: friend.id ?? '',
     name: friend.details?.displayName ?? 'Unknown User',
     initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
-    color: 'bg-blue-500', // Assign a default or dynamic color
+    color: 'bg-hub-panel', // Assign a default or dynamic color
     avatarId: friend.details?.avatarId?.val ?? null,
     online: false, // We'll handle this in ChatInterface
     status: 'Offline',
@@ -37,17 +37,20 @@ async function loadChats(friends: Friend[]): Promise<{ chatId: string; friend: F
   });
   if (!response.ok || !data) return [];
 
-  return data.map((chat: any) => {
-    let friendId = chat.otherUserId;
+  const chatsArray: unknown[] = ((data as { content?: unknown[] })?.content ?? data) as unknown[];
+
+  return chatsArray.map((chatRaw: unknown) => {
+    const chat = chatRaw as BackendChatResponse;
+    const friendId = chat.otherUserId;
     let friend = friendId ? friends.find((f) => f.id === friendId) : null;
 
     if (!friend) {
-      // Mock friend when otherUserId is missing
       friend = {
-        id: chat.chatId, // Use chatId to avoid duplicate keys
-        name: chat.chatId,
-        initial: chat.chatId.charAt(0).toUpperCase(),
+        id: friendId || chat.chatId,
+        name: chat.displayName || chat.chatId,
+        initial: (chat.displayName || chat.chatId).charAt(0).toUpperCase(),
         color: 'bg-hub-panel',
+        avatarId: chat.avatarId || null,
         online: false,
         status: 'Offline',
       };

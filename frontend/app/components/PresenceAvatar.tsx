@@ -24,9 +24,8 @@ export default function PresenceAvatar({ online, ...avatarProps }: Props) {
     <div className="relative shrink-0">
       <Avatar {...avatarProps} />
       <span
-        className={`${
-          online ? 'bg-hub-online' : 'bg-gray-400'
-        } ring-hub-panel absolute bottom-0 right-0 rounded-full ring-2`}
+        className={`${online ? 'bg-hub-online' : 'bg-gray-400'
+          } ring-hub-panel absolute bottom-0 right-0 rounded-full ring-2`}
         style={{ width: dotSize, height: dotSize }}
       >
         <span className="sr-only">{online ? 'Online' : 'Offline'}</span>
