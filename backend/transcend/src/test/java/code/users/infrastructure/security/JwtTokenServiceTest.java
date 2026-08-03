@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @TestPropertySource(
     properties = {
       "security.jwt.secret=pXbFiUSy8W76pDARDCfcWzpSymurWCST1jYh46oBwrA=",
-      "security.jwt.expirationMs=3600000"
+      "security.jwt.expirationMs=86400000"
     })
 @SpringJUnitConfig(JwtTokenServiceTest.JwtTokenServiceTestConfig.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})

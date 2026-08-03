@@ -56,7 +56,7 @@ springwolf:
 security:
   jwt:
     secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
-    expiration-ms: 3600000
+    expiration-ms: 86400000
 
 bucket4j:
   enabled: true
