@@ -616,3 +616,233 @@ zadziała niezależnie od tego, czy warstwa `@theme inline` istnieje, mieszany
 zapis sprawia, że przy pisaniu tamtego bloku trzeba pamiętać, które tokeny są
 którego rodzaju. Koszt jest realny, tylko odroczony — poniesie go ktoś inny
 za kilka kroków, nie ja teraz.
+
+---
+
+## 11. Krok 3 — połączenie palet
+
+Zgodnie z §7 planu. Zmiana w jednym pliku (`app/globals.css`), wyłącznie
+w bloku `:root` + jeden nowy token-rodzeństwo w `@theme inline`. Zero
+plików `.tsx` dotkniętych — cała korzyść z warstwy pośredniej opisanej
+w pojęciu ② (§3.3).
+
+### 11.0 Domknięcie warunku wejścia (§7.1①)
+
+Krok 3 został rozpoczęty zanim tabela 10.3 (weryfikacja Kroku 2) miała
+realne wyniki — to było niezgodne z kolejnością wymaganą przez plan.
+Domknięte retroaktywnie metodą analityczną (patrz uzasadnienie w 11.3a),
+ponieważ okno na porównanie branchy 3000/3001 w Computed zamknęło się
+w momencie zmiany `:root` w Kroku 3.
+
+### 11.1 Mapa par: token semantyczny → nowa wartość
+
+| Token semantyczny | Wskazywał na | Nowa wartość | Źródło (token `hub-*`) | Para | Commit |
+|---|---|---|---|---|---|
+| `--theme-surface` | `var(--color-brand-main-color)` = `#f0f0f0` | `#f3f6f4` | `--theme-hub-surface` | Tło strony | 1 |
+| `--theme-on-surface` | `var(--color-brand-additional-color-2)` = `#4c603a` | `#0d2b47` | `--theme-hub-on-surface` | Tło strony | 1 |
+| `--theme-elevated-surface` | `var(--color-brand-reversed-main-color)` = `#333333` | `#ffffff` | `--theme-hub-panel` | Panel/karta | 2 |
+| `--theme-on-elevated-surface` | `var(--color-brand-main-color)` = `#f0f0f0` | `#0d2b47` | `--theme-hub-on-surface` | Panel/karta | 2 |
+| `--theme-elevated-border` | `var(--color-brand-reversed-main-color)` = `#333333` | `#eef2ef` | `--theme-hub-border` | Panel/karta | 2 |
+| `--theme-primary` | `var(--color-brand-secondary-color)` = `#8bde5a` | `#a3e635` | `--color-hub-lime` (potwierdzone w eksporcie — aktywna zakładka logowania) | Akcja główna | 3 |
+| `--theme-on-primary` | `var(--color-brand-additional-color-2)` = `#4c603a` | `#0d2b47` | `--color-hub-ink` | Akcja główna | 3 |
+| `--theme-success` | `var(--color-brand-secondary-color)` = `#8bde5a` | `#49b47a` | `--theme-hub-online` — decyzja podjęta bezpośrednio, nie potwierdzona w eksporcie | Stan | 4 |
+| `--theme-danger` | już niezależny, nigdy nie wskazywał na `brand-*` | bez zmian (`#e5484d`) | — | Stan | — (nic do commitowania) |
+
+**Pozycja dodatkowa, poza tabelą 9 tokenów, ale w zakresie Kroku 3 (§7.6):**
+
+| Co | Wskazywało na | Nowa wartość | Uwaga | Commit |
+|---|---|---|---|---|
+| Trzeci stop `bg-gradient-start-page` | `var(--color-brand-reversed-main-color)` = `#333333` | Nowy token `--theme-start-page-gradient-end` = `#0d2b47` | Wartość wybrana bezpośrednio (brak dopasowania w eksporcie), zapisana jako własny token-rodzeństwo (`-start`/`-mid`/`-end`), nie jako bezpośrednie odwołanie do `--color-hub-ink` — poprawione po korekcie względem pierwotnej, błędnej wersji | 5 (osobny, widoczna zmiana — §7.6) |
+
+### 11.2 Tokeny bez odpowiednika w eksporcie designu
+
+| Token | Dlaczego brak odpowiednika | Pytanie do designu |
+|---|---|---|
+| `--theme-success` (wartość ostateczna) | Eksport designu nie zawiera żadnego ekranu z generycznym stanem "sukces" — tylko konkretne użycia zieleni (obecność). Wartość `#49b47a` przyjęta bezpośrednio. | Czy `success` powinien mieć inny odcień niż `hub-online`, skoro pełni inną rolę semantyczną? |
+| `--theme-start-page-gradient-end` | Brak ekranu w eksporcie pokazującego kartę Hero w nowym designie w obecnej formie. | Czy karta Hero przetrwa w obecnym układzie po Kroku 4, czy zostanie zastąpiona (mockup `landing` wygląda inaczej — pełnoekranowy ciemny gradient, nie zielona karta)? |
+
+### 11.3 Kontrast po każdej parze
+
+**Metoda:** obliczone matematycznie wg wzoru WCAG 2.1 na luminancję
+względną (relative luminance), nie odczytane z DevTools — dokładniejsze
+niż odczyt wzrokowy, bo nie zależy od trafienia kursorem we właściwy
+element. Wzór: `L = 0.2126·R + 0.7152·G + 0.0722·B` (kanały zlinearyzowane
+z sRGB), kontrast = `(L_jaśniejszy + 0.05) / (L_ciemniejszy + 0.05)`.
+
+| Para | Tło porównawcze | Współczynnik | Próg WCAG | Wynik |
+|---|---|---|---|---|
+| `surface` / `on-surface` | (własna para) | **13.28:1** | 4.5:1 | ✅ PASS |
+| `elevated-surface` / `on-elevated-surface` | (własna para) | **14.45:1** | 4.5:1 | ✅ PASS |
+| `elevated-border` | vs `elevated-surface` (biały panel) | **1.13:1** | 3:1 | ❌ FAIL |
+| `elevated-border` | vs `surface` (tło strony) | **1.04:1** | 3:1 | ❌ FAIL |
+| `primary` / `on-primary` | (własna para) | **9.58:1** | 4.5:1 | ✅ PASS |
+| `success` (tekst) | vs `surface` | **2.38:1** | 4.5:1 | ❌ FAIL |
+| `success` (tekst) | vs `elevated-surface` | **2.59:1** | 4.5:1 | ❌ FAIL |
+| `danger` (tekst) | vs `surface` | **3.60:1** | 4.5:1 | ❌ FAIL |
+| `danger` (tekst) | vs `elevated-surface` | **3.91:1** | 4.5:1 | ❌ FAIL |
+
+**Cztery znalezione problemy kontrastu — zapisane, nie naprawione (Zasada B):**
+
+1. **`elevated-border`** — wartość odziedziczona bezpośrednio z `hub-border`
+   (`#eef2ef`), która miała identyczny problem już w oryginalnym designie
+   czatu. To nie jest regresja wprowadzona w Kroku 3. Możliwe, że to
+   świadomie subtelna linia rozdzielająca (WCAG 1.4.11 dopuszcza wyjątek
+   dla elementów czysto dekoracyjnych, niewymaganych do rozpoznania
+   granic funkcjonalnych) — ale wymaga potwierdzenia, nie założenia.
+2. **`success`/`danger` jako tekst** — oba poniżej progu 4.5:1 na obu
+   sprawdzonych tłach. Realne odkrycie, potwierdzone tylko na stronie
+   `/stomp` (jedyne miejsce użycia — patrz 11.6). Do rozstrzygnięcia
+   w Kroku 7 (rejestr kontrastu), razem z już znanymi problemami
+   kolorów avatarów.
+
+### 11.3a Weryfikacja `/chat` (kryterium 4, §7.12) — metoda analityczna
+
+Bez dostępu do przeglądarki w tej rozmowie, zamknięte przez **porównanie
+źródłowe zamiast empirycznego test w Computed**: każda wartość wpisana do
+nowych tokenów `hub-*`/`start-page-gradient-*` w Kroku 2 jest bajt-w-bajt
+identyczna z oryginalnym hexem, który zastąpiła (`#0b2b3a`, `#0d3339`,
+`#0d2b3f`, `#7de8b4`, `#56876f` — sprawdzone przez bezpośrednie
+porównanie tekstu w kodzie). Podstawianie zmiennych CSS jest deterministyczne,
+więc wynikowy `background-image` musi być identyczny.
+
+Dla trzech kolorów Sidebara (`white/70`, `white/10`, `white`) zamiana na
+`rgba(255,255,255,0.7)`, `rgba(255,255,255,0.1)`, `#ffffff` jest
+matematycznie tą samą operacją kompozycji koloru — wynikowy piksel musi
+być identyczny niezależnie od różnic w zapisie tekstowym (Tailwind mógł
+renderować to przez `color-mix()`, nasz zapis to `rgba()`, ale efekt
+końcowy na tym samym tle jest tym samym kolorem).
+
+**To jest dowód analityczny, nie zastąpienie szybkiego, wzrokowego
+spot-checku.** Zalecane: jedno kliknięcie na `/chat` w przeglądarce jako
+potwierdzenie, że w kodzie nie ma literówki, której nie widać w
+przeglądzie źródła — ale kryterium 4 uznaję za spełnione na podstawie
+tej analizy.
+
+### 11.4 Prognoza kontra rzeczywistość
+
+| Co przewidywałam | Co się stało | Wniosek |
+|---|---|---|
+| Strona marketingowa będzie wyglądać najgorzej w całej aplikacji — nowa paleta dookoła, stara w `Hero.tsx`/`Tag.tsx` | **Wymaga wzrokowego potwierdzenia przez osobę prowadzącą migrację** — analiza kodu potwierdza, że `Hero.tsx`/`Tag.tsx` nadal wskazują na `--color-brand-*` bezpośrednio (nietknięte), więc prognoza powinna się sprawdzić, ale to jest twierdzenie o wyglądzie, nie o wartościach — wymaga oczu, nie tylko kodu | Zostaje jako zadanie do jednominutowego potwierdzenia, nie do wymyślenia |
+| `/chat` i powłoka Sidebara — zero zmian | Potwierdzone analitycznie w 11.3a | Zgodne z prognozą |
+| 20 plików na tokenach semantycznych — zmiana wyglądu | Wynika logicznie z mechanizmu (§7.0) — te pliki nie mają własnych wartości kolorów, więc muszą podążyć za `:root` | Zgodne z prognozą, mechanicznie pewne |
+
+### 11.5 Znalezione, ale NIE naprawione (Zasada B)
+
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+| `text-white` (pełna biel) na `BrandLink` wewnątrz Sidebara | `app/components/Sidebar.tsx` | Etap C, Krok 4 |
+| `--color-brand-*` nie może zostać usunięty w Kroku 8, dopóki `Hero.tsx`/`Tag.tsx` nie przejdą Kroku 4 | `app/components/Hero.tsx`, `app/components/Tag.tsx` | Etap D, Krok 4 → dopiero wtedy odblokowany Krok 8 |
+| Rozbieżność `--theme-danger` (`#e5484d`) vs gradient przycisku "logout" w eksporcie (`#e35b52`→`#c0453f`) | ogólnoaplikacyjne | Krok 4/6 |
+| `elevated-border` — kontrast 1.04-1.13:1, poniżej 3:1 (odziedziczone z `hub-border`) | `app/globals.css`, wszystkie panele | Krok 7 (rejestr kontrastu) |
+| `success`/`danger` jako tekst — kontrast 2.38-3.91:1, poniżej 4.5:1 | `app/(app)/stomp/page.tsx` (jedyne potwierdzone użycie) | Krok 7 (rejestr kontrastu) |
+
+### 11.6 Sprawdzenie roli success/danger: text- czy bg- (§7.4) — ZAMKNIĘTE
+
+```
+grep -rn --include='*.tsx' -E '(text|bg)-(success|danger)' app
+→ app/(app)/stomp/page.tsx:33  text-success
+→ app/(app)/stomp/page.tsx:35  text-danger
+→ app/(app)/stomp/page.tsx:107 text-success
+→ app/(app)/stomp/page.tsx:109 text-danger
+```
+
+**Wynik: wyłącznie `text-`, zero `bg-`.** Oba tokeny są używane tylko
+jako kolor tekstu na istniejącym tle — nie potrzebują partnera `on-*`,
+i nie ma tu ryzyka ukrytego zahardkodowanego koloru tła. Jedyne
+potwierdzone miejsce użycia to `/stomp` — strona diagnostyczna,
+zablokowana w Kroku 1 (brak designu, sekcja 9.4) — co obniża pilność
+naprawy kontrastu z 11.3, ale jej nie zamyka.
+
+### 11.7 Sprawdzenie bliźniaczego bloku `.mocha`/`.latte` (§7.3 Krok B) — ZAMKNIĘTE
+
+Blok `.mocha, .latte` nigdy nie odwoływał się do `--color-brand-*` —
+nadpisuje `surface`/`elevated-surface`/`primary`/`success`/`danger`
+wartościami z palety Catppuccin (`--color-ctp-*`), niezależnie od starej
+palety marki. Nie istniał żaden "bliźniak" do przeniesienia razem z
+którąkolwiek parą — blok nie wymagał zmian w tym kroku.
+
+### 11.8 Status ukończenia Kroku 3 wg §7.12
+
+| # | Kryterium | Status |
+|---|---|---|
+| 1 | Żaden `--theme-*` nie wskazuje na `--color-brand-*` (`:root`, `.mocha`/`.latte`, żadna utility) | ✅ |
+| 2 | `grep -n -- '--color-brand-' app/globals.css` zwraca wyłącznie linie 18–23 (+ komentarze) | ✅ potwierdzone |
+| 3 | Każda para przeniesiona w obu blokach, w tym samym commicie | ✅ (`.mocha`/`.latte` nie wymagał zmian — 11.7); **status faktycznych commitów per para wymaga Twojego potwierdzenia w `git log`** |
+| 4 | `/chat` identyczne jak branch odniesienia | ✅ potwierdzone analitycznie (11.3a); zalecany szybki spot-check wzrokowy |
+| 5 | Kontrast każdej pary zmierzony i zapisany | ✅ zmierzony matematycznie (11.3); 4 pozycje poniżej progu — zapisane, nie naprawione, zgodnie z Zasadą B |
+| 6 | Sekcja 11 istnieje i jest wypełniona, wraz z 11.2 i 11.5 | ✅ |
+
+**Krok 3 jest zamknięty co do kodu i dokumentacji.** Jedyna rzecz, której
+nie mogę potwierdzić za Ciebie: czy w Twoim lokalnym repo zmiany
+faktycznie trafiły do 5 osobnych commitów (jak w kolumnie "Commit" w 11.1)
+zamiast jednego zbiorczego. Jeśli commitowałaś inaczej — nie blokuje to
+przejścia do Kroku 4, ale warto to wiedzieć na przyszłość (git bisect
+przy regresji kontrastu z 11.3 będzie mniej precyzyjny).
+
+---
+
+## Odpowiedzi na pytania kontrolne Kroku 3
+
+**1. Krok 3 zmienia wygląd siedmiu tras i nie otwiera ani jednego pliku
+`.tsx`. Jak to możliwe — i który dokładnie mechanizm z §3.3 za to
+odpowiada?**
+
+Mechanizm ② — dwuwarstwowa nazwa tokenu. Komponenty odwołują się wyłącznie
+do nazw klas (`bg-elevated-surface`), które Tailwind generuje raz, podczas
+builda, z wpisów `--color-*` w `@theme inline`. Te z kolei w trybie
+`inline` nie zamrażają wartości, tylko odwołują się w runtime do
+`--theme-*` w `:root`. Komponent nigdy nie zna konkretnego koloru —
+zna tylko nazwę roli. Zmiana tego, na co ta nazwa wskazuje w `:root`,
+zmienia wygląd wszędzie tam, gdzie nazwa jest używana, bez dotykania
+pliku, w którym nazwa się pojawia.
+
+**2. Dlaczego `--theme-elevated-surface: var(--color-hub-panel)` jest
+zapisem gorszym niż wpisanie wartości wprost, mimo że wygląda na mniej
+powtarzalny?**
+
+Bo `--color-hub-panel` to nazwa zaplanowana do usunięcia w Kroku 8.
+Taki zapis budowałby łańcuch tylko po to, żeby go za pięć kroków
+rozplątywać — ta sama praca wykonana dwukrotnie. Dodatkowo odwraca
+ustaloną w pliku konwencję kierunku strzałki (`--color-X: var(--theme-X)`,
+nigdy odwrotnie) i wiąże token, który zostaje na stałe, z tokenem, który
+zniknie — czyli dokładnie ten błąd, który Krok 3 miał naprawić.
+
+**3. Przenosisz parę `surface` / `on-surface` tylko w `:root`. Wszystko
+wygląda dobrze. Co odkryje pierwsza osoba, która kliknie przełącznik
+motywu — i dlaczego Ty tego nie zobaczyłaś?**
+
+W ogólnym przypadku: osoba klikająca przełącznik zobaczyłaby powrót do
+starego wyglądu w trybie `.mocha`/`.latte`, bo ten blok ma własną,
+niezaktualizowaną kopię tych samych tokenów — a domyślny widok (`:root`
+bez klasy motywu) wyglądałby poprawnie, więc błąd jest niewidoczny,
+dopóki ktoś nie przełączy motywu. **W tym konkretnym repozytorium ten
+scenariusz nie wystąpił** — sprawdzone w 11.7: blok `.mocha`/`.latte`
+nigdy nie wskazywał na `--color-brand-*`, tylko niezależnie na paletę
+Catppuccin (`--color-ctp-*`), więc nie miał tu czego "zapomnieć"
+zaktualizować. Gdyby jednak posiadał własną kopię wartości opartą na
+starej palecie (tak jak sugeruje ogólny opis w §7.3 Krok B) — właśnie to
+przeoczenie ujawniłby dopiero klik w przełącznik, nie przegląd samego
+`:root`.
+
+**4. Po Kroku 3 strona marketingowa wygląda gorzej niż przed nim. Czy to
+jest błąd? Uzasadnij przez trzy grupy z §7.8.**
+
+Nie, to nie błąd. Strona marketingowa miesza ze sobą treść z dwóch różnych
+grup jednocześnie: layout i komponenty współdzielone (Grupa 1, na tokenach
+semantycznych) zmieniają wygląd zgodnie z celem kroku, natomiast `Hero.tsx`
+i `Tag.tsx` (Grupa 3, bezpośrednio na `--color-brand-*`) pozostają
+nietknięte, bo Krok 3 świadomie ich nie dotyka. Efekt: nowa paleta dookoła
+starej wyspy. To zaplanowany stan pośredni, naprawiany dopiero w Kroku 4,
+Etapie D.
+
+**5. Dlaczego weryfikacja przez porównanie wartości wyliczonych, która
+była głównym narzędziem w Kroku 2, działa tu tylko na `/chat`?**
+
+Bo zmienił się kontrakt kroku. W Kroku 2 kontraktem było "zero zmian
+wszędzie", więc porównanie branchy miało sens w całej aplikacji — każda
+różnica była błędem. W Kroku 3 kontrakt brzmi "zmiana wszędzie poza
+`hub-*`", więc porównanie branchy pozostaje rozstrzygające wyłącznie dla
+tej jednej podgrupy (`/chat` i powłoka Sidebara), która ma się nie zmienić.
+Dla reszty aplikacji obie wersje **mają** się różnić — więc porównanie
+niczego już nie dowodzi, bo różnica przestaje być jednoznacznym sygnałem
+błędu.
