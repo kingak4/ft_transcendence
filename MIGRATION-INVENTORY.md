@@ -846,3 +846,53 @@ tej jednej podgrupy (`/chat` i powłoka Sidebara), która ma się nie zmienić.
 Dla reszty aplikacji obie wersje **mają** się różnić — więc porównanie
 niczego już nie dowodzi, bo różnica przestaje być jednoznacznym sygnałem
 błędu.
+
+---
+
+## 12. Krok 4 — redesign trasa po trasie (praca dwuosobowa)
+
+Zgodnie z Częścią 8 planu. Pozostałe podsekcje (12.0, 12.1, 12.3–12.7)
+wypełniane w trakcie pracy; 12.2 jest wypełniona z góry, bo cztery decyzje
+zapadły przed rozpoczęciem kroku.
+
+### 12.2 Rozstrzygnięcie czterech pytań wejściowych (§8.1)
+
+Decyzje podjęte **2026-08-03** przez osobę prowadzącą migrację (Zyta).
+To jest tabela referencyjna dla Kroków 5–8: każda z tych decyzji tłumaczy
+stan aplikacji, który bez niej wygląda na przypadkowy.
+
+| # | Pytanie (źródło) | Decyzja | Konsekwencja dla zakresu | Co unieważnia |
+|---|---|---|---|---|
+| ① | Breakpointy (9.5 pkt 6) | **Tylko desktop.** Węższe ekrany poza zakresem migracji | Zero pracy responsywnej. Słownik layoutu (12.0) ma jeden zestaw wartości, nie macierz. W kodzie nie przybywa ani jeden prefiks `sm:`/`md:`/`lg:`; istniejące zostają nietknięte. Wymaga ustalenia **jednej szerokości okna do oceny** — pierwszy wiersz 12.0 | Zastępuje "założenie robocze, nierozstrzygnięte" z 9.5 pkt 6 |
+| ② | Struktura logowania (9.5 pkt 2) | **Uproszczone tło.** Karta logowania dostaje własne tło; ekran `landing` nie jest odtwarzany za nią | `(marketing)/` i `(auth)/*` przestają być jednym zadaniem — w eksporcie były jednym obrazem (karta nałożona na landing). `login` i `register` nadal jedno zadanie (dwie zakładki jednej karty). Otwarte: **czym konkretnie jest "uproszczone tło"** → 12.4. Nie używać `bg-gradient-start-page` z automatu (§7.6 — ta sama wartość to nie ta sama rola) | Domyka P6 = "CZĘŚCIOWO" z 9.1 dla obu tras auth |
+| ③ | Panel znajomych (9.5 pkt 3) | **Wydzielamy.** Znajomi stają się osobną trasą, zgodnie z eksportem (`isSearch`) | Jedyna jednostka Kroku 4, która **nie jest stylowaniem** — zmienia strukturę nawigacji. Wykonywana jako osobny refaktor (jednostka 2a, §8.6) przed redesignem, rozliczana w 12.7. Dotyka `Sidebar.tsx` i `app/(app)/layout.tsx`. Otwarte: nazwa trasy, dokładny zakres przeniesienia, czy profil zachowuje skrót → 12.2/12.4 | **Unieważnia wiersz `(app)/[userId]` w 9.1** (lista komponentów i fan-in) oraz odpowiadające pozycje w 9.2 |
+| ④ | `/stomp` (9.4) | **Poza zakresem migracji wizualnej.** Strona deweloperska, do usunięcia przed oceną końcową | Nie stylowana i **nie usuwana w Kroku 4** (usunięcie to sprzątanie, nie krok designowy) → 12.5. Liczba tras w aplikacji bez zmian: `/stomp` wypada, trasa znajomych dochodzi | Zamyka otwarte pytanie z 9.4 |
+
+**Konsekwencja pochodna decyzji ④, istotna dla Kroku 7.** Zgodnie z 11.6
+`/stomp` to **jedyne potwierdzone miejsce użycia** `text-success`
+i `text-danger` w całej aplikacji. Jeśli strona znika przed oceną końcową,
+oba tokeny zostają bez ani jednego użytkownika — a wtedy dwie z czterech
+pozycji kontrastu zapisanych w 11.3 (`success` i `danger` jako tekst,
+2.38–3.91:1) przestają dotyczyć czegokolwiek renderowanego.
+
+**Reguła do Kroku 7: najpierw sprawdź, czy token ma jeszcze użytkownika,
+potem mierz jego kontrast.** Pozycje `elevated-border` z 11.3 ta uwaga
+nie dotyczy — ten token jest używany przez wszystkie panele i pozostaje
+realnym problemem.
+
+### 12.5 Znalezione, ale NIE naprawione (Zasada B) — pozycje założone z góry
+
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+| Rozbieżność `--theme-danger` (`#e5484d`) vs gradient przycisku "logout" w eksporcie | ogólnoaplikacyjne | Krok 4/6 (odziedziczone z 11.5) |
+| `elevated-border` — kontrast 1.04–1.13:1 | `app/globals.css`, wszystkie panele | Krok 7 (odziedziczone z 11.5) |
+| `success`/`danger` jako tekst — kontrast 2.38–3.91:1 | `app/(app)/stomp/page.tsx` | Krok 7, **z zastrzeżeniem powyżej** (decyzja ④) |
+| `/stomp` do usunięcia przed oceną końcową | `app/(app)/stomp/` | Poza planem migracji — sprzątanie (decyzja ④) |
+
+### Materiał odniesienia
+
+Screenshoty stanu sprzed migracji: **`/root/design/frontend/before_migration`**.
+Rola w Kroku 4 (§8.10): odpowiadają na pytanie "czy nic nie zniknęło",
+którego eksport designu nie potrafi rozstrzygnąć — eksport pokazuje
+intencję, screenshot pokazuje inwentarz tego, co strona faktycznie
+zawierała. Zastępują branch odniesienia, porzucony po Kroku 3 (§7.12).
