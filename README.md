@@ -61,7 +61,7 @@ Lead the project through the full development lifecycle while contributing as a 
   * [Progress Tracker](docs/README-progress-tracker)
 
 * **Chat Module:** Implemented the Real-Time Chat Module feature.
-* **UI/UX Implementation Support:** Created high-fidelity mockups for the entire application and participated in the process of translating the designed interfaces into the frontend implementation. Collaborated with the frontend team to ensure consistency between the proposed design, user flows, and the final application interface.
+* **UI/UX Implementation Support:** Created high-fidelity mockups for the entire application and participated in the process of translating the designed interfaces into the frontend implementation. Collaborated with the frontend team to ensure consistency between the proposed design, user flows, and the final application interface. Related documentation: [Frontend Design Integration](docs/Frontend-Design-Integration).
 * **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
 * **Legal & Compliance:** Created and integrated the Privacy Policy and Terms of Service pages, drafted the required legal documentation, and integrated the Open-Source License into the repository.
 
