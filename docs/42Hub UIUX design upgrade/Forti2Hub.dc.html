@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap');
+    body { margin: 0; }
+    ::placeholder { color: #9aa5a0; }
+    a { color: #2f9bcf; }
+    a:hover { color: #146b7a; }
+    @keyframes float1 { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-16px) rotate(6deg); } }
+    @keyframes float2 { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(14px); } }
+    @keyframes gradientShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  </style>
+</helmet>
+
+<div dir="{{ dir }}" style="{{ rootStyle }}">
+
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;background:linear-gradient(120deg,#0a3348 0%,#146b7a 32%,#1f8f7a 62%,#2f9bcf 100%);background-size:200% 200%;animation:gradientShift 16s ease-in-out infinite;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 10%,rgba(255,255,255,0.10),transparent 40%),radial-gradient(circle at 10% 90%,rgba(0,0,0,0.15),transparent 40%);pointer-events:none"></div>
+
+      <div style="position:absolute;top:120px;left:8%;width:120px;height:120px;border-radius:36px;background:linear-gradient(135deg,rgba(163,230,53,0.25),rgba(47,155,207,0.05));filter:blur(2px);animation:float1 7s ease-in-out infinite;pointer-events:none"></div>
+      <div style="position:absolute;top:60%;left:4%;width:70px;height:70px;border-radius:22px;background:rgba(255,255,255,0.08);animation:float2 8s ease-in-out infinite;pointer-events:none"></div>
+      <div style="position:absolute;top:16%;right:9%;width:64px;height:48px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,0.10);animation:float2 6s ease-in-out infinite;pointer-events:none"></div>
+      <div style="position:absolute;bottom:14%;right:7%;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(163,230,53,0.18),transparent 70%);animation:float1 9s ease-in-out infinite;pointer-events:none"></div>
+
+      <div style="position:relative;padding:20px 40px;display:flex;justify-content:flex-end">
+        <div style="display:flex;gap:6px;background:rgba(255,255,255,0.1);padding:5px;border-radius:12px;backdrop-filter:blur(6px)">
+          <sc-for list="{{ langOptions }}" as="lg" hint-placeholder-count="3">
+            <button onClick="{{ lg.onSelect }}" style="{{ lg.style }}">{{ lg.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;padding:24px 24px 40px;gap:48px">
+        <div style="text-align:center;max-width:720px;display:flex;flex-direction:column;align-items:center;gap:14px">
+          <div style="width:88px;height:88px;border-radius:26px;background:linear-gradient(135deg,#1a7a8a,#2f9bcf 55%,#4ac9a0);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(0,0,0,0.3)">
+            <svg width="50" height="50" viewBox="0 0 48 48" fill="none">
+              <defs>
+                <linearGradient id="logoGradLanding" x1="8" y1="2" x2="34" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#ffffff"/>
+                  <stop offset="1" stop-color="#dff7ee"/>
+                </linearGradient>
+              </defs>
+              <path d="M24 3c5.4 3.8 9.2 10.8 9.2 18.2 0 3.8-1.1 7-2.7 9.6l-2.2-1.1v-5.3l-4.3-2.7-4.3 2.7v5.3l-2.2 1.1c-1.6-2.6-2.7-5.8-2.7-9.6C14.8 13.8 18.6 6.8 24 3z" fill="url(#logoGradLanding)" stroke="#146b7a" stroke-width="0.6"/>
+              <circle cx="24" cy="19.5" r="3.6" fill="#146b7a"/>
+              <circle cx="24" cy="19.5" r="1.6" fill="#dff7ee"/>
+              <path d="M14.8 30.5 9 33.5l1.7-6.2z" fill="#4ac9a0"/>
+              <path d="M33.2 30.5 39 33.5l-1.7-6.2z" fill="#4ac9a0"/>
+              <path d="M19.8 35.5h8.4l-4.2 9.5z" fill="#4ac9a0"/>
+              <g fill="#ffffff" stroke="#146b7a" stroke-width="0.35">
+                <path d="M24 5.5l.9 2.7h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.4 1.7.9-2.7-2.3-1.7h2.9z"/>
+                <path d="M10 13.5l.7 2h2.1l-1.7 1.2.6 2-1.7-1.2-1.7 1.2.6-2-1.7-1.2h2.1z"/>
+                <path d="M38 13.5l.7 2h2.1l-1.7 1.2.6 2-1.7-1.2-1.7 1.2.6-2-1.7-1.2h2.1z"/>
+                <path d="M12.5 24.5l.6 1.7h1.8l-1.5 1 .6 1.8-1.5-1-1.5 1 .6-1.8-1.5-1h1.8z"/>
+                <path d="M35.5 24.5l.6 1.7h1.8l-1.5 1 .6 1.8-1.5-1-1.5 1 .6-1.8-1.5-1h1.8z"/>
+              </g>
+            </svg>
+          </div>
+          <div style="font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.4px">42Hub</div>
+          <h1 style="font-size:48px;line-height:1.1;font-weight:800;color:#ffffff;margin:8px 0 0;letter-spacing:-1px;max-width:600px">{{ t.headline }}</h1>
+          <p style="font-size:18px;color:rgba(255,255,255,0.82);margin:0;max-width:520px;font-weight:500">{{ t.subtitle }}</p>
+        </div>
+
+        <div ref="{{ authRef }}" style="width:100%;max-width:440px;background:linear-gradient(160deg,rgba(20,40,45,0.55),rgba(15,26,38,0.6));backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.14);border-radius:24px;padding:36px;box-shadow:0 25px 60px rgba(0,0,0,0.35);position:relative">
+
+          <div style="display:flex;gap:8px;background:rgba(255,255,255,0.08);padding:6px;border-radius:14px;margin-bottom:28px">
+            <button onClick="{{ setTabLogin }}" style="{{ tabLoginStyle }}">{{ t.login }}</button>
+            <button onClick="{{ setTabRegister }}" style="{{ tabRegisterStyle }}">{{ t.createAccount }}</button>
+          </div>
+
+          <sc-if value="{{ isLoginTab }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <h2 style="margin:0 0 4px;color:#fff;font-size:22px;font-weight:800">{{ t.welcomeBack }}</h2>
+              <input type="email" placeholder="{{ t.email }}" style="{{ inputStyle }}" />
+              <input type="password" placeholder="{{ t.password }}" style="{{ inputStyle }}" />
+              <div style="display:flex;justify-content:flex-end">
+                <a href="#" style="font-size:13px;color:#a3e635;text-decoration:none;font-weight:600">{{ t.forgotPassword }}</a>
+              </div>
+              <button onClick="{{ goToDashboard }}" style="{{ primaryBtnStyle }}">{{ t.login }}</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isRegisterTab }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <h2 style="margin:0 0 4px;color:#fff;font-size:22px;font-weight:800">{{ t.createYourAccount }}</h2>
+              <input type="email" placeholder="{{ t.email }}" style="{{ inputStyle }}" />
+              <input type="text" placeholder="{{ t.username }}" style="{{ inputStyle }}" />
+              <input type="password" placeholder="{{ t.password }}" style="{{ inputStyle }}" />
+              <button onClick="{{ goToDashboard }}" style="{{ primaryBtnStyle }}">{{ t.createAccount }}</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="position:relative;padding:16px 56px;text-align:center;border-top:1px solid rgba(255,255,255,0.12);display:flex;justify-content:center;gap:20px">
+        <a href="#" onClick="{{ goToPrivacy }}" style="font-size:12px;color:rgba(255,255,255,0.5);text-decoration:none;font-weight:600;cursor:pointer">{{ t.privacyPolicy }}</a>
+        <a href="#" onClick="{{ goToTerms }}" style="font-size:12px;color:rgba(255,255,255,0.5);text-decoration:none;font-weight:600;cursor:pointer">{{ t.termsOfService }}</a>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isTermsPage }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;background:#f3f6f4">
+      <div style="padding:24px 56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e3ebe6;background:#ffffff">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#1a7a8a,#2f9bcf 55%,#4ac9a0);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="19" height="19" viewBox="0 0 48 48" fill="none">
+              <path d="M24 3c5.4 3.8 9.2 10.8 9.2 18.2 0 3.8-1.1 7-2.7 9.6l-2.2-1.1v-5.3l-4.3-2.7-4.3 2.7v5.3l-2.2 1.1c-1.6-2.6-2.7-5.8-2.7-9.6C14.8 13.8 18.6 6.8 24 3z" fill="#ffffff"/>
+              <circle cx="24" cy="19.5" r="3.2" fill="#146b7a"/>
+              <path d="M14.8 30.5 9 33.5l1.7-6.2z" fill="#ffffff" opacity="0.85"/>
+              <path d="M33.2 30.5 39 33.5l-1.7-6.2z" fill="#ffffff" opacity="0.85"/>
+              <path d="M19.8 35.5h8.4l-4.2 9.5z" fill="#ffffff" opacity="0.85"/>
+            </svg>
+          </div>
+          <span style="font-size:19px;font-weight:800;color:#0d2b47;letter-spacing:-0.3px">42Hub</span>
+        </div>
+        <button onClick="{{ goBackFromTerms }}" style="padding:10px 20px;border-radius:12px;border:1px solid #d6e4ee;background:#ffffff;color:#155e8f;font-weight:700;font-size:13.5px;cursor:pointer" style-hover="background:#f0f7fb">{{ t.back }}</button>
+      </div>
+
+      <div style="flex:1;overflow:auto;display:flex;justify-content:center;padding:48px 24px">
+        <div style="width:100%;max-width:720px;background:#ffffff;border-radius:24px;padding:48px 56px;box-shadow:0 8px 28px rgba(10,42,77,0.08);display:flex;flex-direction:column;gap:6px">
+          <h1 style="margin:0;font-size:32px;font-weight:800;color:#0d2b47;letter-spacing:-0.5px">{{ t.termsOfService }}</h1>
+          <p style="margin:0 0 20px;font-size:13.5px;color:#8b968f;font-weight:600">{{ t.lastUpdated }}</p>
+
+          <sc-for list="{{ termsSections }}" as="section" hint-placeholder-count="9">
+            <div style="padding:22px 0;border-top:1px solid #eef2ef;display:flex;flex-direction:column;gap:10px">
+              <h2 style="margin:0;font-size:18px;font-weight:800;color:#155e8f">{{ section.title }}</h2>
+              <sc-for list="{{ section.paras }}" as="para" hint-placeholder-count="2">
+                <p style="margin:0;font-size:15px;line-height:1.65;color:#3d4a44;font-weight:500">{{ para }}</p>
+              </sc-for>
+              <sc-if value="{{ section.hasList }}" hint-placeholder-val="{{ false }}">
+                <ul style="margin:4px 0 0;padding-inline-start:20px;display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ section.list }}" as="item" hint-placeholder-count="4">
+                    <li style="font-size:15px;line-height:1.6;color:#3d4a44;font-weight:500">{{ item }}</li>
+                  </sc-for>
+                </ul>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:16px 56px;text-align:center;border-top:1px solid #e3ebe6;background:#ffffff;display:flex;justify-content:center;gap:20px">
+        <a href="#" onClick="{{ goToPrivacy }}" style="font-size:12px;color:#9aa5a0;text-decoration:none;font-weight:600;cursor:pointer">{{ t.privacyPolicy }}</a>
+        <a href="#" style="font-size:12px;color:#9aa5a0;text-decoration:none;font-weight:600">{{ t.termsOfService }}</a>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isPrivacyPage }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;background:#f3f6f4">
+      <div style="padding:24px 56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e3ebe6;background:#ffffff">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#1a7a8a,#2f9bcf 55%,#4ac9a0);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="19" height="19" viewBox="0 0 48 48" fill="none">
+              <path d="M24 3c5.4 3.8 9.2 10.8 9.2 18.2 0 3.8-1.1 7-2.7 9.6l-2.2-1.1v-5.3l-4.3-2.7-4.3 2.7v5.3l-2.2 1.1c-1.6-2.6-2.7-5.8-2.7-9.6C14.8 13.8 18.6 6.8 24 3z" fill="#ffffff"/>
+              <circle cx="24" cy="19.5" r="3.2" fill="#146b7a"/>
+              <path d="M14.8 30.5 9 33.5l1.7-6.2z" fill="#ffffff" opacity="0.85"/>
+              <path d="M33.2 30.5 39 33.5l-1.7-6.2z" fill="#ffffff" opacity="0.85"/>
+              <path d="M19.8 35.5h8.4l-4.2 9.5z" fill="#ffffff" opacity="0.85"/>
+            </svg>
+          </div>
+          <span style="font-size:19px;font-weight:800;color:#0d2b47;letter-spacing:-0.3px">42Hub</span>
+        </div>
+        <button onClick="{{ goBackFromPrivacy }}" style="padding:10px 20px;border-radius:12px;border:1px solid #d6e4ee;background:#ffffff;color:#155e8f;font-weight:700;font-size:13.5px;cursor:pointer" style-hover="background:#f0f7fb">{{ t.back }}</button>
+      </div>
+
+      <div style="flex:1;overflow:auto;display:flex;justify-content:center;padding:48px 24px">
+        <div style="width:100%;max-width:720px;background:#ffffff;border-radius:24px;padding:48px 56px;box-shadow:0 8px 28px rgba(10,42,77,0.08);display:flex;flex-direction:column;gap:6px">
+          <h1 style="margin:0;font-size:32px;font-weight:800;color:#0d2b47;letter-spacing:-0.5px">{{ t.privacyPolicy }}</h1>
+          <p style="margin:0 0 20px;font-size:13.5px;color:#8b968f;font-weight:600">{{ t.lastUpdated }}</p>
+
+          <sc-for list="{{ privacySections }}" as="section" hint-placeholder-count="8">
+            <div style="padding:22px 0;border-top:1px solid #eef2ef;display:flex;flex-direction:column;gap:10px">
+              <h2 style="margin:0;font-size:18px;font-weight:800;color:#155e8f">{{ section.title }}</h2>
+              <sc-for list="{{ section.paras }}" as="para" hint-placeholder-count="2">
+                <p style="margin:0;font-size:15px;line-height:1.65;color:#3d4a44;font-weight:500">{{ para }}</p>
+              </sc-for>
+              <sc-if value="{{ section.hasList }}" hint-placeholder-val="{{ false }}">
+                <ul style="margin:4px 0 0;padding-inline-start:20px;display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ section.list }}" as="item" hint-placeholder-count="4">
+                    <li style="font-size:15px;line-height:1.6;color:#3d4a44;font-weight:500">{{ item }}</li>
+                  </sc-for>
+                </ul>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:16px 56px;text-align:center;border-top:1px solid #e3ebe6;background:#ffffff;display:flex;justify-content:center;gap:20px">
+        <a href="#" style="font-size:12px;color:#9aa5a0;text-decoration:none;font-weight:600">{{ t.privacyPolicy }}</a>
+        <a href="#" onClick="{{ goToTerms }}" style="font-size:12px;color:#9aa5a0;text-decoration:none;font-weight:600;cursor:pointer">{{ t.termsOfService }}</a>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;min-height:100vh">
+
+      <div style="width:250px;flex-shrink:0;background:linear-gradient(165deg,#0b2b3a,#0d3339 55%,#0d2b3f);display:flex;flex-direction:column;padding:28px 20px;gap:6px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px">
+          <div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#1a7a8a,#2f9bcf 55%,#4ac9a0);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="21" height="21" viewBox="0 0 48 48" fill="none">
+              <path d="M24 3c5.4 3.8 9.2 10.8 9.2 18.2 0 3.8-1.1 7-2.7 9.6l-2.2-1.1v-5.3l-4.3-2.7-4.3 2.7v5.3l-2.2 1.1c-1.6-2.6-2.7-5.8-2.7-9.6C14.8 13.8 18.6 6.8 24 3z" fill="#ffffff"/>
+              <circle cx="24" cy="19.5" r="3.2" fill="#146b7a"/>
+              <path d="M14.8 30.5 9 33.5l1.7-6.2z" fill="#ffffff" opacity="0.85"/>
+              <path d="M33.2 30.5 39 33.5l-1.7-6.2z" fill="#ffffff" opacity="0.85"/>
+              <path d="M19.8 35.5h8.4l-4.2 9.5z" fill="#ffffff" opacity="0.85"/>
+            </svg>
+          </div>
+          <span style="color:#fff;font-size:19px;font-weight:800;letter-spacing:-0.3px">42Hub</span>
+        </div>
+
+        <div style="display:flex;gap:6px;background:rgba(255,255,255,0.06);padding:5px;border-radius:12px;margin-bottom:14px">
+          <sc-for list="{{ langOptions }}" as="lg" hint-placeholder-count="3">
+            <button onClick="{{ lg.onSelect }}" style="{{ lg.style }}">{{ lg.label }}</button>
+          </sc-for>
+        </div>
+
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="3">
+          <button onClick="{{ item.onClick }}" style="{{ item.style }}">{{ item.label }}</button>
+        </sc-for>
+
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0.5;padding:24px 0">
+          <svg width="60" height="46" viewBox="0 0 60 46" fill="none">
+            <rect x="4" y="4" width="30" height="20" rx="9" fill="#2f9bcf" opacity="0.3"/>
+            <path d="M14 24 L10 32 L20 24 Z" fill="#2f9bcf" opacity="0.3"/>
+            <rect x="26" y="18" width="24" height="16" rx="8" fill="#4ac9a0" opacity="0.3"/>
+            <path d="M38 34 L42 41 L46 34 Z" fill="#4ac9a0" opacity="0.3"/>
+          </svg>
+          <div style="display:flex;gap:6px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#2f9bcf"></div>
+            <div style="width:6px;height:6px;border-radius:50%;background:#4ac9a0"></div>
+            <div style="width:6px;height:6px;border-radius:50%;background:#2f9bcf"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:8px 10px">
+          <a href="#" onClick="{{ goToPrivacy }}" style="font-size:11.5px;color:rgba(255,255,255,0.4);text-decoration:none;font-weight:600;cursor:pointer">{{ t.privacyPolicy }}</a>
+          <a href="#" onClick="{{ goToTerms }}" style="font-size:11.5px;color:rgba(255,255,255,0.4);text-decoration:none;font-weight:600;cursor:pointer">{{ t.termsOfService }}</a>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+        <div style="flex:1;overflow:auto">
+
+          <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:48px 56px;display:flex;flex-direction:column;gap:8px;position:relative">
+              <div style="position:absolute;top:-10px;{{ decorSide }}:24px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(47,155,207,0.10),transparent 70%);pointer-events:none"></div>
+              <h1 style="margin:0;font-size:34px;font-weight:800;color:#0d2b47;letter-spacing:-0.5px">{{ t.welcomeBack }}</h1>
+              <p style="margin:0 0 28px;font-size:17px;color:#5b6b73;font-weight:500">{{ t.howAreYouFeeling }}</p>
+
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;max-width:980px">
+                <sc-for list="{{ dashboardCards }}" as="card" hint-placeholder-count="4">
+                  <button onClick="{{ card.onClick }}" style="text-align:{{ startAlign }};cursor:pointer;border:none;background:#ffffff;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:14px;box-shadow:0 8px 24px rgba(10,42,77,0.08);transition:transform .15s" style-hover="transform:translateY(-3px)">
+                    <sc-if value="{{ card.isGithub }}" hint-placeholder-val="{{ false }}">
+                      <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:{{ card.bg }}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#0d2b47"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.87-1.36-3.87-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 012.9-.39c.98 0 1.97.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.43-2.69 5.41-5.25 5.7.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.21.66.79.55A10.51 10.51 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ card.isNotGithub }}" hint-placeholder-val="{{ true }}">
+                      <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:{{ card.bg }}">{{ card.icon }}</div>
+                    </sc-if>
+                    <div style="font-size:17px;font-weight:700;color:#0d2b47">{{ card.title }}</div>
+                    <div style="font-size:13.5px;color:#7c8a92;font-weight:500">{{ card.desc }}</div>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:48px 56px;display:flex;flex-direction:column;gap:28px;max-width:720px">
+              <h1 style="margin:0;font-size:30px;font-weight:800;color:#0d2b47">{{ t.myProfile }}</h1>
+
+              <div style="background:linear-gradient(135deg,#146b7a,#2f9bcf 55%,#4ac9a0);border-radius:24px;padding:36px;display:flex;align-items:center;gap:28px;box-shadow:0 12px 32px rgba(10,42,77,0.18)">
+                <div style="width:96px;height:96px;border-radius:50%;background:#0d2b47;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:#a3e635;border:3px solid rgba(255,255,255,0.5);flex-shrink:0">Z</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="font-size:26px;font-weight:800;color:#fff">Zyta</div>
+                  <button style="align-self:flex-start;padding:10px 20px;border-radius:12px;border:1px solid rgba(255,255,255,0.6);background:rgba(255,255,255,0.15);color:#fff;font-weight:700;font-size:13.5px;cursor:pointer">{{ t.changeAvatar }}</button>
+                </div>
+              </div>
+
+              <div style="background:#ffffff;border-radius:20px;padding:8px;box-shadow:0 8px 24px rgba(10,42,77,0.08);display:flex;flex-direction:column">
+                <sc-for list="{{ profileInfo }}" as="row" hint-placeholder-count="3">
+                  <div style="display:flex;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #eef2ef">
+                    <span style="color:#7c8a92;font-weight:600;font-size:14.5px">{{ row.label }}</span>
+                    <span style="color:#0d2b47;font-weight:700;font-size:14.5px">{{ row.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;justify-content:flex-end">
+                <button style="padding:13px 30px;border-radius:14px;border:none;background:linear-gradient(135deg,#e35b52,#c0453f);color:#ffffff;font-weight:700;font-size:14.5px;cursor:pointer;box-shadow:0 8px 20px rgba(192,69,63,0.28)" style-hover="box-shadow:0 10px 24px rgba(192,69,63,0.36)">{{ t.logout }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:48px 56px;display:flex;flex-direction:column;gap:24px;max-width:640px;position:relative">
+              <div style="position:absolute;top:8px;{{ decorSide }}:12px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(163,230,53,0.10),transparent 70%);pointer-events:none"></div>
+              <h1 style="margin:0;font-size:30px;font-weight:800;color:#0d2b47">{{ t.searchUsers }}</h1>
+              <input type="text" placeholder="{{ t.searchByName }}" style="{{ searchInputStyle }}" />
+
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ searchResults }}" as="u" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:16px;background:#ffffff;border-radius:16px;padding:14px 18px;box-shadow:0 6px 18px rgba(10,42,77,0.07)">
+                    <div style="width:44px;height:44px;border-radius:50%;background:{{ u.color }};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px;flex-shrink:0">{{ u.initial }}</div>
+                    <div style="flex:1;font-weight:700;color:#0d2b47;font-size:15px">{{ u.name }}</div>
+                    <button onClick="{{ u.onOpen }}" style="padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#eaf6fb,#e9f9f0);color:#146b7a;font-weight:700;font-size:13.5px;cursor:pointer" style-hover="background:#d2e9f6">{{ t.openChat }}</button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;height:100%">
+              <div style="width:290px;flex-shrink:0;background:#ffffff;{{ chatListBorder }};display:flex;flex-direction:column">
+                <div style="padding:24px 20px 14px">
+                  <h2 style="margin:0 0 14px;font-size:19px;font-weight:800;color:#0d2b47">{{ t.chat }}</h2>
+                  <input type="text" placeholder="{{ t.searchFriends }}" style="{{ smallSearchStyle }}" />
+                </div>
+                <div style="flex:1;overflow:auto;padding:0 12px 12px">
+                  <sc-for list="{{ friends }}" as="f" hint-placeholder-count="3">
+                    <button onClick="{{ f.onSelect }}" style="{{ f.rowStyle }}">
+                      <div style="position:relative;flex-shrink:0">
+                        <div style="width:44px;height:44px;border-radius:50%;background:{{ f.color }};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px">{{ f.initial }}</div>
+                        <sc-if value="{{ f.online }}" hint-placeholder-val="{{ false }}">
+                          <div style="position:absolute;bottom:0;{{ decorSide }}:0;width:11px;height:11px;border-radius:50%;background:#49b47a;border:2px solid #fff"></div>
+                        </sc-if>
+                      </div>
+                      <div style="flex:1;text-align:{{ startAlign }};min-width:0">
+                        <div style="font-weight:700;font-size:14.5px;color:#0d2b47">{{ f.name }}</div>
+                      </div>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="flex:1;display:flex;flex-direction:column;background:#f8faf9;min-width:0">
+                <div style="padding:18px 28px;background:#ffffff;border-bottom:1px solid #eef2ef;display:flex;align-items:center;gap:14px">
+                  <div style="width:42px;height:42px;border-radius:50%;background:{{ activeFriend.color }};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px">{{ activeFriend.initial }}</div>
+                  <div>
+                    <div style="font-weight:700;font-size:15.5px;color:#0d2b47">{{ activeFriend.name }}</div>
+                    <div style="font-size:12.5px;color:#1a8a7a;font-weight:600">{{ activeFriend.statusLabel }}</div>
+                  </div>
+                </div>
+
+                <div style="flex:1;overflow:auto;padding:28px;display:flex;flex-direction:column;gap:14px">
+                  <sc-for list="{{ messages }}" as="m" hint-placeholder-count="5">
+                    <div style="{{ m.wrapStyle }}">
+                      <div style="{{ m.bubbleStyle }}">{{ m.text }}</div>
+                      <div style="{{ m.timeStyle }}">{{ m.time }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="padding:18px 24px;background:#ffffff;border-top:1px solid #eef2ef;display:flex;gap:12px">
+                  <input type="text" placeholder="{{ t.typeMessage }}" style="{{ chatInputStyle }}" />
+                  <button style="padding:0 26px;border-radius:14px;border:none;background:linear-gradient(135deg,#146b7a,#2f9bcf);color:#fff;font-weight:700;font-size:14.5px;cursor:pointer" style-hover="background:#0d2b47">{{ t.send }}</button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DICTS = {
+  en: {
+    headline: "Let's chat with your friends.",
+    subtitle: 'Join 42Hub to stay close to the people you care about — real conversations, made simple.',
+    login: 'Login', createAccount: 'Create Account', welcomeBack: 'Welcome back!',
+    email: 'Email', password: 'Password', username: 'Username', forgotPassword: 'Forgot Password?',
+    createYourAccount: 'Create your account', privacyPolicy: 'Privacy Policy', termsOfService: 'Terms of Service',
+    back: '← Back', lastUpdated: 'Last updated: May 2026', howAreYouFeeling: 'How are you feeling today?',
+    myProfile: 'My Profile', changeAvatar: 'Change Avatar', logout: 'Log out',
+    searchUsers: 'Search Users', searchByName: 'Search user by name', openChat: 'Open Chat',
+    chat: 'Chat', searchFriends: 'Search your friends', typeMessage: 'Type a message...', send: 'Send',
+    home: 'Home', online: 'Online', offline: 'Offline',
+    dashCards: {
+      profile: ['My Profile', 'View and edit your account'],
+      chat: ['Chat with Friends', 'Jump back into a conversation'],
+      search: ['Search Users', 'Find people to connect with'],
+      github: ['Explore our project on GitHub', 'Check out the source code and contribute'],
+    },
+    profileInfo: { email: 'Email', username: 'Username', friends: 'Friends' },
+  },
+  pl: {
+    headline: 'Czatuj ze znajomymi.',
+    subtitle: 'Dołącz do 42Hub, aby być blisko osób, na których Ci zależy — prawdziwe rozmowy w prostej formie.',
+    login: 'Zaloguj się', createAccount: 'Załóż konto', welcomeBack: 'Witaj ponownie!',
+    email: 'Email', password: 'Hasło', username: 'Nazwa użytkownika', forgotPassword: 'Nie pamiętasz hasła?',
+    createYourAccount: 'Załóż konto', privacyPolicy: 'Polityka prywatności', termsOfService: 'Regulamin',
+    back: '← Wstecz', lastUpdated: 'Ostatnia aktualizacja: maj 2026', howAreYouFeeling: 'Jak się dziś czujesz?',
+    myProfile: 'Mój profil', changeAvatar: 'Zmień awatar', logout: 'Wyloguj się',
+    searchUsers: 'Szukaj użytkowników', searchByName: 'Szukaj użytkownika po nazwie', openChat: 'Otwórz czat',
+    chat: 'Czat', searchFriends: 'Szukaj znajomych', typeMessage: 'Napisz wiadomość...', send: 'Wyślij',
+    home: 'Strona główna', online: 'Online', offline: 'Offline',
+    dashCards: {
+      profile: ['Mój profil', 'Zobacz i edytuj swoje konto'],
+      chat: ['Czat ze znajomymi', 'Wróć do rozmowy'],
+      search: ['Szukaj użytkowników', 'Znajdź osoby do kontaktu'],
+      github: ['Zobacz projekt na GitHub', 'Sprawdź kod źródłowy i dołącz do projektu'],
+    },
+    profileInfo: { email: 'Email', username: 'Nazwa użytkownika', friends: 'Znajomi' },
+  },
+  cs: {
+    headline: 'Chatuj se svými přáteli.',
+    subtitle: 'Připoj se k 42Hub a zůstaň v kontaktu s lidmi, na kterých ti záleží — skutečné rozhovory jednoduše.',
+    login: 'Přihlásit se', createAccount: 'Vytvořit účet', welcomeBack: 'Vítej zpět!',
+    email: 'Email', password: 'Heslo', username: 'Uživatelské jméno', forgotPassword: 'Zapomenuté heslo?',
+    createYourAccount: 'Vytvoř si účet', privacyPolicy: 'Zásady ochrany osobních údajů', termsOfService: 'Podmínky služby',
+    back: '← Zpět', lastUpdated: 'Poslední aktualizace: květen 2026', howAreYouFeeling: 'Jak se dnes cítíš?',
+    myProfile: 'Můj profil', changeAvatar: 'Změnit avatar', logout: 'Odhlásit se',
+    searchUsers: 'Hledat uživatele', searchByName: 'Hledat uživatele podle jména', openChat: 'Otevřít chat',
+    chat: 'Chat', searchFriends: 'Hledat přátele', typeMessage: 'Napiš zprávu...', send: 'Odeslat',
+    home: 'Domů', online: 'Online', offline: 'Offline',
+    dashCards: {
+      profile: ['Můj profil', 'Zobrazit a upravit svůj účet'],
+      chat: ['Chat s přáteli', 'Pokračovat v konverzaci'],
+      search: ['Hledat uživatele', 'Najít lidi ke spojení'],
+      github: ['Prohlédni si náš projekt na GitHubu', 'Podívej se na zdrojový kód a přispěj'],
+    },
+    profileInfo: { email: 'Email', username: 'Uživatelské jméno', friends: 'Přátelé' },
+  },
+  fr: {
+    headline: 'Discute avec tes amis.',
+    subtitle: 'Rejoins 42Hub pour rester proche des personnes qui comptent pour toi — des conversations authentiques, en toute simplicité.',
+    login: 'Connexion', createAccount: 'Créer un compte', welcomeBack: 'Content de te revoir !',
+    email: 'Email', password: 'Mot de passe', username: "Nom d'utilisateur", forgotPassword: 'Mot de passe oublié ?',
+    createYourAccount: 'Crée ton compte', privacyPolicy: 'Politique de confidentialité', termsOfService: "Conditions d'utilisation",
+    back: '← Retour', lastUpdated: 'Dernière mise à jour : mai 2026', howAreYouFeeling: "Comment te sens-tu aujourd'hui ?",
+    myProfile: 'Mon profil', changeAvatar: "Changer l'avatar", logout: 'Se déconnecter',
+    searchUsers: 'Rechercher des utilisateurs', searchByName: 'Rechercher un utilisateur par nom', openChat: 'Ouvrir le chat',
+    chat: 'Chat', searchFriends: 'Rechercher tes amis', typeMessage: 'Écris un message...', send: 'Envoyer',
+    home: 'Accueil', online: 'En ligne', offline: 'Hors ligne',
+    dashCards: {
+      profile: ['Mon profil', 'Voir et modifier ton compte'],
+      chat: ['Discuter avec des amis', 'Reprends une conversation'],
+      search: ['Rechercher des utilisateurs', 'Trouve des personnes à contacter'],
+      github: ['Découvre notre projet sur GitHub', 'Consulte le code source et contribue'],
+    },
+    profileInfo: { email: 'Email', username: "Nom d'utilisateur", friends: 'Amis' },
+  },
+  ar: {
+    headline: 'تحدث مع أصدقائك.',
+    subtitle: 'انضم إلى 42Hub لتبقى قريبًا من الأشخاص الذين تهتم بهم — محادثات حقيقية بطريقة بسيطة.',
+    login: 'تسجيل الدخول', createAccount: 'إنشاء حساب', welcomeBack: 'مرحبًا بعودتك!',
+    email: 'البريد الإلكتروني', password: 'كلمة المرور', username: 'اسم المستخدم', forgotPassword: 'هل نسيت كلمة المرور؟',
+    createYourAccount: 'أنشئ حسابك', privacyPolicy: 'سياسة الخصوصية', termsOfService: 'شروط الخدمة',
+    back: '← رجوع', lastUpdated: 'آخر تحديث: مايو 2026', howAreYouFeeling: 'كيف تشعر اليوم؟',
+    myProfile: 'ملفي الشخصي', changeAvatar: 'تغيير الصورة الرمزية', logout: 'تسجيل الخروج',
+    searchUsers: 'البحث عن المستخدمين', searchByName: 'ابحث عن مستخدم بالاسم', openChat: 'فتح المحادثة',
+    chat: 'المحادثة', searchFriends: 'ابحث عن أصدقائك', typeMessage: 'اكتب رسالة...', send: 'إرسال',
+    home: 'الرئيسية', online: 'متصل', offline: 'غير متصل',
+    dashCards: {
+      profile: ['ملفي الشخصي', 'عرض وتعديل حسابك'],
+      chat: ['الدردشة مع الأصدقاء', 'عد إلى محادثتك'],
+      search: ['البحث عن المستخدمين', 'ابحث عن أشخاص للتواصل معهم'],
+      github: ['استكشف مشروعنا على GitHub', 'اطلع على الكود المصدري وشارك في المشروع'],
+    },
+    profileInfo: { email: 'البريد الإلكتروني', username: 'اسم المستخدم', friends: 'الأصدقاء' },
+  },
+};
+
+class Component extends DCLogic {
+  state = {
+    screen: 'landing', prevScreen: 'landing', authTab: 'login', activeFriendId: 'ania', lang: 'en'
+  };
+
+  goToTerms = () => this.setState(s => ({ screen: 'terms', prevScreen: s.screen }));
+  goBackFromTerms = () => this.setState(s => ({ screen: s.prevScreen || 'landing' }));
+  goToPrivacy = () => this.setState(s => ({ screen: 'privacy', prevScreen: s.screen }));
+  goBackFromPrivacy = () => this.setState(s => ({ screen: s.prevScreen || 'landing' }));
+  setLang = (lang) => this.setState({ lang });
+  authRef = React.createRef();
+  setTabLogin = () => this.setState({ authTab: 'login' });
+  setTabRegister = () => this.setState({ authTab: 'register' });
+  goToDashboard = () => this.setState({ screen: 'home' });
+  goTo = (screen) => this.setState({ screen });
+
+  termsSectionsRaw = {
+    fr: [
+      { title: '1. Introduction', paras: ['Bienvenue sur ft_transcendence.', "En accédant à cette application ou en l'utilisant, vous acceptez de respecter les présentes conditions d'utilisation.", 'ft_transcendence est un projet étudiant créé dans le cadre du cursus de 42 Warsaw.'] },
+      { title: '2. Comptes utilisateurs', paras: ['Les utilisateurs sont responsables de la sécurité de leurs comptes et de leurs identifiants d\'authentification.', "Vous acceptez de ne pas usurper l'identité d'autres utilisateurs ni de tenter d'accéder sans autorisation aux comptes, systèmes ou données."] },
+      { title: '3. Utilisation acceptable', paras: ["En utilisant l'application, vous acceptez de ne pas :"], list: ['Utiliser la plateforme à des fins illégales', 'Exploiter des vulnérabilités ou des failles de sécurité', 'Perturber les serveurs, le matchmaking ou le jeu', 'Télécharger du contenu malveillant ou nuisible', "Harceler, insulter ou menacer d'autres utilisateurs", 'Tenter d\'accéder au système sans autorisation'] },
+      { title: '4. Propriété intellectuelle', paras: ["Tout le contenu du projet, le code source, l'image de marque, les éléments d'interface et les ressources de l'application restent la propriété de leurs créateurs respectifs, sauf indication contraire."] },
+      { title: '5. Disponibilité du service', paras: ["L'application est fournie « en l'état » et « selon disponibilité ».", "Nous ne garantissons pas une disponibilité ininterrompue, un fonctionnement sans erreur ni un accès permanent au service."] },
+      { title: '6. Limitation de responsabilité', paras: ['Les créateurs de ft_transcendence ne peuvent être tenus responsables des dommages, pertes de données, interruptions ou problèmes résultant de l\'utilisation de l\'application.'] },
+      { title: '7. Résiliation de compte', paras: ["Nous nous réservons le droit de suspendre ou de résilier les comptes utilisateurs qui enfreignent ces conditions d'utilisation ou compromettent la sécurité et la stabilité de l'application."] },
+      { title: '8. Modifications des conditions', paras: ["Ces conditions d'utilisation peuvent être mises à jour ou modifiées à tout moment sans préavis.", "L'utilisation continue de l'application après des modifications constitue une acceptation des conditions mises à jour."] },
+      { title: '9. Contact', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    cs: [
+      { title: '1. Úvod', paras: ['Vítej v ft_transcendence.', 'Přístupem k této aplikaci nebo jejím používáním souhlasíš s dodržováním těchto podmínek služby.', 'ft_transcendence je studentský projekt vytvořený v rámci programu 42 Warsaw.'] },
+      { title: '2. Uživatelské účty', paras: ['Uživatelé odpovídají za zabezpečení svých účtů a přihlašovacích údajů.', 'Souhlasíš s tím, že nebudeš vydávat se za jiné uživatele ani se pokoušet o neoprávněný přístup k účtům, systémům nebo datům.'] },
+      { title: '3. Přijatelné používání', paras: ['Používáním aplikace souhlasíš, že nebudeš:'], list: ['Používat platformu k nezákonným činnostem', 'Zneužívat zranitelnosti nebo bezpečnostní problémy', 'Narušovat servery, párování hráčů ani hru', 'Nahrávat škodlivý nebo nebezpečný obsah', 'Obtěžovat, zneužívat nebo vyhrožovat jiným uživatelům', 'Pokoušet se o neoprávněný přístup do systému'] },
+      { title: '4. Duševní vlastnictví', paras: ['Veškerý obsah projektu, zdrojový kód, branding, prvky rozhraní a aktiva aplikace zůstávají majetkem svých příslušných tvůrců, pokud není uvedeno jinak.'] },
+      { title: '5. Dostupnost služby', paras: ['Aplikace je poskytována „tak jak je“ a „jak je dostupná“.', 'Nezaručujeme nepřerušovanou dostupnost, bezchybný provoz ani trvalý přístup ke službě.'] },
+      { title: '6. Omezení odpovědnosti', paras: ['Tvůrci ft_transcendence nenesou odpovědnost za jakékoli škody, ztrátu dat, přerušení nebo problémy vyplývající z používání aplikace.'] },
+      { title: '7. Ukončení účtu', paras: ['Vyhrazujeme si právo pozastavit nebo zrušit uživatelské účty, které porušují tyto podmínky služby nebo ohrožují bezpečnost a stabilitu aplikace.'] },
+      { title: '8. Změny podmínek', paras: ['Tyto podmínky služby mohou být kdykoli aktualizovány nebo upraveny bez předchozího upozornění.', 'Další používání aplikace po provedení změn představuje přijetí aktualizovaných podmínek.'] },
+      { title: '9. Kontakt', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    en: [
+      { title: '1. Introduction', paras: ['Welcome to ft_transcendence.', 'By accessing or using this application, you agree to comply with these Terms of Service.', 'ft_transcendence is a student project created as part of the 42 Warsaw curriculum.'] },
+      { title: '2. User Accounts', paras: ['Users are responsible for maintaining the security of their accounts and authentication credentials.', 'You agree not to impersonate other users or attempt unauthorized access to accounts, systems, or data.'] },
+      { title: '3. Acceptable Use', paras: ['By using the application, you agree not to:'], list: ['Use the platform for illegal activities', 'Exploit vulnerabilities or security issues', 'Disrupt servers, matchmaking, or gameplay', 'Upload malicious or harmful content', 'Harass, abuse, or threaten other users', 'Attempt unauthorized access to the system'] },
+      { title: '4. Intellectual Property', paras: ['All project content, source code, branding, interface elements, and application assets remain the property of their respective creators unless otherwise stated.'] },
+      { title: '5. Service Availability', paras: ['The application is provided on an "as is" and "as available" basis.', 'We do not guarantee uninterrupted availability, error-free operation, or permanent access to the service.'] },
+      { title: '6. Limitation of Liability', paras: ['The creators of ft_transcendence are not liable for any damages, data loss, interruptions, or issues resulting from the use of the application.'] },
+      { title: '7. Account Termination', paras: ['We reserve the right to suspend or terminate user accounts that violate these Terms of Service or compromise the security and stability of the application.'] },
+      { title: '8. Changes to Terms', paras: ['These Terms of Service may be updated or modified at any time without prior notice.', 'Continued use of the application after changes constitutes acceptance of the updated terms.'] },
+      { title: '9. Contact', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    pl: [
+      { title: '1. Wprowadzenie', paras: ['Witamy w ft_transcendence.', 'Korzystając z tej aplikacji, zgadzasz się przestrzegać niniejszego regulaminu.', 'ft_transcendence to projekt studencki stworzony w ramach programu 42 Warszawa.'] },
+      { title: '2. Konta użytkowników', paras: ['Użytkownicy odpowiadają za bezpieczeństwo swoich kont i danych uwierzytelniających.', 'Zobowiązujesz się nie podszywać pod innych użytkowników ani nie podejmować prób nieautoryzowanego dostępu do kont, systemów lub danych.'] },
+      { title: '3. Dozwolone użytkowanie', paras: ['Korzystając z aplikacji, zobowiązujesz się nie:'], list: ['Wykorzystywać platformy do działań niezgodnych z prawem', 'Wykorzystywać luk lub problemów bezpieczeństwa', 'Zakłócać działania serwerów, dopasowywania graczy ani rozgrywki', 'Przesyłać złośliwych lub szkodliwych treści', 'Nękać, obrażać ani grozić innym użytkownikom', 'Podejmować prób nieautoryzowanego dostępu do systemu'] },
+      { title: '4. Własność intelektualna', paras: ['Cała zawartość projektu, kod źródłowy, branding, elementy interfejsu i zasoby aplikacji pozostają własnością ich twórców, chyba że zaznaczono inaczej.'] },
+      { title: '5. Dostępność usługi', paras: ['Aplikacja jest dostarczana w stanie „tak jak jest” i „w miarę dostępności”.', 'Nie gwarantujemy nieprzerwanej dostępności, bezbłędnego działania ani stałego dostępu do usługi.'] },
+      { title: '6. Ograniczenie odpowiedzialności', paras: ['Twórcy ft_transcendence nie ponoszą odpowiedzialności za jakiekolwiek szkody, utratę danych, przerwy w działaniu ani problemy wynikające z korzystania z aplikacji.'] },
+      { title: '7. Zakończenie konta', paras: ['Zastrzegamy sobie prawo do zawieszenia lub zakończenia kont użytkowników, którzy naruszają niniejszy regulamin lub zagrażają bezpieczeństwu i stabilności aplikacji.'] },
+      { title: '8. Zmiany regulaminu', paras: ['Niniejszy regulamin może być aktualizowany lub zmieniany w dowolnym momencie bez wcześniejszego powiadomienia.', 'Dalsze korzystanie z aplikacji po wprowadzeniu zmian oznacza akceptację zaktualizowanego regulaminu.'] },
+      { title: '9. Kontakt', paras: ['ft_transcendence', '42 Warszawa', 'Al. Solidarności 171B', '00-877 Warszawa', 'Polska', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    ar: [
+      { title: '1. مقدمة', paras: ['مرحبًا بك في ft_transcendence.', 'من خلال الوصول إلى هذا التطبيق أو استخدامه، فإنك توافق على الامتثال لشروط الخدمة هذه.', 'ft_transcendence هو مشروع طلابي تم إنشاؤه كجزء من منهج 42 Warsaw.'] },
+      { title: '2. حسابات المستخدمين', paras: ['يتحمل المستخدمون مسؤولية الحفاظ على أمان حساباتهم وبيانات المصادقة الخاصة بهم.', 'أنت توافق على عدم انتحال شخصية مستخدمين آخرين أو محاولة الوصول غير المصرح به إلى الحسابات أو الأنظمة أو البيانات.'] },
+      { title: '3. الاستخدام المقبول', paras: ['باستخدامك للتطبيق، فإنك توافق على عدم:'], list: ['استخدام المنصة في أنشطة غير قانونية', 'استغلال الثغرات أو المشكلات الأمنية', 'تعطيل الخوادم أو المطابقة أو اللعب', 'رفع محتوى ضار أو خبيث', 'مضايقة أو إساءة معاملة أو تهديد مستخدمين آخرين', 'محاولة الوصول غير المصرح به إلى النظام'] },
+      { title: '4. الملكية الفكرية', paras: ['تظل جميع محتويات المشروع والكود المصدري والعلامة التجارية وعناصر الواجهة وأصول التطبيق ملكًا لمنشئيها ما لم يُذكر خلاف ذلك.'] },
+      { title: '5. توفر الخدمة', paras: ['يتم توفير التطبيق "كما هو" و"حسب التوفر".', 'نحن لا نضمن التوفر المستمر أو التشغيل الخالي من الأخطاء أو الوصول الدائم إلى الخدمة.'] },
+      { title: '6. حدود المسؤولية', paras: ['لا يتحمل مبتكرو ft_transcendence مسؤولية أي أضرار أو فقدان بيانات أو انقطاعات أو مشكلات ناتجة عن استخدام التطبيق.'] },
+      { title: '7. إنهاء الحساب', paras: ['نحتفظ بالحق في تعليق أو إنهاء حسابات المستخدمين الذين ينتهكون شروط الخدمة هذه أو يعرضون أمان واستقرار التطبيق للخطر.'] },
+      { title: '8. التغييرات على الشروط', paras: ['يجوز تحديث شروط الخدمة هذه أو تعديلها في أي وقت دون إشعار مسبق.', 'يشكل استمرار استخدام التطبيق بعد التغييرات قبولًا للشروط المحدّثة.'] },
+      { title: '9. التواصل', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+  };
+
+  privacySectionsRaw = {
+    fr: [
+      { title: '1. Introduction', paras: ["Cette politique de confidentialité explique comment ft_transcendence collecte, utilise et protège les informations des utilisateurs.", 'ft_transcendence est un projet étudiant créé dans le cadre du cursus de 42 Warsaw.'] },
+      { title: '2. Données que nous collectons', paras: ["L'application peut collecter les informations suivantes :"], list: ["Nom d'utilisateur et informations de profil", 'Adresse email (le cas échéant)', "Données d'authentification", 'Statistiques de jeu et historique des parties', 'Images de profil téléchargées par l\'utilisateur', "Informations techniques telles que l'adresse IP et le type de navigateur", "Données de session et cookies nécessaires à l'authentification"] },
+      { title: '3. Comment nous utilisons les données', paras: ['Les données collectées ne sont utilisées qu\'à des fins liées au fonctionnement de l\'application, notamment pour :'], list: ["L'authentification des utilisateurs et la gestion des comptes", 'Fournir des fonctionnalités de jeu multijoueur', "Afficher les classements et l'historique des parties", "Améliorer la stabilité et la sécurité de l'application", "Prévenir les abus et les accès non autorisés"] },
+      { title: '4. Cookies', paras: ["ft_transcendence utilise des cookies et le stockage de session pour maintenir l'authentification de l'utilisateur et assurer le bon fonctionnement de l'application.", "Les utilisateurs peuvent désactiver les cookies dans les paramètres de leur navigateur, bien que certaines fonctionnalités de l'application puissent alors cesser de fonctionner correctement."] },
+      { title: '5. Stockage des données et sécurité', paras: ['Nous prenons des mesures techniques raisonnables pour protéger les données des utilisateurs contre tout accès non autorisé, modification, divulgation ou destruction.', "Cependant, aucune méthode de transmission sur Internet ou de stockage électronique n'est totalement sécurisée."] },
+      { title: '6. Droits des utilisateurs', paras: ["Les utilisateurs peuvent demander l'accès à leurs données personnelles, la correction d'informations inexactes, ou la suppression de leur compte et des données associées."] },
+      { title: '7. Services tiers', paras: ["ft_transcendence peut utiliser des services d'authentification ou d'hébergement tiers nécessaires au fonctionnement de l'application.", 'Ces services peuvent traiter les données conformément à leurs propres politiques de confidentialité.'] },
+      { title: '8. Contact', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    cs: [
+      { title: '1. Úvod', paras: ['Tyto zásady ochrany osobních údajů vysvětlují, jak ft_transcendence shromažďuje, používá a chrání informace o uživatelích.', 'ft_transcendence je studentský projekt vytvořený v rámci programu 42 Warsaw.'] },
+      { title: '2. Údaje, které shromažďujeme', paras: ['Aplikace může shromažďovat následující informace:'], list: ['Uživatelské jméno a informace o profilu', 'E-mailová adresa (pokud je uvedena)', 'Autentizační údaje', 'Herní statistiky a historie zápasů', 'Uživatelem nahrané profilové obrázky', 'Technické informace, jako je IP adresa a typ prohlížeče', 'Údaje o relaci a cookies potřebné k autentizaci'] },
+      { title: '3. Jak data používáme', paras: ['Shromážděná data se používají pouze pro účely související s funkčností aplikace, včetně:'], list: ['Autentizace uživatelů a správy účtu', 'Poskytování funkcí hry pro více hráčů', 'Zobrazování žebříčků a historie zápasů', 'Zlepšování stability a bezpečnosti aplikace', 'Prevence zneužití a neoprávněného přístupu'] },
+      { title: '4. Cookies', paras: ['ft_transcendence používá cookies a úložiště relace k udržení autentizace uživatele a zajištění správné funkčnosti aplikace.', 'Uživatelé mohou zakázat cookies v nastavení prohlížeče, i když některé funkce aplikace pak nemusí fungovat správně.'] },
+      { title: '5. Ukládání dat a bezpečnost', paras: ['Přijímáme přiměřená technická opatření k ochraně uživatelských dat před neoprávněným přístupem, úpravou, zveřejněním nebo zničením.', 'Žádný způsob přenosu přes internet ani elektronického uložení však není zcela bezpečný.'] },
+      { title: '6. Práva uživatele', paras: ['Uživatelé mohou požádat o přístup ke svým osobním údajům, opravu nepřesných informací nebo smazání svého účtu a souvisejících dat.'] },
+      { title: '7. Služby třetích stran', paras: ['ft_transcendence může využívat autentizační nebo hostingové služby třetích stran nezbytné pro funkčnost aplikace.', 'Tyto služby mohou zpracovávat data podle svých vlastních zásad ochrany osobních údajů.'] },
+      { title: '8. Kontakt', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    en: [
+      { title: '1. Introduction', paras: ['This Privacy Policy explains how ft_transcendence collects, uses, and protects user information.', 'ft_transcendence is a student project created as part of the 42 Warsaw curriculum.'] },
+      { title: '2. Data We Collect', paras: ['The application may collect the following information:'], list: ['Username and profile information', 'Email address (if provided)', 'Authentication data', 'Game statistics and match history', 'User uploaded profile images', 'Technical information such as IP address and browser type', 'Session and cookie data required for authentication'] },
+      { title: '3. How We Use Data', paras: ['Collected data is used only for purposes related to the functionality of the application, including:'], list: ['User authentication and account management', 'Providing multiplayer game features', 'Displaying rankings and match history', 'Improving application stability and security', 'Preventing abuse and unauthorized access'] },
+      { title: '4. Cookies', paras: ['ft_transcendence uses cookies and session storage to maintain user authentication and ensure proper functionality of the application.', 'Users can disable cookies in their browser settings, although some features of the application may stop working properly.'] },
+      { title: '5. Data Storage and Security', paras: ['We take reasonable technical measures to protect user data against unauthorized access, modification, disclosure, or destruction.', 'However, no internet transmission or electronic storage method is completely secure.'] },
+      { title: '6. User Rights', paras: ['Users may request access to their personal data, correction of inaccurate information, or deletion of their account and associated data.'] },
+      { title: '7. Third-Party Services', paras: ['ft_transcendence may use third-party authentication or hosting services required for application functionality.', 'These services may process data according to their own privacy policies.'] },
+      { title: '8. Contact', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    pl: [
+      { title: '1. Wprowadzenie', paras: ['Niniejsza Polityka prywatności wyjaśnia, w jaki sposób ft_transcendence gromadzi, wykorzystuje i chroni informacje o użytkownikach.', 'ft_transcendence to projekt studencki stworzony w ramach programu 42 Warszawa.'] },
+      { title: '2. Dane, które zbieramy', paras: ['Aplikacja może zbierać następujące informacje:'], list: ['Nazwa użytkownika i informacje o profilu', 'Adres email (jeśli podany)', 'Dane uwierzytelniające', 'Statystyki gier i historia meczów', 'Zdjęcia profilowe przesłane przez użytkownika', 'Informacje techniczne, takie jak adres IP i typ przeglądarki', 'Dane sesji i plików cookie wymagane do uwierzytelniania'] },
+      { title: '3. Jak wykorzystujemy dane', paras: ['Zebrane dane są wykorzystywane wyłącznie w celach związanych z funkcjonowaniem aplikacji, w tym do:'], list: ['Uwierzytelniania użytkowników i zarządzania kontem', 'Zapewniania funkcji gry wieloosobowej', 'Wyświetlania rankingów i historii meczów', 'Poprawy stabilności i bezpieczeństwa aplikacji', 'Zapobiegania nadużyciom i nieautoryzowanemu dostępowi'] },
+      { title: '4. Pliki cookie', paras: ['ft_transcendence wykorzystuje pliki cookie i pamięć sesji do utrzymania uwierzytelnienia użytkownika i zapewnienia prawidłowego działania aplikacji.', 'Użytkownicy mogą wyłączyć pliki cookie w ustawieniach przeglądarki, chociaż niektóre funkcje aplikacji mogą wtedy przestać działać poprawnie.'] },
+      { title: '5. Przechowywanie danych i bezpieczeństwo', paras: ['Podejmujemy rozsądne środki techniczne w celu ochrony danych użytkowników przed nieautoryzowanym dostępem, modyfikacją, ujawnieniem lub zniszczeniem.', 'Jednak żadna metoda transmisji internetowej ani elektronicznego przechowywania danych nie jest całkowicie bezpieczna.'] },
+      { title: '6. Prawa użytkownika', paras: ['Użytkownicy mogą wystąpić o dostęp do swoich danych osobowych, poprawienie nieprawidłowych informacji lub usunięcie konta i powiązanych danych.'] },
+      { title: '7. Usługi stron trzecich', paras: ['ft_transcendence może korzystać z usług uwierzytelniania lub hostingu stron trzecich niezbędnych do funkcjonowania aplikacji.', 'Usługi te mogą przetwarzać dane zgodnie z własnymi politykami prywatności.'] },
+      { title: '8. Kontakt', paras: ['ft_transcendence', '42 Warszawa', 'Al. Solidarności 171B', '00-877 Warszawa', 'Polska', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+    ar: [
+      { title: '1. مقدمة', paras: ['توضح سياسة الخصوصية هذه كيفية جمع ft_transcendence لمعلومات المستخدم واستخدامها وحمايتها.', 'ft_transcendence هو مشروع طلابي تم إنشاؤه كجزء من منهج 42 Warsaw.'] },
+      { title: '2. البيانات التي نجمعها', paras: ['قد يجمع التطبيق المعلومات التالية:'], list: ['اسم المستخدم ومعلومات الملف الشخصي', 'عنوان البريد الإلكتروني (إن وُجد)', 'بيانات المصادقة', 'إحصائيات اللعبة وسجل المباريات', 'صور الملف الشخصي التي يرفعها المستخدم', 'معلومات تقنية مثل عنوان IP ونوع المتصفح', 'بيانات الجلسة وملفات تعريف الارتباط اللازمة للمصادقة'] },
+      { title: '3. كيف نستخدم البيانات', paras: ['تُستخدم البيانات المجمعة فقط لأغراض تتعلق بوظائف التطبيق، بما في ذلك:'], list: ['مصادقة المستخدم وإدارة الحساب', 'توفير ميزات اللعب الجماعي', 'عرض الترتيب وسجل المباريات', 'تحسين استقرار التطبيق وأمانه', 'منع إساءة الاستخدام والوصول غير المصرح به'] },
+      { title: '4. ملفات تعريف الارتباط', paras: ['يستخدم ft_transcendence ملفات تعريف الارتباط وتخزين الجلسة للحفاظ على مصادقة المستخدم وضمان عمل التطبيق بشكل صحيح.', 'يمكن للمستخدمين تعطيل ملفات تعريف الارتباط في إعدادات متصفحهم، على الرغم من أن بعض ميزات التطبيق قد تتوقف عن العمل بشكل صحيح.'] },
+      { title: '5. تخزين البيانات والأمان', paras: ['نتخذ تدابير تقنية معقولة لحماية بيانات المستخدم من الوصول غير المصرح به أو التعديل أو الإفصاح أو الإتلاف.', 'ومع ذلك، لا توجد طريقة نقل عبر الإنترنت أو تخزين إلكتروني آمنة تمامًا.'] },
+      { title: '6. حقوق المستخدم', paras: ['يجوز للمستخدمين طلب الوصول إلى بياناتهم الشخصية، أو تصحيح المعلومات غير الدقيقة، أو حذف حسابهم والبيانات المرتبطة به.'] },
+      { title: '7. خدمات الأطراف الثالثة', paras: ['قد يستخدم ft_transcendence خدمات مصادقة أو استضافة من أطراف ثالثة ضرورية لوظائف التطبيق.', 'قد تعالج هذه الخدمات البيانات وفقًا لسياسات الخصوصية الخاصة بها.'] },
+      { title: '8. التواصل', paras: ['ft_transcendence', '42 Warsaw', 'Al. Solidarności 171B', '00-877 Warszawa', 'Poland', 'Email: kinga.kwasniak5@gmail.com'] },
+    ],
+  };
+
+  friendsData = [
+    { id: 'ania', name: 'Ania', initial: 'A', color: '#e07a5f', online: true,
+      messages: [
+        { from: 'them', text: "Hey! Are we still on for tomorrow?", time: '9:12 AM' },
+        { from: 'me', text: "Yes, absolutely! Same time?", time: '9:14 AM' },
+        { from: 'them', text: "Perfect, see you then 🙂", time: '9:15 AM' },
+        { from: 'them', text: "See you tomorrow!", time: '9:16 AM' },
+      ] },
+    { id: 'grzes', name: 'Grześ', initial: 'G', color: '#3a86ff', online: false,
+      messages: [
+        { from: 'me', text: "Sent you the files.", time: 'Yesterday' },
+        { from: 'them', text: "Got them, thank you!", time: 'Yesterday' },
+        { from: 'them', text: "Sounds good, thanks!", time: 'Yesterday' },
+      ] },
+    { id: 'kasia', name: 'Kasia', initial: 'K', color: '#8338ec', online: true,
+      messages: [
+        { from: 'them', text: "Did you check the new update?", time: '2:40 PM' },
+        { from: 'me', text: "Not yet, checking now.", time: '2:41 PM' },
+      ] },
+  ];
+
+  searchData = [
+    { id: 'u1', name: 'Marta Kowalska', initial: 'M', color: '#e07a5f' },
+    { id: 'u2', name: 'Tomasz Nowak', initial: 'T', color: '#3a86ff' },
+    { id: 'u3', name: 'Julia Wiśniewska', initial: 'J', color: '#8338ec' },
+    { id: 'u4', name: 'Piotr Zieliński', initial: 'P', color: '#2a9d8f' },
+  ];
+
+  inputStyle = { width: '100%', boxSizing: 'border-box', padding: '14px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.08)', color: '#fff', fontSize: '14.5px', fontWeight: 500, outline: 'none' };
+  primaryBtnStyle = { marginTop: '4px', padding: '14px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg,#4ac9a0,#a3e635)', color: '#0d2b47', fontWeight: 800, fontSize: '15px', cursor: 'pointer' };
+  searchInputStyle = { width: '100%', boxSizing: 'border-box', padding: '15px 18px', borderRadius: '14px', border: '1px solid #e3ebe6', background: '#fff', color: '#0d2b47', fontSize: '14.5px', fontWeight: 500, outline: 'none', boxShadow: '0 4px 14px rgba(10,42,77,0.06)' };
+  smallSearchStyle = { width: '100%', boxSizing: 'border-box', padding: '11px 14px', borderRadius: '12px', border: '1px solid #eef2ef', background: '#f6f9f7', color: '#0d2b47', fontSize: '13.5px', fontWeight: 500, outline: 'none' };
+  chatInputStyle = { flex: 1, padding: '14px 18px', borderRadius: '14px', border: '1px solid #eef2ef', background: '#f6f9f7', fontSize: '14.5px', fontWeight: 500, outline: 'none' };
+  tabBtnBase = { flex: 1, padding: '10px', borderRadius: '10px', border: 'none', fontWeight: 700, fontSize: '13.5px', cursor: 'pointer' };
+
+  navItemStyle = (active) => ({
+    display: 'flex', alignItems: 'center', padding: '13px 14px', borderRadius: '12px', border: 'none',
+    background: active ? 'linear-gradient(135deg,#4ac9a0,#a3e635)' : 'transparent', color: active ? '#0d2b47' : 'rgba(255,255,255,0.75)',
+    fontWeight: 700, fontSize: '14.5px', cursor: 'pointer', textAlign: 'start', width: '100%'
+  });
+
+  langBtnStyle = (active, isSidebar) => ({
+    padding: '6px 10px', borderRadius: '9px', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '11.5px',
+    background: active ? (isSidebar ? 'linear-gradient(135deg,#4ac9a0,#2f9bcf)' : 'rgba(255,255,255,0.9)') : 'transparent',
+    color: active ? (isSidebar ? '#0d2b47' : '#146b7a') : (isSidebar ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.75)')
+  });
+
+  renderVals() {
+    const { screen, authTab, activeFriendId, lang } = this.state;
+    const dir = lang === 'ar' ? 'rtl' : 'ltr';
+    const t = DICTS[lang];
+    const activeFriend = this.friendsData.find(f => f.id === activeFriendId) || this.friendsData[0];
+    const fontFamily = lang === 'ar' ? "'Noto Sans Arabic','Manrope',sans-serif" : "'Manrope',sans-serif";
+
+    const withSections = (raw) => raw.map(s => ({ ...s, list: s.list || [], hasList: !!(s.list && s.list.length) }));
+
+    return {
+      dir,
+      rootStyle: { width: '100%', minHeight: '100vh', background: '#f3f6f4', display: 'flex', flexDirection: 'column', fontFamily, direction: dir },
+      startAlign: dir === 'rtl' ? 'right' : 'left',
+      decorSide: dir === 'rtl' ? 'left' : 'right',
+      chatListBorder: dir === 'rtl' ? 'border-left:1px solid #eef2ef' : 'border-right:1px solid #eef2ef',
+      t,
+      langOptions: ['en', 'pl', 'cs', 'fr', 'ar'].map(code => ({
+        label: code.toUpperCase(),
+        onSelect: () => this.setLang(code),
+        style: this.langBtnStyle(lang === code, screen !== 'landing' && screen !== 'terms' && screen !== 'privacy')
+      })),
+      isLanding: screen === 'landing',
+      isTermsPage: screen === 'terms',
+      isPrivacyPage: screen === 'privacy',
+      isApp: screen !== 'landing' && screen !== 'terms' && screen !== 'privacy',
+      goToTerms: this.goToTerms, goBackFromTerms: this.goBackFromTerms,
+      goToPrivacy: this.goToPrivacy, goBackFromPrivacy: this.goBackFromPrivacy,
+      termsSections: withSections(this.termsSectionsRaw[lang]),
+      privacySections: withSections(this.privacySectionsRaw[lang]),
+      isHome: screen === 'home', isProfile: screen === 'profile', isSearch: screen === 'search', isChat: screen === 'chat',
+      isLoginTab: authTab === 'login', isRegisterTab: authTab === 'register',
+      authRef: this.authRef, setTabLogin: this.setTabLogin, setTabRegister: this.setTabRegister, goToDashboard: this.goToDashboard,
+      inputStyle: this.inputStyle, primaryBtnStyle: this.primaryBtnStyle, searchInputStyle: this.searchInputStyle,
+      smallSearchStyle: this.smallSearchStyle, chatInputStyle: this.chatInputStyle,
+      tabLoginStyle: { ...this.tabBtnBase, background: authTab === 'login' ? '#a3e635' : 'transparent', color: authTab === 'login' ? '#0d2b47' : 'rgba(255,255,255,0.7)' },
+      tabRegisterStyle: { ...this.tabBtnBase, background: authTab === 'register' ? '#a3e635' : 'transparent', color: authTab === 'register' ? '#0d2b47' : 'rgba(255,255,255,0.7)' },
+
+      navItems: [
+        { label: t.home, onClick: () => this.goTo('home'), style: this.navItemStyle(screen === 'home') },
+        { label: t.myProfile, onClick: () => this.goTo('profile'), style: this.navItemStyle(screen === 'profile') },
+        { label: t.chat, onClick: () => this.goTo('chat'), style: this.navItemStyle(screen === 'chat') },
+      ],
+
+      dashboardCards: [
+        { title: t.dashCards.profile[0], desc: t.dashCards.profile[1], icon: '👤', bg: 'linear-gradient(135deg,#e5f6f2,#eaf6fb)', isNotGithub: true, onClick: () => this.goTo('profile') },
+        { title: t.dashCards.chat[0], desc: t.dashCards.chat[1], icon: '👥', bg: 'linear-gradient(135deg,#eaf6fb,#e9f9f0)', isNotGithub: true, onClick: () => this.goTo('chat') },
+        { title: t.dashCards.search[0], desc: t.dashCards.search[1], icon: '🔍', bg: 'linear-gradient(135deg,#f0f6fc,#eaf9f4)', isNotGithub: true, onClick: () => this.goTo('search') },
+        { title: t.dashCards.github[0], desc: t.dashCards.github[1], icon: '', bg: '#eef2f5', isGithub: true, isNotGithub: false, onClick: () => window.open('https://github.com', '_blank') },
+      ],
+
+      profileInfo: [
+        { label: t.profileInfo.email, value: 'zyta@dev.com' },
+        { label: t.profileInfo.username, value: 'Zyta' },
+        { label: t.profileInfo.friends, value: `${this.friendsData.length}` },
+      ],
+
+      searchResults: this.searchData.map(u => ({ ...u, onOpen: () => this.setState({ screen: 'chat', activeFriendId: 'ania' }) })),
+
+      friends: this.friendsData.map(f => ({
+        ...f,
+        onSelect: () => this.setState({ activeFriendId: f.id }),
+        rowStyle: {
+          display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '12px', borderRadius: '14px',
+          border: 'none', cursor: 'pointer', marginBottom: '4px',
+          background: f.id === activeFriendId ? '#eaf4fa' : 'transparent'
+        }
+      })),
+
+      activeFriend: { ...activeFriend, statusLabel: activeFriend.online ? t.online : t.offline },
+
+      messages: activeFriend.messages.map(m => ({
+        text: m.text, time: m.time,
+        wrapStyle: { display: 'flex', flexDirection: 'column', alignItems: m.from === 'me' ? (dir === 'rtl' ? 'flex-start' : 'flex-end') : (dir === 'rtl' ? 'flex-end' : 'flex-start') },
+        bubbleStyle: {
+          maxWidth: '420px', padding: '12px 16px',
+          borderRadius: m.from === 'me' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+          background: m.from === 'me' ? 'linear-gradient(135deg,#146b7a,#2f9bcf)' : '#ffffff',
+          color: m.from === 'me' ? '#fff' : '#0d2b47',
+          fontSize: '14.5px', fontWeight: 500, boxShadow: m.from === 'me' ? 'none' : '0 3px 10px rgba(10,42,77,0.06)'
+        },
+        timeStyle: { fontSize: '11px', color: '#9aa5a0', marginTop: '4px', fontWeight: 600 }
+      })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
