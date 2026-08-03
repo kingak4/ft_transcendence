@@ -49,6 +49,7 @@ Lead the project through the full development lifecycle while contributing as a 
 * **Documentation:** Created Confluence articles, architecture diagrams, feature specifications, and visual guides for the project knowledge base. Coordinated documentation and knowledge sharing across the entire team.
 * **UI/UX Design:** Designed the application's visual identity and user interface, creating high-fidelity mockups and feature visualizations in Canva. Planned the layout, user flows, and overall user experience to ensure a consistent design across all modules.
 * **Design Documentation:** Documented UI concepts, workflows, and feature specifications in Confluence, providing implementation guidelines and maintaining design consistency throughout development.
+* **Project Documentation Repository:** Created and maintained the `docs` folder containing project-related documentation, including UI/UX visualizations, articles, meeting presentations, and progress tracking materials. Organized resources such as design concepts, feature descriptions, project updates, and presentation materials to provide a centralized knowledge base for the team.
 * **Chat Module:** Implemented the Real-Time Chat Module feature.
 * **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
 * **Legal & Compliance:** Drafted the Privacy Policy and integrated the Open-Source License into the repository.
@@ -64,8 +65,6 @@ Established a structured workflow for team coordination and task execution:
 * **Timeline Management:** Monitored project progress, adapted priorities to meet deadlines, and coordinated scope adjustments when necessary.
 * **Design Coordination:** Planned the application's interface and feature designs before implementation, ensuring developers followed a unified vision documented in Confluence.
 * **Team Support & Collaboration:** Supported and motivated team members throughout the development process, fostering a positive and collaborative atmosphere. Encouraged open communication, knowledge sharing, and teamwork to maintain strong team engagement and effective cooperation.
-
-**Tools:** Jira (task tracking), Confluence (project documentation, architecture & design specifications), Canva (UI/UX mockups and feature visualizations), Slack (project communication), Messenger (rapid team updates).
 
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
 TODO
