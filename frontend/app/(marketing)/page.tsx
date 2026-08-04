@@ -9,18 +9,16 @@ import SessionCard from '../components/SessionCard';
 
 import { client } from '../lib/api-clients';
 import { clearSession } from '../lib/logout';
+import { assertValidSession } from '../lib/session';
 
 export default async function LandingPage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get('user_id')?.value ?? null;
 
   if (userId) {
-    //ping request just to check if token is valid
-    const { response } = await client.GET('/friends', {
-      params: { query: { size: 1 } },
-    });
+    const isValidSession = await assertValidSession();
 
-    if (response.status === 401 || response.status === 403 || response.status === 404) {
+    if (!isValidSession) {
       redirect('/auth/logout');
     }
   }

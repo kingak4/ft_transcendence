@@ -1,9 +1,7 @@
-import { cookies } from 'next/headers';
+import { clearAuthCookies } from '@/app/lib/logout';
 
 export async function GET() {
-  const cookieStore = await cookies();
-  cookieStore.delete('auth_token');
-  cookieStore.delete('user_id');
+  await clearAuthCookies();
 
   return new Response(null, {
     status: 302,

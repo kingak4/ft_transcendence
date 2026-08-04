@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { client } from '../lib/api-clients';
+import { assertValidSession } from '../lib/session';
 
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
@@ -19,12 +20,9 @@ export default async function AppLayout({
     redirect('/login');
   }
 
-  //ping request just to check if token is valid
-  const { response } = await client.GET('/friends', {
-    params: { query: { size: 1 } },
-  });
+  const isValidSession = await assertValidSession();
 
-  if (response.status === 401 || response.status === 403 || response.status === 404) {
+  if (!isValidSession) {
     redirect('/auth/logout');
   }
 
