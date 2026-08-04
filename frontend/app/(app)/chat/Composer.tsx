@@ -8,14 +8,21 @@ interface Props {
   handleSend: (e: React.FormEvent) => void;
   isInputDisabled?: boolean;
   isButtonDisabled?: boolean;
+  errorMsg?: string | null;
 }
 
-const Composer = forwardRef<HTMLInputElement, Props>(function Composer({ inputValue, setInputValue, handleSend, isInputDisabled, isButtonDisabled }, ref) {
+const Composer = forwardRef<HTMLInputElement, Props>(function Composer({ inputValue, setInputValue, handleSend, isInputDisabled, isButtonDisabled, errorMsg }, ref) {
   return (
-    <form 
-      onSubmit={handleSend}
-      className="bg-hub-panel border-hub-border flex shrink-0 items-center gap-3 border-t p-4"
-    >
+    <div className="bg-hub-panel border-hub-border flex shrink-0 flex-col border-t p-4">
+      {errorMsg && (
+        <div className="text-red-500 text-sm mb-2">
+          {errorMsg}
+        </div>
+      )}
+      <form 
+        onSubmit={handleSend}
+        className="flex items-center gap-3"
+      >
       <TextField
         ref={ref}
         tone="chat"
@@ -31,6 +38,7 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer({ inputVa
         Send
       </Button>
     </form>
+    </div>
   );
 });
 

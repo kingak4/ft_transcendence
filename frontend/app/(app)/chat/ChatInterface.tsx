@@ -9,6 +9,8 @@ import MessageBubble from './MessageBubble';
 import Composer from './Composer';
 import { ChatMessage, Friend, BackendChatMessage } from './types';
 
+const DELETED_MESSAGE_TEXT = '(message deleted)';
+
 interface Props {
   myUserId: string | null;
   friend: Friend | null;
@@ -19,6 +21,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatId, setChatId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const creationPromiseRef = useRef<{ friendId: string; promise: Promise<string> } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -105,14 +108,13 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
   useChatSubscription(chatId || '', (newMessage) => {
     if (!chatId) return;
     setMessages((prev) => {
-      // If content is missing, it is a delete event
-      if (newMessage.content === undefined && newMessage.time === undefined) {
-        return prev.map((m) => 
-          m.messageId === newMessage.messageId
-            ? { ...m, content: '(wiadomość została usunięta)', isDeleted: true }
-            : m
-        );
-      }
+        if (newMessage.content === undefined && newMessage.time === undefined) {
+          return prev.map((m) => 
+            m.messageId === newMessage.messageId
+              ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
+              : m
+          );
+        }
 
       // Basic deduplication
       if (prev.find((m) => m.messageId === newMessage.messageId)) return prev;
@@ -138,8 +140,13 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputValue.trim() === '' || !chatId) return;
-    sendMessage(chatId, inputValue);
-    setInputValue('');
+    const success = sendMessage(chatId, inputValue);
+    if (!success) {
+      setErrorMsg("Failed to send message: Not connected to server");
+    } else {
+      setErrorMsg(null);
+      setInputValue('');
+    }
   };
 
   return (
@@ -157,7 +164,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
                 // Optimistic UI update
                 setMessages((prev) => prev.map((m) => 
                   m.messageId === message.messageId
-                    ? { ...m, content: '(wiadomość została usunięta)', isDeleted: true }
+                    ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
                     : m
                 ));
               }
@@ -175,6 +182,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
         handleSend={handleSend}
         isInputDisabled={!chatId}
         isButtonDisabled={!chatId || inputValue.trim() === ''}
+        errorMsg={errorMsg}
       />
     </>
   );

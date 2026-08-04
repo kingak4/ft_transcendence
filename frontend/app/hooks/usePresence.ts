@@ -10,7 +10,7 @@ export function usePresence(userIdsToWatch: string[] = []) {
 
   const destinations = useMemo(
     () => userIdsToWatch.map((id) => `${TOPIC_PREFIX}/user/${id}/presence`),
-    [userIdsToWatch] // userIdsToWatch is already memoized in the components calling usePresence
+    [userIdsToWatch]
   );
 
   useSubscription(destinations, (message) => {

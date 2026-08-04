@@ -20,8 +20,10 @@ export function useChat() {
         destination: `${APP_PREFIX}/chat/${chatId}/send`,
         body: JSON.stringify(request),
       });
+      return true;
     } else {
       console.warn('STOMP client is not connected.');
+      return false;
     }
   }, [stompClient]);
 
@@ -32,8 +34,10 @@ export function useChat() {
         destination: `${APP_PREFIX}/chat/${chatId}/messages/${messageId}/delete`,
         body: JSON.stringify(request),
       });
+      return true;
     } else {
       console.warn('STOMP client is not connected.');
+      return false;
     }
   }, [stompClient]);
 

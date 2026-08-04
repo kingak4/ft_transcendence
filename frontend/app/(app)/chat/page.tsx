@@ -2,7 +2,11 @@ import { cookies } from 'next/headers';
 import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
 import FriendRail from './FriendRail';
-import type { Friend, BackendFriendResponse, BackendChatResponse } from './types';
+import type { Friend } from './types';
+import type { components } from '../../types/api';
+
+type FriendResult = components['schemas']['FriendResult'];
+type ChatResponse = components['schemas']['ChatResponse'];
 
 export const metadata = {
   title: 'Chat',
@@ -20,7 +24,7 @@ async function loadFriends(): Promise<Friend[]> {
   // Map the response based on the backend structure.
   // Assuming data is a Page<FriendResult> with content array.
   // FriendResult contains id and details (displayName, avatarId).
-  return (data?.content ?? []).map((friend: BackendFriendResponse) => ({
+  return (data?.content ?? []).map((friend: FriendResult) => ({
     id: friend.id ?? '',
     name: friend.details?.displayName ?? 'Unknown User',
     initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
@@ -37,26 +41,27 @@ async function loadChats(friends: Friend[]): Promise<{ chatId: string; friend: F
   });
   if (!response.ok || !data) return [];
 
-  const chatsArray: unknown[] = ((data as { content?: unknown[] })?.content ?? data) as unknown[];
+  const chatsArray = data.content ?? [];
 
-  return chatsArray.map((chatRaw: unknown) => {
-    const chat = chatRaw as BackendChatResponse;
+  return chatsArray.map((chat: ChatResponse) => {
     const friendId = chat.otherUserId;
     let friend = friendId ? friends.find((f) => f.id === friendId) : null;
 
     if (!friend) {
+      const fallbackId = friendId ?? chat.chatId ?? '';
+      const fallbackName = chat.displayName ?? chat.chatId ?? 'Unknown';
       friend = {
-        id: friendId || chat.chatId,
-        name: chat.displayName || chat.chatId,
-        initial: (chat.displayName || chat.chatId).charAt(0).toUpperCase(),
+        id: fallbackId,
+        name: fallbackName,
+        initial: fallbackName.charAt(0).toUpperCase(),
         color: 'bg-hub-panel',
-        avatarId: chat.avatarId || null,
+        avatarId: chat.avatarId ?? null,
         online: false,
         status: 'Offline',
       };
     }
 
-    return { chatId: chat.chatId, friend };
+    return { chatId: chat.chatId ?? '', friend };
   });
 }
 
