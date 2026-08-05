@@ -2,12 +2,12 @@ package code.users.logic;
 
 import code.users.domain.exceptions.UserNotFoundException;
 import code.users.domain.model.FriendId;
-import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ManageFriendsUseCase;
 import code.users.ports.out.UserDao;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +29,7 @@ public class ManageFriends implements ManageFriendsUseCase {
   }
 
   @Override
-  public Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size) {
-    return userDao.getFriendList(userId, page, size);
+  public Page<FriendResult> getFriendList(UserId userId, Pageable pageable) {
+    return userDao.getFriendList(userId, pageable);
   }
 }

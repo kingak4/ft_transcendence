@@ -10,8 +10,8 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserFixtures;
+import code.users.ports.in.ManageFriendsUseCase;
 import code.users.ports.out.UserDao;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +41,7 @@ public class UserRepositoryTest {
 
   @BeforeEach
   void setup() {
-    Avatar defaultAvatar = new Avatar(
-            AvatarId.DEFAULT_AVATAR_ID,
-            new byte[]{0}
-    );
+    Avatar defaultAvatar = new Avatar(AvatarId.DEFAULT_AVATAR_ID, new byte[] {0});
 
     userRepository.saveAvatar(defaultAvatar);
   }
@@ -170,14 +170,20 @@ public class UserRepositoryTest {
     userRepository.createUser(friend);
     userRepository.createUser(friend2);
 
-//    userRepository.addFriend(user.getId(), FriendId.of(user.getId().val()));
     userRepository.addFriend(user.getId(), FriendId.of(friend.getId().val()));
     userRepository.addFriend(user.getId(), FriendId.of(friend2.getId().val()));
 
     // when
-    Map<FriendId, UserDetails> page = userRepository.getFriendList(user.getId(), 0, 2);
+    Pageable pageable = PageRequest.of(0, 2);
+    Page<ManageFriendsUseCase.FriendResult> page =
+            userRepository.getFriendList(user.getId(), pageable);
 
     // then
-    assertThat(page).hasSize(2);
+    assertThat(page.getContent()).hasSize(2);
+    assertThat(page.getTotalElements()).isEqualTo(2);
+    assertThat(page.getTotalPages()).isEqualTo(1);
+    assertThat(page.getNumber()).isEqualTo(0);
+    assertThat(page.isFirst()).isTrue();
+    assertThat(page.isLast()).isTrue();
   }
 }

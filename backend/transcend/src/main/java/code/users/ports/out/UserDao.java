@@ -6,10 +6,15 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import java.util.Map;
 import java.util.Optional;
 
+import code.users.ports.in.ManageFriendsUseCase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface UserDao {
+
+  Page<User> searchUsers(String query, Pageable pageable);
 
   Optional<User> findById(UserId id);
 
@@ -29,7 +34,7 @@ public interface UserDao {
 
   void removeFriend(UserId userId, FriendId friendId);
 
-  Map<FriendId, UserDetails> getFriendList(UserId userId, int page, int size);
+  public Page<ManageFriendsUseCase.FriendResult> getFriendList(UserId userId, Pageable pageable);
 
   boolean exists(FriendId friendId);
 

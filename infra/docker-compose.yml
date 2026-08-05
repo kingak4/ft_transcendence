@@ -1,0 +1,4 @@
+include:
+  - postgres/docker-compose.yml
+  - redis/docker-compose.yml
+  - nginx/docker-compose.yml

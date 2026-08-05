@@ -1,5 +1,6 @@
 'use server';
 
+import type { ActionResponse } from './action-response';
 import { client } from './api-clients';
 
 export async function register(
@@ -18,10 +19,20 @@ export async function register(
       /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const errAny = error as any;
       console.error('Register Error:', error);
+      let message = error?.detail || 'An error occurred during registration.';
+      if (errAny?.properties) {
+        const emailError = errAny.properties['register.command.email'];
+        const passwordError = errAny.properties['register.command.rawPassword'];
+        const details = [emailError, passwordError].filter(Boolean).join('\n');
+        if (details) {
+          message += `\n\n${details}`;
+        }
+      }
+
       return {
         success: false,
         status: error?.status,
-        message: `${error?.detail}:\n\n${errAny?.properties['register.command.email']}'\n'${errAny?.properties['register.command.rawPassword']}`,
+        message,
       };
     }
     return { success: true, status: 200, message: `user ID: ${data?.id}` };
@@ -34,9 +45,3 @@ export async function register(
     };
   }
 }
-
-export type ActionResponse = {
-  success: boolean;
-  status?: number;
-  message?: string;
-};

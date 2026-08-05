@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-create-messages-table
+      author: dev
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: val
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: chat_id
+            referencedTableName: chat
+            referencedColumnNames: val
+            constraintName: fk_messages_chat
+            onDelete: CASCADE
+        - createIndex:
+            indexName: idx_messages_chat_id
+            tableName: messages
+            columns:
+              - column:
+                  name: chat_id
+              - column:
+                  name: created_at

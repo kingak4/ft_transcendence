@@ -1,28 +1,39 @@
-.PHONY: all up down re logs ps clean killall network
-
-all: up
-
-network:
-	docker network create transcend-net 2>/dev/null || true
+include .env
+.PHONY: up build down rebuild re network
 
 up: network
-	$(MAKE) -C postgres up
-	$(MAKE) -C redis up
+	make -C nginx up
+	make -C postgres up
+	make -C redis up
+
+build:
+	make -C nginx build
+	make -C postgres build
+	make -C redis build
 
 down:
-	$(MAKE) -C postgres down
-	$(MAKE) -C redis down
-	docker network rm transcend-net 2>/dev/null || true
+	make -C nginx down
+	make -C postgres down
+	make -C redis down
+	-docker network rm transcend-net
+
+rebuild: down build up
 
 re: down up
 
-ps:
-	$(MAKE) -C postgres ps
-	$(MAKE) -C redis ps
+# Utils
+.PHONY: ps clean killall
 
 clean:
 	$(MAKE) -C postgres clean
 	$(MAKE) -C redis clean
 
+ps:
+	$(MAKE) -C postgres ps
+	$(MAKE) -C redis ps
+
 killall:
 	ids=$$(docker ps -aq); [ -n "$$ids" ] && docker rm -f $$ids
+
+network:
+	-docker network create transcend-net

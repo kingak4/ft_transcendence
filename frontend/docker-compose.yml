@@ -1,0 +1,13 @@
+services:
+  transcend-frontend:
+    build:
+      context: .
+    container_name: transcend-frontend
+    env_file:
+      - .env
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: transcend-net
