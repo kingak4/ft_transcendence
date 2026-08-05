@@ -90,17 +90,17 @@ TODO
 
 ### ⚙️ Core Web Infrastructure
 
-#### 1. Framework-Based Architecture (Major — 2pts)
+#### 1. Framework-Based Architecture (IV.1.A — Major, 2pts)
 * **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** as a single-page application (SPA) using a Backend-for-Frontend (BFF) pattern with JWT based authentication.
 
 * **Reasons:** Provides dependency injection, complete frontend-backend separation, secure token management, and enterprise-grade maintainability / future scalability.
 
-#### 2. Microservices Architecture (Major — 2pts)
+#### 2. Microservices Architecture (IV.7.C — Major, 2pts)
 * **Implementation:** The backend was built using **Spring Modulith** with loosely-coupled modules. Services are documented with **OpenAPI** specifications for synchronous communication and **AsyncAPI** specifications for event-driven messaging. Each module contains independent services adhering to the single responsibility principle. REST endpoints are documented via OpenAPI/Swagger; asynchronous messaging patterns follow AsyncAPI standards for WebSocket and STOMP-based communication.
 
 * **Reasons:** Reduces dependency entanglement, ensures module autonomy, enables independent scaling, facilitates team parallelization, and provides clear API contracts. Modular structure allows straightforward migration to full microservices if needed.
 
-#### 3. Database Object-Relational Mapping (Minor — 1pt)
+#### 3. Database Object-Relational Mapping (IV.1.G — Minor, 1pt)
 * **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping.
 
 * **Reasons:** Prevents SQL injection vulnerabilities, maintains type safety, abstracts database schema complexity.
@@ -109,12 +109,12 @@ TODO
 
 ### 💬 Communication & Social Features
 
-#### 4. Real-Time WebSockets Module (Major — 2pts)
+#### 4. Real-Time WebSockets Module (IV.1.D — Major, 2pts)
 * **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)**. The architecture efficiently broadcasts messages across clients, gracefully handles connection/disconnection lifecycles, and synchronizes system state for live features.
 
 * **Reasons:** Eliminates constant HTTP polling, providing an immersive user experience essential for chatting and live updates.
 
-#### 5. User Interaction & Core Social Systems (Major — 2pts)
+#### 5. User Interaction & Core Social Systems (IV.1.E — Major, 2pts)
 * **Implementation:** Developed a suite for user interactions, including:
     * **Chat:** A real-time messaging service to send/receive messages between users.
     * **Profile Page:** Pages to view user-specific information.
@@ -122,7 +122,7 @@ TODO
 
 * **Reasons:** Establishes the core pillars for a social platform, ensuring users can communicate with each other and build their network.
 
-#### 6. Organization System for Forums (Major — 2pts)
+#### 6. Organization System for Forums (IV.3.E — Major, 2pts)
 * **Implementation:** Developed a forum platform, enabling users to create, edit, and delete sub-communities. It manages member lists (adding/removing users) and isolates permissions, allowing users to perform scoped CRUD actions, based on their given Role, only within an assigned organization.
 
 * **Reasons:** Grouping users enables structured sub-communities within the forum space, organizing interactions and related content.
@@ -132,17 +132,17 @@ TODO
 
 ### 🔐 Security, Authentication & Access Control
 
-#### 7. Standard User Management & Authentication (Major — 2pts)
+#### 7. Standard User Management & Authentication (IV.3.A — Major, 2pts)
 * **Implementation:** Using **Spring Security**, implemented email and password authentication (salted and hashed passwords). Features registration, login flows, profile modifications, and avatar uploads. Incorporates form and user input validation across both the frontend and backend.
 
 * **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
 
-#### 8. Secured Public API (Major — 2pts)
+#### 8. Secured Public API (IV.1.F — Major, 2pts)
 * **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes strict **rate limiting** and is fully documented following 'living documentation' principles.
 
 * **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
 
-#### 9. Advanced Permissions & Role Management (Major — 2pts)
+#### 9. Advanced Permissions & Role Management (IV.3.D — Major, 2pts)
 * **Implementation:** Built a Role-Based Access Control (RBAC) system managing distinct forum roles (Admin, Moderator, User, Guest). Features include per-role frontend UI views and backend action restrictions.
 
 * **Reasons:** Establishes hierarchies to prevent data tampering, enforces authorized data manipulation, and allows moderators/admins to maintain community standards.
@@ -151,11 +151,29 @@ TODO
 
 ### 📊 Devops, Monitoring & Observability
 
-#### 10. Centralized Log Management - ELK Stack (Major — 2pts)
+#### 10. Centralized Log Management - ELK Stack (IV.7.A — Major, 2pts)
 TODO
 
-#### 11. Monitoring & Alerting - Prometheus & Grafana (Major — 2pts)
+#### 11. Monitoring & Alerting - Prometheus & Grafana (IV.7.B — Major, 2pts)
 TODO
+
+---
+
+### Modules table summary
+
+| Module ID | Module Name | Points | Detailed requirements list | 42Hub requirements fulfillment |
+| --- | --- | --- | --- | --- |
+| 1 | IV.1 Web - A. Use a framework for both the frontend and backend. | 2 |◦ Use a frontend framework (React, Vue, Angular, Svelte, etc.).◦ Use a backend framework (Express, NestJS, Django, Flask, Ruby on Rails, etc.).◦ Full-stack frameworks (Next.js, Nuxt.js, SvelteKit) count as both if you use both their frontend and backend capabilities.| Java Spring Boot on Backend, Next.js on Frontend |
+| 2 | IV.1 Web - B. Use a frontend framework (React, Vue, Angular, Svelte, etc.). | 1 | | |
+| 3 | IV.1 Web - C. Use a backend framework (Express, Fastify, NestJS, Django, etc.). | 1 | | |
+| 4 | IV.1 Web - D. Implement real-time features using WebSockets or similar technology. | 2 |◦ Real-time updates across clients.◦ Handle connection/disconnection gracefully.◦ Efficient message broadcasting. | |
+| 5 | IV.1 Web - E. Allow users to interact with other users. | 2 | ◦ A basic chat system (send/receive messages between users).◦ A profile system (view user information).◦ A friends system (add/remove friends, see friends list).| |
+| 6 | IV.1 Web - F. A public API to interact with the database with a secured API key, rate limiting, documentation, and at least 5 endpoints | 2 | | |
+| 7 | IV.1 Web - J. Server-Side Rendering (SSR) for improved performance and SEO.| 1 | | |
+| 8 | IV.1 Web - L. Custom-made design system with reusable components, including a proper color palette, typography, and icons (minimum: 10 reusable components).| 1 | | |
+| 9 | IV.3 User Management - A. Standard user management and authentication. | 2 | ◦ Users can update their profile information.◦ Users can upload an avatar (with a default avatar if none provided).◦ Users can add other users as friends and see their online status.◦ Users have a profile page displaying their information.| |
+| 10 | IV.3 User Management - D. Advanced permissions system | 2 | ◦ View, edit, and delete users (CRUD).◦ Roles management (admin, user, guest, moderator, etc.).◦ Different views and actions based on user role.| |
+| 11 | IV.7 Devops - C. Backend as microservices. | 2 |◦ Design loosely-coupled services with clear interfaces.◦ Use REST APIs or message queues for communication.◦ Each service should have a single responsibility.| |
 
 ---
 
