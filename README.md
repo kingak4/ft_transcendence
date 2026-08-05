@@ -11,25 +11,33 @@ This project is licensed under the GNU GPL v3 License.
 
 ## 📌 42hub.tech Project Description
 
-The goal is to enable user interaction through real-time communication and community building.
+The goal is to enable user interaction through real-time communication.
 
-The platform provides three functionalities:
-*   **Secure Authentication:** A user management system supporting registration, login, and session handling.
-*   **Chat:** A messaging system that allows users to connect and exchange messages in real time.
+The platform provides the following functionalities:
+*   **Authentication:** A user management system supporting registration, login, and session handling.
+*   **Chat:** A messaging system that allows users to connect and exchange messages.
 
 ## ⚙️ Setup
 
-Create and configure the environment files before running the project, either manually or by running `make env` (using the defaults):
+Create and configure all .eenvironment files before running the project, either manually or by running `make env` (using the defaults):
 
-- [infra/.env](infra/.env) and [infra/.env.example](infra/.env.example)
 - [infra/postgres/.env](infra/postgres/.env) and [infra/postgres/.env.example](infra/postgres/.env.example)
 - [infra/redis/.env](infra/redis/.env) and [infra/redis/.env.example](infra/redis/.env.example)
-- [backend/.env](backend/.env) and [backend/.env.example](backend/.env.example)
+- [infra/.env](infra/.env) and [infra/.env.example](infra/.env.example)
+- [frontend/.env](frontend/.env) and [frontend/.env.example](frontend/.env.example)
 - [backend/transcend/.env](backend/transcend/.env) and [backend/transcend/.env.example](backend/transcend/.env.example)
+- [backend/.env](backend/.env) and [backend/.env.example](backend/.env.example)
+
+Or run the following to use the default values:
+```bash
+make env
+```
 
 ## ▶️ Instructions
 
-From the repository root, start the application on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders (see supporting documentation).
+From the repository root, start the application on dev profile with `make up`. 
+
+Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders (see supporting documentation).
 
 Supporting documentation:
 
@@ -38,7 +46,6 @@ Supporting documentation:
 - [Frontend README](frontend/README.md)
 
 Application will be available via nginx proxy on port 8443.
-
 
 ## 👥 Team Information
 ### [Kinga](https://github.com/kingak4) — Project Manager & Developer
@@ -50,7 +57,6 @@ Lead the project through the full development lifecycle while contributing as a 
 * **UI/UX Design:** Designed the application's visual identity and user interface, creating high-fidelity mockups and feature visualizations in Canva. Planned the layout, user flows, and overall user experience to ensure a consistent design across all modules.
 * **Design Documentation:** Documented UI concepts, workflows, and feature specifications in Confluence, providing implementation guidelines and maintaining design consistency throughout development.
 * **Project Documentation Repository:** Created and maintained the [Documentation](docs/) folder containing project-related documentation, including UI/UX visualizations, articles, meeting presentations, and progress tracking materials. Organized resources such as design concepts, feature descriptions, project updates, and presentation materials to provide a centralized knowledge base for the team.
-* **Chat Module:** Implemented the Real-Time Chat Module feature.
 * **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
 * **Legal & Compliance:** Drafted the Privacy Policy and integrated the Open-Source License into the repository.
 
@@ -69,6 +75,9 @@ Established a structured workflow for team coordination and task execution:
 **Tools:** Jira (task tracking), Confluence (project documentation, architecture & design specifications), Canva (UI/UX mockups and feature visualizations), Slack (project communication), Messenger (rapid team updates).
   
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
+TODO
+
+#### Individual Contributions
 TODO
 
 ### [Alina](https://github.com/alrltgit) — DevOps, Database Engineer
@@ -91,6 +100,9 @@ Designed and maintained the project's infrastructure and database layer
 *   **Testing:** Wrote integration tests for the repository layer.
 *   **Documentation:** Created and maintained database documentation, including the entity-relationship diagram.
 
+#### Individual Contributions
+TODO
+
 
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
 
@@ -100,6 +112,9 @@ Led the initial frontend setup and established core integrations for REST API an
 *   **API Integration:** Developed the integration layer between the Next.js frontend and the Spring Boot backend. Implemented the BFF (Backend-for-Frontend) pattern, API web clients, and robust error handling for authentication flows (login/register).
 *   **Real-Time Communication:** Integrated WebSocket (STOMP) connections on the client side, enabling real-time chat functionality and live user presence (online/offline) updates.
 *   **UI/UX Design:** Designed and developed the foundational layout and aesthetics for the platform's landing page and user profile views.
+
+#### Individual Contributions
+TODO
 
 ### [Zyta](https://github.com/aktyz) — Frontend Developer & Designer
 Owned the application's visual language and component library, built the identity and social surfaces of the SPA (profile, friends, chat), introduced the project's CI pipeline, and took ownership of the build environments and their verification.
@@ -129,98 +144,124 @@ Owned the application's visual language and component library, built the identit
 *   **Build Reliability:** Repaired the root-to-service Makefile chain and added content-based staleness tracking, so `make up` rebuilds images only when their build context actually changed. Made the shared Docker network creation idempotent and fixed the environment strategy (`.env` + optional `.env.local`) so local and containerized runs stay consistent.
 *   **Automated Verification:** Authored `docs/env_verification.sh` — an end-to-end check of both builds covering HTTPS routes, closed backend ports, loopback isolation, and cross-build leak checks.
 
+#### Individual Contributions
+TODO
+
+## ✨ Features List
+TODO
+
 ## 🔄 Development Lifecycle & Practices
 
 ### Workflow
 All feature development followed a structured, API-first approach that enabled parallel execution across different technology layers:
-* **Requirements & Core Domain:** Feature development began with business requirements defined by the Project Manager (**Kinga**). The Technical Lead (**Szymon**) then implemented the core domain models and use cases in Java, exposing the functionality via REST APIs.
+* **Requirements & Core Domain:** Feature development began with business requirements defined by the Project Manager (**Kinga**). The Technical Lead (**Szymon**) then implemented the core domain models and use cases in Java, exposing the functionality via REST and Async APIs.
 * **Parallel Integration:** Once the API contracts were established, the team split into simultaneous tracks to prevent bottlenecks:
   * **Persistence Layer (Infra):** Implementing database repositories and integrating infrastructure (**Alina**).
-  * **Client Layer (Frontend):** Designing the UI components (**Zyta**) and consuming the exposed backend endpoints (**Kacper**).
+  * **Client Layer (Frontend):** Designing the UI components (**Zyta**) and consuming the backend endpoints (**Kacper**).
 
-### Code Quality & Version Control Standards
-Integration standards were enforced through an automated CI pipeline combined with team policies and repository configuration:
+### CI/CD Pipeline
+Integration standards were enforced through an CI pipeline combined with team policies and repository configuration:
 
-* **Continuous Integration (GitHub Actions):** Every push and pull request targeting `main` runs a three-job pipeline that goes beyond compilation checks:
-  * **Backend tests** — the Gradle test suite executed inside Docker against real PostgreSQL and Redis containers, not mocks.
-  * **Dev/eval build verification** — brings up the full containerized stack and asserts the security topology: REST and STOMP endpoints must answer through nginx's HTTPS proxy while the backend's direct ports are confirmed closed. It then generates API types from the live OpenAPI/AsyncAPI specs, lints and builds the Next.js frontend, and verifies the homepage is served end-to-end through nginx.
+* **Continuous Integration (GitHub Actions):** Every push and pull request targeting `main` runs a three-job pipeline:
+  * **Backend tests** — the Gradle test suite executed inside Docker against PostgreSQL and Redis containers.
+  * **Dev/eval build verification** — brings up the containerized stack and asserts the security topology: REST and STOMP endpoints must answer through nginx's HTTPS proxy while the backend's ports are confirmed closed. It then generates API types from the live OpenAPI/AsyncAPI specs, lints and builds the Next.js frontend, and verifies the homepage is served end-to-end through nginx.
   * **Local build verification** — validates the frontend developer workflow: the backend must be published on loopback only (`127.0.0.1:5001`, invisible to the network) with health and STOMP endpoints reachable for a host-run dev server.
-  * Docker layer, Gradle, and Next.js caches keep full pipeline runs to a few minutes.
-* **Automated Formatters & Linters:** Integrated static analysis tools to eliminate stylistic debates, catch logical bugs before runtime, and enforce framework best practices. This allowed peer reviews to focus entirely on architecture and business logic.
-* **Strict GitHub Flow:** Adopted an isolated feature-branching strategy. Developers frequently synced with the main branch to preempt massive merge conflicts, submitting all work exclusively through Pull Requests.
+  * Docker layer, Gradle, and Next.js caches keep pipeline runs to a few minutes.
+
+### Team's Code Quality & Version Control Standards
+* **Formatters & Linters:** Integrated static analysis tools to eliminate stylistic debates, catch logical bugs before runtime, and enforce framework best practices. This allowed peer reviews to focus entirely on architecture and business logic.
+* **GitHub Flow:** Adopted a feature-branching strategy. Developers frequently synced with the main branch to preempt massive merge conflicts, submitting all work exclusively through Pull Requests.
 * **Conventional Commits:** Enforced structured commit messaging. This provided instant context for changes, streamlined debugging, and prepped the repository for automated release changelogs.
 * **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable pushes to main and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
 
 
 ## 🛠️ Technical Stack
+### Spring Boot Backend
 TODO
+
+### Next.js Frontend
+TODO
+
+### PostgreSQL and Redis
+TODO
+
+### Nginx
+TODO
+
+### Makefile orchestration
+
 
 ## 🗄️ Database Schema
-![Diagram](postgres_db_diagram.png)
-
-## ✨ Features List
-TODO
+![Diagram](./docs/postgres_db_diagram.png)
 
 ## 🧩 Modules
 
-### ⚙️ Core Web Infrastructure
+### Web Infrastructure
 
-#### 1. Framework-Based Architecture (Major — 2pts)
+#### Framework-Based Architecture (Major — 2pts)
 * **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** as a single-page application (SPA) using a Backend-for-Frontend (BFF) pattern with JWT based authentication.
+
+* **Story**: TODO
 
 * **Reasons:** Provides dependency injection, complete frontend-backend separation, secure token management, and enterprise-grade maintainability / future scalability.
 
-#### 2. Microservices Architecture (Major — 2pts)
-* **Implementation:** The backend was built using **Spring Modulith** with loosely-coupled modules. Services are documented with **OpenAPI** specifications for synchronous communication and **AsyncAPI** specifications for event-driven messaging. Each module contains independent services adhering to the single responsibility principle. REST endpoints are documented via OpenAPI/Swagger; asynchronous messaging patterns follow AsyncAPI standards for WebSocket and STOMP-based communication.
+* **People Responsible**: TODO
 
-* **Reasons:** Reduces dependency entanglement, ensures module autonomy, enables independent scaling, facilitates team parallelization, and provides clear API contracts. Modular structure allows straightforward migration to full microservices if needed.
-
-#### 3. Database Object-Relational Mapping (Minor — 1pt)
-* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping.
-
-* **Reasons:** Prevents SQL injection vulnerabilities, maintains type safety, abstracts database schema complexity.
-
----
-
-### 💬 Communication & Social Features
-
-#### 4. Real-Time WebSockets Module (Major — 2pts)
+#### Real-Time WebSockets Module (Major — 2pts)
 * **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)**. The architecture efficiently broadcasts messages across clients, gracefully handles connection/disconnection lifecycles, and synchronizes system state for live features.
+
+* **Story**: TODO
 
 * **Reasons:** Eliminates constant HTTP polling, providing an immersive user experience essential for chatting and live updates.
 
-#### 5. User Interaction & Core Social Systems (Major — 2pts)
+* **People Responsible**: TODO
+
+#### Secured Public API (Major — 2pts)
+* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes **rate limiting** and is documented following 'living documentation' principles.
+
+* **Story**: TODO
+
+* **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
+
+* **People Responsible**: TODO
+
+#### Database Object-Relational Mapping (Minor — 1pt)
+* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping.
+
+* **Story**: TODO
+
+* **Reasons:** Prevents SQL injection vulnerabilities, maintains type safety, abstracts database schema complexity.
+
+* **People Responsible**: TODO
+
+---
+
+### Communication & Social Features
+
+#### User Interaction & Core Social Systems (Major — 2pts)
 * **Implementation:** Developed a suite for user interactions, including:
     * **Chat:** A real-time messaging service to send/receive messages between users.
     * **Profile Page:** Pages to view user-specific information.
     * **Friends System:** Functionality to add/remove friends and view a list of friends with real-time online/offline statuses.
 
+* **Story**: TODO
+
 * **Reasons:** Establishes the core pillars for a social platform, ensuring users can communicate with each other and build their network.
+
+* **People Responsible**: TODO
 
 ---
 
-### 🔐 Security, Authentication & Access Control
+### Security, Authentication & Access Control
 
-#### 6. Standard User Management & Authentication (Major — 2pts)
+#### Standard User Management & Authentication (Major — 2pts)
 * **Implementation:** Using **Spring Security**, implemented email and password authentication (salted and hashed passwords). Features registration, login flows, profile modifications, and avatar uploads. Incorporates form and user input validation across both the frontend and backend.
+
+* **Story**: TODO
 
 * **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
 
-#### 7. Secured Public API (Major — 2pts)
-* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes **rate limiting** and is documented following 'living documentation' principles.
-
-* **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
-
----
-
-### 📊 Devops, Monitoring & Observability
-
-#### 10. Centralized Log Management - ELK Stack (Major — 2pts)
-TODO
-
-#### 11. Monitoring & Alerting - Prometheus & Grafana (Major — 2pts)
-TODO
-
+* **People Responsible**: TODO
 ---
 
 ## 📚 Resources

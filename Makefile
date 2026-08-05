@@ -29,6 +29,9 @@ env:
 		echo "Created $$dir/.env from $$file"; \
 	done
 
+%/.env: %/.env.example
+	cp $< $@
+	echo "Created $@ from $<"
 # Utils
 .PHONY: frontend-local
 
