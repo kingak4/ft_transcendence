@@ -75,10 +75,16 @@ Established a structured workflow for team coordination and task execution:
 **Tools:** Jira (task tracking), Confluence (project documentation, architecture & design specifications), Canva (UI/UX mockups and feature visualizations), Slack (project communication), Messenger (rapid team updates).
   
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
-TODO
+
+Managed the technical side of the project during initial stages of development. Defined the technology stack and standards.
 
 #### Individual Contributions
-TODO
+- Architectured a Hexagonal spring boot backend following SOA, DDD, UseCase centric design, separation of Concerns and CQRS, enabling development consistent with the Open closed principle.
+- Oversaw frontend backend JWT token integration, for stateless Rest API and STOMP websocket AsyncApi, allowing for secure token isolation and permission management with Spring Security.
+- Documented the backend according to the Docs as Code, Self Documenting Code, and Living Documentation principles.
+- Utilized gradle plugins and test pipelines for diagram and asciidoc generation, providing insight into the architecture and state of the backend.
+- Tested the backend in accordance with TDD and BDD, utilized Spring context splitting.
+- Integrated Spring WebSockets with Redis.
 
 ### [Alina](https://github.com/alrltgit) — DevOps, Database Engineer
 
@@ -102,7 +108,6 @@ Designed and maintained the project's infrastructure and database layer
 
 #### Individual Contributions
 TODO
-
 
 ### [Kacper](https://github.com/Fistxszek) — Frontend Developer, API Integration Engineer
 
@@ -177,19 +182,19 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 ## 🛠️ Technical Stack
 ### Spring Boot Backend
-TODO
+was the backend of choice due to Szymon's pre-exiting knowledge of the technology.
 
 ### Next.js Frontend
-TODO
+was the frontend of choice due to Kacper's interest in the technology.
 
 ### PostgreSQL and Redis
-TODO
+were the most common open source technologies, and were the go-to choice for integration with Spring boot.
 
 ### Nginx
-TODO
+simplest open source router that allowed for SSL certificate configuration
 
 ### Makefile orchestration
-
+this custom setup was made to adhere to the Separation of concerns.
 
 ## 🗄️ Database Schema
 ![Diagram](./docs/postgres_db_diagram.png)
