@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
-import StompProvider from './components/StompProvider';
 import { THEME_CLASSES, THEME_STORAGE_KEY } from './lib/theme';
 
 // Runs before paint to apply the stored flavour, avoiding a flash of the default
@@ -23,11 +22,13 @@ const themeInitScript = `
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -51,7 +52,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
-        <StompProvider>{children}</StompProvider>
+        {children}
       </body>
     </html>
   );

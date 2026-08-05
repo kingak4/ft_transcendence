@@ -1,7 +1,12 @@
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+import { client } from '../lib/api-clients';
+import { assertValidSession } from '../lib/session';
 
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import StompProvider from '../components/StompProvider';
 
 export default async function AppLayout({
   children,
@@ -11,13 +16,25 @@ export default async function AppLayout({
   const cookieStore = await cookies();
   const userId = cookieStore.get('user_id')?.value ?? null;
 
+  if (!userId) {
+    redirect('/login');
+  }
+
+  const isValidSession = await assertValidSession();
+
+  if (!isValidSession) {
+    redirect('/auth/logout');
+  }
+
   return (
-    <div className="bg-surface text-on-surface flex min-h-screen">
-      <Sidebar userId={userId} />
-      <div className="flex flex-1 flex-col">
-        <main className="flex-1 p-8">{children}</main>
-        <Footer />
+    <StompProvider>
+      <div className="bg-surface text-on-surface flex min-h-screen">
+        <Sidebar userId={userId} />
+        <div className="flex flex-1 flex-col">
+          <main className="flex-1 p-8">{children}</main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </StompProvider>
   );
 }

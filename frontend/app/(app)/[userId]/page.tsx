@@ -69,7 +69,7 @@ export default async function UserProfilePage({ params, searchParams }: Props) {
   });
 
   if (response.status === 401 || response.status === 403) {
-    redirect('/login');
+    redirect('/auth/logout');
   }
 
   if (response.status === 404 || !data) {
