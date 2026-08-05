@@ -1,7 +1,6 @@
 package code.chat.domain.model;
 
 import io.micrometer.common.lang.NonNull;
-
 import java.util.UUID;
 
 public record UserId(UUID val) {

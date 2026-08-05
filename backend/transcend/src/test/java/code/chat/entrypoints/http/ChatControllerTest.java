@@ -76,28 +76,21 @@ class ChatControllerTest {
     UUID avatarId = UUID.randomUUID();
 
     List<GetChatsUseCase.ChatSummary> content =
-            List.of(
-                    new GetChatsUseCase.ChatSummary(
-                            ChatId.of(CHAT_UUID_FIXTURE),
-                            UserId.of(otherUserId),
-                            displayName,
-                            avatarId));
+        List.of(
+            new GetChatsUseCase.ChatSummary(
+                ChatId.of(CHAT_UUID_FIXTURE), UserId.of(otherUserId), displayName, avatarId));
     Page<GetChatsUseCase.ChatSummary> chatSummaryPage =
-            new PageImpl<>(content, PageRequest.of(0, 10), 1);
+        new PageImpl<>(content, PageRequest.of(0, 10), 1);
     when(getChatsUseCase.getChatList(UserId.of(AUTH_USER_ID), 0, 10)).thenReturn(chatSummaryPage);
 
     mockMvc
-            .perform(
-                    get("/chats")
-                            .param("page", "0")
-                            .param("size", "10")
-                            .principal(authentication()))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].chatId").value(CHAT_UUID_FIXTURE.toString()))
-            .andExpect(jsonPath("$.content[0].otherUserId").value(otherUserId.toString()))
-            .andExpect(jsonPath("$.content[0].displayName").value(displayName))
-            .andExpect(jsonPath("$.content[0].avatarId").value(avatarId.toString()))
-            .andExpect(jsonPath("$.totalElements").value(1));
+        .perform(get("/chats").param("page", "0").param("size", "10").principal(authentication()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content[0].chatId").value(CHAT_UUID_FIXTURE.toString()))
+        .andExpect(jsonPath("$.content[0].otherUserId").value(otherUserId.toString()))
+        .andExpect(jsonPath("$.content[0].displayName").value(displayName))
+        .andExpect(jsonPath("$.content[0].avatarId").value(avatarId.toString()))
+        .andExpect(jsonPath("$.totalElements").value(1));
 
     verify(getChatsUseCase).getChatList(UserId.of(AUTH_USER_ID), 0, 10);
   }

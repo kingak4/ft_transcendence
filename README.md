@@ -153,7 +153,19 @@ Owned the application's visual language and component library, built the identit
 TODO
 
 ## ✨ Features List
-TODO
+- GetChatMessages
+- GetChats
+- ManageMessages
+- StartChat
+- GetProfile
+- ManageFriends
+- ReadPresence
+- Register
+- UpdateAvatar
+- UpdatePresence
+- Login
+- SearchUsers
+- UpdateDisplayName
 
 ## 🔄 Development Lifecycle & Practices
 

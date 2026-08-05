@@ -16,7 +16,9 @@ class ChatRepositoryTest : ChatDaoTestSupport() {
     Given("two chats exist") {
       val otherChatId =
         chatDao.createChat(
-          Chat.builder().participants(setOf(CHAT_MEMBER1_ID_FIXTURE, CHAT_MEMBER2_ID_FIXTURE)).build()
+          Chat.builder()
+            .participants(setOf(CHAT_MEMBER1_ID_FIXTURE, CHAT_MEMBER2_ID_FIXTURE))
+            .build()
         )
       val message = ChatFixtures.aMessageBuilder(CHAT_MEMBER1_ID_FIXTURE).chatId(chatId).build()
 

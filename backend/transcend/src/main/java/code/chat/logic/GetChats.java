@@ -3,8 +3,8 @@ package code.chat.logic;
 import code.chat.domain.model.UserId;
 import code.chat.ports.in.GetChatsUseCase;
 import code.chat.ports.out.ChatDao;
-import org.springframework.data.domain.Page;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service

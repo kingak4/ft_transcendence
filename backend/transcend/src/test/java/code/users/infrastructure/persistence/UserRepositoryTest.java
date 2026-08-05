@@ -176,7 +176,7 @@ public class UserRepositoryTest {
     // when
     Pageable pageable = PageRequest.of(0, 2);
     Page<ManageFriendsUseCase.FriendResult> page =
-            userRepository.getFriendList(user.getId(), pageable);
+        userRepository.getFriendList(user.getId(), pageable);
 
     // then
     assertThat(page.getContent()).hasSize(2);

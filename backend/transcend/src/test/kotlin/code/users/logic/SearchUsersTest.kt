@@ -36,10 +36,7 @@ class SearchUsersTest(private val service: SearchUsersUseCase) : UserDaoTestSupp
       When("searching users with a matching query (full or partial match)") {
         val resultFull = service.searchUsers(DISPLAY_NAME_FIXTURE, pageable)
         val resultPartial =
-          service.searchUsers(
-            DISPLAY_NAME_FIXTURE.substring(0, 3).lowercase(),
-            pageable
-          )
+          service.searchUsers(DISPLAY_NAME_FIXTURE.substring(0, 3).lowercase(), pageable)
 
         Then("it should return the user successfully") {
           resultFull.content.shouldNotBeEmpty()

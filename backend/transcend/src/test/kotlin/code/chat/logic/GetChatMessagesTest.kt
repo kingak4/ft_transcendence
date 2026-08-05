@@ -7,13 +7,12 @@ import code.chat.domain.model.ChatUserFixtures.*
 import code.chat.ports.`in`.GetChatMessagesUseCase
 import code.users.domain.model.Role
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.annotation.Ignored
 import io.kotest.matchers.collections.shouldHaveSize
 import java.util.*
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-//@Ignored
+// @Ignored
 @Import(GetChatMessages::class)
 class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDaoTestSupport() {
 
@@ -73,7 +72,7 @@ class GetChatMessagesTest(private val service: GetChatMessagesUseCase) : ChatDao
 
         When("requesting messages") {
           authenticateAs(CHAT_MEMBER2_ID_FIXTURE, Role.ADMIN)
-//          service.getChatMessages(nonExistentChatId, 0, 10)
+          //          service.getChatMessages(nonExistentChatId, 0, 10)
 
           Then("it should throw ChatNotFoundException") {
             shouldThrow<ChatNotFoundException> { service.getChatMessages(nonExistentChatId, 0, 10) }

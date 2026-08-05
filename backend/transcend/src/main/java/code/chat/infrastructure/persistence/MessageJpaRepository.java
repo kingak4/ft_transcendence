@@ -5,5 +5,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageJpaRepository extends JpaRepository<MessageEntity, MessageIdEntity> {
-    Page<MessageEntity> findByChatIdOrderByCreatedAtDesc(ChatIdEntity chatId, Pageable pageable);
+  Page<MessageEntity> findByChatIdOrderByCreatedAtDesc(ChatIdEntity chatId, Pageable pageable);
 }

@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JacksonConfig {
-    @Bean
-    public SimpleModule friendIdModule() {
-        SimpleModule module = new SimpleModule();
-        module.addKeySerializer(FriendId.class, new FriendIdKeySerializer());
-        return module;
-    }
+  @Bean
+  public SimpleModule friendIdModule() {
+    SimpleModule module = new SimpleModule();
+    module.addKeySerializer(FriendId.class, new FriendIdKeySerializer());
+    return module;
+  }
 }

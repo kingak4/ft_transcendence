@@ -2,16 +2,15 @@ package code.users.entrypoints.http;
 
 import static code.users.entrypoints.http.FriendsController.FRIENDS_ENDPOINT;
 
-import code.users.domain.model.FriendId;
-import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
 import code.users.ports.in.ManageFriendsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -40,12 +37,11 @@ public class FriendsPaginationController {
       @RequestParam(value = "size", defaultValue = "10") int size) {
 
     if (page < 0) {
-      throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "page must be >= 0");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "page must be >= 0");
     }
     if (size < 1 || size > MAX_PAGE_SIZE) {
       throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "size must be between 1 and " + MAX_PAGE_SIZE);
+          HttpStatus.BAD_REQUEST, "size must be between 1 and " + MAX_PAGE_SIZE);
     }
 
     UUID userId = UUID.fromString(authentication.getName());

@@ -6,13 +6,12 @@ import code.chat.ports.`in`.StartChatUseCase
 import code.chat.ports.`in`.StartChatUseCase.StartChatCommand
 import code.users.domain.model.Role
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.annotation.Ignored
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-//@Ignored
+// @Ignored
 @Import(StartChat::class)
 class StartChatTest(private val service: StartChatUseCase) : ChatDaoTestSupport() {
 
@@ -22,7 +21,7 @@ class StartChatTest(private val service: StartChatUseCase) : ChatDaoTestSupport(
 
     Given("a user wants to start a chat") {
       And("the user is authenticated and starting a chat as themselves (initiator)") {
-//        authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
+        //        authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)
 
         When("starting a chat with a new recipient") {
           authenticateAs(CHAT_USER_ID_FIXTURE, Role.USER)

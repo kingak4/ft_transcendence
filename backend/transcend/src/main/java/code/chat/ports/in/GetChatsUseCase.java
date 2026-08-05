@@ -2,9 +2,8 @@ package code.chat.ports.in;
 
 import code.chat.domain.model.ChatId;
 import code.chat.domain.model.UserId;
-import org.springframework.data.domain.Page;
 import java.util.UUID;
-
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface GetChatsUseCase {

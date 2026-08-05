@@ -3,9 +3,9 @@ package code.users.ports.in;
 import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ManageFriendsUseCase {
   @PreAuthorize(

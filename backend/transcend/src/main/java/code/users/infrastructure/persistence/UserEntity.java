@@ -36,8 +36,7 @@ public class UserEntity implements Persistable<UserIdEntity> {
   @Column(name = "friend_id", nullable = false)
   private Set<UUID> friends = new HashSet<>();
 
-  @Transient
-  private boolean isNew = true;
+  @Transient private boolean isNew = true;
 
   @Override
   public UserIdEntity getId() {

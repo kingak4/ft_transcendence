@@ -13,13 +13,12 @@ import code.chat.ports.`in`.ManageMessagesUseCase.DeleteMessageCommand
 import code.chat.ports.`in`.ManageMessagesUseCase.SendMessageCommand
 import code.users.domain.model.Role
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.annotation.Ignored
 import io.kotest.matchers.shouldNotBe
 import java.util.UUID
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-//@Ignored
+// @Ignored
 @Import(ManageMessages::class)
 class ManageMessagesTest(private val service: ManageMessagesUseCase) : ChatDaoTestSupport() {
 
