@@ -201,8 +201,6 @@ this custom setup was made to adhere to the Separation of concerns.
 
 ## 🧩 Modules
 
-### Web Infrastructure
-
 #### Framework-Based Architecture (Major — 2pts)
 * **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** as a single-page application (SPA) using a Backend-for-Frontend (BFF) pattern with JWT based authentication.
 
@@ -239,10 +237,6 @@ this custom setup was made to adhere to the Separation of concerns.
 
 * **People Responsible**: TODO
 
----
-
-### Communication & Social Features
-
 #### User Interaction & Core Social Systems (Major — 2pts)
 * **Implementation:** Developed a suite for user interactions, including:
     * **Chat:** A real-time messaging service to send/receive messages between users.
@@ -255,10 +249,6 @@ this custom setup was made to adhere to the Separation of concerns.
 
 * **People Responsible**: TODO
 
----
-
-### Security, Authentication & Access Control
-
 #### Standard User Management & Authentication (Major — 2pts)
 * **Implementation:** Using **Spring Security**, implemented email and password authentication (salted and hashed passwords). Features registration, login flows, profile modifications, and avatar uploads. Incorporates form and user input validation across both the frontend and backend.
 
@@ -267,6 +257,19 @@ this custom setup was made to adhere to the Separation of concerns.
 * **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
 
 * **People Responsible**: TODO
+
+#### Custom-made design system (Minor - 1pts)
+* **Implementation:** TODO
+* **Story**: TODO
+* **Reasons:** TODO
+* **People Responsible**: TODO
+
+#### Server-Side Rendering (SSR) (Minor - 1pts)
+* **Implementation:** TODO
+* **Story**: TODO
+* **Reasons:** TODO
+* **People Responsible**: TODO
+
 ---
 
 ## 📚 Resources
