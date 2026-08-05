@@ -156,7 +156,7 @@ Integration standards were enforced through an automated CI pipeline combined wi
 TODO
 
 ## 🗄️ Database Schema
-TODO
+![Diagram](postgres_db_diagram.png)
 
 ## ✨ Features List
 TODO
