@@ -65,6 +65,12 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
                 return data.chatId as string;
               }
               throw new Error('Failed to create/get chat');
+            }).catch((err) => {
+              if (creationPromiseRef.current?.friendId === friendId) {
+                creationPromiseRef.current = null;
+              }
+              setErrorMsg('Failed to initialize chat');
+              throw err;
             });
             creationPromiseRef.current = { friendId, promise };
           }
@@ -160,7 +166,11 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
             isMine={message.senderId === myUserId}
             onDelete={() => {
               if (chatId) {
-                deleteMessage(chatId, message.messageId);
+                if (!deleteMessage(chatId, message.messageId)) {
+                  setErrorMsg('Failed to delete message: Not connected to server');
+                  return;
+                }
+                setErrorMsg(null);
                 // Optimistic UI update
                 setMessages((prev) => prev.map((m) => 
                   m.messageId === message.messageId

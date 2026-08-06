@@ -8,9 +8,10 @@ export function usePresence(userIdsToWatch: string[] = []) {
   const stompClient = useStompClient();
   const [onlineStatus, setOnlineStatus] = useState<Record<string, boolean>>({});
 
+  const key = userIdsToWatch.join(',');
   const destinations = useMemo(
-    () => userIdsToWatch.map((id) => `${TOPIC_PREFIX}/user/${id}/presence`),
-    [userIdsToWatch]
+    () => (key ? key.split(',').map((id) => `${TOPIC_PREFIX}/user/${id}/presence`) : []),
+    [key]
   );
 
   useSubscription(destinations, (message) => {
