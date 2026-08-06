@@ -2057,7 +2057,7 @@ po drodze” — przy pracy w pojedynkę kusi podwójnie, bo nie ma z kim się u
 się, że nie ma czego ustalać. To jest dokładnie odwrotnie niż w rzeczywistości: umawiasz się
 sama ze sobą z czwartku (§8.2), a ta osoba nie będzie pamiętała rozmowy, której nie zapisałaś.
 
-**Co robisz:** otwierasz eksport designu (`42Hub UIUX design/Forti2Hub.dc.html`) i wypisujesz
+**Co robisz:** otwierasz eksport designu (`docs/42Hub UIUX design upgrade/42Hub.dc.html`) i wypisujesz
 z niego **wartości powtarzalne** — te, które wracają na wielu ekranach. Efektem jest tabela
 w 12.0, nie kod.
 
@@ -2154,8 +2154,8 @@ grep -rn -E 'components/(TextField|Button|Avatar|Card|AccentLink|Tag)' app/compo
 `components/` a zaraz po tym jedna z sześciu nazw w nawiasie. `-E` włącza rozszerzone wzorce,
 dzięki czemu pionowe kreski znaczą »albo«. Ostatnia ścieżka jest w apostrofach, bo zawiera
 nawiasy — powłoka traktuje nawiasy jako swoje własne znaki specjalne, a apostrofy każą jej
-potraktować wszystko w środku dosłownie. To ta sama sytuacja co ze spacją w nazwie katalogu
-`42Hub UIUX design`.”*
+potraktować wszystko w środku dosłownie. To ta sama sytuacja co ze spacjami w nazwie katalogu
+`42Hub UIUX design upgrade`.”*
 
 **Jak czytać wynik:**
 

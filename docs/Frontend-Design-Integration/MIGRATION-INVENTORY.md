@@ -862,6 +862,32 @@ plików — 12.1 jest teraz kolejką jednostek, a nie tabelą "kto co ma".
 Druga zmienia kształt 12.0 (druga kolumna wartości) i dokłada drugą
 jednostkę strukturalną do 12.7.
 
+### 12.0 Słownik layoutu (Faza 0)
+
+Cztery pierwsze wiersze opisują **warunki oceny, nie wartości kodu** —
+i tylko one nie dają się odtworzyć z kodu później. Przy odstępach zawsze
+można zmierzyć, co jest; przy szerokości oceny nie ma czego mierzyć, jest
+wyłącznie to, co tu zapisano.
+
+| Pozycja | Wartość | Skąd / dlaczego | Data |
+|---|---|---|---|
+| Szerokość wąska (ocena) | **360px** | Dominująca szerokość logiczna Androida — praktyczna podłoga rynku. Układ pęka w dół, nigdy w górę: co działa przy 360, działa przy 390 i 430 | 2026-08-06 |
+| Szerokość szeroka (ocena) | *do ustalenia* | Eksport nie niesie szerokości artboardu w formie wydobywalnej (patrz uwaga pod tabelą) | — |
+| Breakpoint | **`lg:` — 1024px** | Pomiar na `/chat` (najbardziej zatłoczona trasa): `window.innerWidth` = **955px** w najmniejszej czytelnej i funkcjonalnej szerokości. Zaokrąglone w górę do najbliższej domyślnej wartości Tailwinda — próg ma zadziałać, **zanim** zrobi się źle, a nie w momencie, gdy już jest. `md:` (768px) byłoby o 187px za nisko | 2026-08-06 |
+| Kierunek zapisu | **mobile-first** | Klasa bez prefiksu = wąski ekran, `lg:` = szeroki. Reguła, nie pomiar (decyzja ①) | 2026-08-06 |
+
+**Uwaga do breakpointu — jedna rzecz do potwierdzenia.** Pomiar wykonano
+na `/chat`, czyli na trasie **wyłączonej z zakresu Kroku 4** (wzorzec
+docelowy, §8.11). Jest to najlepszy dostępny obiekt pomiaru, bo jako
+jedyna trasa jest już zgodna z eksportem, ale mierzy przede wszystkim
+**powłokę** — Sidebar plus panel treści. Zanim 1024 zostanie uznane za
+ostateczne, warto powtórzyć ten sam odczyt na trasie znajomych albo na
+profilu: jeśli któraś umiera powyżej 1024, breakpoint idzie za najgorszym
+przypadkiem, a nie za średnią.
+
+| Kategoria | Rola | Wartość | Wartość mobile (jeśli inna) + dlaczego | Skąd w eksporcie |
+|---|---|---|---|---|
+
 ### 12.2 Rozstrzygnięcie czterech pytań wejściowych (§8.1)
 
 Decyzje podjęte **2026-08-03** przez osobę prowadzącą migrację (Zyta);
