@@ -1,40 +1,45 @@
+import { forwardRef } from 'react';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
 
-/**
- * Inert on this branch: no handlers, no submit. Wiring this up means making it
- * a Client Component and calling the STOMP send destination
- * `/transcend/chat/{chatId}/send` with `{ content }`.
- *
- * TODO(stomp): the full list, in the order it bites:
- *   1. `'use client'` here (and only here, not up the tree), take `chatId` as
- *      a prop, publish `{ content }` to the destination above.
- *   2. Wrap in a <form> with onSubmit so Enter sends and the button is
- *      `type="submit"` - right now Enter does nothing, which reads as broken.
- *   3. Controlled input, cleared on send.
- *   4. Disable the button on empty/whitespace input and while a send is in
- *      flight; the base Button styles already cover `disabled:`. See the
- *      matching note in Button.tsx about why it is enabled today.
- *   5. Handle send failure - the socket can be down. A message that silently
- *      vanishes is worse than a visible error.
- *   6. Decide on optimistic rendering: showing the message immediately needs a
- *      temporary id reconciled against the server's `messageId` on echo.
- */
-export default function Composer() {
+interface Props {
+  inputValue: string;
+  setInputValue: (value: string) => void;
+  handleSend: (e: React.FormEvent) => void;
+  isInputDisabled?: boolean;
+  isButtonDisabled?: boolean;
+  errorMsg?: string | null;
+}
+
+const Composer = forwardRef<HTMLInputElement, Props>(function Composer({ inputValue, setInputValue, handleSend, isInputDisabled, isButtonDisabled, errorMsg }, ref) {
   return (
-    <div className="bg-hub-panel border-hub-border flex shrink-0 items-center gap-3 border-t p-4">
-      {/* `className` here is layout only, which is what TextField permits;
-          colour and padding stay owned by `tone` and `size`. */}
+    <div className="bg-hub-panel border-hub-border flex shrink-0 flex-col border-t p-4">
+      {errorMsg && (
+        <div className="text-red-500 text-sm mb-2">
+          {errorMsg}
+        </div>
+      )}
+      <form 
+        onSubmit={handleSend}
+        className="flex items-center gap-3"
+      >
       <TextField
+        ref={ref}
         tone="chat"
         placeholder="Type a message"
         aria-label="Message"
         className="flex-1"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        disabled={!!isInputDisabled}
+        suppressHydrationWarning
       />
-      {/* Deliberately not `disabled`: the base button styles dim disabled
-          buttons to 50% opacity, which would misrepresent the gradient on a
-          page whose job is to show the design. */}
-      <Button variant="send">Send</Button>
+      <Button variant="send" disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
+        Send
+      </Button>
+    </form>
     </div>
   );
-}
+});
+
+export default Composer;

@@ -1,49 +1,126 @@
+'use client';
+
+import { useMemo, useEffect, useState } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import TextField from '../../components/TextField';
 import FriendRow from './FriendRow';
-import type { Friend } from './fixtures';
+import type { Friend } from './types';
+import { usePresence } from '../../hooks/usePresence';
 
 interface Props {
-  friends: Friend[];
+  activeChats: { chatId: string; friend: Friend }[];
+  allFriends: Friend[];
   activeFriendId: string;
 }
 
-export default function FriendRail({ friends, activeFriendId }: Props) {
+export default function FriendRail({ activeChats, allFriends, activeFriendId }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentQuery = searchParams.get('q') || '';
+  const [searchInput, setSearchInput] = useState(currentQuery);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const activeChatFriends = useMemo(() => activeChats.map((c) => c.friend), [activeChats]);
+
+  const searchResults = useMemo(() => {
+    if (!currentQuery) {
+      return isFocused ? allFriends.slice(0, 5) : [];
+    }
+    const lowerQuery = currentQuery.toLowerCase();
+    return allFriends.filter((f) => f.name.toLowerCase().includes(lowerQuery));
+  }, [allFriends, currentQuery, isFocused]);
+
+  const friendIds = useMemo(() => {
+    const ids = new Set(activeChatFriends.map((f) => f.id));
+    searchResults.forEach((f) => ids.add(f.id));
+    return Array.from(ids);
+  }, [activeChatFriends, searchResults]);
+
+  const { isConnected, onlineStatus, checkPresence } = usePresence(friendIds);
+
+  useEffect(() => {
+    if (isConnected && friendIds.length > 0) {
+      friendIds.forEach(id => checkPresence(id));
+    }
+  }, [isConnected, friendIds, checkPresence]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (searchInput) {
+        params.set('q', searchInput);
+      } else {
+        params.delete('q');
+      }
+      const newQueryString = params.toString();
+      if (searchParams.toString() !== newQueryString) {
+        router.replace(`${pathname}?${newQueryString}`, { scroll: false });
+      }
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [searchInput, router, pathname, searchParams]);
+
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
     <aside className="bg-hub-panel border-hub-border flex w-[290px] shrink-0 flex-col border-e">
-      <div className="flex flex-col gap-3 p-4">
+      <div 
+        className="relative flex flex-col gap-3 p-4"
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+            setIsFocused(false);
+          }
+        }}
+      >
         <h2 className="text-hub-on-surface text-base font-bold">Chats</h2>
-        {/* Inert on this branch - filtering needs client state, which would
-            cost the page its zero-JS Server Component status for no benefit
-            while the data is fixtures.
-            TODO(design-migration): make this filter. Prefer a `?q=` search param over
-            useState so the rail stays a Server Component and the URL keeps
-            describing the view, matching how `?friend=` already works. Reach
-            for a Client Component only if you need debounced typing. */}
         <TextField
           tone="chat"
           size="sm"
           type="search"
-          placeholder="Search friends"
-          aria-label="Search friends"
+          placeholder="Search friends to create a conversation"
+          aria-label="Search friends to create a conversation"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onFocus={() => setIsFocused(true)}
         />
+
+        {/* Search Results Dropdown */}
+        {(currentQuery || isFocused) && (
+          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
+            {searchResults.length > 0 ? (
+              <div className="flex flex-col p-2 gap-1">
+                {searchResults.map((friend) => (
+                  <FriendRow
+                    key={friend.id}
+                    friend={{ ...friend, online: onlineStatus[friend.id] ?? false }}
+                    isActive={false} // Never active in the search dropdown
+                    onClick={() => setSearchInput('')}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 text-center text-sm text-hub-muted">No friends found</div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* min-h-0 lets this shrink below its content so overflow-y-auto can
-          actually engage; without it the list would push the rail taller.
-          TODO(stomp): `GET /friends` is paginated (see commit "ref: paginate
-          GET /friends endpoint"), so this renders one page, not every friend.
-          Needs either infinite scroll on this container or explicit paging -
-          silently showing page 1 as if it were the whole list is the bug to
-          avoid. Add an empty state for a user with no friends too. */}
+       * actually engage; without it the list would push the rail taller.
+       * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
+       * not every friend. Needs infinite scroll on this container to load subsequent pages.
+       */}
       <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
-        {friends.map((friend) => (
-          <FriendRow
-            key={friend.id}
-            friend={friend}
-            isActive={friend.id === activeFriendId}
-          />
-        ))}
+        {activeChatFriends.map((friend) => {
+          return (
+            <div key={friend.id}>
+              <FriendRow
+                friend={{ ...friend, online: onlineStatus[friend.id] ?? false }}
+                isActive={friend.id === activeFriendId}
+              />
+            </div>
+          );
+        })}
       </nav>
     </aside>
   );
