@@ -2,6 +2,7 @@ package code.users.entrypoints.http;
 
 import static code.shared.entrypoints.UrlBuilderUtil.buildUrl;
 import static code.users.domain.model.UserFixtures.aDaoUser;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,6 +16,7 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.UserDetails;
 import code.users.infrastructure.security.JwtAuthenticationFilter;
 import code.users.ports.in.ManageFriendsUseCase;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -25,8 +27,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
-import static org.mockito.ArgumentMatchers.any;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -89,30 +89,31 @@ class FriendsControllerTest {
     UserDetails friendDetails = aDaoUser().getDetails();
 
     ManageFriendsUseCase.FriendResult friendResult =
-            new ManageFriendsUseCase.FriendResult(friendId, friendDetails);
+        new ManageFriendsUseCase.FriendResult(friendId, friendDetails);
 
     Page<ManageFriendsUseCase.FriendResult> friendsPage =
-            new PageImpl<>(List.of(friendResult), PageRequest.of(0, 10), 1);
+        new PageImpl<>(List.of(friendResult), PageRequest.of(0, 10), 1);
 
     when(manageFriendsUseCase.getFriendList(
             eq(code.users.domain.model.UserId.of(AUTH_USER_ID)), any(Pageable.class)))
-            .thenReturn(friendsPage);
+        .thenReturn(friendsPage);
 
     // when & then
     mockMvc
-            .perform(
-                    get(buildUrl(FriendsController.FRIENDS_ENDPOINT, null))
-                            .param("page", "0")
-                            .param("size", "10")
-                            .principal(authentication()))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content").isArray())
-            .andExpect(jsonPath("$.content.length()").value(1))
-            .andExpect(jsonPath("$.content[0].id").value(friendId.val().toString()))
-            .andExpect(jsonPath("$.content[0].details.displayName").value(friendDetails.getDisplayName()))
-            .andExpect(jsonPath("$.totalElements").value(1))
-            .andExpect(jsonPath("$.totalPages").value(1))
-            .andExpect(jsonPath("$.number").value(0));
+        .perform(
+            get(buildUrl(FriendsController.FRIENDS_ENDPOINT, null))
+                .param("page", "0")
+                .param("size", "10")
+                .principal(authentication()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content").isArray())
+        .andExpect(jsonPath("$.content.length()").value(1))
+        .andExpect(jsonPath("$.content[0].id").value(friendId.val().toString()))
+        .andExpect(
+            jsonPath("$.content[0].details.displayName").value(friendDetails.getDisplayName()))
+        .andExpect(jsonPath("$.totalElements").value(1))
+        .andExpect(jsonPath("$.totalPages").value(1))
+        .andExpect(jsonPath("$.number").value(0));
   }
 
   private UsernamePasswordAuthenticationToken authentication() {

@@ -118,8 +118,7 @@ class UserDetailsControllerTest {
     Page<SearchUsersUseCase.UserSearchResult> pageResult =
         new PageImpl<>(List.of(searchResult), pageable, 1);
 
-    when(searchUsersUseCase.searchUsers(eq(query), any(Pageable.class)))
-        .thenReturn(pageResult);
+    when(searchUsersUseCase.searchUsers(eq(query), any(Pageable.class))).thenReturn(pageResult);
 
     // when & then
     mockMvc

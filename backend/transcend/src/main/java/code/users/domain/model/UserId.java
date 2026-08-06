@@ -14,7 +14,9 @@ public record UserId(UUID val) {
   }
 
   @JsonValue
-  public UUID val() { return val; }
+  public UUID val() {
+    return val;
+  }
 
   @Override
   public @NonNull String toString() {

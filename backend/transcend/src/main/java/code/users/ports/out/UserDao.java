@@ -6,9 +6,8 @@ import code.users.domain.model.FriendId;
 import code.users.domain.model.User;
 import code.users.domain.model.UserDetails;
 import code.users.domain.model.UserId;
-import java.util.Optional;
-
 import code.users.ports.in.ManageFriendsUseCase;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -56,7 +56,9 @@ public interface UserEntityMapper {
     return id == null ? null : FriendId.of(id.val());
   }
 
-  default UserIdEntity mapFromFriendId(FriendId id) { return id == null ? null : new UserIdEntity(id.val()); }
+  default UserIdEntity mapFromFriendId(FriendId id) {
+    return id == null ? null : new UserIdEntity(id.val());
+  }
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "user", source = "user")

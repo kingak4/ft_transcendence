@@ -5,12 +5,11 @@ import code.chat.domain.model.ChatUserFixtures.*
 import code.chat.ports.`in`.GetChatsUseCase
 import code.users.domain.model.Role
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.annotation.Ignored
 import io.kotest.matchers.collections.shouldHaveSize
 import org.springframework.context.annotation.Import
 import org.springframework.security.access.AccessDeniedException
 
-//@Ignored
+// @Ignored
 @Import(GetChats::class)
 class GetChatsTest(private val service: GetChatsUseCase) : ChatDaoTestSupport() {
 

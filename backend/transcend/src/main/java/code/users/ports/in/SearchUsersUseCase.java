@@ -4,7 +4,6 @@ import code.users.domain.model.AvatarId;
 import code.users.domain.model.UserId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SearchUsersUseCase {
 

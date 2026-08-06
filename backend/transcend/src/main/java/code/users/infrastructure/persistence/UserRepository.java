@@ -14,10 +14,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Repository
@@ -129,15 +127,17 @@ public class UserRepository implements UserDao {
   @Override
   public Page<ManageFriendsUseCase.FriendResult> getFriendList(UserId userId, Pageable pageable) {
     Page<Object[]> rows =
-            userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
+        userDetailsJpaRepository.findFriendDetailsByUserId(userId.val(), pageable);
 
-    return rows.map(row -> new ManageFriendsUseCase.FriendResult(
-            FriendId.of((UUID) row[0]),
-            UserDetails.builder()
+    return rows.map(
+        row ->
+            new ManageFriendsUseCase.FriendResult(
+                FriendId.of((UUID) row[0]),
+                UserDetails.builder()
                     .displayName(row[1] != null ? (String) row[1] : "")
-                    .avatarId(row[2] != null ? AvatarId.of((UUID) row[2]) : AvatarId.DEFAULT_AVATAR_ID)
-                    .build()
-    ));
+                    .avatarId(
+                        row[2] != null ? AvatarId.of((UUID) row[2]) : AvatarId.DEFAULT_AVATAR_ID)
+                    .build()));
   }
 
   @Override

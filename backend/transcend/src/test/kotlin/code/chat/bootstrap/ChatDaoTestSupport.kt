@@ -39,11 +39,9 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 @Import(
   UserRepository::class,
   ChatRepository::class,
-
   ChatMapper::class,
   MessageMapper::class,
   OwnershipValidator::class,
-
   UserEntityMapperImpl::class,
   DefaultAvatarInitializer::class,
   MembershipValidator::class,
@@ -89,7 +87,7 @@ class ChatDaoTestSupport : BehaviorSpec() {
       userDao.createUser(aChatMember1DaoUser())
       userDao.createUser(aChatMember2DaoUser())
       val participants = setOf(CHAT_USER_ID_FIXTURE, CHAT_MEMBER1_ID_FIXTURE)
-//      val chatId = createChatWithMessages(participants, 5)
+      //      val chatId = createChatWithMessages(participants, 5)
       chatId = createChatWithMessages(participants, 5)
     }
     afterSpec { clearAuthentication() }

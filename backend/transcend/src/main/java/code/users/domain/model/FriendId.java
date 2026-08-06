@@ -1,7 +1,6 @@
 package code.users.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.util.UUID;
 
 public record FriendId(UUID val) {

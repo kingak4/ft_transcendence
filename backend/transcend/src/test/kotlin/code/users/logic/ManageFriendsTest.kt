@@ -49,9 +49,9 @@ class ManageFriendsTest(private val service: ManageFriendsUseCase) : FriendDaoTe
         Then("it should return both friends") {
           result.content shouldHaveSize 2
           result.content.first { it.id == FRIEND1_CLASS_ID_FIXTURE }.details.displayName shouldBe
-                  FRIEND1_NAME_FIXTURE
+            FRIEND1_NAME_FIXTURE
           result.content.first { it.id == FRIEND2_CLASS_ID_FIXTURE }.details.displayName shouldBe
-                  FRIEND2_NAME_FIXTURE
+            FRIEND2_NAME_FIXTURE
         }
       }
     }

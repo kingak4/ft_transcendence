@@ -2,10 +2,9 @@ package code.chat.ports.out;
 
 import code.chat.domain.model.*;
 import code.chat.ports.in.GetChatsUseCase;
-import org.springframework.data.domain.Page;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 
 public interface ChatDao {
   Optional<ChatId> findChat(UserId initiator, UserId recipient);

@@ -14,7 +14,7 @@ public interface UserDetailsJpaRepository extends JpaRepository<UserDetailsEntit
 
   @Query(
       value =
-            """
+          """
               SELECT uf.friend_id, ud.display_name, ud.avatar_id
               FROM user_friends uf
               JOIN users u ON u.val = uf.friend_id
@@ -23,11 +23,11 @@ public interface UserDetailsJpaRepository extends JpaRepository<UserDetailsEntit
               ORDER BY ud.display_name, uf.friend_id
             """,
       countQuery =
-            """
+          """
               SELECT count(*)
               FROM user_friends uf
               WHERE uf.user_id = :userId
             """,
       nativeQuery = true)
-    Page<Object[]> findFriendDetailsByUserId(@Param("userId") UUID userId, Pageable pageable);
+  Page<Object[]> findFriendDetailsByUserId(@Param("userId") UUID userId, Pageable pageable);
 }

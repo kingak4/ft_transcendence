@@ -1,5 +1,6 @@
 package code
 
+import kotlin.jvm.java
 import org.mockito.Mockito
 import org.springframework.beans.factory.config.BeanDefinition
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
@@ -15,35 +16,34 @@ import org.springframework.stereotype.Controller
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RestController
-import kotlin.jvm.java
 
 class AutoMockingRegistrar : BeanDefinitionRegistryPostProcessor {
-   private val nameGenerator = AnnotationBeanNameGenerator()
+  private val nameGenerator = AnnotationBeanNameGenerator()
 
-   override fun postProcessBeanDefinitionRegistry(registry: BeanDefinitionRegistry) {
-      val scanner = ClassPathScanningCandidateComponentProvider(false).apply {
-         addIncludeFilter(AnnotationTypeFilter(Service::class.java))
-         addIncludeFilter(AnnotationTypeFilter(Component::class.java))
-         addIncludeFilter(AnnotationTypeFilter(Repository::class.java))
-         addExcludeFilter(AnnotationTypeFilter(Configuration::class.java))
-         addExcludeFilter(AnnotationTypeFilter(Controller::class.java))
-         addExcludeFilter(AnnotationTypeFilter(RestController::class.java))
+  override fun postProcessBeanDefinitionRegistry(registry: BeanDefinitionRegistry) {
+    val scanner =
+      ClassPathScanningCandidateComponentProvider(false).apply {
+        addIncludeFilter(AnnotationTypeFilter(Service::class.java))
+        addIncludeFilter(AnnotationTypeFilter(Component::class.java))
+        addIncludeFilter(AnnotationTypeFilter(Repository::class.java))
+        addExcludeFilter(AnnotationTypeFilter(Configuration::class.java))
+        addExcludeFilter(AnnotationTypeFilter(Controller::class.java))
+        addExcludeFilter(AnnotationTypeFilter(RestController::class.java))
       }
 
-      scanner.findCandidateComponents("code").forEach { candidate ->
-         val beanClass = Class.forName(candidate.beanClassName)
-         val beanName = nameGenerator.generateBeanName(candidate, registry)
+    scanner.findCandidateComponents("code").forEach { candidate ->
+      val beanClass = Class.forName(candidate.beanClassName)
+      val beanName = nameGenerator.generateBeanName(candidate, registry)
 
-         val mockDefinition = RootBeanDefinition(beanClass)
+      val mockDefinition = RootBeanDefinition(beanClass)
 
-         mockDefinition.setInstanceSupplier { Mockito.mock(beanClass) }
-         mockDefinition.isPrimary = true
-         mockDefinition.scope = BeanDefinition.SCOPE_SINGLETON
+      mockDefinition.setInstanceSupplier { Mockito.mock(beanClass) }
+      mockDefinition.isPrimary = true
+      mockDefinition.scope = BeanDefinition.SCOPE_SINGLETON
 
-         registry.registerBeanDefinition(beanName, mockDefinition)
-      }
-   }
+      registry.registerBeanDefinition(beanName, mockDefinition)
+    }
+  }
 
-   override fun postProcessBeanFactory(factory: ConfigurableListableBeanFactory) {
-   }
+  override fun postProcessBeanFactory(factory: ConfigurableListableBeanFactory) {}
 }

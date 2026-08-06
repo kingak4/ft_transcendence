@@ -78,97 +78,97 @@ java {
 val profileToUse = (project.findProperty("profile") ?: System.getenv("SPRING_PROFILES_ACTIVE") ?: "default").toString()
 
 allprojects {
-   tasks.withType<Test>().configureEach {
-      systemProperty("spring.profiles.include", profileToUse)
-      systemProperty("spring.profiles.active", profileToUse)
+    tasks.withType<Test>().configureEach {
+        systemProperty("spring.profiles.include", profileToUse)
+        systemProperty("spring.profiles.active", profileToUse)
 
-      testLogging {
-         showStandardStreams = true
-      }
-   }
+        testLogging {
+            showStandardStreams = true
+        }
+    }
 }
 
 tasks {
-   compileJava {
-      options.encoding = "UTF-8"
-      options.compilerArgs.addAll(
-         listOf(
-            "-parameters",
-            "-Amapstruct.defaultComponentModel=spring",
-            "-Amapstruct.unmappedTargetPolicy=ERROR",
-            "-Amapstruct.suppressGeneratorTimestamp=true"
-         )
-      )
-   }
-   compileTestJava {
-      options.encoding = "UTF-8"
-   }
-   bootJar {
-      archiveFileName = "${project.name}-${version}.${archiveExtension.get()}"
-   }
-   jar {
-      enabled = false
-   }
+    compileJava {
+        options.encoding = "UTF-8"
+        options.compilerArgs.addAll(
+            listOf(
+                "-parameters",
+                "-Amapstruct.defaultComponentModel=spring",
+                "-Amapstruct.unmappedTargetPolicy=ERROR",
+                "-Amapstruct.suppressGeneratorTimestamp=true",
+            ),
+        )
+    }
+    compileTestJava {
+        options.encoding = "UTF-8"
+    }
+    bootJar {
+        archiveFileName = "${project.name}-$version.${archiveExtension.get()}"
+    }
+    jar {
+        enabled = false
+    }
 
+    register("docs") {
+        dependsOn("check")
+        dependsOn("asciidoctorModulith")
+        dependsOn("asciidoctor")
+        dependsOn("generateStructurizr")
+        dependsOn("generateSpecs")
+        doLast {
+            val reportPath = layout.buildDirectory.file("reports/index.html").get().asFile
+            println("Report index: file://${reportPath.toURI().path}")
+        }
+    }
 
-   register("docs") {
-      dependsOn("check")
-      dependsOn("asciidoctorModulith")
-      dependsOn("asciidoctor")
-      dependsOn("generateStructurizr")
-      dependsOn("generateSpecs")
-      doLast {
-         val reportPath = layout.buildDirectory.file("reports/index.html").get().asFile
-         println("Report index: file://${reportPath.toURI().path}")
-      }
-   }
+    register<Test>("generateSpecs") {
+        group = "documentation"
+        description = "Runs tests to generate OpenAPI and AsyncAPI specs"
 
-   register<Test>("generateSpecs") {
-      group = "documentation"
-      description = "Runs tests to generate OpenAPI and AsyncAPI specs"
+        useJUnitPlatform()
 
-      useJUnitPlatform()
+        filter {
+            includeTestsMatching("code.SpecGeneratorTest")
+        }
 
-      filter {
-         includeTestsMatching("code.SpecGeneratorTest")
-      }
+        outputs.dir(layout.buildDirectory.dir("reports/specs"))
+        outputs.upToDateWhen { false }
+    }
 
-      outputs.dir(layout.buildDirectory.dir("reports/specs"))
-      outputs.upToDateWhen { false }
-   }
-
-
-   withType<AsciidoctorTask>().configureEach {
-      baseDirFollowsSourceFile()
-      useIntermediateWorkDir()
-      configurations("asciidoctorExt")
-      sources {
-         include("index.adoc")
-      }
-      asciidoctorj {
-         modules {
-            diagram.use()
-         }
-         setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
-         attributes(
-            mapOf(
-               "toc" to "left",
-               "icons" to "font",
-               "projectdir" to projectDir.absolutePath,
-               "imagesdir" to "images",
-               "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
-               "structurizr-docs" to layout.buildDirectory.dir("tmp/structurizr").get().asFile.absolutePath,
-               "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg"
+    withType<AsciidoctorTask>().configureEach {
+        baseDirFollowsSourceFile()
+        useIntermediateWorkDir()
+        configurations("asciidoctorExt")
+        sources {
+            include("index.adoc")
+        }
+        asciidoctorj {
+            modules {
+                diagram.use()
+            }
+            setFatalWarnings(listOf(org.asciidoctor.log.Severity.ERROR))
+            attributes(
+                mapOf(
+                    "toc" to "left",
+                    "icons" to "font",
+                    "projectdir" to projectDir.absolutePath,
+                    "imagesdir" to "images",
+                    "modulith-docs" to layout.buildDirectory.dir("tmp/modulith").get().asFile.absolutePath,
+                    "structurizr-docs" to layout.buildDirectory.dir("tmp/structurizr").get().asFile.absolutePath,
+                    "plantumlconfig" to "${projectDir.absolutePath}/src/docs/asciidoc/plantuml.cfg",
+                ),
             )
-         )
-      }
-      jvm {
-         jvmArgs(
-            "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
-            "--add-opens", "java.base/java.io=ALL-UNNAMED"
-         )
-      }
-   }
+        }
+        jvm {
+            jvmArgs(
+                "--add-opens",
+                "java.base/sun.nio.ch=ALL-UNNAMED",
+                "--add-opens",
+                "java.base/java.io=ALL-UNNAMED",
+            )
+        }
+    }
 
     javadoc {
         options.encoding = "UTF-8"

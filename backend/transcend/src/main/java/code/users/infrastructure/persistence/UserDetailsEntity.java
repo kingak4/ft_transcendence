@@ -32,8 +32,7 @@ public class UserDetailsEntity implements Persistable<UserIdEntity> {
     this.avatarId = avatarId;
   }
 
-  @Transient
-  private boolean isNew = true;
+  @Transient private boolean isNew = true;
 
   @Override
   public UserIdEntity getId() {

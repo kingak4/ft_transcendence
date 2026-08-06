@@ -53,12 +53,15 @@ public class ChatController {
       @RequestParam(value = "size", defaultValue = "10") int size) {
     UUID userId = UUID.fromString(authentication.getName());
     Page<ChatResponse> chats =
-            getChatsUseCase.getChatList(UserId.of(userId), page, size)
-                    .map(cs -> new ChatResponse(
-                            cs.chatId().val(),
-                            cs.otherUserId().val(),
-                            cs.displayName(),
-                            cs.avatarId()));
+        getChatsUseCase
+            .getChatList(UserId.of(userId), page, size)
+            .map(
+                cs ->
+                    new ChatResponse(
+                        cs.chatId().val(),
+                        cs.otherUserId().val(),
+                        cs.displayName(),
+                        cs.avatarId()));
     return ResponseEntity.ok(chats);
   }
 

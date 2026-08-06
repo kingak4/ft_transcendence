@@ -86,12 +86,12 @@ class UserStatusWebSocketListenerTest {
     var principal = new UsernamePasswordAuthenticationToken(userId.toString(), null);
     accessor.setUser(principal);
     if (accessor.getSessionAttributes() != null) {
-        accessor.getSessionAttributes().put("user-agent", userAgent);
+      accessor.getSessionAttributes().put("user-agent", userAgent);
     } else {
-        accessor.setSessionAttributes(new java.util.HashMap<>());
-        accessor.getSessionAttributes().put("user-agent", userAgent);
+      accessor.setSessionAttributes(new java.util.HashMap<>());
+      accessor.getSessionAttributes().put("user-agent", userAgent);
     }
-    
+
     return new SessionConnectedEvent(this, message(accessor), principal);
   }
 
