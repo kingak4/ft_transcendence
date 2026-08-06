@@ -849,24 +849,41 @@ błędu.
 
 ---
 
-## 12. Krok 4 — redesign trasa po trasie (praca dwuosobowa)
+## 12. Krok 4 — redesign trasa po trasie (jedna osoba, dwie szerokości)
 
 Zgodnie z Częścią 8 planu. Pozostałe podsekcje (12.0, 12.1, 12.3–12.7)
 wypełniane w trakcie pracy; 12.2 jest wypełniona z góry, bo cztery decyzje
 zapadły przed rozpoczęciem kroku.
 
+**Dwie zmiany założeń, 2026-08-06.** Krok 4 wykonuje **jedna osoba**
+(wcześniej planowany był na dwie) i obejmuje **także wąskie ekrany**
+(decyzja ① odwrócona). Pierwsza zmiana usuwa z tej sekcji rejestr własności
+plików — 12.1 jest teraz kolejką jednostek, a nie tabelą "kto co ma".
+Druga zmienia kształt 12.0 (druga kolumna wartości) i dokłada drugą
+jednostkę strukturalną do 12.7.
+
 ### 12.2 Rozstrzygnięcie czterech pytań wejściowych (§8.1)
 
-Decyzje podjęte **2026-08-03** przez osobę prowadzącą migrację (Zyta).
-To jest tabela referencyjna dla Kroków 5–8: każda z tych decyzji tłumaczy
-stan aplikacji, który bez niej wygląda na przypadkowy.
+Decyzje podjęte **2026-08-03** przez osobę prowadzącą migrację (Zyta);
+decyzja ① odwrócona **2026-08-06**. To jest tabela referencyjna dla
+Kroków 5–8: każda z tych decyzji tłumaczy stan aplikacji, który bez niej
+wygląda na przypadkowy.
 
-| # | Pytanie (źródło) | Decyzja | Konsekwencja dla zakresu | Co unieważnia |
-|---|---|---|---|---|
-| ① | Breakpointy (9.5 pkt 6) | **Tylko desktop.** Węższe ekrany poza zakresem migracji | Zero pracy responsywnej. Słownik layoutu (12.0) ma jeden zestaw wartości, nie macierz. W kodzie nie przybywa ani jeden prefiks `sm:`/`md:`/`lg:`; istniejące zostają nietknięte. Wymaga ustalenia **jednej szerokości okna do oceny** — pierwszy wiersz 12.0 | Zastępuje "założenie robocze, nierozstrzygnięte" z 9.5 pkt 6 |
-| ② | Struktura logowania (9.5 pkt 2) | **Uproszczone tło.** Karta logowania dostaje własne tło; ekran `landing` nie jest odtwarzany za nią | `(marketing)/` i `(auth)/*` przestają być jednym zadaniem — w eksporcie były jednym obrazem (karta nałożona na landing). `login` i `register` nadal jedno zadanie (dwie zakładki jednej karty). Otwarte: **czym konkretnie jest "uproszczone tło"** → 12.4. Nie używać `bg-gradient-start-page` z automatu (§7.6 — ta sama wartość to nie ta sama rola) | Domyka P6 = "CZĘŚCIOWO" z 9.1 dla obu tras auth |
-| ③ | Panel znajomych (9.5 pkt 3) | **Wydzielamy.** Znajomi stają się osobną trasą, zgodnie z eksportem (`isSearch`) | Jedyna jednostka Kroku 4, która **nie jest stylowaniem** — zmienia strukturę nawigacji. Wykonywana jako osobny refaktor (jednostka 2a, §8.6) przed redesignem, rozliczana w 12.7. Dotyka `Sidebar.tsx` i `app/(app)/layout.tsx`. Otwarte: nazwa trasy, dokładny zakres przeniesienia, czy profil zachowuje skrót → 12.2/12.4 | **Unieważnia wiersz `(app)/[userId]` w 9.1** (lista komponentów i fan-in) oraz odpowiadające pozycje w 9.2 |
-| ④ | `/stomp` (9.4) | **Poza zakresem migracji wizualnej.** Strona deweloperska, do usunięcia przed oceną końcową | Nie stylowana i **nie usuwana w Kroku 4** (usunięcie to sprzątanie, nie krok designowy) → 12.5. Liczba tras w aplikacji bez zmian: `/stomp` wypada, trasa znajomych dochodzi | Zamyka otwarte pytanie z 9.4 |
+| # | Pytanie (źródło) | Decyzja | Data (i zmiany) | Konsekwencja dla zakresu | Co unieważnia |
+|---|---|---|---|---|---|
+| ① | Breakpointy (9.5 pkt 6) | **Desktop i mobile.** Aplikacja ma wyglądać dobrze i być funkcjonalna na wąskim ekranie | 2026-08-03 → **zmieniona 2026-08-06**; poprzednio: "Tylko desktop, węższe ekrany poza zakresem migracji" | **Dwie szerokości oceny** (robocze: 390px / 1440px) — pierwsze wiersze 12.0. **Jeden breakpoint** (`md:`, 768px); drugi tylko przez wpis w 12.4. **Zapis mobile-first**: klasa bez prefiksu = wąski ekran, prefiks = szeroki. Druga kolumna wartości w 12.0 **tylko z uzasadnieniem** — domyślnie jedna wartość na obie szerokości. Dokłada jednostkę strukturalną **1b** (nawigacja przy 390px) → 12.7 oraz punkty 8–9 definicji ukończenia (§8.9) | Zastępuje "założenie robocze, nierozstrzygnięte" z 9.5 pkt 6 — **oraz własną poprzednią wersję**: zapis "tylko desktop" nie obowiązuje od 2026-08-06 |
+| ② | Struktura logowania (9.5 pkt 2) | **Uproszczone tło.** Karta logowania dostaje własne tło; ekran `landing` nie jest odtwarzany za nią | 2026-08-03 | `(marketing)/` i `(auth)/*` przestają być jednym zadaniem — w eksporcie były jednym obrazem (karta nałożona na landing). `login` i `register` nadal jedno zadanie (dwie zakładki jednej karty). Otwarte: **czym konkretnie jest "uproszczone tło"** → 12.4. Nie używać `bg-gradient-start-page` z automatu (§7.6 — ta sama wartość to nie ta sama rola) | Domyka P6 = "CZĘŚCIOWO" z 9.1 dla obu tras auth |
+| ③ | Panel znajomych (9.5 pkt 3) | **Wydzielamy.** Znajomi stają się osobną trasą, zgodnie z eksportem (`isSearch`) | 2026-08-03 | Jedna z **dwóch** jednostek Kroku 4, które **nie są stylowaniem** (druga to 1b z decyzji ①) — zmienia strukturę nawigacji. Wykonywana jako osobny refaktor (jednostka 2a, §8.6) przed redesignem, rozliczana w 12.7. Dotyka `Sidebar.tsx` i `app/(app)/layout.tsx`, więc **otwiera ponownie jednostki zamknięte w Fazie 1** — po niej Sidebar wymaga ponownego sprawdzenia na obu szerokościach. Otwarte: nazwa trasy, dokładny zakres przeniesienia, czy profil zachowuje skrót → 12.2/12.4 | **Unieważnia wiersz `(app)/[userId]` w 9.1** (lista komponentów i fan-in) oraz odpowiadające pozycje w 9.2 |
+| ④ | `/stomp` (9.4) | **Poza zakresem migracji wizualnej.** Strona deweloperska, do usunięcia przed oceną końcową | 2026-08-03 | Nie stylowana i **nie usuwana w Kroku 4** (usunięcie to sprzątanie, nie krok designowy) → 12.5. Liczba tras w aplikacji bez zmian: `/stomp` wypada, trasa znajomych dochodzi | Zamyka otwarte pytanie z 9.4 |
+
+**Dlaczego poprzednia treść decyzji ① została zachowana, a nie nadpisana.**
+Decyzja odwrócona jest innym rodzajem faktu niż decyzja, która od początku
+brzmiała tak jak dziś, i Kroki 5–8 potrzebują tej różnicy. Bez adnotacji
+zapis "tylko desktop" byłby najbliższym dostępnym uzasadnieniem dla
+prefiksów responsywnych zastanych w kodzie — i prowadziłby do wniosku, że
+ktoś dopisał je wbrew ustaleniom. Z adnotacją widać, że prefiksy `md:`
+powstałe po 2026-08-06 są zgodne z zakresem, a te wcześniejsze to
+pozostałości sprzed migracji, opisane w 9.5 pkt 6.
 
 **Konsekwencja pochodna decyzji ④, istotna dla Kroku 7.** Zgodnie z 11.6
 `/stomp` to **jedyne potwierdzone miejsce użycia** `text-success`
@@ -879,6 +896,20 @@ pozycji kontrastu zapisanych w 11.3 (`success` i `danger` jako tekst,
 potem mierz jego kontrast.** Pozycje `elevated-border` z 11.3 ta uwaga
 nie dotyczy — ten token jest używany przez wszystkie panele i pozostaje
 realnym problemem.
+
+**Konsekwencja pochodna decyzji ① i ③ dla sekcji 6 (lista `'use client'`).**
+Krok 4 jest krokiem stylistycznym i lista klientów nie ma prawa rosnąć —
+z dwoma wyjątkami, oba nazwane z góry i oba wynikające z jednostek
+strukturalnych, nie ze stylowania:
+
+| Jednostka | Z decyzji | Kiedy dopuszczalny przyrost | Gdzie odnotować |
+|---|---|---|---|
+| **1b** — nawigacja przy 390px | ① | jeśli menu ma stan otwarty/zamknięty | 12.7, z powodem |
+| **2a** — trasa znajomych | ③ | jeśli strona nowej trasy musi być komponentem klienckim | 12.7, z powodem |
+
+Każdy inny przyrost względem sekcji 6 jest błędem, nie wyjątkiem.
+Zapis "najwyżej +2, oba nazwane" jest tu po to, żeby Krok 5 nie musiał
+zgadywać, które wpisy są zaplanowane, a które przypadkowe.
 
 ### 12.5 Znalezione, ale NIE naprawione (Zasada B) — pozycje założone z góry
 
@@ -896,3 +927,13 @@ Rola w Kroku 4 (§8.10): odpowiadają na pytanie "czy nic nie zniknęło",
 którego eksport designu nie potrafi rozstrzygnąć — eksport pokazuje
 intencję, screenshot pokazuje inwentarz tego, co strona faktycznie
 zawierała. Zastępują branch odniesienia, porzucony po Kroku 3 (§7.12).
+
+**Zakres ich ważności po decyzji ①.** Jeśli powstały przy jednej
+szerokości okna, odpowiadają na pytanie "co tam było", ale nie na "jak to
+się układało na wąskim ekranie" — a tego drugiego pytania nie da się już
+zadać wstecz. Przy jednostkach mobilnych są więc **listą elementów do
+odnalezienia w nowym układzie**, nie wzorcem układu; w tej roli działają
+bez zastrzeżeń, bo lista elementów nie zależy od szerokości. Przy czytaniu
+punktu 10 definicji z §8.9 obowiązuje rozróżnienie: element schowany za
+przyciskiem menu **nie zniknął**, element wycięty, żeby się zmieściło —
+zniknął. Różnica jest w kodzie, nie na ekranie.

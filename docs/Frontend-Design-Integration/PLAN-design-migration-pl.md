@@ -1807,19 +1807,31 @@ i wtedy branch odniesienia można przestać utrzymywać.
 
 ---
 
-## Część 8 — Krok 4 w szczegółach (praca dwóch osób)
+## Część 8 — Krok 4 w szczegółach (jedna osoba, dwie szerokości)
 
-*Dopisane 2026-08-03, po zamknięciu Kroku 3. Wejściem są sekcje 9, 10 i 11
-`MIGRATION-INVENTORY.md`. Rezultatem jest siedem tras i kilkanaście komponentów zgodnych
-z eksportem designu oraz sekcja 12 w inwentaryzacji.*
+*Dopisane 2026-08-03 po zamknięciu Kroku 3, przebudowane 2026-08-06 po dwóch zmianach
+założeń. Wejściem są sekcje 9, 10 i 11 `MIGRATION-INVENTORY.md`. Rezultatem jest siedem tras
+i kilkanaście komponentów zgodnych z eksportem designu — sprawdzonych w dwóch szerokościach —
+oraz sekcja 12 w inwentaryzacji.*
 
-**Zmiana adresata.** Wszystkie poprzednie części mówiły do jednej osoby. Ta mówi do dwóch —
-**Zyty** i **Kingi** — więc tam, gdzie podział ma znaczenie, pada imię. Reguły bez imienia
-obowiązują obie.
+**Dwie zmiany założeń i to, co z nich wynika.** Ta część była wcześniej napisana dla dwóch
+osób i dla samego desktopu. Oba założenia się zmieniły, ale **nie znoszą się nawzajem** —
+warto zobaczyć, dlaczego, bo to tłumaczy kształt całej reszty:
 
-Budżet: **kilka dni, nie jeden.** Krok 4 jest największym krokiem w całym planie i jedynym,
-w którym pracy jest wystarczająco dużo, żeby dwie osoby miały sens. Pozostałe kroki dwie
-osoby by tylko spowolniły — o tym, dlaczego akurat tu jest inaczej, mówi §8.2.
+| Zmiana | Co upraszcza | Co komplikuje |
+|---|---|---|
+| Pracę wykonuje **jedna osoba** | Znikają konflikty tekstowe, rejestr własności plików, negocjowanie podziału i codzienna synchronizacja | Znika **jedyne narzędzie wykrywania konfliktu systemowego** — druga para oczu (§8.2, §8.10) |
+| Zakres obejmuje **wąskie ekrany** | Nic | Każda jednostka ma dwa układy do zaprojektowania i dwa do sprawdzenia; dochodzi jedno pytanie strukturalne o nawigację (§8.0, jednostka 1b) |
+
+Praca w pojedynkę jest więc **prostsza organizacyjnie i trudniejsza jakościowo.** Zniknęła
+biurokracja, ale zniknął razem z nią mechanizm kontroli — i to jest jedyny powód, dla którego
+§8.3 (słownik) i §8.8 (przegląd wsteczny) są w tej wersji ważniejsze, a nie mniej ważne, niż
+były przy dwóch osobach. Wszystko, co poprzednia wersja załatwiała rozmową, musi teraz być
+zapisane.
+
+Budżet: **to jest najdłuższy krok w całym planie.** Mobile nie podwaja pisania kodu — te same
+klasy Tailwinda obsługują obie szerokości — ale podwaja **oglądanie**, a oglądanie jest tu
+jedyną formą testu (§8.10).
 
 ### 8.0 Kontrakt tego kroku
 
@@ -1834,50 +1846,82 @@ bo pokusa „poprawię przy okazji” pojawia się na każdym ekranie.
 
 Co wchodzi w zakres: odstępy, szerokości i wysokości, promienie zaokrągleń, obramowania,
 cienie, typografia (rozmiar, waga, interlinia, tracking), układ (flex/grid, wyrównania,
-kolejność) oraz **przypisanie już istniejących tokenów kolorystycznych do właściwych ról**.
+kolejność), **zachowanie układu przy zmianie szerokości okna** oraz **przypisanie już
+istniejących tokenów kolorystycznych do właściwych ról**.
 
 Co nie wchodzi: dodawanie nowych tokenów (§8.7 reguła 2), zmiany API komponentów
 (§8.7 reguła 3), naprawianie kontrastu (Krok 7), scalanie wariantów komponentów (Krok 6),
 usuwanie `brand-*` i `hub-*` (Krok 8) oraz jakakolwiek zmiana zachowania.
 
-**Jeden wyjątek, nazwany wprost, żeby nie rozlał się na resztę kroku.** Decyzja ③ z §8.1
-(wydzielenie znajomych na osobną trasę) **nie jest stylowaniem** — zmienia strukturę
-nawigacji. Zostaje w tym kroku, bo stylowanie ekranu, który zaraz zmienia miejsce, to praca
-wykonana dwa razy, ale jest jedyną taką jednostką i wykonuje się ją jako **osobny refaktor,
-przed redesignem** (§8.6, jednostka 2a). Jeśli w trakcie pracy pojawi się druga podobna
-pokusa — „przy okazji przeniosę też…” — odpowiedź brzmi nie, a uzasadnieniem jest ten akapit:
-wyjątek jest jeden i został zapisany z góry.
+**Dwa wyjątki, nazwane wprost, żeby nie rozlały się na resztę kroku.** Oba wynikają z decyzji
+z §8.1 i oba **nie są stylowaniem** — zmieniają strukturę, a nie wygląd:
 
-### 8.1 Warunki wejścia — cztery decyzje podjęte, trzy rzeczy odziedziczone
+| Jednostka | Co to jest | Z której decyzji | Kiedy |
+|---|---|---|---|
+| **1b** | Nawigacja na wąskim ekranie — stała kolumna Sidebara nie mieści się przy 390px | ① | Faza 1, zaraz po ostylowaniu Sidebara (§8.5) |
+| **2a** | Wydzielenie znajomych na osobną trasę | ③ | Faza 2, przed całym stylowaniem tej fazy (§8.6) |
+
+Obie zostają w Kroku 4 z tego samego powodu: **stylowanie ekranu, który zaraz zmienia miejsce
+albo strukturę, to praca wykonana dwa razy.** Obie wykonuje się jako osobne jednostki, każdą
+osobnym commitem, i obie rozlicza się **działaniem, a nie wyglądem** (§8.9). Jeśli w trakcie
+pracy pojawi się trzecia podobna pokusa — „przy okazji przebuduję jeszcze…” — odpowiedź brzmi
+nie, a uzasadnieniem jest ten akapit: wyjątki są dwa i zostały zapisane z góry.
+
+### 8.1 Warunki wejścia — cztery decyzje, z czego jedna odwrócona
 
 **Cztery pytania otwarte od Kroku 1 zostały rozstrzygnięte 2026-08-03** przez osobę prowadzącą
-migrację. Zapisane w 12.2. Poniżej każda z konsekwencjami, bo wszystkie cztery zmieniają zakres
-pracy, a dwie zmieniają **podział pracy** — §8.6 jest przebudowany właśnie dlatego.
+migrację; **decyzja ① została odwrócona 2026-08-06.** Wszystkie idą do 12.2 — razem z historią
+tej zmiany, a nie zamiast niej. Wpis „tylko desktop” bez adnotacji o odwróceniu wprowadziłby
+w błąd Kroki 5–8 dokładnie wtedy, gdy będą szukały uzasadnienia dla istniejących prefiksów
+responsywnych.
 
 | # | Pytanie | Decyzja |
 |---|---|---|
-| ① | Breakpointy (9.5 pkt 6) | **Tylko desktop.** Węższe ekrany poza zakresem migracji |
+| ① | Breakpointy (9.5 pkt 6) | **Desktop i mobile.** Aplikacja ma wyglądać dobrze i działać na wąskim ekranie *(zmiana z 2026-08-06; wcześniej „tylko desktop”)* |
 | ② | Struktura logowania (9.5 pkt 2) | **Uproszczone tło.** Karta logowania dostaje własne tło; landing nie jest odtwarzany za nią |
 | ③ | Panel znajomych (9.5 pkt 3) | **Wydzielamy.** Znajomi stają się osobną trasą, zgodnie z eksportem |
 | ④ | `/stomp` (9.4) | **Poza zakresem.** Strona deweloperska, do usunięcia przed oceną końcową |
 
-**① Tylko desktop — co to zdejmuje i co dokłada.**
-Zdejmuje najdroższe ryzyko tego kroku: nie ma pracy responsywnej, nie ma podwójnego zestawu
-odstępów, słownik z §8.3 ma **jedną kolumnę wartości**, a w kodzie nie pojawia się ani jeden
-prefiks typu `sm:` / `md:` / `lg:` (§8.11). Dokłada natomiast jedną rzecz, którą trzeba ustalić
-w Fazie 0 i o której łatwo zapomnieć: **jedną szerokość okna, przy której obie oceniacie
-wygląd.** Jeśli Kinga pracuje przy 1440px, a Zyta przy 1280px, obie będą podejmować poprawne
-decyzje o odstępach i obie dojdą do innych — to jest konflikt systemowy z §8.2 w czystej
-postaci, powstały bez jednej linijki wspólnego kodu.
-Koszt tej decyzji jest znany i przyjęty świadomie: gdyby kiedykolwiek miała się odwrócić,
-wraca przegląd wszystkich tras (odpowiedź na pytanie kontrolne 5 Kroku 1). Zapisz to w 12.2
-jako część decyzji, nie jako ostrzeżenie — po to, żeby za pół roku nikt nie odkrywał tego
-kosztu od nowa.
+**① Desktop i mobile — najdroższa z czterech decyzji, podjęta w najtańszym momencie.**
+Poprzednia wersja tego dokumentu wyceniła ją z góry: *„gdyby kiedykolwiek miała się odwrócić,
+wraca przegląd wszystkich tras”*. Odwróciła się — i to jest dobra wiadomość o momencie, a nie
+o cenie. **Odwrócenie przed rozpoczęciem Kroku 4 kosztuje przemyślenie słownika; odwrócenie po
+Kroku 4 kosztowałoby przejście przez wszystkie ostylowane ekrany drugi raz.** Cena jest
+dokładnie ta zapowiadana, płacona w najlepszym możliwym momencie — i to jest jedyny powód, dla
+którego warto zapisywać koszt decyzji wtedy, gdy się ją podejmuje.
+
+Co ta decyzja dokłada — cztery rzeczy, wszystkie do domknięcia w Fazie 0 (§8.3):
+
+1. **Drugą kolumnę w słowniku, ale nie w każdym wierszu.** Większość pozycji ma jedną wartość
+   na obie szerokości: promienie, grubości obramowań, cienie, wagi fontów. Różnią się przede
+   wszystkim odstępy od krawędzi ekranu, odstępy między sekcjami i szerokości kontenerów. Stąd
+   reguła z §8.3: **druga wartość tylko wtedy, gdy potrafisz powiedzieć, dlaczego pierwsza nie
+   wystarcza.** Słownik z dwiema kolumnami wypełnionymi wszędzie przestaje być słownikiem
+   i staje się macierzą, a macierzy nikt nie pamięta.
+2. **Jeden breakpoint i kierunek pisania.** Tailwind jest *mobile-first*: klasa bez prefiksu
+   działa na każdej szerokości, klasa z prefiksem — od tej szerokości **w górę**. Wynika z tego
+   dyscyplina, którą najłatwiej złamać odruchowo: **klasy bez prefiksu opisują wąski ekran,
+   prefiks opisuje szeroki.** Pisanie odwrotnie („najpierw desktop, potem cofam dla mobile”)
+   też działa, ale wymaga nadpisywania własnych klas i po dwóch dniach nie widać już, która
+   wartość faktycznie obowiązuje. To jest ta sama zasada co warstwy tokenów z §5: strzałka ma
+   biec w jedną stronę.
+3. **Dwie szerokości oceny zamiast jednej** (§8.3) — bo „sprawdzone” przestaje cokolwiek
+   znaczyć bez podania, przy czym.
+4. **Jedno pytanie strukturalne, na które eksport prawdopodobnie nie odpowiada: co się dzieje
+   z Sidebarem przy 390px.** Stała kolumna nawigacji nie zmieści się obok treści. To nie jest
+   kwestia dobrania odstępu, tylko innego układu — a możliwe, że i innego zachowania, bo menu
+   rozwijane ma stan otwarty i zamknięty, którego statyczna kolumna nie ma. Stąd jednostka
+   **1b** z §8.0 i pytanie do designu zadane w pierwszej turze (§8.8), a nie wtedy, gdy dojdziesz
+   do Sidebara.
+
+Czego ta decyzja **nie** dokłada: podwojenia liczby jednostek pracy. Jednostką nadal jest jeden
+komponent albo jedna trasa — zmienia się tylko jej definicja ukończenia, która ma teraz dwa
+układy zamiast jednego (§8.9 pkt 8).
 
 **② Uproszczone tło — znika powód, dla którego trzy trasy były jednym zadaniem.**
 Karta logowania nie potrzebuje ekranu `landing` za sobą, więc `(marketing)/` i `(auth)/*`
-przestają być jednym obrazem i stają się dwoma niezależnymi zadaniami. To jest jedyna zmiana
-w podziale wynikająca wprost z odpowiedzi — szczegóły w §8.6.
+przestają być jednym obrazem i stają się dwoma niezależnymi jednostkami — takimi, które można
+rozdzielić w czasie i zamknąć jedną, zanim zacznie się druga (§8.6).
 Decyzja tworzy jednak jedno nowe pytanie: **czym dokładnie jest „uproszczone tło”.** To jest
 pytanie do designu (12.4), nie do kodu. Jedno ostrzeżenie z góry: kusi, żeby sięgnąć po
 `bg-gradient-start-page`, bo istnieje, jest ładny i leży pod ręką. Nie z tego powodu.
@@ -1886,21 +1930,24 @@ wiąże ze sobą dwa niezależne ekrany przez wspólną nazwę — dokładnie te
 ostrzega §7.6 („ta sama wartość to nie ta sama rola”). Jeśli tło ma być tym gradientem, to
 jest to decyzja do zapisania, a nie skrót do wzięcia.
 
-**③ Wydzielamy znajomych — jedyna jednostka w tym kroku, która nie jest stylowaniem.**
+**③ Wydzielamy znajomych — druga z dwóch jednostek w tym kroku, które nie są stylowaniem.**
 To jest najpoważniejsza z czterech odpowiedzi, bo zmienia **strukturę nawigacji**, a nie wygląd:
 powstaje nowa trasa, `(app)/[userId]` traci osadzony panel, a Sidebar zyskuje nowy wpis.
 Konsekwencje, wszystkie omówione w §8.6:
 - Jest to **refaktor**, nie redesign, więc zgodnie z Zasadą A idzie osobno i przed
   stylowaniem obu ekranów.
-- Dotyka `Sidebar.tsx` — czyli pliku z Etapu C — więc ma zależność od Fazy 1 i właściciela
-  wyznaczonego przez Fazę 1, a nie przez Fazę 2.
+- Dotyka `Sidebar.tsx` i `app/(app)/layout.tsx` — plików z Etapu C — więc czeka na domknięcie
+  Fazy 1. Spotyka się tam z jednostką 1b i kolejność jest jednoznaczna: **najpierw Sidebar
+  ma ostateczny kształt na obu szerokościach, dopiero potem dokłada się do niego nowy wpis.**
+  Odwrotnie oznaczałoby projektowanie nawigacji mobilnej dla listy linków, która zaraz się
+  zmieni.
 - **Unieważnia wiersz `(app)/[userId]` w tabeli 9.1** (lista komponentów i fan-in przestają
-  być aktualne po przeniesieniu). Zaktualizujcie go przy okazji, zamiast zostawiać
+  być aktualne po przeniesieniu). Zaktualizuj go przy okazji, zamiast zostawiać
   inwentaryzację, która opisuje układ sprzed decyzji.
 - Liczba tras w aplikacji się nie zmienia: `/stomp` wypada, `friends` dochodzi. Osiem jak było.
 
 **④ `/stomp` poza zakresem — i jedna konsekwencja, której nie widać na pierwszy rzut oka.**
-Nie stylujecie tej strony i **nie usuwacie jej w tym kroku** — usunięcie strony nie jest
+Nie stylujesz tej strony i **nie usuwasz jej w tym kroku** — usunięcie strony nie jest
 zadaniem kroku designowego, tylko sprzątaniem; wpis w 12.5 i tyle.
 Konsekwencja ukryta jest ciekawsza. Zgodnie z 11.6 `/stomp` to **jedyne potwierdzone miejsce
 użycia** `text-success` i `text-danger` w całej aplikacji. Jeśli strona znika przed oceną
@@ -1923,8 +1970,7 @@ kontrastu koloru, którego nikt nie wyświetla, to praca wykonana dla samej tabe
 
 **Jedna rzecz do porzucenia:** branch odniesienia. Zgodnie z ostatnim akapitem §7.12 przestaje
 cokolwiek dowodzić — w tym kroku wszystko ma się różnić. Drugi port (`npm run dev -- -p 3001`)
-zostaje jednak przydatny, tylko w nowej roli: do oglądania **gałęzi drugiej osoby** obok
-własnej (§8.8).
+zostaje jednak przydatny, tylko w nowej roli (§8.8).
 
 **Stan wyjściowy jest już zapisany:** screenshoty sprzed migracji leżą
 w `/root/design/frontend/before_migration`. To one przejmują rolę branchu odniesienia, ale
@@ -1936,114 +1982,167 @@ W redesignie najczęstszą cichą stratą nie jest zły odstęp — zły odstęp
 jest **element, który zniknął**: drugorzędny przycisk, komunikat o błędzie, link w stopce,
 stan pusty listy. Znika nie przez błąd, tylko dlatego, że nikt go nie przepisał do nowego
 układu, a nowy układ wygląda kompletnie. Eksportu o to nie zapytasz — pokazuje intencję, nie
-inwentarz tego, co strona dziś naprawdę zawiera. Screenshota tak. Stąd punkt 9 w §8.9
-i czwarte narzędzie w §8.10.
+inwentarz tego, co strona dziś naprawdę zawiera. Screenshota tak. Stąd punkt 10 w §8.9
+i drugie narzędzie w §8.10.
 
-Screenshoty są sprzed całej migracji, więc **nie rozstrzygają** wiersza z 11.4 („czy strona
-marketingowa wygląda teraz najgorzej w aplikacji”) — ten stan powstał dopiero po Kroku 3
-i wymaga spojrzenia na działającą aplikację. Ale dają wreszcie z czym porównywać: zajrzyjcie
-obie, zanim zacznie się praca, bo za trzy dni nikt nie będzie pamiętał, co na tych ekranach
-w ogóle stało.
+Dwa ograniczenia tego materiału, żeby nie oczekiwać od niego za dużo. Po pierwsze, screenshoty
+są sprzed całej migracji, więc **nie rozstrzygają** wiersza z 11.4 („czy strona marketingowa
+wygląda teraz najgorzej w aplikacji”) — ten stan powstał dopiero po Kroku 3 i wymaga spojrzenia
+na działającą aplikację. Po drugie, jeśli powstały przy jednej szerokości okna, odpowiadają na
+pytanie „co tam było”, ale nie na „jak to się układało na wąskim ekranie” — a tego drugiego
+pytania nie da się już zadać wstecz. Przy jednostkach mobilnych screenshot jest więc **listą
+elementów do odnalezienia w nowym układzie**, a nie wzorcem układu; i akurat w tej roli działa
+tak samo dobrze, bo lista elementów nie zależy od szerokości.
 
-### 8.2 Pojęcie: dwa rodzaje konfliktu, a `git` widzi tylko jeden
+Zajrzyj tam, zanim zaczniesz pracę, bo za kilka dni nikt nie będzie pamiętał, co na tych
+ekranach w ogóle stało.
 
-To jest centralne pojęcie tej części i to od niego zależy cały podział pracy.
+### 8.2 Pojęcie: konflikt systemowy nie potrzebuje drugiej osoby
 
-Gdy dwie osoby pracują równolegle, mogą wejść sobie w drogę na dwa różne sposoby:
+To jest centralne pojęcie tej części — i jedyne, które **nie zniknęło** razem z drugą osobą.
+Warto zobaczyć, dlaczego nie zniknęło, bo intuicja mówi coś przeciwnego.
+
+Gdy dwie osoby pracują równolegle, mogą wejść sobie w drogę na dwa sposoby:
 
 | | Konflikt tekstowy | Konflikt systemowy |
 |---|---|---|
-| Co to jest | Dwie osoby zmieniły ten sam fragment tego samego pliku | Dwie osoby podjęły dwie różne decyzje projektowe o tej samej rzeczy |
-| Przykład | Obie dodały klasę do tego samego `<div>` w `Sidebar.tsx` | Kinga przyjęła, że karta ma promień `rounded-xl`, Zyta — że `rounded-2xl` |
+| Co to jest | Ktoś zmienił ten sam fragment tego samego pliku, co ktoś inny | Zapadły dwie różne decyzje projektowe o tej samej rzeczy |
+| Przykład | Dwie zmiany w tym samym `<div>` w `Sidebar.tsx` | Karta na jednym ekranie ma promień `rounded-xl`, na drugim `rounded-2xl` |
 | Kto to wykryje | `git` przy scalaniu, natychmiast | Człowiek, kilka dni później, przypadkiem |
-| Ile kosztuje naprawa | Minuty — obie wersje są widoczne obok siebie | Przegląd wszystkiego, co obie zrobiły do tej pory |
+| Ile kosztuje naprawa | Minuty — obie wersje są widoczne obok siebie | Przegląd wszystkiego, co zostało zrobione do tej pory |
 | Czy scalanie się powiedzie | **Nie** — i to jest zaleta | **Tak** — i to jest problem |
 
 Wniosek, który przewraca intuicję: **konflikt tekstowy jest tanim rodzajem konfliktu.** Jest
-głośny, lokalny i rozwiązuje się w minutę. Prawdziwym zagrożeniem przy pracy we dwie jest
-konflikt systemowy — bo scala się bez jednego ostrzeżenia i produkuje aplikację, w której
-połowa ekranów należy do jednego systemu wizualnego, a połowa do drugiego. Nikt tego nie
-zgłosi, bo każdy ekran z osobna wygląda poprawnie.
+głośny, lokalny i rozwiązuje się w minutę. Drogi jest ten drugi — scala się bez jednego
+ostrzeżenia i produkuje aplikację, w której połowa ekranów należy do jednego systemu
+wizualnego, a połowa do drugiego. Nikt tego nie zgłosi, bo każdy ekran z osobna wygląda
+poprawnie.
 
-Stąd dwie zasady, na których stoi cały ten podział:
+**I teraz rzecz, dla której ta sekcja przetrwała przejście na pracę w pojedynkę.** Przeczytaj
+kolumnę „konflikt systemowy” jeszcze raz i zauważ, że nigdzie nie pada w niej słowo „dwie
+osoby”. Pada „dwie decyzje”. A dwie decyzje nie potrzebują dwóch ludzi — wystarczą **dwa
+momenty w czasie:**
 
-- **Przeciwko konfliktom tekstowym: rozłączne pliki.** Podział przebiega po granicy plików,
-  nie po granicy „obszarów” czy „ekranów”. Dwie osoby nigdy nie mają otwartego tego samego
-  pliku (§8.4, §8.7 reguła 1).
-- **Przeciwko konfliktom systemowym: wspólny słownik przed startem.** Wszystkie wartości
-  layoutu zostają ustalone **raz, wspólnie**, zanim ktokolwiek zacznie stylować — i potem
-  obie osoby sięgają do tabeli, a nie do eksportu (§8.3).
+> Ty z poniedziałku i Ty z czwartku to dwie osoby, które się nie znają.
 
-Druga zasada jest tą, która daje realne przyspieszenie. Pierwsza tylko zapobiega marnowaniu
-czasu.
+W poniedziałek wiesz, czemu karta ma `rounded-xl`; w czwartek pamiętasz tylko, że „karty są
+zaokrąglone”, i przy kolejnej wpisujesz `rounded-2xl`, bo tak wygląda lepiej na tym konkretnym
+ekranie. Obie decyzje były rozsądne w swoim momencie. Efekt jest identyczny jak przy dwóch
+osobach — z jedną różnicą na niekorzyść: **nie ma nikogo, kto by to zobaczył.**
 
-### 8.3 Faza 0 — wspólny słownik layoutu (pół dnia, razem)
+Decyzja ① dokłada trzeci wariant tego samego mechanizmu, tym razem wewnątrz jednej jednostki:
+**ten sam ekran w dwóch szerokościach.** Układ mobilny projektujesz zwykle po desktopowym,
+czasem następnego dnia — i to znów dwa momenty, dwie decyzje, jeden ekran. Rozjazd między
+mobile a desktopem tej samej trasy jest tego samego gatunku co rozjazd między dwiema trasami.
 
-To jest jedyna część Kroku 4, którą **robicie razem, przy jednym ekranie.** Kusi, żeby ją
-pominąć i „ustalać po drodze”. Nie pomijajcie — to jest ta godzina, która decyduje o tym, czy
-trzy dni później masz jedną aplikację, czy dwie.
+Stąd bilans po zmianie założeń — i on tłumaczy, dlaczego ta wersja dokumentu jest krótsza
+w regułach, a dłuższa w zapisie:
 
-**Co robicie:** otwieracie eksport designu (`42Hub UIUX design/Forti2Hub.dc.html`) i wypisujecie
-z niego **wartości powtarzalne** — te, które wracają na wielu ekranach. Nie stylujecie niczego.
-Efektem jest tabela w 12.0, nie kod.
+- **Obrona przed konfliktem tekstowym przestaje być potrzebna.** Rozłączne pliki, rejestr
+  własności, negocjowanie podziału — wszystko to znika. §8.4 zostaje, ale odpowiada już na
+  inne pytanie (kolejność, nie własność).
+- **Obrona przed konfliktem systemowym staje się jedyną obroną, jaka tu jest** — i traci
+  swoje najlepsze narzędzie. Przy dwóch osobach wykrywał go przegląd krzyżowy: ktoś patrzył
+  świeżym okiem i mówił „to nie wygląda jak reszta”. W pojedynkę zostaje **słownik** (§8.3),
+  który zapobiega, i **przegląd wsteczny** (§8.8), który wykrywa — słabiej, bo dystansem
+  czasu zamiast drugą głową.
 
-| Kategoria | Co spisać | Typowy rozmiar zestawu |
-|---|---|---|
-| Odstępy (spacing) | Jakie odległości faktycznie występują między elementami i jakie mają role (odstęp wewnątrz karty, między kartami, od krawędzi ekranu) | 4–6 wartości |
-| Promienie (radius) | Promień karty, przycisku, pola formularza, avatara | 3–4 wartości |
-| Obramowania | Grubość i który token koloru | 1–2 wartości |
-| Cienie | Cień karty, cień elementu podniesionego (menu, modal) | 1–3 wartości |
-| Typografia | Nagłówki (poziomy), tekst podstawowy, tekst drugorzędny, etykiety — rozmiar + waga + interlinia | 5–7 pozycji |
-| Szerokości kontenerów | Maksymalna szerokość kolumny treści, szerokość Sidebara, szerokość karty logowania | 3–4 wartości |
+To jest cała zmiana filozofii tej części w jednym zdaniu: **przy dwóch osobach spójności
+pilnowała rozmowa, w pojedynkę musi jej pilnować zapis.**
 
-**Dzięki decyzji ① każda z tych pozycji ma dokładnie jedną wartość, nie zestaw wartości na
-ekran.** To jest największa praktyczna korzyść z „tylko desktop”: słownik jest tabelą, a nie
-macierzą, i mieści się w głowie.
+### 8.3 Faza 0 — słownik layoutu (pół dnia, zanim cokolwiek ostylujesz)
 
-**Piąta rzecz do ustalenia w Fazie 0, wynikająca z decyzji ①: jedna szerokość okna do oceny.**
-Zapiszcie ją w 12.0 jako pierwszy wiersz. Powód jest ten sam, dla którego istnieje cały ten
-słownik: przy 1280px i przy 1440px ta sama strona wymaga innych odstępów, żeby wyglądać dobrze,
-więc dwie osoby oceniające przy dwóch szerokościach wyprodukują dwa spójne wewnętrznie, ale
-różne systemy — i żadna nie zobaczy błędu u siebie. To jest konflikt systemowy powstały
-całkowicie **poza kodem**, więc żadne narzędzie go nie wykryje.
+To jest jedyna część Kroku 4, w której **nie piszesz kodu.** Kusi, żeby ją pominąć i „ustalać
+po drodze” — przy pracy w pojedynkę kusi podwójnie, bo nie ma z kim się umawiać, więc wydaje
+się, że nie ma czego ustalać. To jest dokładnie odwrotnie niż w rzeczywistości: umawiasz się
+sama ze sobą z czwartku (§8.2), a ta osoba nie będzie pamiętała rozmowy, której nie zapisałaś.
 
-**Zasada, która nadaje temu sens: po Fazie 0 wartość, której nie ma w słowniku, nie może
-pojawić się w kodzie bez wpisu w 12.4.** Nie chodzi o to, żeby zakazać wyjątków — chodzi
-o to, żeby wyjątek był widoczny. Ekran, który potrzebuje odstępu spoza słownika, albo mówi
-coś o designie (jest tam nowa rola), albo o tym, że ktoś zmierzył na oko. Jedno i drugie warto
+**Co robisz:** otwierasz eksport designu (`42Hub UIUX design/Forti2Hub.dc.html`) i wypisujesz
+z niego **wartości powtarzalne** — te, które wracają na wielu ekranach. Efektem jest tabela
+w 12.0, nie kod.
+
+| Kategoria | Co spisać | Typowy rozmiar zestawu | Czy różni się na mobile |
+|---|---|---|---|
+| Odstępy (spacing) | Jakie odległości występują między elementami i jakie mają role (wewnątrz karty, między kartami, od krawędzi ekranu) | 4–6 wartości | **Tak** — zwłaszcza odstęp od krawędzi i między sekcjami |
+| Promienie (radius) | Promień karty, przycisku, pola formularza, avatara | 3–4 wartości | Nie |
+| Obramowania | Grubość i który token koloru | 1–2 wartości | Nie |
+| Cienie | Cień karty, cień elementu podniesionego (menu, modal) | 1–3 wartości | Nie |
+| Typografia | Nagłówki (poziomy), tekst podstawowy, tekst drugorzędny, etykiety — rozmiar + waga + interlinia | 5–7 pozycji | Czasem — zwykle tylko największe nagłówki |
+| Szerokości kontenerów | Maksymalna szerokość kolumny treści, szerokość Sidebara, szerokość karty logowania | 3–4 wartości | **Tak** — na wąskim ekranie zwykle „cała szerokość minus margines” |
+
+**Reguła drugiej kolumny: wpisujesz ją tylko tam, gdzie umiesz powiedzieć, dlaczego pierwsza
+wartość nie wystarcza.** Ostatnia kolumna tabeli wyżej to podpowiedź, nie wynik — wynik czytasz
+z eksportu. Powód tej reguły jest praktyczny: słownik z dwiema wartościami w każdym wierszu ma
+dwa razy więcej pozycji do zapamiętania i przestaje pełnić swoją funkcję, bo **nikt nie sięga
+do tabeli, w której trzeba szukać.** Domyślną odpowiedzią jest „ta sama wartość na obu
+szerokościach”; różnica jest wyjątkiem, który się uzasadnia.
+
+**Trzy rzeczy, które Faza 0 ustala poza kategoriami powyżej — wszystkie do pierwszych wierszy
+12.0, bo żadna nie opisuje kodu, tylko warunki jego oceny:**
+
+1. **Dwie szerokości oceny.** Na przykład 390px i 1440px. Konkretne liczby są mniej ważne od
+   tego, żeby były **te same przez cały krok**: przy 1280 i 1440 ta sama strona potrzebuje
+   innych odstępów, żeby wyglądać dobrze, więc ocenianie raz tak, raz tak, daje dwa spójne
+   wewnętrznie i różne systemy — konflikt systemowy powstały całkowicie **poza kodem**,
+   którego żadne narzędzie nie wykryje.
+2. **Jeden breakpoint i jego nazwa.** Domyślnie `md:` (768px), bo to naturalna granica między
+   „telefon” a „reszta świata”. Drugi breakpoint można dodać **tylko przez wpis w 12.4**, nigdy
+   odruchowo — każdy kolejny mnoży liczbę układów do sprawdzenia w §8.9 pkt 8.
+3. **Kierunek pisania: mobile-first** (§8.1 ①). Klasy bez prefiksu = wąski ekran, `md:` =
+   szeroki. Zapisz to w 12.0 jako regułę, nie jako wartość — bo to jedyna pozycja słownika,
+   którą łamie się nie z niewiedzy, tylko z odruchu.
+
+**Zasada, która nadaje temu wszystkiemu sens: po Fazie 0 wartość, której nie ma w słowniku, nie
+może pojawić się w kodzie bez wpisu w 12.4.** Nie chodzi o to, żeby zakazać wyjątków — chodzi
+o to, żeby wyjątek był widoczny. Ekran, który potrzebuje odstępu spoza słownika, mówi albo coś
+o designie (jest tam nowa rola), albo o tym, że ktoś zmierzył na oko. Jedno i drugie warto
 wiedzieć.
 
-**Dlaczego to jest największa dźwignia wydajności w całym kroku.** Bez słownika każda z Was
-odczytuje te same wartości z eksportu osobno — czyli ta sama praca wykonana dwa razy, i to
-z dwoma różnymi wynikami, bo odczyt z eksportu wymaga interpretacji. Ze słownikiem odczyt
-dzieje się raz, a potem stylowanie komponentu przestaje być pytaniem „jak to ma wyglądać”
-i staje się pytaniem „którą pozycję ze słownika tu wpisać”. To jest dokładnie ta różnica,
-która sprawia, że praca staje się rozdzielna: **decyzje zostały podjęte wspólnie, do rozdania
-została tylko robota.**
+**Dlaczego to jest największa dźwignia w całym kroku — i dlaczego w pojedynkę większa, nie
+mniejsza.** Przy dwóch osobach słownik oszczędzał podwójny odczyt z eksportu i wykluczał dwie
+różne interpretacje. W pojedynkę nie oszczędza już nic — ale zaczyna pełnić drugą funkcję,
+której wcześniej nie musiał: **jest jedyną rzeczą, która pamięta, dlaczego poprzednie ekrany
+wyglądają tak, jak wyglądają.** Ze słownikiem stylowanie komponentu przestaje być pytaniem
+„jak to ma wyglądać” i staje się pytaniem „którą pozycję ze słownika tu wpisać” — a to drugie
+pytanie ma tę zaletę, że da się na nie odpowiedzieć identycznie w poniedziałek i w czwartek.
 
-To jest też ten sam mechanizm, który już raz w tym planie zadziałał: tokeny kolorystyczne
-robią z kolorami dokładnie to, co słownik robi z odstępami — nadają wartościom nazwy ról,
+To jest zresztą ten sam mechanizm, który już raz w tym planie zadziałał: tokeny kolorystyczne
+robią z kolorami dokładnie to, co słownik robi z odstępami — nadają wartościom **nazwy ról**,
 żeby decyzja zapadła raz i w jednym miejscu. Różnica jest tylko taka, że tokeny są zapisane
 w CSS, a słownik zostaje w dokumencie, bo Krok 4 nie dodaje nowych tokenów (§8.7 reguła 2).
 
-**Domykacie też w Fazie 0:** podział własności plików z §8.5 i §8.6 (do 12.1), szerokość okna
-do oceny (do 12.0) oraz trzy decyzje wykonawcze wynikające z odpowiedzi ② i ③, których sama
-odpowiedź jeszcze nie przesądza: **czym konkretnie jest „uproszczone tło”** karty logowania,
-**jak nazywa się nowa trasa** znajomych i **co dokładnie się na nią przenosi** (§8.6,
-jednostka 2a). Cztery pytania z §8.1 są już rozstrzygnięte — zostaje je tylko przepisać
-do 12.2.
+**Domykasz też w Fazie 0** kolejność jednostek z §8.5 i §8.6 (do 12.1) oraz cztery decyzje
+wykonawcze, których same odpowiedzi z §8.1 jeszcze nie przesądzają:
 
-### 8.4 Granica własności musi przebiegać po granicy importów
+| Decyzja wykonawcza | Z której odpowiedzi | Gdzie zapisać |
+|---|---|---|
+| Czym konkretnie jest „uproszczone tło” karty logowania | ② | 12.4 (pytanie do designu) |
+| Co się dzieje z nawigacją przy 390px | ① | 12.4, potem 12.7 (jednostka 1b) |
+| Jak nazywa się nowa trasa znajomych | ③ | 12.2 |
+| Co dokładnie się na nią przenosi | ③ | 12.2, potwierdzone poleceniem z §8.6 |
 
-Zanim przypiszecie sobie pliki, trzeba potwierdzić jedną rzecz, której inwentaryzacja **nie
-zapisała**: sekcja 9.2 podaje *ile* plików używa danego komponentu, ale nie *które*. Do
-podziału pracy potrzebne są nazwy, nie liczby.
+Dwie pierwsze są pytaniami do designu i **obie idą w pierwszej turze** (§8.8), bo obie blokują
+pracę w Fazie 1: bez odpowiedzi o nawigacji nie da się zamknąć Sidebara, a bez odpowiedzi o tle
+— żadnej z trzech tras wejścia. Cztery pytania z §8.1 są już rozstrzygnięte; zostaje je tylko
+przepisać do 12.2 razem z historią zmiany ①.
 
-Konkretnie: podział z §8.5 zakłada, że powłoka aplikacji (Etap C) **nie importuje** komponentów
+### 8.4 Kolejność musi przebiegać po granicy importów
+
+Przy dwóch osobach ta sekcja wyznaczała **granicę własności**. W pojedynkę odpowiada na inne
+pytanie — **co przed czym** — ale opiera się na dokładnie tej samej informacji i wymaga tego
+samego sprawdzenia. To dobra ilustracja tego, że zależności w kodzie nie znikają razem ze
+zmianą organizacji pracy; zmienia się tylko to, czy przekładają się na przestrzeń, czy na czas.
+
+Trzeba potwierdzić jedną rzecz, której inwentaryzacja **nie zapisała**: sekcja 9.2 podaje *ile*
+plików używa danego komponentu, ale nie *które*. Do ustalenia kolejności potrzebne są nazwy,
+nie liczby.
+
+Konkretnie: kolejność z §8.5 zakłada, że powłoka aplikacji (Etap C) **nie importuje** komponentów
 sterujących z Etapu A. Jeśli to założenie jest fałszywe — jeśli np. `Footer` zawiera `Button` —
-to jedna osoba stylowałaby komponent, którego wygląd druga w tym samym czasie zmienia pod nią.
-Nie byłby to konflikt tekstowy (pliki są różne), tylko konflikt systemowy: przegląd wizualny
-powłoki byłby robiony na nieaktualnym stanie i trzeba by go powtórzyć.
+to zamknięcie Footera przed Buttonem oznacza, że jego przegląd wizualny odbył się na stanie,
+który zaraz się zmieni, i trzeba go powtórzyć. Nikt tego nie zgłosi: `Footer` zostanie
+odhaczony w 12.3 i nikt nie wróci sprawdzić, czy nadal wygląda tak, jak wtedy, gdy go
+odhaczano.
 
 Z katalogu **`/root/design/frontend`**:
 
@@ -2060,80 +2159,96 @@ potraktować wszystko w środku dosłownie. To ta sama sytuacja co ze spacją w 
 
 **Jak czytać wynik:**
 
-- **Brak wyników** — podział z §8.5 jest bezpieczny bez zmian. Etap A i Etap C są rozłączne
-  także pod względem zależności, nie tylko plików.
+- **Brak wyników** — kolejność z §8.5 jest bezpieczna bez zmian. Etap A i Etap C są rozłączne
+  także pod względem zależności, nie tylko plików, więc Etap C mógłby nawet pójść pierwszy.
 - **Są wyniki** — dla każdego trafienia obowiązuje reguła: **komponent nadrzędny nie przechodzi
-  finalnego przeglądu wizualnego, dopóki jego dziecko nie jest ukończone.** Praktycznie: Zyta
-  może zacząć powłokę wcześniej, ale ostatnie spojrzenie na `Footer` odbywa się dopiero, gdy
-  `Button` jest zamknięty. To ten sam argument co fan-in w Kroku 1, tylko zastosowany do
-  kolejności w czasie, a nie do kolejności w kolejce: **dotknij raz, oceń raz.**
+  finalnego przeglądu wizualnego, dopóki jego dziecko nie jest ukończone.** Praktycznie: możesz
+  zacząć powłokę wcześniej, ale ostatnie spojrzenie na `Footer` odbywa się dopiero wtedy, gdy
+  `Button` jest zamknięty — a to spojrzenie kosztuje teraz dwa razy tyle, bo obejmuje obie
+  szerokości (§8.9 pkt 8). To ten sam argument co fan-in w Kroku 1: **dotknij raz, oceń raz** —
+  tylko że przy dwóch szerokościach „oceń raz” jest wyraźnie droższe, więc pomyłka w kolejności
+  boli mocniej niż w poprzednich krokach.
 
-### 8.5 Faza 1 — praca równoległa na rozłącznych zbiorach plików
+### 8.5 Faza 1 — komponenty i powłoka, w jednej kolejce
 
-Kluczowa obserwacja, dzięki której ta faza w ogóle może być równoległa, siedzi w tabeli 9.1
-i łatwo ją przeoczyć: **Etap B nie zależy od Etapu A.** `privacy-policy` i `terms-of-service`
-używają dokładnie dwóch komponentów (`LegalSection`, `ContactBlock`), a oba są używane wyłącznie
-przez te dwie strony. Ta gałąź jest samowystarczalna — można ją poprowadzić w całości bez
-czekania na cokolwiek innego.
+Przy dwóch osobach ta faza była tabelą podziału. W pojedynkę jest **kolejką**, a jedyne pytanie
+brzmi: w jakiej kolejności, żeby niczego nie oglądać dwa razy.
 
-| | **Kinga** | **Zyta** |
-|---|---|---|
-| Zakres | **Etap A** — komponenty sterujące | **Etap C → Etap B** — powłoka, potem strony prawne |
-| Pliki | `TextField`, `Button`, `Avatar`, `Card`, `AccentLink`, `Tag` | `ThemeToggle`, `BrandLink`, `Footer`, `Sidebar`, `BareLayout`, `app/(app)/layout.tsx`, potem `LegalSection`, `ContactBlock`, `privacy-policy/page.tsx`, `terms-of-service/page.tsx` |
-| Kolejność wewnętrzna | wg 9.3: TextField → Button → Avatar → Card → AccentLink → Tag | wg 9.3: ThemeToggle → BrandLink → Footer → Sidebar → BareLayout, następnie privacy-policy → terms-of-service |
-| Trasy do oglądania | wszystkie, na których dany komponent występuje (§8.9 pkt 6) | `(app)/*` dla powłoki, dwie strony prawne dla Etapu B |
+| # | Etap | Pliki | Kolejność wewnętrzna (9.3) |
+|---|---|---|---|
+| 1 | **A** — komponenty sterujące | `TextField`, `Button`, `Avatar`, `Card`, `AccentLink`, `Tag` | TextField → Button → Avatar → Card → AccentLink → Tag |
+| 2 | **C** — powłoka | `ThemeToggle`, `BrandLink`, `Footer`, `Sidebar`, `BareLayout`, `app/(app)/layout.tsx` | ThemeToggle → BrandLink → Footer → Sidebar → BareLayout |
+| 3 | **1b** — nawigacja mobilna | `Sidebar`, `app/(app)/layout.tsx` (i to, co wskaże odpowiedź z 12.4) | jedna jednostka, osobny commit |
+| 4 | **B** — strony prawne | `LegalSection`, `ContactBlock`, `privacy-policy/page.tsx`, `terms-of-service/page.tsx` | privacy-policy → terms-of-service |
 
-**Jedno wyprzedzenie w Etapie C, wynikające z decyzji ③:** Sidebar dostanie w Fazie 2 nowy
-wpis nawigacyjny (trasa znajomych). Stylując go teraz, zaprojektuj listę linków tak, żeby
-przyjęcie kolejnej pozycji nie wymagało powrotu — czyli nie dobieraj odstępów pod dokładnie
-tę liczbę elementów, którą widzisz dzisiaj. To kosztuje jedną świadomą decyzję teraz zamiast
-drugiego przejścia przez ten sam plik za trzy dni.
+**Dlaczego Etap A przed Etapem C.** Fan-in: `TextField` i `Button` mają po sześć miejsc użycia
+(9.2). Komponent o wysokim fan-in ostylowany późno zmienia wygląd wszystkiego, co go zawiera —
+w tym rzeczy już odhaczonych w 12.3. To ta sama reguła co w Kroku 1, tylko że jej cena wzrosła:
+przy dwóch szerokościach powrót do sześciu ekranów to dwanaście spojrzeń.
 
-**Dlaczego akurat tak, a nie „każda bierze połowę Etapu A”:**
+**Dlaczego Etap B na końcu, mimo że nie zależy od niczego.** Kluczowa obserwacja siedzi
+w tabeli 9.1: **Etap B nie zależy od Etapu A.** `privacy-policy` i `terms-of-service` używają
+dokładnie dwóch komponentów (`LegalSection`, `ContactBlock`), a oba są używane wyłącznie przez
+te dwie strony. Przy dwóch osobach to była podstawa równoległości. W pojedynkę zmienia się w coś
+innego i równie użytecznego: **Etap B jest rezerwą na czas blokady.** Kiedy czekasz na odpowiedź
+z 12.4 — a czekać będziesz, bo dwa pytania z §8.3 blokują Sidebar i trasy wejścia — masz gałąź
+pracy, która nie potrzebuje żadnej odpowiedzi. To jest w pojedynkę odpowiednik równoległości:
+nie robisz dwóch rzeczy naraz, ale nigdy nie stoisz.
 
-1. **`TextField` i `Button` muszą być w jednych rękach.** Pole formularza i przycisk stoją obok
-   siebie w każdym formularzu i muszą się zgadzać co do wysokości, promienia, grubości
-   obramowania i pierścienia focusa. Rozdzielenie ich między dwie osoby to podręcznikowy
-   konflikt systemowy z §8.2 — dwa poprawne komponenty, które razem wyglądają źle. Skoro te
-   dwa muszą być razem, a to one dominują Etap A (fan-in 6 i 6), to cały Etap A idzie w jedne
-   ręce.
-2. **Powłoka i treść to naturalna płaszczyzna cięcia.** Sidebar, Footer i layout to rama;
-   komponenty sterujące to zawartość. Widać je na tym samym ekranie, ale nie da się ich
-   pomylić i nie dzielą ani jednego pliku.
-3. **Etap C niesie dwie decyzje, które należą do osoby prowadzącej migrację** — trzy
-   placeholdery z 10.4 i `text-white` na `BrandLink` z 11.5. Obie wymagają rozmowy z designem,
-   a nie odczytu z eksportu. Etap A nie niesie **ani jednej** decyzji strukturalnej: każde
-   pytanie w nim brzmi „jak to wygląda w eksporcie”. To czyni go najlepszym zakresem dla
-   osoby, która ma się przy okazji nauczyć systemu.
-4. **`app/(app)/layout.tsx` ma jednego właściciela.** To plik, który widzi każda trasa
-   w grupie `(app)`; gdyby był wspólny, byłby głównym źródłem konfliktów tekstowych. Idzie
-   razem z powłoką, bo to on powłokę składa.
+**Jednostka 1b — nawigacja na wąskim ekranie.** Wykonujesz ją **po** ostylowaniu Sidebara i jako
+osobny commit, nie w środku Etapu C.
 
-**Jeśli któraś skończy wcześniej:** nie wchodzi w pliki drugiej. Przekazanie własności jest
-jawne — wpis w 12.1 ze zmianą właściciela, po potwierdzeniu, że poprzednia właścicielka nie ma
-tam nic w toku (§8.7 reguła 7).
+| | |
+|---|---|
+| **Co się dzieje** | Nawigacja przestaje być stałą kolumną przy wąskim ekranie; przyjmuje formę wskazaną przez odpowiedź z 12.4 |
+| **Czego NIE zmienia** | Wyglądu nawigacji na szerokim ekranie — desktop po tej jednostce wygląda dokładnie tak, jak przed nią |
+| **Rodzaj zmiany** | **Strukturalna**, a możliwe że i behawioralna (menu rozwijane ma stan) |
+| **Czym się to weryfikuje** | Działaniem: każda pozycja nawigacji jest osiągalna przy 390px, menu otwiera się i zamyka, przejście do trasy zamyka je |
+| **`'use client'`** | Może urosnąć o jeden wpis — jeśli tak, wymaga uzasadnienia w 12.7 (§8.13) |
+
+Trzy powody, dla których jest osobno, a nie wtopiona w Sidebara:
+
+1. **Może zmieniać zachowanie, a Etap C jest stylowaniem.** Zasada A: jednostka jest albo
+   refaktorem, albo redesignem. Menu ze stanem otwarcia to nie odstęp — to nowy element
+   interakcji, którego reszta kroku nie zawiera.
+2. **Jej testem nie jest wygląd, tylko osiągalność.** Ekran, na którym nawigacja wygląda
+   świetnie i nie da się z niego wyjść, przechodzi każdy przegląd wizualny. Wymieszana ze
+   stylowaniem Sidebara ginie w tłumie zmian wizualnych i nikt jej nie kliknie osobno.
+3. **Jest jedynym miejscem w tym kroku, gdzie „mobile” znaczy co innego niż „inne odstępy”.**
+   Wszędzie indziej wąski ekran to ta sama treść inaczej rozłożona. Tutaj to inna konstrukcja —
+   i warto, żeby ta różnica miała własny wpis w dzienniku.
+
+**Jedno wyprzedzenie w Etapie C, wynikające z decyzji ③:** Sidebar dostanie w Fazie 2 nowy wpis
+nawigacyjny (trasa znajomych). Stylując go teraz — i projektując dla niego nawigację mobilną
+w 1b — zrób to tak, żeby przyjęcie kolejnej pozycji nie wymagało powrotu: nie dobieraj odstępów
+ani wysokości pod dokładnie tę liczbę elementów, którą widzisz dzisiaj. To kosztuje jedną
+świadomą decyzję teraz zamiast dwóch przejść przez ten sam plik za kilka dni — a przy 1b
+przejście oznacza też ponowny test działania, nie tylko spojrzenie.
 
 ### 8.6 Faza 2 — Etap D po decyzjach ② i ③
 
 Ta sekcja wygląda inaczej niż przed odpowiedziami z §8.1 i warto wiedzieć, co dokładnie je
 zmieniło — bo to dobry przykład tego, jak decyzja produktowa przestawia plan pracy.
 
-**Co zniknęło.** Pierwotnie `(marketing)/`, `login` i `register` musiały być jednym klastrem
-jednej osoby, bo w eksporcie karta logowania jest **nałożona na ekran `landing`** — trzy trasy,
-ale jeden obraz. Decyzja ② („uproszczone tło”) tę zależność zdejmuje: karta dostaje własne tło,
-więc strona marketingowa i strony logowania stają się dwoma niezależnymi zadaniami. **Powód
-sprzężenia był w eksporcie, nie w kodzie — i zniknął razem z decyzją.**
+**Co zniknęło.** Pierwotnie `(marketing)/`, `login` i `register` musiały być jednym klastrem,
+bo w eksporcie karta logowania jest **nałożona na ekran `landing`** — trzy trasy, ale jeden
+obraz. Decyzja ② („uproszczone tło”) tę zależność zdejmuje: karta dostaje własne tło, więc
+strona marketingowa i strony logowania stają się osobnymi jednostkami. **Powód sprzężenia był
+w eksporcie, nie w kodzie — i zniknął razem z decyzją.**
 
-**Co przetrwało.** `login` i `register` nadal **muszą** być u jednej osoby. To wciąż dwie
-zakładki jednej karty, a nie dwie strony — dzielą kształt, obramowanie, pola i przyciski.
-Zasada, na której to stoi, jest ta sama co przy parach tokenów w §7.4, tylko piętro wyżej:
-**jednostka pracy przebiega tam, gdzie przebiega jednostka decyzji**, a nie tam, gdzie
-przebiega granica plików.
+**Co przetrwało — i przetrwałoby nawet w pojedynkę.** `login` i `register` nadal **muszą** być
+jedną jednostką pracy. To wciąż dwie zakładki jednej karty, a nie dwie strony — dzielą kształt,
+obramowanie, pola i przyciski. Warto zauważyć, że to ograniczenie nie miało nic wspólnego
+z liczbą osób: **jednostka pracy przebiega tam, gdzie przebiega jednostka decyzji**, a nie tam,
+gdzie przebiega granica plików ani gdzie przebiega granica między ludźmi. Ta sama zasada co
+przy parach tokenów w §7.4, tylko piętro wyżej. Rozdzielenie ich w czasie jest dokładnie tak
+samo groźne jak rozdzielenie ich między dwie osoby — pierwszą ostylujesz w środę, drugą
+w czwartek, i to są dwie decyzje o jednej karcie (§8.2).
 
 **Co doszło.** Decyzja ③ dokłada zadanie, którego w planie nie było — i które nie jest
 stylowaniem.
 
-#### Jednostka 2a — wydzielenie trasy znajomych (Zyta, przed resztą Fazy 2, osobno)
+#### Jednostka 2a — wydzielenie trasy znajomych (przed resztą Fazy 2, osobno)
 
 | | |
 |---|---|
@@ -2151,17 +2266,23 @@ Cztery powody, dla których ta jednostka jest wydzielona, a nie wtopiona w redes
 2. **Idzie przed stylowaniem**, bo stylowanie ekranu, który zaraz zmienia miejsce i kontekst,
    to praca wykonana dwa razy. To ten sam argument co fan-in w Kroku 1: **dotknij raz,
    oceń raz.**
-3. **Należy do Zyty**, bo dotyka `Sidebar.tsx` i `app/(app)/layout.tsx` — plików, których jest
-   właścicielką od Etapu C. Oddanie tego drugiej osobie oznaczałoby edycję w cudzych plikach,
-   czyli złamanie reguły 1 z §8.7 na najbardziej ruchliwym pliku w całym projekcie.
-4. **Jest jedyną jednostką w Kroku 4, której testem nie jest wygląd.** Wszystko inne w tym
-   kroku można ocenić, patrząc; tę trzeba kliknąć. Wymieszana z redesignem znika w tłumie
-   zmian wizualnych i nikt jej nie przetestuje osobno.
+3. **Otwiera ponownie jednostkę już zamkniętą** — dotyka `Sidebar.tsx` i `app/(app)/layout.tsx`,
+   odhaczonych w 12.3 jeszcze w Fazie 1. To jedyne takie miejsce w całym kroku i właśnie dlatego
+   musi być widoczne: w chwili wykonania 2a wpis w 12.3 przy Sidebarze **przestaje być
+   aktualny**, bo opisuje przegląd zrobiony na innej liczbie linków. Konsekwencja praktyczna:
+   po 2a Sidebar przechodzi ponowne sprawdzenie na obu szerokościach, łącznie z nawigacją
+   mobilną z 1b — nowy wpis nawigacyjny musi się zmieścić także tam. Odhaczenie nie jest wieczne;
+   jest ważne do najbliższej zmiany w pliku.
+4. **Jest jedną z dwóch jednostek w Kroku 4, których testem nie jest wygląd** (drugą jest 1b).
+   Wszystko inne w tym kroku można ocenić, patrząc; te dwie trzeba kliknąć. Wymieszana
+   z redesignem znika w tłumie zmian wizualnych i nikt jej nie przetestuje osobno.
 
 **Trzy decyzje wykonawcze do zapisania w 12.2, zanim zaczniesz:** jak nazywa się trasa, co
 dokładnie się przenosi i czy profil zachowuje jakikolwiek skrót do znajomych (np. licznik albo
-link) — bo jeśli nie, to znajomi są dostępni **wyłącznie** z Sidebara i to jest zmiana
-w ścieżce użytkownika, nie w wyglądzie.
+link) — bo jeśli nie, to znajomi są dostępni **wyłącznie** z nawigacji i to jest zmiana
+w ścieżce użytkownika, nie w wyglądzie. Trzecia decyzja waży teraz więcej niż przy samym
+desktopie: jeśli przy 390px nawigacja chowa się za przyciskiem menu (1b), to „wyłącznie
+z nawigacji” oznacza na telefonie „za dwoma kliknięciami”.
 
 Drugą z tych decyzji trzeba oprzeć na tym, co faktycznie jest w kodzie, a nie na tym, co
 sugerują nazwy. Z katalogu **`/root/design/frontend`**:
@@ -2181,103 +2302,132 @@ profilu (i zostają). Robocze założenie na podstawie 9.1: z panelem idą `User
 `AddFriendButton` i `RemoveFriendButton`, a w profilu zostają `Avatar`, `EditAvatarButton`
 i `EditDisplayNameButton` — ale to jest **założenie do potwierdzenia**, nie ustalenie.
 
-#### Podział Fazy 2 po wydzieleniu
+#### Kolejność Fazy 2 po wydzieleniu
 
-| | **Kinga** | **Zyta** |
-|---|---|---|
-| Klaster | Wejście do aplikacji | Znajomi i profil |
-| Trasy | `(marketing)/`, `(auth)/login`, `(auth)/register` | nowa trasa znajomych, `(app)/[userId]` |
-| Komponenty | `Hero`, `SessionCard` | `FriendsPanel`, `UserList`, `UserSearch`, `AddFriendButton`, `RemoveFriendButton`, `EditAvatarButton`, `EditDisplayNameButton` |
-| Kolejność | Hero + SessionCard → `(marketing)/` → `login` → `register` | **2a (refaktor)** → UserList + UserSearch → FriendsPanel → trasa znajomych → `(app)/[userId]` → dwa przyciski edycji |
-| Niesie decyzję | „uproszczone tło” (②) w trzech ekranach | strukturę nawigacji (③) |
+Dwa klastry — wejście do aplikacji i znajomi/profil — są wewnętrznie spójne i **kolejność
+między nimi jest dowolna.** Kolejność wewnątrz każdego z nich już nie.
 
-**Dlaczego `Hero` trafia do Kingi.** Zawiera `Tag`, który Kinga stylowała w Etapie A — więc
-zna już jego stany i marginesy. Do tego to właśnie te dwa pliki odblokowują Krok 8 (11.5),
-więc lepiej, żeby były w rękach osoby, która widziała je wcześniej, niż żeby ktoś odkrywał
-je drugi raz.
+| # | Jednostka | Klaster | Dlaczego w tym miejscu |
+|---|---|---|---|
+| 1 | **2a — wydzielenie trasy** | struktura | Refaktor przed redesignem; potem ponowne sprawdzenie Sidebara (pkt 3 wyżej) |
+| 2 | `Hero`, `SessionCard` | wejście | Komponenty przed trasami, które je zawierają — fan-in jak w §8.5 |
+| 3 | `(marketing)/` | wejście | Pierwsza z trzech tras P1 |
+| 4 | `login` + `register` **razem** | wejście | Jedna karta, jedna jednostka decyzji — rozdzielenie w czasie to §8.2 |
+| 5 | `UserList`, `UserSearch` | znajomi | Komponenty przed trasą znajomych |
+| 6 | `FriendsPanel` | znajomi | Składa poprzednie dwa |
+| 7 | nowa trasa znajomych | znajomi | Trasa po komponentach, które zawiera |
+| 8 | `(app)/[userId]` | profil | To, co zostało po wydzieleniu panelu |
+| 9 | `AddFriendButton`, `RemoveFriendButton`, `EditAvatarButton`, `EditDisplayNameButton` | oba | Cztery warianty jednej decyzji; naturalnie idą razem, na końcu |
 
-**Dlaczego bilans nie jest równy w plikach — i dlaczego to nie jest problem.** Zyta ma dwie
-trasy i siedem komponentów, Kinga trzy trasy i dwa komponenty. Ale Kinga ma **trzy trasy
-z P1** (zepsucie każdej blokuje wejście do aplikacji) i pytanie projektowe ②, a Zyta jedyną
-w tym kroku zmianę strukturalną. **Praca dzieli się po ciężarze decyzyjnym, nie po liczbie
-plików**; liczba plików jest najgorszą dostępną miarą wielkości zadania — pięć niemal
-identycznych przycisków w profilu to jedna decyzja powtórzona pięć razy, a jeden ekran
-logowania to pięć decyzji w jednym pliku.
+**Dlaczego `Hero` idzie zaraz po Fazie 1.** Zawiera `Tag`, ostylowany w Etapie A — więc jego
+stany i marginesy masz jeszcze w pamięci. Do tego to właśnie `Hero` i `Tag` odblokowują Krok 8
+(11.5), a kryterium, na które czeka inny krok, warto zamknąć wcześnie, a nie ostatniego dnia
+(§8.13, uwaga do kryterium 5).
 
-Klastry można zamienić — obie strony są wewnętrznie spójne. Jedyne, czego zamienić **nie
-można**, to rozdzielić `login` od `register` albo oddać jednostki 2a osobie, która nie jest
-właścicielką `Sidebar.tsx`.
+**Dlaczego pozycja 9 wygląda na cztery zadania, a jest jednym.** Cztery przyciski w profilu to
+w praktyce **jedna decyzja powtórzona cztery razy** — ten sam kształt, ta sama wysokość, te
+same stany. Jeden ekran logowania to odwrotnie: pięć decyzji w jednym pliku. Warto to widzieć,
+planując dzień, bo liczba plików jest najgorszą dostępną miarą wielkości zadania i regularnie
+prowadzi do wniosku „zostały mi już tylko drobiazgi” w momencie, w którym została najtrudniejsza
+trasa.
 
 **Zależności między fazami są dwie i obie załatwia granica faz:** `Hero` zawiera `Tag`
-(Etap A, Kinga), a jednostka 2a dotyka `Sidebar.tsx` (Etap C, Zyta). Faza 2 zaczyna się, gdy
-Faza 1 jest scalona — i to jest jedyny powód, dla którego te fazy są po sobie, a nie obok
-siebie.
+(Etap A), a jednostka 2a dotyka `Sidebar.tsx` i nawigacji mobilnej z 1b (Etap C). Faza 2
+zaczyna się, gdy Faza 1 jest domknięta — i to jest jedyny powód, dla którego te fazy są po
+sobie.
 
-### 8.7 Siedem reguł współpracy
+### 8.7 Sześć reguł — i dwie, które zniknęły razem z drugą osobą
 
-**1. Jeden plik ma dokładnie jedną właścicielkę w danym momencie.** Nie „jedną na etap”, nie
-„jedną na ekran” — jedną na plik. Rejestr własności żyje w 12.1 i jest jedynym miejscem, gdzie
-sprawdzasz, czy wolno Ci coś otworzyć. Ta jedna reguła eliminuje praktycznie wszystkie konflikty
-tekstowe.
+Poprzednia wersja miała siedem. Odpadły dwie: „jeden plik, jedna właścicielka” i „przekazanie
+własności jest jawne”. Obie chroniły **plik** przed drugą osobą. W pojedynkę chronionym zasobem
+przestaje być plik, a staje się **uwaga** — stąd nowa reguła 1, która wygląda inaczej, ale robi
+dokładnie to samo: pilnuje, żeby w danym momencie istniało jedno miejsce, w którym coś jest
+niedokończone.
 
-**2. `app/globals.css` ma jedną właścicielkę na cały Krok 4 — i prawie nic w nim nie robi.**
-To jedyny plik, do którego obie mogłyby chcieć pisać, więc jest naturalnym miejscem konfliktów.
-Rozwiązuje to reguła, która w tym planie już istnieje: **Krok 4 nie dodaje tokenów ad hoc**
-(Część 2, opis Kroku 4). Skoro nikt nie ma dodawać tokenów, to nikt nie ma pisać do
-`globals.css` — a zapotrzebowanie na nowy kolor idzie do tabeli pytań w 12.4, nie do pliku.
-Właścicielką jest Zyta; rola sprowadza się do prowadzenia tej kolejki. **Konflikt zamieniony
-w kolejkę przestaje być konfliktem.**
+**1. Jedna jednostka w toku.** Nie „jeden etap”, nie „jeden ekran” — jedna jednostka,
+doprowadzona do definicji z §8.9, zanim otworzysz następną. Trzy zaczęte i niedokończone
+komponenty to nie 60% postępu, tylko trzy rzeczy, o których za dwa dni nie będziesz wiedziała,
+czy przeszły punkt 6, czy nie — a jedyny sposób, żeby się dowiedzieć, to zrobić je od nowa.
+Kolejka jednostek żyje w 12.1 i to ona zastępuje rejestr własności.
+
+**2. `app/globals.css` jest praktycznie zamrożony.** Przy dwóch osobach powodem było to, że
+jest jedynym plikiem, do którego obie chciałyby pisać. Powód się zmienił, reguła nie: **zmiana
+tokenu jest zmianą wszystkich ekranów naraz, w tym tych już odhaczonych w 12.3.** To jedyny
+plik w projekcie, który potrafi cofnąć pracę uznaną za skończoną, i to bez żadnego widocznego
+sygnału. Obowiązuje reguła, która w tym planie już jest: **Krok 4 nie dodaje tokenów ad hoc**
+(Część 2, opis Kroku 4). Zapotrzebowanie na nowy kolor idzie do 12.4, nie do pliku.
 
 **3. Zero zmian API komponentów.** Żadnych nowych propsów, żadnych zmian domyślnych wartości,
-żadnego przemianowywania wariantów. Powód jest dokładnie ten z §8.2: zmiana API scala się
-czysto i psuje wygląd w miejscu, którego autorka zmiany nie oglądała. Jeśli komponent
-naprawdę potrzebuje nowego wariantu — to jest Krok 6 (por. notatki `TODO` o wariancie `send`
-w `Button` i tonie `chat` w `TextField`, sekcja 7 inwentaryzacji). Zapisz w 12.5, nie rób.
+żadnego przemianowywania wariantów. Powód jest ten z §8.2: zmiana API psuje wygląd w miejscu,
+którego przy tej zmianie nie oglądałaś. Jeśli komponent naprawdę potrzebuje nowego wariantu —
+to jest Krok 6 (por. notatki `TODO` o wariancie `send` w `Button` i tonie `chat` w `TextField`,
+sekcja 7 inwentaryzacji). Zapisz w 12.5, nie rób.
 
-**4. Widzisz błąd w cudzym pliku — zapisujesz, nie naprawiasz.** To jest Zasada B, tylko
-zastosowana do drugiej osoby zamiast do drugiego kroku. Jednolinijkowa poprawka w cudzym pliku
-kosztuje trzydzieści sekund i produkuje konflikt tekstowy przy scalaniu **oraz** rozmowę
-„myślałam, że to Ty” przy przeglądzie. Wpis w 12.5 kosztuje piętnaście sekund.
+**4. Widzisz błąd poza bieżącą jednostką — zapisujesz, nie naprawiasz.** To jest Zasada B,
+zastosowana tym razem do samej siebie. Wersja dwuosobowa mówiła „w cudzym pliku”, bo istniał
+cudzy plik; wersja jednoosobowa mówi „poza jednostką”, bo granica przebiega teraz w czasie,
+a nie między ludźmi. Skutek jest identyczny: **plik, w którym poprawiłaś trzy znaki po
+odhaczeniu go w 12.3, przestaje być plikiem, o którym wiadomo, że przeszedł przegląd.** Wpis
+w 12.5 kosztuje piętnaście sekund i tej wiedzy nie niszczy.
 
-**5. Gałęzie krótkie, scalane często.** Ilość konfliktów rośnie z **czasem**, przez jaki dwie
-wersje żyją osobno, a nie z liczbą osób. Dwie osoby scalające się co pół dnia mają mniej
-konfliktów niż jedna osoba wracająca po tygodniu. Jednostka gałęzi = jednostka pracy
-z §8.0: jeden komponent albo jedna trasa. *(Same operacje na gałęziach wykonuje Zyta —
-zgodnie z podziałem obowiązujących w tym repozytorium; ten dokument opisuje politykę, nie
+**5. Gałęzie krótkie, jednostka gałęzi = jednostka pracy z §8.0.** Przy dwóch osobach
+uzasadnieniem były konflikty. W pojedynkę uzasadnienie jest inne i warto je nazwać uczciwie,
+zamiast powtarzać stare: **krótka gałąź to gałąź, którą da się przejrzeć i wycofać w całości.**
+Jednostka 2a albo 1b wmieszana w gałąź z trzema ostylowanymi trasami przestaje być odwracalna
+osobno — a to właśnie te dwie jednostki mają najwyższe prawdopodobieństwo, że trzeba je będzie
+cofnąć. *(Same operacje na gałęziach wykonujesz Ty — ten dokument opisuje politykę, nie
 polecenia.)*
 
-**6. Lista `'use client'` nie rośnie.** Sekcja 6 inwentaryzacji jest listą kontrolną. Krok 4
-jest krokiem stylistycznym — nie ma powodu, żeby stylowanie zmieniało to, czy komponent działa
-po stronie serwera, czy przeglądarki. Jeśli wydaje się, że ma, to znaczy, że robisz coś
-innego niż Krok 4.
+**6. Lista `'use client'` rośnie najwyżej o dwa wpisy, oba nazwane z góry.** Sekcja 6
+inwentaryzacji jest listą kontrolną. Krok 4 jest krokiem stylistycznym — stylowanie nie ma
+powodu zmieniać tego, czy komponent działa po stronie serwera, czy przeglądarki. Dopuszczalne
+wyjątki są dokładnie dwa i oba wynikają z jednostek strukturalnych z §8.0: **nawigacja mobilna
+(1b)**, jeśli menu ma stan otwarcia, i **nowa trasa znajomych (2a)**, jeśli jej strona
+faktycznie musi być komponentem klienckim. Każdy z nich wymaga wpisu w 12.7 z powodem. Każdy
+inny przyrost oznacza, że robisz coś innego niż Krok 4.
 
-**7. Przekazanie własności pliku jest jawne.** Wpis w 12.1 z datą i nową właścicielką. Nigdy
-przez „już tam nie siedzę, możesz brać”, bo to zdanie pada zawsze wtedy, gdy w edytorze drugiej
-osoby wciąż coś jest otwarte.
+### 8.8 Rytm pracy — czym zastępujesz drugą parę oczu
 
-### 8.8 Rytm pracy — co synchronizujecie i jak często
+Tu wypadła najważniejsza rzecz z wersji dwuosobowej: **przegląd krzyżowy.** Był jedynym
+istniejącym testem na konflikt systemowy i działał, bo druga osoba patrzyła na Twój ekran bez
+Twoich założeń w głowie. Tego nie da się odtworzyć w pojedynkę. Da się natomiast podejść blisko
+— i warto wiedzieć, na czym ta namiastka stoi, bo inaczej zamienia się w rytuał bez treści.
 
-**Jeden punkt styku dziennie, dwadzieścia minut.** Nie po to, żeby raportować postęp — po to,
-żeby wyłapać konflikty systemowe, póki są tanie. Trzy rzeczy na tym spotkaniu:
+**Przegląd wsteczny — dwadzieścia minut na początku dnia, zanim otworzysz nową jednostkę.**
+Nie na koniec dnia: wieczorem patrzysz na własną pracę pamięcią z tego samego dnia i widzisz to,
+co chciałaś zrobić, a nie to, co zrobiłaś. Rano ta pamięć jest już częściowo pusta i dopiero
+wtedy zaczynasz widzieć piksele zamiast intencji.
 
-1. **Przegląd krzyżowy.** Każda pokazuje drugiej to, co ostylowała, na ekranie. Druga patrzy
-   przez minutę i mówi, czy to należy do tego samego systemu, co jej własna praca. To jest
-   jedyny test na konflikt systemowy, jaki istnieje — i działa wyłącznie wtedy, gdy odbywa się
-   codziennie, bo po tygodniu obie mają już zbyt dużo zbudowane na własnych założeniach.
-2. **Rozbieżności ze słownikiem.** Każda wartość użyta spoza 12.0 — dopisujecie do słownika albo
-   do pytań. Wartość, która pojawiła się dwa razy u dwóch osób, prawdopodobnie należała do
-   słownika od początku.
-3. **Kolejka pytań do designu (12.4).** Zbierane przez cały dzień, wysyłane **razem, raz.**
+Trzy rzeczy w tym przeglądzie:
 
-Ostatni punkt zasługuje na osobne zdanie, bo to on najczęściej decyduje o tempie: **czekanie na
-odpowiedź jest najdroższą rzeczą w całym kroku**, a jest to koszt równoległy — jedna tura pytań
-kosztuje tyle samo, ile pięć pytań w jednej turze. Pytanie zadane pojedynczo, gdy się pojawi,
-zamienia jedno oczekiwanie w pięć.
+1. **Dwie ostatnie ukończone jednostki obok najnowszej — obok siebie, nie po kolei.** To jest
+   punkt, w którym cała technika stoi albo upada. Różnicy `rounded-xl` od `rounded-2xl` nie
+   widać, przełączając się między zakładkami: pamięć wygładza to, co widziała minutę temu, i obie
+   karty pamiętasz po prostu jako „zaokrąglone”. Widać ją, gdy oba ekrany są **jednocześnie
+   w polu widzenia.** Dwa okna obok siebie robią za drugą osobę tyle, ile w ogóle da się za nią
+   zrobić.
+2. **Ta sama jednostka w dwóch szerokościach, też obok siebie.** Rozjazd mobile ↔ desktop to
+   ten sam konflikt systemowy w miniaturze (§8.2) i wykrywa się go tak samo — porównaniem,
+   nie przypominaniem.
+3. **Rozbieżności ze słownikiem.** Każda wartość użyta spoza 12.0 idzie do słownika albo do
+   pytań. Sygnał, na który warto uważać: wartość, która pojawiła się **dwa razy w dwóch
+   jednostkach**, prawie na pewno należała do słownika od początku i nie jest wyjątkiem, tylko
+   brakującą pozycją.
+
+**Kolejka pytań do designu (12.4): zbierane na bieżąco, wysyłane razem, raz.** To jedyny punkt
+tej sekcji, który nie zmienił się ani o słowo po przejściu na pracę w pojedynkę — bo nigdy nie
+dotyczył liczby osób. **Czekanie na odpowiedź jest najdroższą rzeczą w całym kroku**, a jest to
+koszt równoległy: jedna tura pytań kosztuje tyle samo czasu co pięć pytań w tej samej turze.
+Pytanie zadane pojedynczo, w chwili gdy się pojawi, zamienia jedno oczekiwanie w pięć. Dwa
+pytania blokujące — „czym jest uproszczone tło” i „co z nawigacją przy 390px” — idą w pierwszej
+turze, jeszcze w Fazie 0 (§8.3), a nie wtedy, gdy dojdziesz do ekranu, który ich potrzebuje.
+A gdy odpowiedź nie przychodzi, przenosisz się na Etap B (§8.5), zamiast czekać.
 
 **Drugi port do nowej roli.** `npm run dev -- -p 3001` przestaje służyć porównaniu z branchem
-odniesienia (§8.1) i zaczyna służyć oglądaniu gałęzi drugiej osoby obok własnej. To ten sam
-mechanizm i to samo polecenie — zmieniło się tylko pytanie, na które odpowiada: nie „czy nic się
-nie zmieniło”, tylko „czy to wygląda, jakby robiła to jedna osoba”.
+odniesienia (§8.1) i zaczyna służyć **oglądaniu ostatniego domkniętego stanu obok bieżącej
+pracy.** To ten sam mechanizm i to samo polecenie — zmieniło się tylko pytanie, na które
+odpowiada: nie „czy nic się nie zmieniło”, tylko „czy to wygląda, jakby robiła to jedna osoba
+w jednym tygodniu”.
 
 ### 8.9 Definicja ukończenia **jednostki** (komponentu albo trasy)
 
@@ -2299,50 +2449,80 @@ ekranie, na którym akurat patrzyłam”.
 7. **Kontrast sprawdzony w nowych zestawieniach.** Krok 4 tworzy zestawienia kolorów, których
    Krok 3 nie mógł zmierzyć, bo jeszcze nie istniały. Poniżej progu → 12.5 i Krok 7, nie
    naprawa na miejscu.
-8. **Obejrzane przy ustalonej szerokości okna** (§8.3), a nie przy tej, którą akurat masz
-   otwartą. Przy decyzji „tylko desktop” szerokość oceny jest częścią definicji poprawności,
-   a nie szczegółem środowiska.
-9. **Nic nie zniknęło** — porównanie ze screenshotem sprzed migracji
-   (`/root/design/frontend/before_migration`). Nie „czy wygląda lepiej”, tylko **czy wszystko,
-   co tam było, nadal jest**: każdy przycisk, komunikat, link, stan pusty. To jedyny punkt tej
-   listy, na który eksport designu nie potrafi odpowiedzieć.
-10. **Wpis w 12.3.**
+8. **Obejrzane przy obu ustalonych szerokościach** (§8.3), a nie przy tej, którą akurat masz
+   otwartą. Szerokość oceny jest częścią definicji poprawności, a nie szczegółem środowiska —
+   i od decyzji ① są dwie, więc „sprawdzone” bez podania której nie znaczy nic.
+9. **Na wąskim ekranie: nic nie wystaje i nic nie jest za małe.** Trzy konkretne pytania,
+   których na desktopie nie trzeba było zadawać: czy strona przewija się w poziomie (jeśli tak,
+   coś ma stałą szerokość, która się nie mieści); czy elementy dotykowe — przyciski, linki
+   w nawigacji, pola — są na tyle duże, żeby trafić w nie palcem (przyjęty próg to ok. 44px);
+   czy tekst i elementy nie nachodzą na siebie po zwężeniu. Pierwsze pytanie ma zaletę bycia
+   binarnym: pozioma przewijarka albo jest, albo jej nie ma.
+10. **Nic nie zniknęło** — porównanie ze screenshotem sprzed migracji
+    (`/root/design/frontend/before_migration`). Nie „czy wygląda lepiej”, tylko **czy wszystko,
+    co tam było, nadal jest**: każdy przycisk, komunikat, link, stan pusty. To jedyny punkt tej
+    listy, na który eksport designu nie potrafi odpowiedzieć — i jedyny, który na wąskim ekranie
+    trzeba czytać ostrożnie, bo element schowany za przyciskiem menu **nie zniknął**, a element
+    wycięty, żeby się zmieściło, zniknął. Różnica jest w kodzie, nie na ekranie.
+11. **Wpis w 12.3** — z odnotowaniem obu szerokości.
 
 Dla trasy dochodzą dwa punkty: **zachowanie przy długiej treści** (co się dzieje, gdy tekst
 jest dwa razy dłuższy niż w eksporcie — to najczęstsze źródło ekranów, które „działały do
-produkcji”) oraz **poprawne osadzenie w powłoce** (strona i Sidebar nie kłócą się o odstępy
-przy krawędzi).
+produkcji”, a przy 390px sprawdza się samo, bo długi tekst zawija się tam natychmiast) oraz
+**poprawne osadzenie w powłoce** (strona i nawigacja nie kłócą się o odstępy przy krawędzi —
+na obu szerokościach, bo po jednostce 1b są to dwie różne powłoki).
 
-**Jednostka 2a ma własną, krótszą definicję**, bo nie jest stylowaniem: panel działa na nowej
-trasie (dodanie i usunięcie znajomego, wyszukiwanie), nawigacja prowadzi tam i z powrotem,
-profil nie stracił niczego poza panelem, a wygląd przeniesionego panelu **nie zmienił się
-ani o piksel**. Punkty 1–9 nie mają tu zastosowania — jej redesign odbywa się później, jako
-osobna jednostka, i wtedy dopiero przechodzi pełną listę.
+**Ile to naprawdę kosztuje.** Warto policzyć uczciwie, zamiast odkryć to w trakcie: punkt 6
+razy punkt 8 to przy `Button` dwanaście spojrzeń zamiast sześciu. To jest ta część mobile,
+która realnie wydłuża krok — nie pisanie klas. Jedyne sensowne złagodzenie jest takie:
+**wąską szerokość sprawdzaj najstaranniej, bo tam wszystko pęka**; szeroka jest tą, na której
+błędy są rzadsze, bo miejsca jest w nadmiarze. Ale „gotowe” nadal znaczy obie.
 
-### 8.10 Weryfikacja — czym zastępujecie branch odniesienia
+**Jednostki strukturalne mają własne, krótsze definicje**, bo nie są stylowaniem — punkty 1–10
+nie mają do nich zastosowania, a ich redesign (jeśli jakiegoś potrzebują) odbywa się później,
+jako osobna jednostka:
+
+- **1b (nawigacja mobilna):** każda pozycja nawigacji jest osiągalna przy 390px, menu otwiera
+  się i zamyka, przejście do trasy je zamyka, a **wygląd nawigacji na szerokim ekranie nie
+  zmienił się ani o piksel.**
+- **2a (wydzielenie trasy):** panel działa na nowej trasie (dodanie i usunięcie znajomego,
+  wyszukiwanie), nawigacja prowadzi tam i z powrotem na obu szerokościach, profil nie stracił
+  niczego poza panelem, a wygląd przeniesionego panelu **nie zmienił się ani o piksel.**
+
+### 8.10 Weryfikacja — czym zastępujesz branch odniesienia
 
 W Krokach 2 i 3 dowodem było porównanie wartości wyliczonych. Tutaj takiego dowodu nie ma
 i nie da się go wytworzyć: **nie istnieje automatyczny test na „czy to wygląda jak w eksporcie”.**
 Warto to powiedzieć wprost, bo w poprzednich krokach zawsze była jakaś liczba do sprawdzenia,
 a przyzwyczajenie do liczby prowadzi do szukania pewności tam, gdzie jej nie ma.
 
-Zostają trzy narzędzia, każde odpowiadające na inne pytanie:
+Zostają cztery narzędzia, każde odpowiadające na inne pytanie:
 
-| Narzędzie | Na jakie pytanie odpowiada | Kto |
+| Narzędzie | Na jakie pytanie odpowiada | Kiedy |
 |---|---|---|
-| Eksport designu obok przeglądarki | „Czy to jest to, co zaprojektowano?” | Właścicielka jednostki |
-| Screenshoty `before_migration` | „Czy nic nie zniknęło po drodze?” | Właścicielka jednostki |
-| Przegląd krzyżowy (§8.8) | „Czy to jest ten sam system, co reszta?” | Druga osoba |
-| Słownik 12.0 | „Czy wartości są te, na które się umówiłyśmy?” | Obie, przy pisaniu |
+| Eksport designu obok przeglądarki | „Czy to jest to, co zaprojektowano?” | Przy pracy, na obu szerokościach |
+| Screenshoty `before_migration` | „Czy nic nie zniknęło po drodze?” | Przy zamykaniu jednostki (§8.9 pkt 10) |
+| Przegląd wsteczny (§8.8) | „Czy to jest ten sam system, co poprzednie jednostki?” | Rano, przed otwarciem następnej |
+| Słownik 12.0 | „Czy to są wartości, na które się umówiłam?” | Przy pisaniu każdej klasy |
 
 Dwa środkowe narzędzia bywają mylone, a odpowiadają na rozłączne pytania i **żadne nie
 zastępuje drugiego**: ekran może być w stu procentach zgodny z eksportem i jednocześnie
 zgubić przycisk, którego eksport nigdy nie pokazywał, bo powstał po jego oddaniu. Eksport nie
 wie o istnieniu tego przycisku. Screenshot wie.
 
-Ostatnie narzędzie jest jedynym, które daje odpowiedź TAK/NIE — i dlatego warto, żeby słownik
-był możliwie konkretny. Im więcej decyzji da się sprowadzić do „sprawdź w tabeli”, tym mniej
-zostaje do oceniania wzrokiem.
+**Trzecie narzędzie jest wyraźnie słabsze niż w wersji dwuosobowej i trzeba to powiedzieć
+wprost, zamiast udawać, że przegląd wsteczny to przegląd krzyżowy pod inną nazwą.** Druga osoba
+patrzyła bez Twoich założeń, bo nigdy ich nie miała. Ty patrzysz z założeniami przyblakłymi
+o jedną noc — to lepsze niż nic i wyraźnie gorsze niż świeże oko. Wniosek nie jest taki, żeby
+przeglądu nie robić, tylko taki, żeby **przesunąć ciężar na narzędzie, które nie zależy od
+pamięci.**
+
+Tym narzędziem jest słownik. Jest jedynym z czterech, które daje odpowiedź TAK/NIE, i jedynym,
+którego trafność nie spada z upływem dni. Stąd praktyczny wniosek, który jest chyba
+najważniejszym skutkiem pracy w pojedynkę w całej tej części: **słownik z §8.3 musi być
+konkretniejszy, niż musiałby być przy dwóch osobach.** Każda decyzja sprowadzona do „sprawdź
+w tabeli” to decyzja wyjęta spod oceny wzrokiem — a ocena wzrokiem jest tutaj tą częścią
+systemu, która straciła kontrolę.
 
 ### 8.11 Czego nie wolno robić w Kroku 4
 
@@ -2350,50 +2530,63 @@ zostaje do oceniania wzrokiem.
   jedna trasa.
 - **Nie dodawać tokenów kolorystycznych** — nawet „tymczasowo”, nawet „tylko jeden”.
   Zapotrzebowanie → 12.4 (§8.7 reguła 2).
-- **Nie otwierać pliku, którego nie ma się w 12.1.** Także po to, żeby „tylko zerknąć
-  i poprawić jedną klasę” (§8.7 reguła 4).
+- **Nie otwierać drugiej jednostki przed zamknięciem pierwszej** (§8.7 reguła 1). Także po to,
+  żeby „tylko zerknąć i poprawić jedną klasę” w czymś już odhaczonym (§8.7 reguła 4).
 - **Nie naprawiać kontrastu**, nawet gdy jest ewidentnie zły — cztery takie pozycje są już
   zapisane w 11.3 i czekają na Krok 7. Naprawa w Kroku 4 zmienia token, czyli zmienia
-  wszystkie ekrany naraz, w tym te należące do drugiej osoby.
+  wszystkie ekrany naraz — w tym te już zamknięte w 12.3, których nikt nie obejrzy ponownie
+  (§8.7 reguła 2).
 - **Nie scalać wariantów komponentów** (`send` w `Button`, `chat` w `TextField`) — Krok 6.
 - **Nie ruszać `/chat`.** To jest wzorzec docelowy; zmiana czegokolwiek tam oznacza, że
   eksport i kod przestają być tym samym punktem odniesienia.
-- **Nie dodawać prefiksów responsywnych** (`sm:`, `md:`, `lg:`, `xl:`). Decyzja ① wyklucza
-  węższe ekrany z zakresu, a prefiks dopisany „na wszelki wypadek” jest deklaracją, że ktoś
-  ten przypadek przemyślał — czego nikt później nie zweryfikuje. Prefiksy **już istniejące
-  w kodzie zostawcie nietknięte**: usuwanie ich nie zmienia niczego przy jednej szerokości,
-  więc jest pracą bez skutku, a przy ewentualnym powrocie do responsywności byłoby stratą.
-  Zasada B — zapisz w 12.5, jeśli któryś przeszkadza.
+- **Nie pisać desktop-first.** Klasa bez prefiksu opisuje wąski ekran, `md:` opisuje szeroki
+  (§8.1 ①). Odwrotny zapis daje ten sam wynik na ekranie i kod, w którym po dwóch dniach nie
+  widać, która wartość obowiązuje — a to jest dokładnie ten rodzaj wiedzy, który w pojedynkę
+  ma tylko jedno miejsce przechowywania i nim jest kod.
+- **Nie dodawać drugiego breakpointu** bez wpisu w 12.4. Każdy kolejny mnoży liczbę układów
+  w §8.9 pkt 8 — a prefiks dopisany „na wszelki wypadek” jest deklaracją, że ktoś ten przypadek
+  przemyślał i sprawdził, czego nikt później nie zweryfikuje.
+- **Nie rozwiązywać mobile przez duplikowanie treści** — czyli przez dwa warianty tego samego
+  elementu, jeden z `hidden md:block`, drugi z `md:hidden`. Kusi, bo działa od razu. Kosztuje
+  potem podwójnie: każda przyszła zmiana treści musi trafić w oba miejsca, a gdy trafi w jedno,
+  powstaje rozjazd, którego **nie widać na żadnej pojedynczej szerokości.** To jest konflikt
+  systemowy z §8.2 zamknięty w jednym pliku. Wyjątek jest jeden i nazwany: nawigacja w jednostce
+  1b, jeśli odpowiedź z 12.4 wskaże dwie różne konstrukcje.
 - **Nie stylować `/stomp` i nie usuwać jej.** Decyzja ④ wyprowadza tę trasę poza zakres;
   usunięcie strony jest sprzątaniem, nie krokiem designowym — wpis w 12.5.
-- **Nie łączyć wydzielenia trasy ze stylowaniem** (§8.6, jednostka 2a). Refaktor i redesign
-  w jednym commicie to złamanie Zasady A w miejscu, w którym najbardziej boli.
-- **Nie odkładać przeglądu krzyżowego „do końca etapu”.** To jest jedyny test na konflikt
-  systemowy, a jego wartość spada z każdym dniem zwłoki.
+- **Nie łączyć zmian strukturalnych ze stylowaniem** (§8.0: jednostki 1b i 2a). Refaktor
+  i redesign w jednym commicie to złamanie Zasady A w miejscu, w którym najbardziej boli — bo
+  to właśnie te dwie jednostki najpewniej trzeba będzie cofnąć (§8.7 reguła 5).
+- **Nie odkładać przeglądu wstecznego „do końca etapu”.** To jedyne, co zostało z testu na
+  konflikt systemowy, a jego wartość spada z każdym dniem zwłoki — po tygodniu masz zbyt dużo
+  zbudowane na własnych założeniach, żeby je jeszcze zobaczyć.
 
 ### 8.12 Artefakt — sekcja 12 w `MIGRATION-INVENTORY.md`
 
 ```markdown
-## 12. Krok 4 — redesign trasa po trasie (praca dwuosobowa)
+## 12. Krok 4 — redesign trasa po trasie (jedna osoba, dwie szerokości)
 
-### 12.0 Słownik layoutu (ustalony w Fazie 0, wspólnie)
+### 12.0 Słownik layoutu (ustalony w Fazie 0)
 
-| Kategoria | Rola | Wartość | Skąd w eksporcie |
-|---|---|---|---|
+Pierwsze wiersze — warunki oceny, nie wartości kodu:
+szerokość wąska, szerokość szeroka, breakpoint, kierunek pisania (mobile-first).
 
-### 12.1 Rejestr własności plików
+| Kategoria | Rola | Wartość | Wartość mobile (jeśli inna) + dlaczego | Skąd w eksporcie |
+|---|---|---|---|---|
 
-| Plik | Właścicielka | Etap | Status | Data przekazania |
+### 12.1 Kolejka jednostek
+
+| # | Jednostka | Faza / etap | Status | Data zamknięcia |
 |---|---|---|---|---|
 
 ### 12.2 Rozstrzygnięcie czterech pytań wejściowych (§8.1)
 
-| # | Pytanie | Decyzja | Kto zdecydował | Konsekwencja dla zakresu |
-|---|---|---|---|---|
+| # | Pytanie | Decyzja | Data (i zmiany) | Konsekwencja dla zakresu | Co unieważnia |
+|---|---|---|---|---|---|
 
 ### 12.3 Dziennik ukończonych jednostek
 
-| Jednostka | Etap | Właścicielka | Trasy sprawdzone | Przegląd krzyżowy |
+| Jednostka | Faza / etap | Trasy sprawdzone | Szerokości sprawdzone | Przegląd wsteczny |
 |---|---|---|---|---|
 
 ### 12.4 Pytania do designu i odstępstwa od słownika
@@ -2406,37 +2599,48 @@ zostaje do oceniania wzrokiem.
 | Co | Gdzie | Do którego kroku należy |
 |---|---|---|
 
-### 12.6 Rozjazdy wyłapane w przeglądzie krzyżowym
+### 12.6 Rozjazdy wyłapane w przeglądzie wstecznym
 
-| Co się rozjechało | Kiedy wykryte | Jak rozstrzygnięte | Czy słownik wymagał uzupełnienia |
-|---|---|---|---|
+| Co się rozjechało | Między czym a czym | Kiedy wykryte | Jak rozstrzygnięte | Czy słownik wymagał uzupełnienia |
+|---|---|---|---|---|
 
-### 12.7 Wydzielenie trasy znajomych (jednostka 2a — refaktor)
+### 12.7 Jednostki strukturalne (1b — nawigacja mobilna, 2a — wydzielenie trasy)
 
-| Co przeniesione | Skąd | Dokąd | Wygląd bez zmian? | Sprawdzone działanie |
+| Jednostka | Co się zmieniło | Gdzie wygląd bez zmian | Sprawdzone działaniem | `'use client'` +? |
 |---|---|---|---|---|
 ```
 
-**12.2 jest już rozstrzygnięte** — cztery decyzje z §8.1 wpisujecie od razu, razem z ich
-konsekwencjami dla zakresu. Ta tabela jest jedynym miejscem, do którego sięgną Kroki 5–8,
+**12.2 jest już rozstrzygnięte** — cztery decyzje z §8.1 wpisujesz od razu, razem
+z konsekwencjami i **z historią zmiany ①**. Kolumna „Data (i zmiany)” istnieje wyłącznie z tego
+powodu: decyzja, która została odwrócona, jest innym rodzajem faktu niż decyzja, która od
+początku brzmiała tak jak dziś. Ta tabela jest jedynym miejscem, do którego sięgną Kroki 5–8,
 gdy będą potrzebowały wiedzieć, dlaczego aplikacja wygląda tak, a nie inaczej; decyzja bez
 zapisanego uzasadnienia zostanie za trzy kroki potraktowana jak przypadek i „poprawiona”.
 
-**12.0 zaczynajcie od wiersza z szerokością okna** (§8.3). Jest to jedyna pozycja słownika,
-która nie opisuje kodu, tylko warunki oceny kodu — i właśnie dlatego jest najłatwiejsza do
-pominięcia.
+**12.0 zaczynasz od wierszy z warunkami oceny** (§8.3) — dwie szerokości, breakpoint, kierunek
+pisania. To jedyne pozycje słownika, które nie opisują kodu, tylko warunki jego oceny — i właśnie
+dlatego najłatwiej je pominąć. Kolumna „Wartość mobile” celowo ma w nagłówku *dlaczego*:
+wypełniona bez uzasadnienia oznacza, że ktoś dopisał drugą wartość odruchowo, a nie dlatego,
+że pierwsza nie wystarczała (§8.3).
 
-**12.7 istnieje dlatego, że 2a jest refaktorem, a refaktor rozlicza się inaczej.** Kolumna
-„Wygląd bez zmian?” jest tu tym samym, czym w Kroku 2 była tabela 10.3: dowodem, że zmiana
-struktury nie przemyciła zmiany wizualnej. Różnica jest taka, że tam dowodem były wartości
-wyliczone, a tu wystarczy porównanie ze screenshotem — bo panel przenosi się w całości,
-bez jednej zmienionej klasy.
+**12.1 zastępuje rejestr własności z wersji dwuosobowej.** Ta sama tabela, inne pytanie: nie
+„czy wolno mi to otworzyć”, tylko **„co jest w tej chwili niedokończone”** — a odpowiedź
+„jedno” jest jedyną poprawną (§8.7 reguła 1).
+
+**12.7 obejmuje obie jednostki strukturalne, bo obie rozliczają się inaczej niż stylowanie.**
+Kolumna „Gdzie wygląd bez zmian” jest tu tym samym, czym w Kroku 2 była tabela 10.3: dowodem,
+że zmiana struktury nie przemyciła zmiany wizualnej. Dla 2a brzmi „w przeniesionym panelu”,
+dla 1b — „na szerokim ekranie”. Różnica względem Kroku 2 jest taka, że tam dowodem były wartości
+wyliczone, a tu wystarczy porównanie ze screenshotem, bo nic nie zmienia klas.
 
 Sekcja 12.6 nie ma odpowiednika w poprzednich krokach i jest dopisana z tego samego powodu, co
-11.4 w Kroku 3: to jest miejsce, w którym widać, czy sposób pracy działa. Każdy wiersz w 12.6
-mówi jedno z dwóch — albo słownik z Fazy 0 miał lukę (i wtedy warto ją zamknąć od razu, bo
-zapewne wróci), albo jedna z Was pracuje na innym założeniu, niż deklaruje. Pusta 12.6 po trzech
-dniach pracy nie oznacza, że rozjazdów nie było; oznacza, że przegląd krzyżowy się nie odbywał.
+11.4 w Kroku 3: to jest miejsce, w którym widać, czy sposób pracy działa. Kolumna „Między czym
+a czym” jest nowa i ma dwie dopuszczalne wartości: **między dwiema jednostkami** albo **między
+dwiema szerokościami tej samej jednostki** — bo od decyzji ① rozjazd może powstać także tam
+(§8.2). Każdy wiersz mówi jedno z dwóch: albo słownik z Fazy 0 miał lukę (wtedy warto ją zamknąć
+od razu, bo zapewne wróci), albo pracujesz na innym założeniu, niż zapisałaś. Pusta 12.6 po
+kilku dniach pracy nie oznacza, że rozjazdów nie było; oznacza, że przegląd wsteczny się nie
+odbywał.
 
 Tabelę 12.5 warto od razu założyć z trzema pozycjami odziedziczonymi z 11.5: rozbieżność
 `--theme-danger` względem gradientu przycisku „logout” w eksporcie, kontrast
@@ -2444,53 +2648,67 @@ Tabelę 12.5 warto od razu założyć z trzema pozycjami odziedziczonymi z 11.5:
 
 ### 8.13 Definicja ukończenia Kroku 4
 
-Krok jest ukończony, gdy zachodzi wszystkie osiem:
+Krok jest ukończony, gdy zachodzi wszystkie dziewięć:
 
-1. Cztery decyzje z §8.1 są przepisane do 12.2 razem z konsekwencjami, a trzy decyzje
-   wykonawcze z §8.3 (uproszczone tło, nazwa trasy, zakres przeniesienia) mają odpowiedzi.
-2. **Jednostka 2a jest rozliczona osobno w 12.7**: trasa znajomych istnieje, panel działa,
-   wygląd przeniesionego panelu jest niezmieniony, a refaktor nie dzieli commita z żadnym
-   redesignem.
+1. Cztery decyzje z §8.1 są przepisane do 12.2 razem z konsekwencjami **i z historią zmiany ①**,
+   a cztery decyzje wykonawcze z §8.3 (uproszczone tło, nawigacja przy 390px, nazwa trasy,
+   zakres przeniesienia) mają odpowiedzi.
+2. **Jednostki 1b i 2a są rozliczone osobno w 12.7**: nawigacja jest osiągalna przy wąskiej
+   szerokości, trasa znajomych istnieje, panel działa, wygląd przeniesionego panelu i wygląd
+   nawigacji na szerokim ekranie są niezmienione, a żadna z tych jednostek nie dzieli commita
+   z redesignem.
 3. Sześć komponentów Etapu A, pięć Etapu C, dwa Etapu B oraz komponenty przygotowawcze
    Etapu D mają wpis w 12.3 ze spełnioną definicją z §8.9 — w tym punktem 6 (wszystkie trasy
-   użycia) i punktem 9 (nic nie zniknęło).
-4. Siedem tras jest zgodnych z eksportem: `privacy-policy`, `terms-of-service`,
-   `(marketing)/`, `login`, `register`, `[userId]` i nowa trasa znajomych. `/stomp` jest poza
-   zakresem wg decyzji ④ — nieostylowana i nieusunięta.
+   użycia), 8 (obie szerokości), 9 (wąski ekran) i 10 (nic nie zniknęło).
+4. Siedem tras jest zgodnych z eksportem **przy obu ustalonych szerokościach**:
+   `privacy-policy`, `terms-of-service`, `(marketing)/`, `login`, `register`, `[userId]` i nowa
+   trasa znajomych. `/stomp` jest poza zakresem wg decyzji ④ — nieostylowana i nieusunięta.
 5. `Hero.tsx` i `Tag.tsx` nie odwołują się już do `brand-*` — **to jest moment, w którym
    Krok 8 zostaje odblokowany** (§7.8, 11.5).
 6. Trzy tokeny-placeholdery z 10.4 mają odpowiedź od designu albo jawny wpis w 12.4, że
    pozostają placeholderami świadomie.
 7. `app/globals.css` nie zyskał ani jednego nowego tokenu poza tymi, które przeszły przez 12.4;
-   w kodzie nie przybył ani jeden prefiks responsywny (§8.11).
-8. Sekcja 12 istnieje i jest wypełniona, wraz z 12.5, 12.6 i 12.7.
+   w kodzie jest **dokładnie jeden breakpoint**, zapis jest mobile-first, a żaden element nie
+   istnieje w dwóch kopiach przełączanych przez `hidden` / `md:hidden` poza nawigacją z 1b
+   (§8.11).
+8. **Żadna z siedmiu tras nie przewija się w poziomie przy wąskiej szerokości.** To jedyne
+   kryterium w tym kroku, które ma odpowiedź binarną i nie wymaga oceny wzrokiem — warto je
+   mieć osobno właśnie dlatego (§8.10).
+9. Sekcja 12 istnieje i jest wypełniona, wraz z 12.5, 12.6 i 12.7.
 
 Dwie uwagi do tej listy. **Kryterium 5 jest jedynym, które ma skutek poza tym krokiem** —
-Krok 8 czeka na nie od Kroku 3, więc warto odnotować moment jego spełnienia osobno.
-A **lista `'use client'` może w tym kroku urosnąć dokładnie o jeden wpis** — nową trasę
-znajomych, jeśli jej strona faktycznie musi być komponentem klienckim. To jedyny dopuszczalny
-przyrost względem reguły 6 z §8.7, wynikający z jednostki 2a, i należy go odnotować w 12.7
-razem z powodem. Każdy inny przyrost jest błędem.
+Krok 8 czeka na nie od Kroku 3, więc warto odnotować moment jego spełnienia osobno i nie
+zostawiać `Hero` na ostatni dzień (§8.6, pozycja 2). A **lista `'use client'` może w tym kroku
+urosnąć najwyżej o dwa wpisy**: nawigację mobilną z 1b, jeśli menu ma stan otwarcia, i nową
+trasę znajomych z 2a, jeśli jej strona faktycznie musi być komponentem klienckim. Oba są
+dopuszczalnymi wyjątkami od reguły 6 z §8.7, oba wynikają z jednostek strukturalnych nazwanych
+w §8.0 i oba wymagają wpisu w 12.7 razem z powodem. Każdy inny przyrost jest błędem.
 
-**Pytania kontrolne** — odpowiedzcie na piśmie, każda osobno, i porównajcie odpowiedzi. Jeśli
-się różnią, macie konflikt systemowy, którego jeszcze nie widać w kodzie:
+**Pytania kontrolne** — odpowiedz na piśmie. W wersji dwuosobowej porównywało się odpowiedzi
+i różnica ujawniała konflikt systemowy; w pojedynkę nie ma z czym porównywać, więc zostaje sam
+zapis — i to wystarczy, bo **pisanie jest jedynym znanym sposobem na zauważenie, że się czegoś
+nie wie.** Odpowiedź, którą „mniej więcej znasz”, przestaje być mniej więcej znana w chwili,
+gdy trzeba ją zapisać zdaniem.
 
-- Dlaczego konflikt, który `git` zgłasza, jest tańszy od konfliktu, którego nie zgłasza?
-  Podaj przykład drugiego rodzaju z własnej pracy w tym kroku.
-- Etap B nie zależy od Etapu A, mimo że obie te grupy są częścią tej samej aplikacji.
-  Skąd to wiadomo — z której konkretnie tabeli i której jej kolumny?
-- Ostylowałaś `Button` i wygląda idealnie na stronie logowania. Ile ekranów musisz jeszcze
-  zobaczyć, zanim wpiszesz go do 12.3 — i skąd bierzesz tę liczbę?
-- Decyzja „uproszczone tło” rozdzieliła `(marketing)/` od stron logowania, ale `login`
-  i `register` nadal muszą być u jednej osoby. Co dokładnie zniknęło, a co zostało — i co
-  z tego wynika o tym, gdzie w ogóle przebiega granica między zadaniami?
-- Wydzielenie trasy znajomych zmienia wygląd zera pikseli, a mimo to jest częścią kroku,
-  którego celem jest zmiana wyglądu. Dlaczego jest tutaj, a nie w Kroku 7 — i dlaczego mimo
-  to idzie osobnym commitem?
-- Znajdujesz w komponencie należącym do drugiej osoby literówkę w klasie, która psuje odstęp.
-  Poprawka to trzy znaki. Dlaczego jej nie robisz?
+- Konflikt systemowy nie potrzebuje drugiej osoby — wystarczą dwa momenty w czasie. Podaj
+  przykład z własnej pracy w tym kroku: jedna rzecz, o której decyzja zapadła dwa razy,
+  w dwóch różnych dniach.
+- Etap B nie zależy od Etapu A. Skąd to wiadomo — z której konkretnie tabeli i której jej
+  kolumny? I po co Ci ta wiedza teraz, skoro nie ma już pracy równoległej?
+- Ostylowałaś `Button` i wygląda idealnie na stronie logowania przy 1440px. Ile jeszcze
+  spojrzeń dzieli Cię od wpisu w 12.3 — i z jakich dwóch liczb powstaje ta liczba?
+- Klasa bez prefiksu opisuje wąski ekran, `md:` opisuje szeroki. Dlaczego akurat w tę stronę,
+  skoro odwrotny zapis daje ten sam obraz na ekranie — i co konkretnie tracisz, pisząc
+  desktop-first?
+- Jednostki 1b i 2a obie dotykają `Sidebar.tsx`, obie są strukturalne i obie sprawdza się
+  klikaniem. Dlaczego mimo to nie idą jednym commitem?
+- Poprawiasz trzy znaki w klasie komponentu, który zamknęłaś w 12.3 dwa dni temu. Nikt inny
+  nie pracuje w tym repozytorium. Dlaczego to i tak jest droższe, niż wygląda?
 
-Ostatnie pytanie jest sprawdzianem tego, czy podział własności jest rozumiany jako narzędzie,
-czy jako biurokracja. Trzy znaki nie są problemem. Problemem jest to, że po ich wpisaniu nikt
-już nie wie, czy stan tego pliku jest tym, który jego właścicielka sprawdziła w punkcie 6
-definicji z §8.9 — a odtworzenie tej wiedzy kosztuje znacznie więcej niż trzy znaki.
+Ostatnie pytanie jest sprawdzianem tego, czy dyscyplina z §8.7 jest rozumiana jako narzędzie,
+czy jako biurokracja przepisana z wersji dla dwóch osób. Trzy znaki nie są problemem. Problemem
+jest to, że po ich wpisaniu nikt — łącznie z Tobą — nie wie już, czy stan tego pliku jest tym,
+który przeszedł punkty 6, 8 i 10 definicji z §8.9. Odtworzenie tej wiedzy kosztuje sześć
+spojrzeń na sześć ekranów w dwóch szerokościach, czyli znacznie więcej niż trzy znaki. Brak
+drugiej osoby niczego tu nie zmienia: sprawdzenie było warte tyle, ile było warte, niezależnie
+od tego, kto je wykonał.
