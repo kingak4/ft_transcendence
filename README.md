@@ -117,6 +117,7 @@ Led the initial frontend setup and established core integrations for REST API an
 *   **API Integration:** Developed the integration layer between the Next.js frontend and the Spring Boot backend. Implemented the BFF (Backend-for-Frontend) pattern, API web clients, and robust error handling for authentication flows (login/register).
 *   **Real-Time Communication:** Integrated WebSocket (STOMP) connections on the client side, enabling real-time chat functionality and live user presence (online/offline) updates.
 *   **UI/UX Design:** Designed and developed the foundational layout and aesthetics for the platform's landing page and user profile views.
+*   **Chat implementation:** Developed the chat logic based on STOMP and HTTPS backend endpoints, with sending and removing messeges, creating conversations with friends and error handling when backend connection breaks.
 
 #### Individual Contributions
 TODO
