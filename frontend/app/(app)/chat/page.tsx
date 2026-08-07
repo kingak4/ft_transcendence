@@ -107,7 +107,7 @@ export default async function ChatPage({
           name: userDetails.displayName ?? 'Unknown User',
           initial: (userDetails.displayName ?? 'U').charAt(0).toUpperCase(),
           color: 'bg-hub-panel',
-          avatarId: userDetails.avatarId?.val ?? null,
+          avatarId: userDetails.avatarId ?? null,
           online: false,
           status: 'Offline',
         };
