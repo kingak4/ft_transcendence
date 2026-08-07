@@ -89,7 +89,7 @@ export default function ChatInterface({ myUserId, user, initialChatId }: Props) 
         setChatId(currentChatId);
 
         const { data: msgsData, response: msgsRes } = await client.GET('/chats/{chatId}/messages', {
-          params: { path: { chatId: currentChatId }, query: { page: 0, size: 50 } },
+          params: { path: { chatId: currentChatId }, query: { page: 0, size: 1000 } },
         });
 
           if (msgsRes.ok && msgsData && active) {
