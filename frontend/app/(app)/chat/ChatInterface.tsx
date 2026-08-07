@@ -8,8 +8,9 @@ import { client } from '@/app/lib/api-clients';
 import MessageBubble from './MessageBubble';
 import Composer from './Composer';
 import { ChatMessage, Friend, BackendChatMessage } from './types';
+import { CHAT_DICT } from './dictionary';
 
-const DELETED_MESSAGE_TEXT = '(message deleted)';
+const DELETED_MESSAGE_TEXT = CHAT_DICT.chat.messageDeleted;
 
 interface Props {
   myUserId: string | null;
@@ -64,12 +65,12 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
               if (response.ok && data) {
                 return data.chatId as string;
               }
-              throw new Error('Failed to create/get chat');
+              throw new Error(CHAT_DICT.chat.errorCreateChat);
             }).catch((err) => {
               if (creationPromiseRef.current?.friendId === friendId) {
                 creationPromiseRef.current = null;
               }
-              setErrorMsg('Failed to initialize chat');
+              setErrorMsg(CHAT_DICT.chat.errorInitChat);
               throw err;
             });
             creationPromiseRef.current = { friendId, promise };
@@ -148,7 +149,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
     if (inputValue.trim() === '' || !chatId) return;
     const success = sendMessage(chatId, inputValue);
     if (!success) {
-      setErrorMsg("Failed to send message: Not connected to server");
+      setErrorMsg(CHAT_DICT.chat.errorSendNotConnected);
     } else {
       setErrorMsg(null);
       setInputValue('');
@@ -167,7 +168,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
             onDelete={() => {
               if (chatId) {
                 if (!deleteMessage(chatId, message.messageId)) {
-                  setErrorMsg('Failed to delete message: Not connected to server');
+                  setErrorMsg(CHAT_DICT.chat.errorDeleteNotConnected);
                   return;
                 }
                 setErrorMsg(null);

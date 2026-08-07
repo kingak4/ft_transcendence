@@ -4,18 +4,21 @@ import Avatar from '../../components/Avatar';
 import ChatInterface from './ChatInterface';
 import type { Friend } from './types';
 import { usePresence } from '../../hooks/usePresence';
+import { CHAT_DICT } from './dictionary';
+import AddFriendButton from '../[userId]/AddFriendButton';
 
 interface Props {
   friend: Friend;
   initialChatId: string | null;
   myUserId: string | null;
+  isFriend?: boolean;
 }
 
-export default function Conversation({ friend, initialChatId, myUserId }: Props) {
+export default function Conversation({ friend, initialChatId, myUserId, isFriend }: Props) {
   const avatarSrc = friend.avatarId ? `/api/users/avatar/${friend.avatarId}` : null;
   const { onlineStatus } = usePresence([friend.id]);
   const isOnline = onlineStatus[friend.id] ?? friend.online;
-  const statusText = isOnline ? 'Online' : 'Offline';
+  const statusText = isOnline ? CHAT_DICT.conversation.online : CHAT_DICT.conversation.offline;
 
   return (
     <section className="bg-hub-panel-sunken flex min-h-0 flex-1 flex-col">
@@ -36,6 +39,13 @@ export default function Conversation({ friend, initialChatId, myUserId }: Props)
           </span>
         </div>
       </header>
+
+      {isFriend === false && (
+        <div className="bg-hub-panel border-hub-border flex shrink-0 items-center justify-between border-b px-5 py-3">
+          <span className="text-hub-muted text-sm font-medium">{CHAT_DICT.conversation.notFriendBanner}</span>
+          <AddFriendButton friendId={friend.id} onAdded={() => {}} />
+        </div>
+      )}
 
       {/* 
        * TODO(stomp): History is finite. Loading older messages on upward scroll 

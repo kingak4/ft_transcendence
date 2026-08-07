@@ -2,8 +2,8 @@ import { cookies } from 'next/headers';
 import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
 import FriendRail from './FriendRail';
-import type { Friend } from './types';
 import type { components } from '../../types/api';
+import { CHAT_DICT } from './dictionary';
 
 type FriendResult = components['schemas']['FriendResult'];
 type ChatResponse = components['schemas']['ChatResponse'];
@@ -95,6 +95,22 @@ export default async function ChatPage({
     if (chatSession) {
       activeFriend = chatSession.friend;
       activeChatId = chatSession.chatId;
+    } else {
+      // Global search fallback
+      const { data: userDetails, response } = await client.GET('/users/{userId}/details', {
+        params: { path: { userId: friendId } }
+      });
+      if (response.ok && userDetails) {
+        activeFriend = {
+          id: friendId,
+          name: userDetails.displayName ?? 'Unknown User',
+          initial: (userDetails.displayName ?? 'U').charAt(0).toUpperCase(),
+          color: 'bg-hub-panel',
+          avatarId: userDetails.avatarId?.val ?? null,
+          online: false,
+          status: 'Offline',
+        };
+      }
     }
   }
 
@@ -103,22 +119,16 @@ export default async function ChatPage({
     if (chatSession) activeChatId = chatSession.chatId;
   }
 
-  if (allFriends.length === 0) {
-    return (
-      <div className="bg-hub-panel text-hub-muted flex h-full items-center justify-center rounded-2xl text-sm">
-        No friends yet. Add friends to start chatting.
-      </div>
-    );
-  }
+  const isFriend = activeFriend ? allFriends.some(f => f.id === activeFriend?.id) : false;
 
   return (
     <div className="border-hub-border flex h-full overflow-hidden rounded-2xl border">
       <FriendRail activeChats={activeChats} allFriends={allFriends} activeFriendId={activeFriend?.id || ''} />
       {activeFriend ? (
-        <Conversation friend={activeFriend} initialChatId={activeChatId} myUserId={myUserId} />
+        <Conversation friend={activeFriend} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
       ) : (
         <div className="bg-hub-panel-sunken flex flex-1 items-center justify-center text-sm text-hub-muted">
-          Select a chat to start messaging
+          {CHAT_DICT.page.selectChatToStart}
         </div>
       )}
     </div>
