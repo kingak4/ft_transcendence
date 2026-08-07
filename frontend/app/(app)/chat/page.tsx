@@ -1,7 +1,8 @@
 import { cookies } from 'next/headers';
 import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
-import FriendRail from './FriendRail';
+import ChatSidebar from './ChatSidebar';
+import type { ChatUser } from './types';
 import type { components } from '../../types/api';
 import { CHAT_DICT } from './dictionary';
 
@@ -12,7 +13,7 @@ export const metadata = {
   title: 'Chat',
 };
 
-async function loadFriends(): Promise<Friend[]> {
+async function loadUsers(): Promise<ChatUser[]> {
   const { data, response } = await client.GET('/friends', {
     params: { query: { page: 0, size: 20 } },
   });
@@ -35,7 +36,7 @@ async function loadFriends(): Promise<Friend[]> {
   }));
 }
 
-async function loadChats(friends: Friend[]): Promise<{ chatId: string; friend: Friend }[]> {
+async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: ChatUser }[]> {
   const { data, response } = await client.GET('/chats', {
     params: { query: { page: 0, size: 20 } },
   });
@@ -44,13 +45,13 @@ async function loadChats(friends: Friend[]): Promise<{ chatId: string; friend: F
   const chatsArray = data.content ?? [];
 
   return chatsArray.map((chat: ChatResponse) => {
-    const friendId = chat.otherUserId;
-    let friend = friendId ? friends.find((f) => f.id === friendId) : null;
+    const userId = chat.otherUserId;
+    let user = userId ? allUsers.find((u) => u.id === userId) : null;
 
-    if (!friend) {
-      const fallbackId = friendId ?? chat.chatId ?? '';
+    if (!user) {
+      const fallbackId = userId ?? chat.chatId ?? '';
       const fallbackName = chat.displayName ?? chat.chatId ?? 'Unknown';
-      friend = {
+      user = {
         id: fallbackId,
         name: fallbackName,
         initial: fallbackName.charAt(0).toUpperCase(),
@@ -61,7 +62,7 @@ async function loadChats(friends: Friend[]): Promise<{ chatId: string; friend: F
       };
     }
 
-    return { chatId: chat.chatId ?? '', friend };
+    return { chatId: chat.chatId ?? '', user };
   });
 }
 
@@ -71,38 +72,38 @@ export default async function ChatPage({
   searchParams: Promise<{ friend?: string | string[]; chat?: string | string[] }>;
 }) {
   const { friend, chat } = await searchParams;
-  const friendId = Array.isArray(friend) ? friend[0] : friend;
+  const userId = Array.isArray(friend) ? friend[0] : friend;
   const urlChatId = Array.isArray(chat) ? chat[0] : chat;
 
   const cookieStore = await cookies();
   const myUserId = cookieStore.get('user_id')?.value ?? null;
 
-  const allFriends = await loadFriends();
-  const activeChats = await loadChats(allFriends);
+  const allUsers = await loadUsers();
+  const activeChats = await loadChats(allUsers);
 
-  // Find the active friend either by friendId or by looking up the chatId
-  let activeFriend = allFriends.find((f) => f.id === friendId) || null;
+  // Find the active user either by userId or by looking up the chatId
+  let activeUser = allUsers.find((f) => f.id === userId) || null;
   let activeChatId = urlChatId || null;
 
-  if (!activeFriend && activeChatId) {
+  if (!activeUser && activeChatId) {
     const chatSession = activeChats.find((c) => c.chatId === activeChatId);
-    if (chatSession) activeFriend = chatSession.friend;
+    if (chatSession) activeUser = chatSession.user;
   }
 
-  if (!activeFriend && friendId) {
-    // Handle the case where friendId in URL is actually a chatId from the mock
-    const chatSession = activeChats.find((c) => c.chatId === friendId || c.friend.id === friendId);
+  if (!activeUser && userId) {
+    // Handle the case where userId in URL is actually a chatId from the mock
+    const chatSession = activeChats.find((c) => c.chatId === userId || c.user.id === userId);
     if (chatSession) {
-      activeFriend = chatSession.friend;
+      activeUser = chatSession.user;
       activeChatId = chatSession.chatId;
     } else {
       // Global search fallback
       const { data: userDetails, response } = await client.GET('/users/{userId}/details', {
-        params: { path: { userId: friendId } }
+        params: { path: { userId: userId } }
       });
       if (response.ok && userDetails) {
-        activeFriend = {
-          id: friendId,
+        activeUser = {
+          id: userId,
           name: userDetails.displayName ?? 'Unknown User',
           initial: (userDetails.displayName ?? 'U').charAt(0).toUpperCase(),
           color: 'bg-hub-panel',
@@ -114,18 +115,18 @@ export default async function ChatPage({
     }
   }
 
-  if (activeFriend && !activeChatId) {
-    const chatSession = activeChats.find((c) => c.friend.id === activeFriend?.id);
+  if (activeUser && !activeChatId) {
+    const chatSession = activeChats.find((c) => c.user.id === activeUser?.id);
     if (chatSession) activeChatId = chatSession.chatId;
   }
 
-  const isFriend = activeFriend ? allFriends.some(f => f.id === activeFriend?.id) : false;
+  const isFriend = activeUser ? allUsers.some(f => f.id === activeUser?.id) : false;
 
   return (
     <div className="border-hub-border flex h-full overflow-hidden rounded-2xl border">
-      <FriendRail activeChats={activeChats} allFriends={allFriends} activeFriendId={activeFriend?.id || ''} />
-      {activeFriend ? (
-        <Conversation friend={activeFriend} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
+      <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} />
+      {activeUser ? (
+        <Conversation user={activeUser} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
       ) : (
         <div className="bg-hub-panel-sunken flex flex-1 items-center justify-center text-sm text-hub-muted">
           {CHAT_DICT.page.selectChatToStart}
