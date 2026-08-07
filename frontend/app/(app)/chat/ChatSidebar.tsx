@@ -63,7 +63,7 @@ export default function ChatSidebar({
     }
     performSearch();
     return () => { active = false; };
-  }, [debouncedQuery]);
+  }, [debouncedQuery, myUserId]);
 
   const searchResults = useMemo(() => {
     return globalSearchResults;
