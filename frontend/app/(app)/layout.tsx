@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { client } from '../lib/api-clients';
 import { assertValidSession } from '../lib/session';
 
 import Footer from '../components/Footer';
