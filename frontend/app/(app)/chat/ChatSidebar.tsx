@@ -1,95 +1,94 @@
 'use client';
 
 import { useMemo, useEffect, useState } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import TextField from '../../components/TextField';
-import FriendRow from './FriendRow';
-import type { Friend } from './types';
+import UserRow from './UserRow';
+import type { ChatUser } from './types';
 import { usePresence } from '../../hooks/usePresence';
 import { client } from '../../lib/api-clients';
 import { CHAT_DICT } from './dictionary';
 
 interface Props {
-  activeChats: { chatId: string; friend: Friend }[];
-  allFriends: Friend[];
-  activeFriendId: string;
+  activeChats: { chatId: string; user: ChatUser }[];
+  allUsers: ChatUser[];
+  activeUserId: string;
+  myUserId: string | null;
   searchPlaceholder?: string;
   emptyStateText?: string;
 }
 
-export default function FriendRail({
+export default function ChatSidebar({
   activeChats,
-  allFriends,
-  activeFriendId,
+  allUsers,
+  activeUserId,
+  myUserId,
   searchPlaceholder = CHAT_DICT.rail.searchPlaceholder,
   emptyStateText = CHAT_DICT.rail.noUsersFound
 }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentQuery = searchParams.get('q') || '';
-  const [searchInput, setSearchInput] = useState(currentQuery);
+  const initialQuery = searchParams.get('q') || '';
+  const [searchInput, setSearchInput] = useState(initialQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [isFocused, setIsFocused] = useState(false);
-  const [globalSearchResults, setGlobalSearchResults] = useState<Friend[]>([]);
+  const [globalSearchResults, setGlobalSearchResults] = useState<ChatUser[]>([]);
 
-  const activeChatFriends = useMemo(() => activeChats.map((c) => c.friend), [activeChats]);
+  const sidebarUsers = useMemo(() => {
+    const userMap = new Map<string, ChatUser>();
+    activeChats.forEach((c) => userMap.set(c.user.id, c.user));
+    allUsers.forEach((u) => userMap.set(u.id, u));
+    return Array.from(userMap.values());
+  }, [activeChats, allUsers]);
 
   useEffect(() => {
     let active = true;
     async function performSearch() {
       const { data, response } = await client.GET('/users/search', {
-        params: { query: { query: currentQuery, size: 5 } }
+        params: { query: { query: debouncedQuery, size: 5 } }
       });
       if (active && response.ok && data?.content) {
-        const results: Friend[] = data.content.map(u => ({
-          id: u.id ?? '',
-          name: u.displayName ?? 'Unknown User',
-          initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
-          color: 'bg-hub-panel',
-          avatarId: u.avatarId?.val ?? null,
-          online: false,
-          status: 'Offline',
-        }));
+        const results: ChatUser[] = data.content
+          .filter(u => u.id !== myUserId)
+          .map(u => ({
+            id: u.id ?? '',
+            name: u.displayName ?? 'Unknown User',
+            initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
+            color: 'bg-hub-panel',
+            avatarId: u.avatarId?.val ?? null,
+            online: false,
+            status: 'Offline',
+          }));
         setGlobalSearchResults(results);
       }
     }
     performSearch();
     return () => { active = false; };
-  }, [currentQuery]);
+  }, [debouncedQuery]);
 
   const searchResults = useMemo(() => {
     return globalSearchResults;
   }, [globalSearchResults]);
 
-  const friendIds = useMemo(() => {
-    const ids = new Set(activeChatFriends.map((f) => f.id));
-    searchResults.forEach((f) => ids.add(f.id));
+  const userIds = useMemo(() => {
+    const ids = new Set(sidebarUsers.map((u) => u.id));
+    searchResults.forEach((u) => ids.add(u.id));
     return Array.from(ids);
-  }, [activeChatFriends, searchResults]);
+  }, [sidebarUsers, searchResults]);
 
-  const { isConnected, onlineStatus, checkPresence } = usePresence(friendIds);
+  const { isConnected, onlineStatus, checkPresence } = usePresence(userIds);
 
   useEffect(() => {
-    if (isConnected && friendIds.length > 0) {
-      friendIds.forEach(id => checkPresence(id));
+    if (isConnected && userIds.length > 0) {
+      userIds.forEach(id => checkPresence(id));
     }
-  }, [isConnected, friendIds, checkPresence]);
+  }, [isConnected, userIds, checkPresence]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (searchInput) {
-        params.set('q', searchInput);
-      } else {
-        params.delete('q');
-      }
-      const newQueryString = params.toString();
-      if (searchParams.toString() !== newQueryString) {
-        router.replace(`${pathname}?${newQueryString}`, { scroll: false });
-      }
+      setDebouncedQuery(searchInput);
     }, 300);
     return () => clearTimeout(timeout);
-  }, [searchInput, router, pathname, searchParams]);
+  }, [searchInput]);
 
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
@@ -115,14 +114,14 @@ export default function FriendRail({
         />
 
         {/* Search Results Dropdown */}
-        {(currentQuery || isFocused) && (
+        {(debouncedQuery || isFocused) && (
           <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
             {searchResults.length > 0 ? (
               <div className="flex flex-col p-2 gap-1">
-                {searchResults.map((friend) => (
-                  <FriendRow
-                    key={friend.id}
-                    friend={{ ...friend, online: onlineStatus[friend.id] ?? false }}
+                {searchResults.map((user) => (
+                  <UserRow
+                    key={user.id}
+                    user={{ ...user, online: onlineStatus[user.id] ?? false }}
                     isActive={false} // Never active in the search dropdown
                     onClick={() => setSearchInput('')}
                   />
@@ -141,12 +140,12 @@ export default function FriendRail({
        * not every friend. Needs infinite scroll on this container to load subsequent pages.
        */}
       <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
-        {activeChatFriends.map((friend) => {
+        {sidebarUsers.map((user) => {
           return (
-            <div key={friend.id}>
-              <FriendRow
-                friend={{ ...friend, online: onlineStatus[friend.id] ?? false }}
-                isActive={friend.id === activeFriendId}
+            <div key={user.id}>
+              <UserRow
+                user={{ ...user, online: onlineStatus[user.id] ?? false }}
+                isActive={user.id === activeUserId}
               />
             </div>
           );

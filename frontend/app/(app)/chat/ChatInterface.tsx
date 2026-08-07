@@ -7,18 +7,18 @@ import { usePresence } from '@/app/hooks/usePresence';
 import { client } from '@/app/lib/api-clients';
 import MessageBubble from './MessageBubble';
 import Composer from './Composer';
-import { ChatMessage, Friend, BackendChatMessage } from './types';
+import { ChatMessage, ChatUser, BackendChatMessage } from './types';
 import { CHAT_DICT } from './dictionary';
 
 const DELETED_MESSAGE_TEXT = CHAT_DICT.chat.messageDeleted;
 
 interface Props {
   myUserId: string | null;
-  friend: Friend | null;
+  user: ChatUser | null;
   initialChatId: string | null;
 }
 
-export default function ChatInterface({ myUserId, friend, initialChatId }: Props) {
+export default function ChatInterface({ myUserId, user, initialChatId }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatId, setChatId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
@@ -30,11 +30,11 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
 
   const { sendMessage, deleteMessage } = useChat();
 
-  const friendId = friend?.id;
+  const userId = user?.id;
 
   const monitoredUserIds = useMemo(() => {
-    return friendId ? [friendId] : [];
-  }, [friendId]);
+    return userId ? [userId] : [];
+  }, [userId]);
 
   const { checkPresence, isConnected } = usePresence(monitoredUserIds);
 
@@ -48,7 +48,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
     let active = true;
 
     async function initChat() {
-      if (!friendId) {
+      if (!userId) {
         setChatId(null);
         setMessages([]);
         return;
@@ -58,22 +58,22 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
         
         // If we don't know the chat ID yet, create it.
         if (!currentChatId) {
-          if (creationPromiseRef.current?.friendId !== friendId) {
+          if (creationPromiseRef.current?.friendId !== userId) {
             const promise = client.POST('/chats/{recipientId}', {
-              params: { path: { recipientId: friendId } },
+              params: { path: { recipientId: userId } },
             }).then(({ data, response }) => {
               if (response.ok && data) {
                 return data.chatId as string;
               }
               throw new Error(CHAT_DICT.chat.errorCreateChat);
             }).catch((err) => {
-              if (creationPromiseRef.current?.friendId === friendId) {
+              if (creationPromiseRef.current?.friendId === userId) {
                 creationPromiseRef.current = null;
               }
               setErrorMsg(CHAT_DICT.chat.errorInitChat);
               throw err;
             });
-            creationPromiseRef.current = { friendId, promise };
+            creationPromiseRef.current = { friendId: userId, promise };
           }
 
           try {
@@ -110,7 +110,7 @@ export default function ChatInterface({ myUserId, friend, initialChatId }: Props
 
     initChat();
     return () => { active = false; };
-  }, [friendId, initialChatId, router]);
+  }, [userId, initialChatId, router]);
 
   useChatSubscription(chatId || '', (newMessage) => {
     if (!chatId) return;

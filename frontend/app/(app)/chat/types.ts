@@ -28,7 +28,7 @@ export interface BackendChatResponse {
   avatarId?: string;
 }
 
-export type Friend = {
+export type ChatUser = {
   id: string;
   name: string;
   initial: string;
