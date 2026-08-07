@@ -906,9 +906,12 @@ prostu ostatnim etapem Fazy 1.
 
 **Faza 1 — komponenty i powłoka, jedna kolejka (§8.5).**
 
-- [ ] **1.1 Etap A**, w kolejności: TextField → Button → Avatar → Card →
-  AccentLink → Tag. `TextField` i `Button` mają fan-in 6 (9.2), więc
-  „gotowe" znaczy **dwanaście spojrzeń**: sześć tras × dwie szerokości
+- [x] **1.1 Etap A** — zamknięty 2026-08-07, w kolejności: TextField →
+  Button → Avatar → Card → AccentLink → Tag. **Korekta arytmetyki z §8.9
+  pkt 6:** fan-in 6 to sześć **miejsc wywołania**, a nie sześć tras —
+  `TextField` i `Button` mają po sześć wywołań na **pięciu** trasach (dwa
+  wywołania siedzą razem na `/chat`). „Gotowe" znaczyło więc dziesięć
+  spojrzeń, nie dwanaście. Licz trasy, nie importy
 - [ ] **1.2 Etap C**, w kolejności: ThemeToggle → BrandLink → Footer →
   Sidebar → BareLayout (+ `app/(app)/layout.tsx`). Przy BrandLink domknij
   `text-white` (10.5, 11.5); przy Sidebarze — trzy tokeny z 10.4
@@ -1112,12 +1115,12 @@ naprawdę pilnuje.
 
 | # | Jednostka | Faza / etap | Status | Data zamknięcia |
 |---|---|---|---|---|
-| 1 | `TextField` | Faza 1 / Etap A | w kolejce | |
-| 2 | `Button` | Faza 1 / Etap A | w kolejce | |
-| 3 | `Avatar` | Faza 1 / Etap A | w kolejce | |
-| 4 | `Card` | Faza 1 / Etap A | w kolejce | |
-| 5 | `AccentLink` | Faza 1 / Etap A | w kolejce | |
-| 6 | `Tag` | Faza 1 / Etap A | w kolejce | |
+| 1 | `TextField` | Faza 1 / Etap A | **zamknięta** (ton `elevated` wraca z pozycją 22 — patrz uwaga pod tabelą) | 2026-08-07 |
+| 2 | `Button` | Faza 1 / Etap A | **zamknięta** | 2026-08-07 |
+| 3 | `Avatar` | Faza 1 / Etap A | **zamknięta** — przeglądem kodu; zmieniona gałąź jest nieosiągalna (12.3, 12.5) | 2026-08-07 |
+| 4 | `Card` | Faza 1 / Etap A | **zamknięta** (kolory, cień i szerokość wracają z pozycjami 21/22 — 12.5) | 2026-08-07 |
+| 5 | `AccentLink` | Faza 1 / Etap A | **zamknięta** | 2026-08-07 |
+| 6 | `Tag` | Faza 1 / Etap A | **zamknięta** — **Etap A domknięty** | 2026-08-07 |
 | 7 | `ThemeToggle` | Faza 1 / Etap C | w kolejce | |
 | 8 | `BrandLink` | Faza 1 / Etap C | w kolejce | |
 | 9 | `Footer` | Faza 1 / Etap C | w kolejce | |
@@ -1146,6 +1149,26 @@ jest bardzo nierówna i liczba wierszy jest najgorszą dostępną miarą postęp
 (§8.6): pozycja 22 to pięć decyzji w jednym pliku, a pozycja 28 to jedna
 decyzja w czterech plikach.
 
+**Pozycja 1 zostanie otwarta po raz drugi — zapisane z góry, nie odkryte
+później.** Ton `elevated` komponentu `TextField` obsługuje wyłącznie `login`
+i `register`, a te stają się ciemną kartą dopiero na pozycji 22 (decyzja ②
+w 12.4). Nadanie mu docelowych kolorów już teraz dałoby biały tekst na dzisiaj
+jeszcze białej karcie — pole nieczytelne, nie „niedokończone", przez całą Fazę 1.
+Jednostka 1 ustawia więc temu tonowi **tylko promień** (12px obowiązuje
+niezależnie od tego, czy karta wyjdzie ciemna, czy jasna), a kolory czekają na
+pozycję 22. Świadomie łamie to zasadę „dotknij raz, oceń raz": alternatywą było
+albo zepsute logowanie przez całą Fazę 1, albo przeciąganie pozycji 22 przez
+granicę faz. **Wpis w 12.3 dla pozycji 1 nie jest więc ostateczny** — dotyczy
+tonów `surface` i `chat`, a ton `elevated` rozlicza się razem z pozycją 22.
+
+**Fan-in `TextField` potwierdzony: 6** (zgodnie z 9.2). Miejsca użycia to
+`UserSearch`, `login/page.tsx`, `register/page.tsx`, `stomp/page.tsx`,
+`chat/Composer.tsx` i `chat/FriendRail.tsx`. **`AccentLink.tsx` nie jest
+użyciem** — wymienia `TextField` wyłącznie w komentarzu (linia 15), więc siódme
+trafienie z `grep` jest fałszywe. Warto to mieć zapisane, bo `grep` po nazwie
+komponentu znajduje też komentarze, a różnica między sześcioma a siedmioma
+ekranami to w §8.9 pkt 8 różnica dwóch spojrzeń.
+
 **Trzy miejsca, w których kolejka wymagała rozstrzygnięcia, a nie przepisania:**
 
 1. **Pozycje 13–14 przed 15–16.** §8.5 podaje dla Etapu B tylko kolejność tras
@@ -1170,21 +1193,51 @@ decyzja w czterech plikach.
 **Kolejność między klastrami Fazy 2 jest dowolna** (§8.6): pozycje 19–22
 (wejście) i 23–27 (znajomi/profil) można zamienić miejscami w całości. Powyższa
 kolejność stawia wejście pierwsze z jednego powodu: **pozycja 19 (`Hero`)
-odblokowuje Krok 8** (kryterium 5 z §8.13), a kryterium, na które czeka inny
-krok, warto zamknąć wcześnie.
+domyka odblokowanie Kroku 8** (kryterium 5 z §8.13), a kryterium, na które
+czeka inny krok, warto zamknąć wcześnie.
 
-**Sprawdzenie zależności z §8.4 — wykonane 2026-08-07, brak wyników.** Żaden
-z sześciu plików powłoki (`Sidebar`, `Footer`, `BareLayout`, `ThemeToggle`,
-`BrandLink`, `app/(app)/layout.tsx`) nie importuje żadnego z sześciu
-komponentów Etapu A. Etap A i Etap C są rozłączne **nie tylko plikowo, ale
-i zależnościowo** — Etap C mógłby wręcz pójść pierwszy.
+**Sprostowanie 2026-08-07: kryterium 5 wymaga dwóch plików, nie jednego.**
+§8.13 pkt 5 mówi o `Hero.tsx` **i** `Tag.tsx`, a `Tag` to pozycja **6**,
+w Etapie A. Połowa tego kryterium spełnia się więc już przy zamknięciu
+Etapu A, a nie dopiero w Fazie 2 — co czyni pozycję 6 ważniejszą, niż wynika
+z jej rozmiaru (fan-in 1, jeden plik, jedna klasa kolorów).
+
+**Sprawdzenie zależności z §8.4 — potwierdzone 2026-08-07, brak wyników.**
+Żaden z sześciu plików powłoki (`Sidebar`, `Footer`, `BareLayout`,
+`ThemeToggle`, `BrandLink`, `app/(app)/layout.tsx`) nie importuje żadnego
+z sześciu komponentów Etapu A. Etap A i Etap C są rozłączne **nie tylko
+plikowo, ale i zależnościowo** — Etap C mógłby wręcz pójść pierwszy.
 
 Kolejność 1–6 przed 7–11 zostaje bez zmian, ale wiadomo teraz, że ma zapas:
 żadna pozycja Etapu C nie czeka na zamknięcie pozycji Etapu A, więc pomyłka
-w kolejności wewnątrz Fazy 1 nie kosztuje powtórnego przeglądu. To jest
-dokładnie ten rodzaj wyniku, który warto zapisać mimo że „nic nie znalazł":
-za trzy tygodnie jedyną alternatywą dla tego akapitu jest ponowne uruchomienie
-tego samego polecenia.
+w kolejności wewnątrz Fazy 1 nie kosztuje powtórnego przeglądu.
+
+**Jak to zostało ustalone — bo polecenie z §8.4 tego nie ustaliło.** Wzorzec
+podany w planie szuka członu `components/(TextField|Button|…)`, ale **pięć
+z sześciu przeszukiwanych plików samo leży w `app/components/`**, więc import
+rodzeństwa zapisuje się tam jako `from './Button'` — bez członu `components/`.
+Wzorzec nie mógł go dopasować z założenia, więc jego „brak wyników" nie był
+dowodem. Wniosek okazał się prawdziwy, ale uzasadnienie było puste.
+
+Rozstrzygnęły dopiero trzy przebiegi wzorca **zakotwiczonego na końcu ścieżki
+i na początku linii**, wykonane przy jednostkach 1 i 2:
+
+```bash
+grep -rnE "^import .*from '[^']*/(Avatar|Card|AccentLink|Tag)'" app/components/Sidebar.tsx app/components/Footer.tsx app/components/BareLayout.tsx app/components/ThemeToggle.tsx app/components/BrandLink.tsx 'app/(app)/layout.tsx'
+```
+
+**Dwie reguły do końca kroku, obie kupione błędem:**
+
+1. **Kotwicz na końcu ścieżki, nie w środku.** `[^']*/Nazwa'` dopasowuje
+   `./Nazwa`, `../components/Nazwa` i `../../components/Nazwa` jednakowo,
+   a odrzuca `./AddFriendButton` — bo przed `Button'` stoi tam `d`, nie `/`.
+2. **Kotwicz na `^import`, nie na samej nazwie.** Wyszukiwanie po nazwie
+   komponentu łapie komentarze i kolizje nazw. Przy `Button` dało to
+   **piętnaście trafień, z czego dziewięć fałszywych** — cztery komponenty
+   `*Button.tsx`, `ChatInterface`, `[userId]/page.tsx`, `FriendsPanel` oraz
+   `Sidebar`, gdzie „Button" pada wyłącznie w komentarzu. Różnica między
+   sześcioma a piętnastoma miejscami użycia to w §8.9 pkt 6 różnica
+   osiemnastu spojrzeń.
 
 Konsekwencja dla §8.9 pkt 6: **fan-in komponentów powłoki nie pochodzi od
 komponentów sterujących.** „Wszystkie trasy, na których komponent występuje"
@@ -1262,6 +1315,12 @@ dotyczył przeglądu zrobionego na innej liczbie linków (§8.6 pkt 3).
 
 | Jednostka | Faza / etap | Trasy sprawdzone | Szerokości sprawdzone | Przegląd wsteczny |
 |---|---|---|---|---|
+| `Tag` — wyjście z `brand-*` + waga pisma | Faza 1 / Etap A | **Jedna trasa, jedno miejsce użycia:** `/`, przez `Hero` (fan-in 1, najmniejszy w Etapie A). Oba stany sesji, bo `Hero` renderuje się niezależnie od zalogowania | **360 i 1280.** Pigułka zmienia kolor z mint `#5cd4a0` na lime `#a3e635`, tekst na `#0d2b47`, waga 700 → 600. Zmiana potwierdzona wzrokowo na `/`. **`Tag.tsx` nie odwołuje się już do `brand-*`** — to połowa kryterium 5 z §8.13; pozostały zakres `brand-*` w aplikacji nie był przy tej okazji mierzony | Odbył się przed pozycją 3 |
+| `AccentLink` — waga pisma | Faza 1 / Etap A | **Trzy trasy:** `/`, `/login`, `/register`, wyłącznie w stanie wylogowanym (`SessionCard` nie zawiera `AccentLink`). Jedna rola we wszystkich trzech: link akcentowy u dołu karty, nie link w tekście ciągłym — dlatego `text-primary`, a nie kolor globalnego `a` z eksportu (`#2f9bcf`) | **360 i 1280.** Potwierdzone wartościami wyliczonymi: `Register` zwraca `weight: 600` i `color: rgb(163, 230, 53)` na obu trasach | Odbył się przed pozycją 3 |
+| `Card` — promień i padding; kolory, cień i szerokość **odłożone do pozycji 21/22** (12.5) | Faza 1 / Etap A | **Trzy trasy, cztery miejsca użycia, oba stany sesji:** `/` (karta „Hello!" — wylogowana; `SessionCard` — zalogowana), `/login`, `/register` (karta formularza — wylogowana; `SessionCard` „Already logged in" z `(auth)/layout.tsx` — zalogowana). `/chat` **nie importuje** `Card`, więc §8.11 tu nie sięga — pierwsza jednostka Etapu A bez zamrożenia | **360 i 1280.** Pierwsza jednostka z zachowaniem responsywnym: padding przechodzi 24px ↔ 36px na progu `lg:` (1024px). Potwierdzone dwojako — wzrokowo przy przeciąganiu okna **oraz** wartościami wyliczonymi: ta sama tabela `getComputedStyle` zwraca dwie różne wartości po obu stronach progu. To jest pierwszy dowód w tym kroku, że breakpoint z 12.0 faktycznie działa, a zapis jest mobile-first | Odbył się przed pozycją 3 |
+| `Avatar` — gałąź zastępcza (brak zdjęcia) | Faza 1 / Etap A | **Dwie trasy:** `/[userId]` (hero profilu, `EditAvatarButton`, wiersze `UserList`) i `/chat` (`Conversation`, `FriendRow` → `PresenceAvatar`). **Żadna nie zmienia wyglądu** — patrz kolumna obok | **Nie dotyczy — nic się nie renderuje inaczej.** Zamknięte **przeglądem kodu, nie wzrokiem**, i to jest świadomy wyjątek od §8.9 pkt 8. Powód: zmieniona gałąź jest nieosiągalna. Wszystkie pięć miejsc wywołania liczy `src` jako `avatarId ? … : null`, a backend wydaje `avatarId` każdemu użytkownikowi — sprawdzone `getComputedStyle` na obu trasach: **wszystkie awatary renderują się jako `<img>`**, żaden jako gałąź zastępcza. Gałąź `<Image>` nie została tknięta, więc nie ma czego oglądać przy 360 ani 1280. Weryfikacja wizualna stanie się możliwa dopiero, gdy backend przestanie wydawać `avatarId` wszystkim, albo gdy Krok 6 rozstrzygnie los tej gałęzi (12.5) | Odbył się przed pozycją 3 — opis w wierszu `Button` |
+| `Button` — warianty `primary`, `outline`, `send` | Faza 1 / Etap A | **Pięć tras, sześć miejsc użycia:** `/` (CTA w `Card` — wylogowana, oraz `SessionCard` — zalogowana), `/login`, `/register` (submit + `SessionCard`), `/chat` (`Composer`, wariant `send` — bez zmiany, §8.11), `/stomp` (poza zakresem). **Oba stany sesji sprawdzone** — wariant `outline` renderuje się wyłącznie w `SessionCard`, więc jest niewidoczny na wylogowanym `/` | **360 i 1280**, oba motywy | **Odbył się 2026-08-07, przed otwarciem pozycji 3.** Pierwszy w tym kroku — wcześniej nie było dwóch ukończonych jednostek do zestawienia. Wykonany na `/login`, gdzie pole i przycisk stoją obok siebie, **porównaniem wartości wyliczonych**, nie wzrokiem: `console.table` po `getComputedStyle` dla wszystkich kontrolek strony. Wynik: promień 12px zgodny dla obu jednostek, **brak rozjazdu** → 12.6 pozostaje pusta zasadnie. Ubocznie ujawnił dwie rzeczy: `ThemeToggle` na 6px (pozycja 7, jeszcze nieostylowana — nie rozjazd) oraz wagę pisma pól 400 wobec 500 w eksporcie (→ 12.5) |
+| `TextField` — tony `surface` i `chat`; ton `elevated` **rozliczany z pozycją 22** (12.1) | Faza 1 / Etap A | **Pięć tras, sześć miejsc użycia:** `/chat` (`Composer` + `FriendRail` — bez zmiany, §8.11), `(app)/[userId]` (`UserSearch` — jedyna realna zmiana wyglądu), `/login`, `/register` (sam promień), `/stomp` (poza zakresem, zmiana uboczna dopuszczalna) | **360 i 1280**, oba motywy. Punkt 9 czytany zgodnie z rozstrzygnięciem w 12.4: ocena komponentu, nie strony | **Brak — pierwsza jednostka kroku.** Nie ma dwóch wcześniejszych, obok których można by ją postawić (§8.8 pkt 1). Pierwszy realny przegląd wsteczny odbędzie się przed otwarciem pozycji 3 |
 
 ### 12.4 Decyzje projektowe i odstępstwa od słownika
 
@@ -1289,7 +1348,7 @@ praca czeka na wiersz.
 
 | Co | Gdzie się pojawiło | Pytanie / odstępstwo | Status |
 |---|---|---|---|
-| Tło karty logowania | decyzja ② (12.2) | Czym konkretnie jest „uproszczone tło"? Nie brać `bg-gradient-start-page` odruchowo — pełni rolę tła karty Hero, a ta sama wartość to nie ta sama rola (§7.6) | otwarta — potrzebna przy `login` + `register` (Faza 2, poz. 4) |
+| Tło karty logowania | decyzja ② (12.2); **wypadła przy jednostce 1**, nie przy 22 | Czym konkretnie jest „uproszczone tło"? | **podjęta 2026-08-07: statyczny gradient landingu** — te same stopnie co w eksporcie (`120deg, #0a3348 0%, #146b7a 32%, #1f8f7a 62%, #2f9bcf 100%`), **bez** animacji `gradientShift` i **bez** czterech pływających kształtów dekoracyjnych. Karta zachowuje ciemne, półprzezroczyste potraktowanie z eksportu, więc jej pola to `inputStyle`. To jest dosłowne odczytanie słowa „uproszczone": to samo tło, mniej ruchu. **Nie** `bg-gradient-start-page` — tamten gradient ma inną rolę (§7.6) |
 | Nawigacja przy szerokości wąskiej | decyzja ① (12.2) | Co się dzieje ze stałą kolumną Sidebara przy 360px? Jedna konstrukcja czy dwie? Jeśli menu ma stan otwarcia — to jest zmiana zachowania, nie odstępu | otwarta — potrzebna przy jednostce **1b** (Faza 1, po Sidebarze) |
 | `--theme-hub-on-shell-muted` | 10.4 | Wartość docelowa czy świadomy placeholder? Etap C to jedyny moment, w którym decyzja jest naprawdę potrzebna | otwarta — potrzebna przy `Sidebar` (Etap C) |
 | `--theme-hub-shell-hover` | 10.4 | jw. | otwarta — potrzebna przy `Sidebar` (Etap C) |
@@ -1298,6 +1357,11 @@ praca czeka na wiersz.
 | Breakpoint 1024px | 12.0 | Pomiar wykonano na `/chat` (powłoka); kontrolny odczyt na profilu dał 726px. Trasy znajomych nie da się zmierzyć przed 2a — profil jest pomiarem zachowawczym | **potwierdzone 2026-08-07: 1024 zostaje** |
 | Obramowanie `#e3ebe6` | 12.0, Faza 0; potrzebne przy `TextField` | Eksport odróżnia **dwie role obramowania**, dowód pod tabelą. Brak tokenu dla drugiej z nich | **podjęta 2026-08-07: obie role dostają `elevated-border`.** Uzasadnienie: §8.7 reguła 2 zabrania nowego tokenu w Kroku 4, a wpisanie `border-[#e3ebe6]` byłoby gorsze niż użycie tokenu — to powrót do surowego hexa, który Kroki 2–3 właśnie usunęły. Różnica 11/255 na linii 1px jest poniżej progu widzialności, a oba kolory i tak czekają na Krok 7 (11.3). **Rozróżnienie ról przestaje istnieć w kodzie, więc żyje w tym wierszu** |
 | Obramowanie `#d6e4ee` | 12.0, Faza 0 | Krawędź przycisku drugorzędnego („Wstecz"). Też bez tokenu, wyraźnie chłodniejszy niż dwa powyższe — możliwe, że to trzecia rola (krawędź kontrolki), a nie wariant krawędzi panelu | otwarta — potrzebna przy Etapie B (`terms-of-service`, przycisk „Wstecz") |
+| **Odstępstwo od §8.11 — `/chat` zmienia wygląd** | jednostka 3 (`Avatar`) | `Avatar` nie ma **żadnej** osi wariantów: ani tonów jak `TextField`, ani wariantów jak `Button`. Jest jeden wygląd, wspólny dla wszystkiego, a `/chat` używa go przez `Conversation` i `FriendRow` → `PresenceAvatar`. Nie istnieje sposób, by ostylować ten komponent i nie ruszyć `/chat` | **podjęta 2026-08-07: stylujemy, odstępstwo zapisane.** Trzy uzasadnienia: (1) alternatywą było odłożenie całej jednostki, czyli trzeci z sześciu komponentów Etapu A bez stylowania; (2) awatary na `/chat` **i tak są tam zepsute** — `chat/page.tsx` podaje `color: 'bg-hub-panel'`, czyli nazwę klasy Tailwinda w miejsce wartości CSS, więc kolor jest cicho ignorowany; (3) zmiana **zbliża** `/chat` do eksportu, nie oddala. **To jest pierwsze świadome odstępstwo od §8.11 w tym kroku i ma pozostać jedynym** — każde następne wymaga osobnego wiersza i osobnego uzasadnienia, nie powołania się na ten. **Sprostowanie z tego samego dnia: odstępstwo jest utajone, nie czynne.** Pomiar `getComputedStyle` na `/chat` i `/[userId]` pokazał, że **wszystkie** awatary renderują się gałęzią `<Image>` — każdy użytkownik w obecnych danych ma wgrane zdjęcie, więc zmieniona gałąź zastępcza nie renderuje się nigdzie. Na `/chat` nie widać dziś żadnej różnicy. Odstępstwo pozostaje zapisane, bo dotyczy kodu wspólnego i ujawni się przy pierwszym użytkowniku bez awatara — ale uzasadnienie (3) jest na razie przewidywaniem, nie obserwacją |
+| Gradient CTA dla wariantu `primary` | jednostka 2 (`Button`) | `primaryBtnStyle` w eksporcie to gradient mint→lime, a `--theme-primary` jest płaskim `#a3e635` i gradientu nie wyrazi | **podjęta 2026-08-07: `primary` przyjmuje `bg-hub-cta`.** Wykonanie instrukcji zapisanej w `globals.css` (komentarz przy `@utility bg-hub-cta`). `text-on-primary` (`#0d2b47`) jest już kolorem, który eksport kładzie na tym przycisku. Świadomy koszt: **dochodzi jeden użytkownik `hub-*`** w kroku, który ich pozbywa — Krok 8 musi dotknąć `Button`, co ten sam komentarz w `globals.css` już przewiduje |
+| `Tag` — BRAK ODPOWIEDNIKA, a mimo to musi się zmienić | jednostka 6 (`Tag`) | Eksport nie zawiera **żadnej** pigułki — jego hero to logo, wordmark, nagłówek i podtytuł, i nic więcej. Nie ma więc wzorca, do którego można być wiernym. Jednocześnie §8.13 kryterium 5 wymaga, żeby ten plik przestał odwoływać się do `brand-*`, bo inaczej Krok 8 nie może wycofać tej palety. Komponent musi się zmienić **mimo braku odniesienia** — sytuacja odwrotna do `outline`, gdzie brak odniesienia był powodem, żeby nie ruszać | **podjęta 2026-08-07: `bg-primary text-on-primary`.** Wybór przez eliminację: `brand-*` wyklucza kryterium 5, `hub-*` tylko przenosi problem do Kroku 8, zostają tokeny semantyczne. `primary`/`on-primary` to para akcentowa, której eksport używa na CTA, a zastępowany mint jest drugim końcem tego samego gradientu mint→lime. **Widoczny skutek: pigułka zmienia kolor z `#5cd4a0` na `#a3e635`** — zmiana wyglądu strony landingowej bez mandatu z designu, wymuszona ograniczeniem. Do rewizji przy pozycji 19 (`Hero`), gdzie cały ten obszar i tak jest przeprojektowywany. **Uzupełnienie 2026-08-07: pigułki mają zniknąć przed końcem migracji** (ustalenie osoby prowadzącej, zgodne z tym, że eksport ich nie zawiera). Stylowanie z pozycji 6 jest więc tymczasowe — ale wyjście z `brand-*` **nie było pracą na marne**: dzięki niemu połowa kryterium 5 jest spełniona **już teraz**, zamiast być uzależniona od tego, czy przeprojektowanie `Hero` faktycznie usunie ten komponent. Kryterium spełnione przez zmianę jest pewniejsze niż kryterium spełnione przez planowane usunięcie |
+| Wariant `outline` — BRAK ODPOWIEDNIKA | jednostka 2 (`Button`) | Eksport nie rysuje żadnego przycisku obrysowanego na trasie, która renderuje ten komponent. Jedyny obrysowany („Wstecz") leży na stronach prawnych, które `Button` nie importują; „Wyloguj" w eksporcie to wypełniony czerwony gradient na ekranie profilu, a to inny ekran i inny komponent | **podjęta 2026-08-07: kolory bez zmian, tylko promień.** Nie da się być „zgodnym z eksportem" z czymś, czego eksport nie narysował (§7.3, §8.9 pkt 2 — brakujące stany nie są do wymyślenia). Do rewizji przy pozycji 20 (`SessionCard`), która jest jedynym miejscem użycia tego wariantu |
+| Zakres §8.9 pkt 9 przed jednostką 1b | jednostka 1 (`TextField`) | Punkt 9 pyta „czy strona przewija się w poziomie", ale przy 360px **każda** trasa `(app)` przewija się do czasu przebudowy powłoki: sam Sidebar to stała kolumna 250px, a `/chat` dokłada 290px szyny znajomych — 540px stałej konstrukcji w oknie 360px. Wzięte dosłownie, punkt 9 przepada dla jednostek 1–11 i definicja ukończenia przestaje cokolwiek znaczyć | **podjęta 2026-08-07: dla jednostki komponentowej punkt 9 pyta o komponent, nie o stronę** — czy sam komponent nie wystaje, nie jest za mały do dotknięcia i nie łamie się przy zwężeniu. Test całej strony jest już osobno jako kryterium **Z.8** w §8.13 (poziom kroku) i zaczyna obowiązywać dla tras dopiero po jednostce 1b |
 | Rozmiar nagłówka trasy | 12.0, Faza 0 | Eksport daje jednej roli trzy rozmiary: 34px (dashboard), 32px (strony prawne), 30px (profil, wyszukiwanie) | **podjęta 2026-08-07: jedna wartość, 30px** — najczęstsza z trzech. Rozbieżność w eksporcie to konflikt systemowy z §8.2 wewnątrz samego artefaktu projektowego; słownik nie może odtwarzać trzech decyzji o jednej roli. Do rewizji, jeśli przegląd wsteczny pokaże, że dashboard potrzebuje mocniejszego nagłówka |
 
 **Dowód na dwie role obramowania (wiersz `#e3ebe6`).** Podział przebiega
@@ -1313,6 +1377,17 @@ Wniosek dla Kroku 5 lub 7: jeśli którykolwiek z tych kroków rusza
 `elevated-border`, ma tu gotową odpowiedź na pytanie, czy potrzebne są dwa
 tokeny zamiast jednego — i po czym poznać, który należy gdzie.
 
+**Uwaga o terminach — decyzje wypadają wcześniej, niż wskazuje trasa, na
+której widać ich skutek.** Decyzja ② była zaplanowana na pozycję 22
+(`login` + `register`) i wypadła na pozycji **1**, bo ton `elevated`
+komponentu `TextField` jest używany wyłącznie przez te dwie trasy — a ton
+stylujesz przy komponencie, nie przy trasie. Reguła praktyczna dla trzech
+decyzji, które zostały otwarte: **termin decyzji wyznacza pierwszy
+komponent, który jej dotyka, a nie trasa, na której widać efekt.** Trzy
+tokeny-placeholdery z 10.4 dotyczą powłoki, więc wypadną przy `Sidebar`
+(poz. 10) zgodnie z zapisem; `#d6e4ee` dotyczy przycisku, więc może wypaść
+już przy `Button` (poz. 2), a nie dopiero w Etapie B.
+
 ### 12.5 Znalezione, ale NIE naprawione (Zasada B) — pozycje założone z góry
 
 | Co | Gdzie | Do którego kroku należy |
@@ -1321,6 +1396,25 @@ tokeny zamiast jednego — i po czym poznać, który należy gdzie.
 | `elevated-border` — kontrast 1.04–1.13:1 | `app/globals.css`, wszystkie panele | Krok 7 (odziedziczone z 11.5) |
 | `success`/`danger` jako tekst — kontrast 2.38–3.91:1 | `app/(app)/stomp/page.tsx` | Krok 7, **z zastrzeżeniem powyżej** (decyzja ④) |
 | `/stomp` do usunięcia przed oceną końcową | `app/(app)/stomp/` | Poza planem migracji — sprzątanie (decyzja ④) |
+| `TextField` — padding niezgodny z eksportem (`md` 12px w pionie, eksport 14px). `SIZE_CLASSES` jest wspólne dla wszystkich tonów, a `/chat` używa **obu** rozmiarów (`Composer` → `md`, `FriendRail` → `sm`), więc korekta ruszyłaby trasę zamrożoną przez §8.11 | `app/components/TextField.tsx` | Krok 6 lub 8 — odblokowuje się, gdy ton `chat` znika razem z `hub-*` |
+| `/chat` **już** odbiega od eksportu: pole kompozytora renderuje promień 8px i padding 12×16px, a `chatInputStyle` w eksporcie ma 14px i 14×18px. Wzorzec docelowy nie jest więc wzorcem pikselowym dla tego komponentu | `app/(app)/chat/Composer.tsx` | Obserwacja — §8.11 nadal zabrania ruszania `/chat`. Do rozstrzygnięcia w Kroku 8 |
+| Eksport ma **cztery** wyglądy pola (`inputStyle`, `searchInputStyle`, `smallSearchStyle`, `chatInputStyle`) przy trzech tonach komponentu. Czwarty ton to zmiana API | `app/components/TextField.tsx` | Krok 6 (§8.7 reguła 3) |
+| Nazwa tonu `elevated` przestanie opisywać swoją powierzchnię po jednostce 22: karta logowania staje się ciemna (decyzja ②), a nazwa pochodzi od `--theme-elevated-surface`, które jest białe. Przemianowanie wariantu to zmiana API | `app/components/TextField.tsx` | Krok 6 (§8.7 reguła 3) |
+| `UserSearch` przekazuje `size="sm"`, ale ekran wyszukiwania w eksporcie używa **dużego** pola (`searchInputStyle`, 15×18px). To decyzja miejsca wywołania, nie komponentu | `app/components/UserSearch.tsx` | Krok 4, **pozycja 24** — nie w jednostce 1 (§8.0, jeden obszar na jednostkę) |
+| **Prefiksy `md:` sprzed migracji vs kryterium Z.7.** Breakpointem kroku jest `lg:` (12.0), ale w kodzie siedzą jeszcze pojedyncze `md:` opisane w 9.5 pkt 6. Kryterium **Z.7** wymaga **dokładnie jednego** breakpointu na koniec kroku, więc każdy z nich trzeba przerobić albo usunąć — a **żadna jednostka w 12.1 obecnie tego nie obejmuje** | całe `app/`, zakres do ustalenia | Krok 4 — zamiatanie przed zamknięciem, do dopisania jako osobna pozycja kolejki albo do rozliczenia przy jednostkach, które te pliki i tak otwierają |
+| `Button` — padding i typografia niezgodne z eksportem (`py-3` = 12px wobec 14px; `text-sm font-bold` = 14px/700 wobec 15px/800). Wszystko troje siedzi w `BASE_CLASSES`, wspólnym z wariantem `send`, którego używa `/chat` | `app/components/Button.tsx` | Krok 6 lub 8 — dokładnie ta sama blokada co przy `TextField`, z tego samego powodu |
+| `outline` wypełnia się na hover płaskim `bg-primary`, podczas gdy `primary` jest już gradientem `bg-hub-cta`. Obrys przestał być obrysem tego, co wypełnia | `app/components/Button.tsx` | Krok 6 — i tak scala warianty |
+| **`SessionCard` nie ma odpowiednika w eksporcie.** Eksport nie zawiera karty „witaj z powrotem, kontynuuj" — jego landing prowadzi wprost do karty logowania. Cała ta karta, razem z jedynym użyciem wariantu `outline`, jest UI spoza projektu | `app/components/SessionCard.tsx` | Krok 4, **pozycja 20** — będzie rozstrzygana decyzją własną, nie odczytem z eksportu (12.4) |
+| **Błąd: nazwa klasy Tailwinda podana jako wartość CSS.** `color: 'bg-hub-panel'` trafia do `style={{ backgroundColor: color }}` w `Avatar`, czyli w miejsce, które oczekuje koloru CSS. Wartość jest cicho ignorowana, więc awatary bez zdjęcia spadają na tło domyślne | `app/(app)/chat/page.tsx` (linie 31 i 57) | Poza Krokiem 4 — `/chat` jest zamrożone (§8.11). Do naprawy razem z `/chat` w Kroku 8 |
+| `Avatar` — obwódka 3px `rgba(255,255,255,0.5)` występuje w eksporcie **tylko** na awatarze hero profilu, nie na pozostałych. Dodanie propa to zmiana API | `app/components/Avatar.tsx` | Krok 6 (prop) albo Krok 4 pozycja 27 (klasa w miejscu wywołania) |
+| **Gałąź zastępcza `Avatar` jest w praktyce nieosiągalna.** Wszystkie pięć miejsc wywołania liczy `src` jako `avatarId ? '/api/users/avatar/…' : null` — uczciwy warunek, bez zaszytej wartości domyślnej po stronie frontendu. Backend wydaje jednak `avatarId` **każdemu** użytkownikowi (potwierdzone na świeżym koncie bez wgranego zdjęcia), więc `src` nigdy nie jest `null` i gałąź z inicjałem nie renderuje się nigdzie. Pytanie „czy ta gałąź ma rację bytu" jest pytaniem o API komponentu, nie o styl | `app/components/Avatar.tsx` oraz pięć miejsc wywołania | Krok 6 — zostawić jako zabezpieczenie czy usunąć razem z propami `initial` / `color` (§8.7 reguła 3 zabrania rozstrzygać to w Kroku 4) |
+| **`prettier-plugin-tailwindcss` nie sortuje klas.** `.prettierrc` ładuje wtyczkę poprawnie, ale podaje jej `"tailwindConfig": "./tailwind.config.ts"` — formę z Tailwinda **3**, wskazującą plik konfiguracyjny JS. Projekt stoi na Tailwindzie **4**, gdzie konfiguracja jest w CSS (`@theme` w `app/globals.css`), więc wtyczka nie znajduje kontekstu i po cichu nic nie sortuje. Objaw: sześć plików Etapu A wraca z `--write` jako `unchanged`, a zastane łańcuchy klas nie są w kolejności kanonicznej (np. `Card` miał `w-72` i `p-8` **po** kolorach). Poprawną opcją dla v4 jest `"tailwindStylesheet": "./app/globals.css"` | `frontend/.prettierrc` | **Poza Krokiem 4** — to naprawa narzędzia, nie designu. Warto osobnym commitem, bo w chwili gdy wtyczka ruszy, przesortuje łańcuchy klas w całym projekcie. Konsekwencja na teraz: kolejność klas jest ręczna i taka trafia do repo. **Decyzja robocza: nie sortujemy jej ręcznie** — łańcuchy klas zostają w konwencji danego pliku, a zmieniamy wyłącznie to, co faktycznie się różni. Powód jest czytelnościowy: diff ma pokazywać zmienioną wartość, a nie przetasowanie ośmiu klas. Sortowanie całego projektu przyjdzie jednym commitem, gdy wtyczka zacznie działać |
+| `AccentLink` — `text-primary` (`#a3e635`) na dzisiejszej białej karcie daje bardzo niski kontrast. Kolor jest **zgodny z eksportem** (tak samo wygląda tam „Forgot Password?"), tyle że eksport kładzie go na ciemnej karcie. Zestawienie jasne+lime jest stanem przejściowym, nie docelowym | `app/components/AccentLink.tsx` na `/`, `/login`, `/register` | Krok 7 — z zastrzeżeniem, że **pozycja 22 prawdopodobnie rozwiąże to sama**, gdy karta stanie się ciemna (decyzja ②). Zgodnie z regułą z 12.2: najpierw sprawdź, czy problem nadal istnieje, potem mierz |
+| `Card` — kolory i cień niezgodne z eksportem (biel + `elevated-border`, brak cienia; eksport: ciemna półprzezroczystość, `white/14`, `0 25px 60px rgba(0,0,0,0.35)`). **Nie jest to blokada techniczna, tylko kolejność**: tło pod kartą kładą trasy, nie komponent, więc ciemna karta teraz oznacza ciemny tekst na ciemnym tle przez całą Fazę 1 | `app/components/Card.tsx` | Krok 4, **pozycje 21 i 22** — razem z tłem z decyzji ② |
+| `Card` — szerokość `w-72` (stałe 288px) wobec `width:100%; max-width:440px` w eksporcie. Zmiana nie jest bezpieczna na poziomie komponentu: `(marketing)/page.tsx` stawia kartę obok `Hero` w kontenerze `flex flex-wrap`, gdzie `w-full` rozwiązuje się do 100% kontenera i łamie układ na dwie linie. Eksport zakłada wyśrodkowaną kolumnę, czyli kontekst logowania, nie landingu | `app/components/Card.tsx`, `app/(marketing)/page.tsx` | Krok 4, **pozycje 21 i 22** — decyzja miejsca wywołania |
+| `PresenceAvatar` — kropka offline używa `bg-gray-400`, surowego koloru z palety Tailwinda zamiast tokenu; jej odpowiednik online stoi poprawnie na `bg-hub-online`. Sama kropka ma 11px, czyli dokładnie tyle co w eksporcie | `app/components/PresenceAvatar.tsx` | Poza Krokiem 4 — komponent renderuje się wyłącznie na `/chat` (przez `FriendRow`), zamrożonym przez §8.11. Do Kroku 8 |
+| Awatary w wierszach list renderują się na **40px**, a eksport podaje **44px** (wiersze wyszukiwania i szyny czatu) oraz 42px w nagłówku rozmowy. Hero profilu ma 96px i zgadza się co do piksela. `size` jest liczbą podawaną przez wywołującego, więc to nie jest ustawienie komponentu | `app/components/UserList.tsx`, `app/(app)/[userId]/page.tsx` | Krok 4, **pozycje 23 i 27** — decyzja miejsca wywołania |
+| `TextField` — waga pisma 400 wobec 500 w eksporcie (`inputStyle` i `searchInputStyle` mają `fontWeight: 500`). **Przeoczone przy jednostce 1**, nie zablokowane — waga daje się ustawić per ton, więc `/chat` jej nie broni | `app/components/TextField.tsx` | Krok 4, **pozycja 22** — `TextField` i tak wraca wtedy po kolory tonu `elevated` (12.1) |
 
 ### 12.6 Rozjazdy wyłapane w przeglądzie wstecznym
 
@@ -1335,6 +1429,24 @@ założeniu, niż zapisałaś. **Pusta 12.6 po kilku dniach pracy nie oznacza,
 
 | Co się rozjechało | Między czym a czym | Kiedy wykryte | Jak rozstrzygnięte | Czy słownik wymagał uzupełnienia |
 |---|---|---|---|---|
+
+**Pusta po Etapie A — i to jest wynik, nie brak wyniku.** Odbyły się dwa
+przeglądy wsteczne: przed pozycją 3 (na `/login`, pole + przycisk) i po
+zamknięciu Etapu A (na `/`, gdzie renderują się cztery z sześciu komponentów).
+Oba wykonane **porównaniem wartości wyliczonych**, nie wzrokiem: `console.table`
+po `getComputedStyle`, z filtrem na elementy mające promień.
+
+Wynik drugiego przeglądu: `Card` 24px, `Button` 12px / 700 / 14px, `Tag` ×5
+pełny promień / 600 / 12px — **każda wartość jest wierszem słownika 12.0**,
+żadnej spoza. Dwa promienie odstające (16px w kontenerze `Hero`, 6px
+w `ThemeToggle`) należą do pozycji **19** i **7**, czyli do jednostek jeszcze
+nieotwartych — to nie rozjazd, tylko praca niewykonana.
+
+**Jak czytać taki przegląd, bo odruch podpowiada źle.** Nie szuka się *jednej*
+wartości promienia. Kilka różnych jest poprawne, bo 12.0 przypisuje różne
+promienie różnym rolom. Sygnałem jest **wartość, która nie jest żadnym wierszem
+słownika** — trzy wartości dające się wskazać w tabeli to spójny system, czwarta
+niedająca się wskazać to konflikt systemowy z §8.2.
 
 ### 12.7 Jednostki strukturalne (1b — nawigacja mobilna, 2a — wydzielenie trasy)
 

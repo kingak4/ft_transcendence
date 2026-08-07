@@ -3,23 +3,36 @@ import type { ComponentProps, ReactNode } from 'react';
 
 type ButtonVariant = 'primary' | 'outline' | 'send';
 
+// Radius sits here rather than in BASE_CLASSES, for the same reason it does in
+// TextField: the export gives each treatment its own radius (12px on the CTA),
+// while `send` has to keep the 8px it renders today - /chat is the reference
+// implementation and is out of scope for this step. Padding and type size are
+// still shared through BASE_CLASSES and so are still frozen by /chat; see
+// MIGRATION-INVENTORY.md 12.5.
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-on-primary hover:brightness-125',
+  // The export's CTA is a mint-to-lime gradient, which a single --theme-primary
+  // cannot express - hence the bg-hub-cta utility rather than bg-primary.
+  // `text-on-primary` is already the colour the export puts on it.
+  primary: 'rounded-xl bg-hub-cta text-on-primary hover:brightness-125',
+  // No export reference: the design has no outline button on any route that
+  // renders this component. Colours are therefore left as they were and only
+  // the radius follows the component. See MIGRATION-INVENTORY.md 12.4.
   outline:
-    'border border-primary text-primary hover:bg-primary hover:text-on-primary',
+    'rounded-xl border border-primary text-primary hover:bg-primary hover:text-on-primary',
   // The chat composer's Send button. `brightness` is a filter, so it lightens
   // the rendered gradient; a hover:bg-* utility would flatten it to one colour.
   // TODO(stomp): the composer's Send needs a disabled state once it submits -
   // empty input and in-flight send. The base classes already style
   // `disabled:`, so this is a prop at the call site, not a change here.
-  // TODO(design-migration): revisit whether `send` stays its own variant or
-  // becomes `primary` once `primary` adopts bg-hub-cta. Keep it separate only
-  // if the design really does treat Send differently from other CTAs.
-  send: 'bg-hub-bubble text-white hover:brightness-125',
+  // TODO(design-migration): `primary` has now adopted bg-hub-cta, so the
+  // question this note used to defer is live: `send` and `primary` are two
+  // distinct gradients rather than one standing in for the other. Step 6
+  // decides whether that distinction is real or whether they collapse.
+  send: 'rounded-lg bg-hub-bubble text-white hover:brightness-125',
 };
 
 const BASE_CLASSES =
-  'inline-block rounded-lg py-3 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-block py-3 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
 function buttonClasses(
   variant: ButtonVariant,

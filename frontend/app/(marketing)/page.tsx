@@ -7,7 +7,6 @@ import Card from '../components/Card';
 import Hero from '../components/Hero';
 import SessionCard from '../components/SessionCard';
 
-import { client } from '../lib/api-clients';
 import { clearSession } from '../lib/logout';
 import { assertValidSession } from '../lib/session';
 

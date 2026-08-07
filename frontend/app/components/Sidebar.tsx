@@ -53,12 +53,20 @@ export default function Sidebar({ userId }: Props) {
       <BrandLink className="mb-3 px-3 text-white" />
 
       {userId && (
-        <Link
-          href={`/${userId}`}
-          className={`mb-6 ${navLinkClasses(pathname === `/${userId}`)}`}
-        >
-          My Profile
-        </Link>
+        <>
+          <Link
+            href={`/${userId}`}
+            className={`mb-6 ${navLinkClasses(pathname === `/${userId}`)}`}
+          >
+            My Profile
+          </Link>
+          <Link
+            href={`/chat`}
+            className={`mb-6 ${navLinkClasses(pathname === `/chat`)}`}
+          >
+            Chat
+          </Link>
+        </>
       )}
 
       <nav className="flex flex-col gap-1">

@@ -25,14 +25,22 @@ export default function Avatar({ src, alt, size, initial, color }: Props) {
         // Hidden from assistive tech: the initial duplicates the name that
         // sits next to it, and this branch carries no accessible name today.
         aria-hidden="true"
-        className="bg-elevated-border flex shrink-0 items-center justify-center rounded-full font-bold text-white"
+        // Fallback colours follow the export's profile avatar: #0d2b47 on
+        // #a3e635, which are exactly --theme-on-surface and --theme-primary,
+        // so this needs no new tokens. The previous pairing was white on
+        // bg-elevated-border (#eef2ef) - an initial that was very nearly
+        // invisible whenever no per-user colour was supplied.
+        className="bg-on-surface text-primary flex shrink-0 items-center justify-center rounded-full font-extrabold"
         // Inline styles outrank stylesheet rules, so `color` overrides
-        // bg-elevated-border when given and leaves it in place when not.
+        // bg-on-surface when given and leaves it in place when not.
         style={{
           width: size,
           height: size,
           backgroundColor: color,
-          fontSize: Math.round(size * 0.4),
+          // The export holds this ratio steady across every avatar it draws:
+          // 34/96 on the profile hero, 15/44 in list rows, 14/42 in the chat
+          // header - all ~0.34. The previous 0.4 ran visibly large.
+          fontSize: Math.round(size * 0.34),
         }}
       >
         {initial}
