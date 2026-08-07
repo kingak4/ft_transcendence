@@ -28,10 +28,10 @@ export default async function AppLayout({
 
   return (
     <StompProvider>
-      <div className="bg-surface text-on-surface flex min-h-screen">
+      <div className="bg-surface text-on-surface flex h-screen overflow-hidden">
         <Sidebar userId={userId} />
-        <div className="flex flex-1 flex-col">
-          <main className="flex-1 p-8">{children}</main>
+        <div className="flex flex-1 flex-col min-w-0">
+          <main className="flex-1 overflow-y-auto p-8">{children}</main>
           <Footer />
         </div>
       </div>

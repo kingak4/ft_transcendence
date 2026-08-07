@@ -105,14 +105,14 @@ export default async function ChatPage({
 
   if (allFriends.length === 0) {
     return (
-      <div className="bg-hub-panel text-hub-muted flex h-[calc(100vh-4rem)] items-center justify-center rounded-2xl text-sm">
+      <div className="bg-hub-panel text-hub-muted flex h-full items-center justify-center rounded-2xl text-sm">
         No friends yet. Add friends to start chatting.
       </div>
     );
   }
 
   return (
-    <div className="border-hub-border flex h-[calc(100vh-4rem)] overflow-hidden rounded-2xl border">
+    <div className="border-hub-border flex h-full overflow-hidden rounded-2xl border">
       <FriendRail activeChats={activeChats} allFriends={allFriends} activeFriendId={activeFriend?.id || ''} />
       {activeFriend ? (
         <Conversation friend={activeFriend} initialChatId={activeChatId} myUserId={myUserId} />
