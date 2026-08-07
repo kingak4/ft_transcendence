@@ -15,6 +15,7 @@ export default function StompProvider({
     <StompSessionProvider
       url=""
       webSocketFactory={() => new SockJS(wsUrl)}
+      reconnectDelay={3000}
       debug={(str) => console.log('[STOMP]', str)}
       onConnect={() => console.log('[STOMP] Connected successfully')}
       onDisconnect={() => console.log('[STOMP] Disconnected')}
