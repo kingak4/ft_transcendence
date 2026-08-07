@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
+import { CHAT_DICT } from './dictionary';
 
 interface Props {
   inputValue: string;
@@ -26,8 +27,8 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer({ inputVa
       <TextField
         ref={ref}
         tone="chat"
-        placeholder="Type a message"
-        aria-label="Message"
+        placeholder={CHAT_DICT.composer.placeholder}
+        aria-label={CHAT_DICT.composer.ariaLabel}
         className="flex-1"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -35,7 +36,7 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer({ inputVa
         suppressHydrationWarning
       />
       <Button variant="send" disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
-        Send
+        {CHAT_DICT.composer.send}
       </Button>
     </form>
     </div>
