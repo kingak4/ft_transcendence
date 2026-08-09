@@ -88,6 +88,7 @@
 
   --color-start-page-gradient-start: var(--theme-start-page-gradient-start);
   --color-start-page-gradient-mid: var(--theme-start-page-gradient-mid);
+  --color-start-page-gradient-mid-2: var(--theme-start-page-gradient-mid-2);
   --color-start-page-gradient-end: var(--theme-start-page-gradient-end);
 
   /*
@@ -106,22 +107,22 @@
 /* Default theme: original 42Hub look, active when no theme class is set */
 :root {
   /* ===== ZMIANA — KROK 3, Para 1 ===== */
-  --theme-surface: #f3f6f4;      /* wcześniej var(--color-brand-main-color) */
-  --theme-on-surface: #0d2b47;   /* wcześniej var(--color-brand-additional-color-2) */
+  --theme-surface: #f3f6f4; /* wcześniej var(--color-brand-main-color) */
+  --theme-on-surface: #0d2b47; /* wcześniej var(--color-brand-additional-color-2) */
   /* ===== KONIEC ZMIANY ===== */
 
   /* ===== ZMIANA — KROK 3, Para 2 ===== */
-  --theme-elevated-surface: #ffffff;      /* wcześniej var(--color-brand-reversed-main-color) */
-  --theme-on-elevated-surface: #0d2b47;   /* wcześniej var(--color-brand-main-color) */
+  --theme-elevated-surface: #ffffff; /* wcześniej var(--color-brand-reversed-main-color) */
+  --theme-on-elevated-surface: #0d2b47; /* wcześniej var(--color-brand-main-color) */
   /* ===== KONIEC ZMIANY ===== */
 
   /* ===== ZMIANA — KROK 3, elevated-border (towarzyszy Parze 2) ===== */
-  --theme-elevated-border: #eef2ef;   /* wcześniej var(--color-brand-reversed-main-color) */
+  --theme-elevated-border: #eef2ef; /* wcześniej var(--color-brand-reversed-main-color) */
   /* ===== KONIEC ZMIANY ===== */
 
   /* ===== ZMIANA — KROK 3, Para 3 ===== */
-  --theme-primary: #a3e635;      /* wcześniej var(--color-brand-secondary-color) */
-  --theme-on-primary: #0d2b47;   /* wcześniej var(--color-brand-additional-color-2) */
+  --theme-primary: #a3e635; /* wcześniej var(--color-brand-secondary-color) */
+  --theme-on-primary: #0d2b47; /* wcześniej var(--color-brand-additional-color-2) */
   /* ===== KONIEC ZMIANY ===== */
 
   /* ===== ZMIANA — KROK 3, success — DECYZJA PODJĘTA BEZPOŚREDNIO ===== */
@@ -129,7 +130,7 @@
      Wartość wybrana bezpośrednio (nie potwierdzona w eksporcie) - taka sama
      jak --color-hub-online, najbliższa istniejąca "pozytywna" zieleń w
      systemie. Patrz MIGRATION-INVENTORY.md sekcja 11.4. */
-  --theme-success: #49b47a;   /* wcześniej var(--color-brand-secondary-color) */
+  --theme-success: #49b47a; /* wcześniej var(--color-brand-secondary-color) */
   /* ===== KONIEC ZMIANY ===== */
 
   /* NIE ZMIENIONE — już niezależne od --color-brand-*, poza zakresem
@@ -162,9 +163,19 @@
   --theme-hub-shell-mid: #0d3339;
   --theme-hub-shell-end: #0d2b3f;
 
-  --theme-start-page-gradient-start: #7de8b4;
-  --theme-start-page-gradient-mid: #56876f;
-  --theme-start-page-gradient-end: #0d2b47;   /* = dawne --color-brand-reversed-main-color (#333333); wartość wybrana bezpośrednio (= dawne --color-hub-ink), brak dopasowania w eksporcie designu */
+  /* ===== ZMIANA — KROK 4, pozycja 21 (gradient landingu) =====
+     Cztery stopnie wprost z eksportu (`isLanding`, linia 27):
+     120deg, #0a3348 0%, #146b7a 32%, #1f8f7a 62%, #2f9bcf 100%.
+     Trzy istniejące tokeny zmieniają wartość — to nie są nowe tokeny, tylko
+     wypełnienie placeholderów, o których 12.4 mówiło wprost, że nie miały
+     dopasowania w eksporcie. Czwarty, `mid-2`, JEST nowy i jest świadomym
+     wyjątkiem od §8.7 reguły 2 — decyzja i uzasadnienie w 12.4.
+     Poprzednie wartości: #7de8b4 / #56876f / #0d2b47, kąt `to bottom left`. */
+  --theme-start-page-gradient-start: #0a3348;
+  --theme-start-page-gradient-mid: #146b7a;
+  --theme-start-page-gradient-mid-2: #1f8f7a;
+  --theme-start-page-gradient-end: #2f9bcf;
+  /* ===== KONIEC ZMIANY ===== */
 
   /* Placeholder values - identical to the white/70, white/10, white they
      replace. See matching comment in @theme inline above. */
@@ -202,11 +213,16 @@
   --theme-danger: var(--color-ctp-red-700);
 }
 
+/* The landing/auth background. Step 4 position 21 brought its stops and angle
+   in line with the export; the `gradientShift` animation and the four floating
+   decorative shapes are deliberately not reproduced, which is what decision (2)
+   means by "uproszczone tło" - the same background, less movement. */
 @utility bg-gradient-start-page {
   background: linear-gradient(
-    to bottom left,
+    120deg,
     var(--color-start-page-gradient-start) 0%,
-    var(--color-start-page-gradient-mid) 44%,
+    var(--color-start-page-gradient-mid) 32%,
+    var(--color-start-page-gradient-mid-2) 62%,
     var(--color-start-page-gradient-end) 100%
   );
 }

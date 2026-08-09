@@ -119,10 +119,18 @@ export default function Sidebar({ userId }: Props) {
         />
       )}
 
-      {/* 250px is the design's rail width; w-52 (208px) left the nav labels tight. */}
+      {/* 250px is the design's rail width; w-52 (208px) left the nav labels tight.
+          `overflow-y-auto` was added at position 18, fixing a 1b defect: as a
+          `fixed inset-y-0` drawer the rail is exactly viewport-tall, and its
+          content runs to ~430px, so on a short screen the last links sat below
+          the fold with no way to reach them - the visible scrollbar belonged to
+          the page behind. `overscroll-contain` stops a scroll gesture inside the
+          drawer from chaining to that page once it hits the end.
+          Both are inert above `lg:`, where the rail is `static` with no height
+          constraint: no constraint means no scroll container. */}
       <aside
         id="app-nav"
-        className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col px-5 py-7 transition-transform lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <BrandLink className="mb-5 px-2.5 text-white" />
 
