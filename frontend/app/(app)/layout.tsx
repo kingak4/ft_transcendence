@@ -41,7 +41,14 @@ export default async function AppLayout({
               puts a fixed hamburger button in that corner. It is reserved space,
               not a spacing decision, which is why it disappears at `lg:` where
               the rail is a column again and nothing overlaps the content. */}
-            <main className="flex-1 px-4 pt-20 pb-6 lg:px-14 lg:pt-12 lg:pb-12">
+            {/* `flex flex-col` so a route can ask for "the rest of the height"
+              with `flex-1` instead of computing it. Every page under here
+              already opens with `flex flex-1 flex-col`, which did nothing while
+              this was a block box - /chat was the only route that needed the
+              height and it got it from `calc(100vh-4rem)`, a number that was
+              true only while this element had `p-8`. Position 11 changed the
+              padding and quietly made it false. */}
+            <main className="flex flex-1 flex-col px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12">
               {children}
             </main>
             <Footer />

@@ -19,7 +19,9 @@ interface Props {
  * Await the backend `/chats` PR to provide this data, then pass it down as optional props.
  */
 export default function FriendRow({ friend, isActive, onClick }: Props) {
-  const avatarSrc = friend.avatarId ? `/api/users/avatar/${friend.avatarId}` : null;
+  const avatarSrc = friend.avatarId
+    ? `/api/users/avatar/${friend.avatarId}`
+    : null;
 
   return (
     <Link
@@ -27,8 +29,9 @@ export default function FriendRow({ friend, isActive, onClick }: Props) {
       onClick={onClick}
       // `page` is the right token here: this link points at the current view.
       aria-current={isActive ? 'page' : undefined}
-      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${isActive ? 'bg-hub-row-active' : 'hover:bg-hub-row-active/60'
-        }`}
+      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${
+        isActive ? 'bg-hub-row-active' : 'hover:bg-hub-row-active/60'
+      }`}
     >
       <PresenceAvatar
         src={avatarSrc}

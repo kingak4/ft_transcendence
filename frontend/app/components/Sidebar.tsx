@@ -6,15 +6,6 @@ import { useEffect, useState } from 'react';
 
 import BrandLink from './BrandLink';
 
-// TODO(stomp): /chat is not listed here, so the page is reachable only by
-// typing the URL. Add `{ label: 'Chat', href: '/chat' }` when the route stops
-// being a static preview - left out deliberately while it shows fixtures.
-const navItems = [
-  { label: 'Terms of service', href: '/terms-of-service' },
-  { label: 'Privacy policy', href: '/privacy-policy' },
-  { label: 'Dev: STOMP WebSocket Test', href: '/stomp' },
-];
-
 // `navItemStyle` in the export: 12px radius, 13x14px padding, 14.5px at weight
 // 700. Radius and size take their dictionary rows (12.0: "pozycja nawigacji" and
 // "tekst interfejsu"); the padding is written exactly, because Tailwind 4's
@@ -134,6 +125,13 @@ export default function Sidebar({ userId }: Props) {
       >
         <BrandLink className="mb-5 px-2.5 text-white" />
 
+        {/* Three links left the rail on 2026-08-10: Terms of Service, Privacy
+            Policy and the STOMP dev page. Nothing became unreachable - `Footer`
+            renders on every route and carries both legal links - and the rail
+            now holds three items, the same count the export's does.
+            /stomp keeps its route and loses only its link, which is what
+            decision (4) means by "not styled and not removed" in Step 4. */}
+
         {/* `onClick={close}` on every link covers the one case deriving cannot:
           tapping the link for the route you are already on leaves `pathname`
           unchanged, so the drawer would sit there looking stuck. */}
@@ -167,19 +165,6 @@ export default function Sidebar({ userId }: Props) {
             </Link>
           </>
         )}
-
-        <nav className="flex flex-col gap-1.5">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={close}
-              className={navLinkClasses(pathname === item.href)}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
       </aside>
     </>
   );

@@ -951,8 +951,8 @@ prostu ostatnim etapem Fazy 1.
 - [x] **2.5** `UserList`, `UserSearch`
 - [x] **2.6** `FriendsPanel`
 - [x] **2.7** nowa trasa znajomych
-- [ ] **2.8** `(app)/[userId]` — to, co zostało po wydzieleniu panelu
-- [ ] **2.9** `AddFriendButton`, `RemoveFriendButton`, `EditAvatarButton`,
+- [x] **2.8** `(app)/[userId]` — to, co zostało po wydzieleniu panelu
+- [x] **2.9** `AddFriendButton`, `RemoveFriendButton`, `EditAvatarButton`,
   `EditDisplayNameButton` — jedna decyzja powtórzona cztery razy
 
 **Rytm — codziennie, nie na koniec etapu (§8.7, §8.8).**
@@ -971,23 +971,37 @@ prostu ostatnim etapem Fazy 1.
 
 **Zamknięcie kroku (§8.13) — dziewięć warunków naraz.**
 
-- [ ] **Z.1** 12.2 kompletna, z historią zmiany ①; cztery decyzje
+- [x] **Z.1** 12.2 kompletna, z historią zmiany ①; cztery decyzje
   wykonawcze z §8.3 mają odpowiedzi
-- [ ] **Z.2** 1b i 2a rozliczone osobno w 12.7; żadna nie dzieli commita
-  z redesignem
-- [ ] **Z.3** 6 komponentów Etapu A, 5 Etapu C, 2 Etapu B i komponenty
+- [x] **Z.2** 1b i 2a rozliczone osobno w 12.7; żadna nie dzieli commita
+  z redesignem — *plus **2b**, jednostka strukturalna dopisana 2026-08-10,
+  której §8.5/§8.6 nie przewidywały; też w 12.7, też osobnym commitem*
+- [x] **Z.3** 6 komponentów Etapu A, 5 Etapu C, 2 Etapu B i komponenty
   Etapu D mają wpis w 12.3 ze spełnionymi punktami 6, 8, 9 i 10 z §8.9
-- [ ] **Z.4** Siedem tras zgodnych z eksportem przy obu szerokościach;
+- [x] **Z.4** Siedem tras zgodnych z eksportem przy obu szerokościach;
   `/stomp` nieostylowana i nieusunięta
-- [ ] **Z.5** `Hero.tsx` i `Tag.tsx` bez `brand-*` → Krok 8 odblokowany
-- [ ] **Z.6** Trzy tokeny z 10.4 mają odpowiedź albo jawny wpis w 12.4, że
-  zostają placeholderami świadomie
-- [ ] **Z.7** `globals.css` bez nowych tokenów; **dokładnie jeden**
-  breakpoint; zapis mobile-first; żadnego elementu w dwóch kopiach
-  przełączanych przez `hidden` / `lg:hidden` poza nawigacją z 1b
-- [ ] **Z.8** **Żadna z siedmiu tras nie przewija się w poziomie przy
-  szerokości wąskiej.** Jedyne kryterium binarne w tym kroku
-- [ ] **Z.9** Sekcja 12 wypełniona, wraz z 12.5, 12.6 i 12.7
+- [x] **Z.5** `Hero.tsx` i `Tag.tsx` bez `brand-*` → **Krok 8 odblokowany**
+  (pozycje 6 i 19; potwierdzone `grep`em — w warstwie komponentów nie ma
+  ani jednego użycia)
+- [x] **Z.6** Trzy tokeny z 10.4 mają odpowiedź — wszystkie trzy
+  **potwierdzone jako wartości docelowe** na pozycji 10, wpisy w 12.4
+- [~] **Z.7** **Spełnione warunkowo — jeden nowy token, świadomie.**
+  *Breakpoint:* dokładnie jeden (`lg:`), potwierdzone `grep`em; jedyne
+  trafienia na `sm:`/`md:` to klucze obiektu `SIZE_CLASSES`, nie prefiksy.
+  *Zapis mobile-first:* tak, wszystkie 12 wartości responsywnych kroku.
+  *Kopie przełączane przez `hidden`:* brak — 1b, 2b i modal ukrywają
+  **ten sam** element, nie renderują drugiego.
+  *Nowe tokeny:* **jeden — `--theme-start-page-gradient-mid-2`**, wyjątek
+  od §8.7 reguły 2 z pełnym uzasadnieniem w 12.4. Kryterium mówi „bez
+  nowych tokenów", więc dosłownie **nie** jest spełnione; zostaje
+  odhaczone warunkowo, bo wyjątek został podjęty świadomie, zapisany
+  przed wykonaniem i jest jedyny w całym kroku
+- [x] **Z.8** **Żadna z siedmiu tras nie przewija się w poziomie przy
+  szerokości wąskiej.** Potwierdzone pomiarem `scrollWidth − clientWidth`
+  na każdej z nich. **Siódma trasa (`/chat`) wymusiła jednostkę 2b** —
+  kryterium binarne zadziałało dokładnie tak, jak miało: nie dało się go
+  „prawie" spełnić
+- [x] **Z.9** Sekcja 12 wypełniona, wraz z 12.5, 12.6 i 12.7
 
 ### 12.0 Słownik layoutu (Faza 0)
 
@@ -1039,7 +1053,7 @@ z takiego obiektu, kolumna „Skąd" podaje jego nazwę.
 | Odstępy | Wnętrze karty średniej / kafla | `p-6.5` (26px) | bez zmian | `dashboardCards` |
 | Odstępy | Wnętrze wiersza listy | `py-3.5 px-4.5` (14 / 18px) | bez zmian | wiersz wyniku wyszukiwania 14/18px, wiersz danych profilu 18/22px |
 | Odstępy | Między sekcjami strony | `gap-7` (28px) | `gap-5` (20px) — w stosie pionowym ten sam odstęp czyta się jako większy, a każdy piksel to przewijanie | profil `gap:28px`, wyszukiwanie `gap:24px` |
-| Odstępy | Między elementami w grupie | `gap-3` (12px); ciasny `gap-1.5` (6px), luźny `gap-4` (16px) | bez zmian | sidebar, formularze, wiersze list |
+| Odstępy | Między elementami w grupie | `gap-3` (12px); ciasny `gap-1.5` (6px), luźny `gap-4` (16px), **bardzo luźny `gap-5` (20px)** | bez zmian | sidebar, formularze, wiersze list; **20px z linków stopki (landing i strony prawne) — dopisane 2026-08-10 na wniosek z pozycji 9** |
 | Promienie | Karta duża | `rounded-3xl` (24px) | bez zmian | karta auth, karta prawna, hero profilu — wszystkie 24px |
 | Promienie | Karta średnia / kafel | `rounded-[20px]` | bez zmian | kafel dashboardu 20px, karta danych profilu 20px |
 | Promienie | Wiersz listy | `rounded-2xl` (16px) | bez zmian | wiersz wyniku wyszukiwania 16px |
@@ -1052,6 +1066,7 @@ z takiego obiektu, kolumna „Skąd" podaje jego nazwę.
 | Obramowania | Krawędź przycisku drugorzędnego | **1px `#d6e4ee` — BRAK TOKENA** → 12.4 | bez zmian | przycisk „Wstecz" na stronach prawnych |
 | Obramowania | Krawędź na tle ciemnym / gradiencie | `border border-white/[0.14]`; wariant mocny `border-white/60` | bez zmian | karta auth 0.14, przycisk „Zmień awatar" 0.6 |
 | Cienie | Subtelny (pole, wiersz, dymek) | `shadow-[0_4px_14px_rgba(10,42,77,0.06)]` | bez zmian | `searchInputStyle`; dymek przychodzący `0 3px 10px /0.06` |
+| Cienie | **Wiersz listy** | `shadow-[0_6px_18px_rgba(10,42,77,0.07)]` | bez zmian | wiersze wyników wyszukiwania — **dopisane 2026-08-10 na wniosek z pozycji 23.** Leży między „subtelnym" a „kartą" i nie jest żadnym z nich; wiersz listy **unosi się cieniem zamiast mieć obramowanie**, co jest w eksporcie regułą, nie wyjątkiem |
 | Cienie | Karta | `shadow-[0_8px_24px_rgba(10,42,77,0.08)]` | bez zmian | kafle dashboardu, karta danych profilu; karta prawna `0 8px 28px` |
 | Cienie | Element podniesiony na gradiencie | `shadow-[0_12px_32px_rgba(10,42,77,0.18)]` | bez zmian | hero profilu |
 | Cienie | Karta na tle ciemnym (landing) | `shadow-[0_25px_60px_rgba(0,0,0,0.35)]` | bez zmian | karta auth |
@@ -1171,8 +1186,9 @@ naprawdę pilnuje.
 | 24 | `UserSearch` | Faza 2 / Etap D — znajomi | **zamknięta** — `size="sm"` → `"md"` (12.5 domknięte częściowo, padding nadal zamrożony), `text-red-400` → `text-danger`, odstęp i przycisk „Load more" ze słownika | 2026-08-09 |
 | 25 | `FriendsPanel` | Faza 2 / Etap D — znajomi | **zamknięta** — dwie akcje w wierszu zamiast jednej (ustalenie osoby prowadzącej), przyciski w geometrii z eksportu, `Remove` przejmuje jego potraktowanie. Dwa nowe wiersze w 12.5: gradient bez tokenów i `?friend=` nieczytany przez `/chat` | 2026-08-09 |
 | 26 | nowa trasa znajomych (`/friends`) | Faza 2 / Etap D — znajomi | **zamknięta** — kolumna 640px, nagłówek trasy, odstęp sekcji. Nagłówek `h2` przeniesiony tu z `FriendsPanel` (drobne ponowne otwarcie pozycji 25). Warstwa dekoracyjna pominięta — **decyzja należy do pozycji 27** (12.5) | 2026-08-09 |
-| 27 | `(app)/[userId]` | Faza 2 / Etap D — profil | w kolejce | |
-| 28 | Cztery przyciski profilu — **jedna jednostka** | Faza 2 / Etap D | w kolejce | |
+| 27 | `(app)/[userId]` | Faza 2 / Etap D — profil | **zamknięta** — nagłówek trasy, hero z gradientem eksportu, **nowa karta informacyjna**, wylogowanie przeniesione i przestylowane, obwódka awatara. Domyka licznik znajomych odłożony przez 2a oraz wiersz 12.5 o obwódce. `Email` nie powstał — brak danych, nie brak stylu | 2026-08-09 |
+| **2b** | **`/chat` — układ jednopanelowy przy szerokości wąskiej** | **poza pierwotną kolejką / strukturalna** | **zamknięta 2026-08-10** — rozliczona w 12.7. Dopisana tego samego dnia. Nie wynika z §8.5 ani §8.6, tylko z **Z.8**: po domknięciu 28 pozycji `/chat` został jedyną trasą przewijającą się w poziomie przy 360px. Odstępstwo od §8.11 zapisane w 12.4, rozliczenie w 12.7 | |
+| 28 | Cztery przyciski profilu — **jedna jednostka** | Faza 2 / Etap D | **zamknięta — KOLEJKA DOMKNIĘTA, 28/28.** Cztery przyciski `EditAvatarButton` plus samo okno dialogowe. Naprawiony błąd: modal był szerszy niż wąska szerokość oceny (12.5) | 2026-08-10 |
 
 **Dwadzieścia osiem pozycji, nie dwadzieścia osiem dni.** Wielkość jednostki
 jest bardzo nierówna i liczba wierszy jest najgorszą dostępną miarą postępu
@@ -1354,6 +1370,8 @@ prawdziwy.
 
 | Jednostka | Faza / etap | Trasy sprawdzone | Szerokości sprawdzone | Przegląd wsteczny |
 |---|---|---|---|---|
+| **Cztery przyciski profilu + okno dialogowe awatara** — plakietka na awatarze, wybór zdjęcia, Cancel, Save | Faza 2 / Etap D | **Jedna trasa, wyłącznie własny profil** — `EditAvatarButton` nie renderuje się na cudzym. Dwa stany: zamknięty (sama plakietka) i otwarty (okno dialogowe), i **to rozróżnienie okazało się istotne**, bo cała zawartość okna była dotąd poza zasięgiem jakiegokolwiek pomiaru | **360 i 1280, w obu stanach.** Okno: promień 24px, padding **24 ↔ 36px**, bez obramowania, cień `0 25px 60px` (wiersz „karta na tle ciemnym" — okno leży na przyciemnionej nakładce, więc to właściwy wiersz, nie „karta"). Nagłówek 20px/800. Przyciski: `12px | 14px | 14px | 700`, `sameGeom` potwierdzone, Save na gradiencie `hub-cta`. **Szerokość okna 440 ↔ 327px przy `left` 420 ↔ 16px** — przed tą jednostką było to stałe 384px w oknie 360px, czyli przycięcie po obu stronach | **Odbył się 2026-08-10 na własnym profilu, jako ostatni przegląd kroku.** Wynik pusty. Promienie na jednym ekranie: 24px (hero, okno), 20px (karta informacyjna), 14px (wylogowanie), 12px (przyciski okna, „Change name") — cztery wiersze słownika przypisane po roli. **Znalezisko metodyczne, nie wartościowe:** błąd szerokości okna przetrwał do przedostatniej jednostki, bo element `fixed` nie powiększa `scrollWidth` dokumentu, więc Z.8 go nie widzi, a wszystkie dotychczasowe tabele mierzyły stan po wejściu na trasę, nie po otwarciu warstwy → 12.5 |
+| **`(app)/[userId]` — nagłówek trasy, hero z gradientu eksportu, nowa karta informacyjna, wylogowanie na dole** | Faza 2 / Etap D — profil | **Jedna trasa, dwa warianty:** własny profil (edycje, licznik znajomych, wylogowanie) i cudzy (awatar, nazwa, jeden wiersz karty). Oba sprawdzone — wariant cudzy ma karty o jednym wierszu, bo `GET /friends` zwraca znajomych **wywołującego**, nie oglądanego | **360 i 1280, oba motywy.** Hero: gradient `135deg` z trzech stopni, promień 24px, padding **24 ↔ 36px**, gap 28px, cień `0 12px 32px`. Karta informacyjna: promień 20px, padding 8px, wiersze `18×22px`, etykieta `rgb(124,138,146)`. Kolumna 720px, odstęp sekcji **20 ↔ 28px**. `overflow` zero przy 360 — mimo że hero trzyma tam 96px awatara i nazwę obok siebie w kolumnie o szerokości 328px. **Pod Mocha zmienia się karta informacyjna, hero nie** — gradient jest wartością dowolną i motywu nie zna; to samo dotyczy `hub-muted` w etykietach | **Odbył się 2026-08-09 na własnym profilu.** Wynik pusty. **Warta odnotowania jest jedna zbieżność:** `hub-muted` okazał się dokładnie tym `#7c8a92`, którego eksport używa na etykiety — **jedyny drugorzędny kolor Etapu D, który miał już token**, wobec `#155e8f`, `#3d4a44`, `#d6e4ee`, `#eaf6fb`/`#e9f9f0` i pięciu stopni dwóch gradientów, które go nie mają. Typografia: nagłówek trasy 30/24px, nazwa 26px/800, wiersze karty 14px — trzy wiersze słownika |
 | `FriendsPanel` + `AddFriendButton` + `RemoveFriendButton` + nowy `OpenChatLink` — **dwie akcje w wierszu zamiast jednej** | Faza 2 / Etap D — znajomi | **Jedna trasa, dwa konteksty:** `/friends` — wiersze znajomych (Chat + Remove) i wyniki wyszukiwania (Add). Wszystkie trzy przyciski dostały tę samą geometrię wiersza, więc czytają się jako jedna rodzina kontrolek niezależnie od listy | **360 i 1280, wartości identyczne.** Geometria z eksportu: `9×18px`, promień 10px, 14px/700, `sameGeom` między akcją akcentową a drugorzędną potwierdzone programowo. `Chat` na płaskiej limonce z `on-primary`, `Remove` na bladym gradiencie z `hub-teal` (`rgb(20,107,122)`). Odstęp między akcjami 12px. **`overflow` zero także przy 360** — a to najciaśniejszy stan, jaki ten wiersz miał: 44px awatara, nazwa i dwa przyciski z 18px paddingu każdy. Dalsze zagęszczanie wymagałoby ikon, co świadomie odłożono do osobnego zgłoszenia | **Odbył się 2026-08-09 na `/friends`.** Wynik pusty. Promienie na jednym ekranie: 16px (wiersz listy), 14px (pole `surface`), 10px (trzy przyciski akcji i pager) — trzy wiersze słownika, przypisane po roli, nie po wielkości. Zniknęła też rozbieżność wskazana w przeglądzie przy pozycji 23: przyciski akcji miały wtedy 8px i były jedyną wartością spoza tabeli na tym ekranie. **Świadome odstępstwo od eksportu, zapisane tutaj, bo nie jest błędem:** eksport ma w wierszu **jedną** akcję, my mamy dwie — ustalenie osoby prowadzącej z 2026-08-09. „Chat" zostaje akcją akcentową, `Remove` przejmuje potraktowanie, które eksport dawał tamtej. Wiersz nie jest więc odtworzeniem, tylko rozszerzeniem o jedną akcję w już istniejącym języku wizualnym | **Jedna trasa, jedno miejsce użycia:** `/friends`, przez `FriendsPanel`. Sprawdzone z wpisanym zapytaniem, żeby pole i wyniki były widoczne naraz | **Zmierzone przy 1151px (`lg` czynne).** Pole: `16×12px` (było `12×8px`), promień 14px, tło białe, **waga 500** — ta ostatnia to ton `surface` odbierający wagę dodaną na pozycji 22, w jednostce, która tego pola nie dotykała. Odstęp do wyników 28px. `overflow` zero. **Wartość wąska niezmierzona:** `gap-5` (20px) jest jedyną liczbą w tej jednostce potwierdzoną tylko po jednej stronie progu. Ryzyko oceniono jako znikome — ten sam mechanizm `lg:` potwierdzono pomiarem na paddingu (`Card`, `Footer`, `main`), rozmiarze pisma i interlinii (`Hero`) oraz szerokości kolumny — ale zapis ma to odnotowywać, a nie zaokrąglać | **Nie odbył się osobno.** Jednostka zmienia jeden komponent na tej samej trasie, którą przegląd z pozycji 23 objął dzień wcześniej i w tym samym stanie; drugi przegląd tego samego ekranu odpowiadałby na pytanie już zadane. Najbliższy realny przegląd to pozycja 25, gdzie dochodzą przyciski akcji i pager |
 | `UserList` — obramowanie zamienione na cień, geometria wiersza, awatar 44px, nazwa 14px/700 | Faza 2 / Etap D — znajomi | **Jedna trasa, dwa konteksty:** `/friends`, gdzie ten sam komponent renderuje **listę znajomych** i **wyniki wyszukiwania**. Sprawdzone z wpisanym zapytaniem, żeby oba były na ekranie naraz — pięć wierszy w sumie. To pierwsza jednostka od czasu 2a, której zasięg **zmalał**: przed wydzieleniem trasy te same wiersze renderowały się na `/[userId]` | **360 i 1280.** Wartości identyczne: `listGap 12px`, `radius 16px`, `18×14px`, `innerGap 16px`, **`border 0px`**, cień `0 6px 18px rgba(10,42,77,0.07)`, awatar 44, nazwa 14px/700. **`overflow` zero także przy 360** — istotne, bo w tej jednostce **każdy wymiar urósł** (awatar 40→44, padding 12→18/14, odstępy 8→12 i 12→16), i to akurat przy szerokości, gdzie jest najmniej miejsca. Kontrolnie `/chat`: bez zmian, więc nic nie przeciekło przez `PresenceAvatar`/`FriendRow` na trasę zamrożoną | **Odbył się 2026-08-09 na `/friends`.** Wynik: promienie 16px (wiersz), 14px (pole `surface`) i 8px (przyciski akcji) — pierwsze dwa to wiersze słownika, **trzeci nie**: 12.0 daje małemu przyciskowi `rounded-[10px]`. **To praca niewykonana, nie rozjazd** — `AddFriendButton` i `RemoveFriendButton` należą do klastra pozycji 25, tak samo jak 6px `ThemeToggle` należało do pozycji 7 w przeglądzie przy pozycji 2. Eksport daje temu przyciskowi własne potraktowanie (gradient `#eaf6fb→#e9f9f0`, tekst `#146b7a`, 13,5px/700), więc pozycja 25 ma co odtwarzać |
 | **`login` + `register` — ciemna karta i ton `elevated` w jednym commicie.** Jednostka, na którą czekały cztery wiersze 12.5 i jeden 12.4 | Faza 2 / Etap D — wejście | **Dwie trasy jednostki plus dwie kontrolne.** `/login` i `/register` w stanie wylogowanym; obie także zalogowane, gdzie `(auth)/layout.tsx` podstawia `SessionCard`. Kontrolnie **`/[userId]` i `/privacy-policy`** — nie po to, żeby coś sprawdzić, tylko żeby udowodnić, że **nic się tam nie zmieniło**: obie używają `on-elevated-surface` bezpośrednio, z pominięciem `Card`, i token pozostał nietknięty. Trzecia trasa uboczna to `/` — „Hello!" i `SessionCard` też siedzą w `Card` | **1280 i 360.** Karta: `max-w-440px`, gradient `160deg` z dwóch półprzezroczystych stopni, `blur(18px)`, krawędź `white/0.14`, cień `0 25px 60px`. Pole: `white/0.08` na `white/0.15`, tekst biały, **waga 500**, promień 12px. Akcent `rgb(163,230,53)`. `overflow` zero | **Odbył się 2026-08-09 na `/login`** — ostatni przegląd Etapu D „wejście". Wynik pusty. **Ujawnił natomiast defekt, którego nie widać w żadnej klasie:** pola wypełnione autouzupełnianiem Chrome'a renderują się jasnoniebiesko z czarnym tekstem, bo `:-webkit-autofill` omija kaskadę. Pierwszy pomiar tonu `elevated` był więc pomiarem stylu przeglądarki, nie naszego; czysty odczyt wykonano na trzecim polu `/register`. → 12.5 |
@@ -1412,6 +1430,8 @@ praca czeka na wiersz.
 | Obramowanie `#e3ebe6` | 12.0, Faza 0; potrzebne przy `TextField` | Eksport odróżnia **dwie role obramowania**, dowód pod tabelą. Brak tokenu dla drugiej z nich | **podjęta 2026-08-07: obie role dostają `elevated-border`.** Uzasadnienie: §8.7 reguła 2 zabrania nowego tokenu w Kroku 4, a wpisanie `border-[#e3ebe6]` byłoby gorsze niż użycie tokenu — to powrót do surowego hexa, który Kroki 2–3 właśnie usunęły. Różnica 11/255 na linii 1px jest poniżej progu widzialności, a oba kolory i tak czekają na Krok 7 (11.3). **Rozróżnienie ról przestaje istnieć w kodzie, więc żyje w tym wierszu** |
 | **Trasa znajomych — nazwa, zakres przeniesienia, punkty wejścia** | decyzja ③ (12.2); potrzebna przy jednostce **2a** (pozycja 17) | Trzy pytania zostawione otwarte w Fazie 0, bo **eksport ich nie rozstrzyga**: pokazuje gotowy ekran `isSearch`, ale nie to, jak się na niego wchodzi ani co zostaje na profilu | **podjęta 2026-08-09, trzy odpowiedzi.** **(1) Nazwa: `/friends`** — słownictwo, które kod już ma (`FriendsPanel`, `UserList`, licznik „Friends" na profilu). Eksport tytułuje ten ekran „Search Users", ale wyszukiwanie jest tam **czynnością**, nie tematem; trasa nazwana tematem przeżyje dodanie zaproszeń czy blokad, nazwana czynnością — nie. **(2) Zakres: przenosi się wszystko, co dotyczy znajomych** — pole wyszukiwania, wyniki i lista znajomych. Profil zostaje „to jestem ja": awatar, nazwa, e-mail, **licznik** znajomych, wylogowanie. Alternatywa (przenieść samo wyszukiwanie) rozdzieliłaby dodawanie znajomego i usuwanie go na dwie trasy. **(3) Punkty wejścia: link w Sidebarze oraz kafel na dashboardzie**, jak w eksporcie. **Zastrzeżenie wykonawcze: kafla nie da się dziś zbudować** — aplikacja nie ma trasy „Home", a eksport wchodzi na wyszukiwanie właśnie z dashboardu. Do czasu jej powstania **jedynym czynnym wejściem jest link w railu** — i to on wymusza pozycję 18 (§8.6 pkt 3). **Profil świadomie nie dostaje linku:** licznik zostaje liczbą, nie odnośnikiem |
 | **WYJĄTEK od §8.7 reguły 2 — nowy token `--theme-start-page-gradient-mid-2`** | jednostka 21 (`(marketing)/`) | Gradient landingu z decyzji ② ma **cztery** stopnie: `120deg, #0a3348 0%, #146b7a 32%, #1f8f7a 62%, #2f9bcf 100%`. Trzy pierwsze obeszły się bez nowych nazw — istniejące `--theme-start-page-gradient-start/mid/end` **zmieniły tylko wartość**, a 12.4 zapisywało wprost, że stary `end` był „wartością wybraną bezpośrednio, brak dopasowania w eksporcie designu", czyli placeholderem czekającym na tę chwilę. Czwarty stopień, `#1f8f7a`, nie ma odpowiednika: `hub-mint` to `#4ac9a0`, inna barwa | **podjęta 2026-08-09: token dochodzi, reguła 2 złamana świadomie.** To **jedyny nowy token w całym Kroku 4** i ma nim pozostać — każdy następny wymaga osobnego wiersza, nie powołania się na ten. Uzasadnienie: alternatywą było zbudowanie gradientu z trzech stopni, czyli **utrata zielonkawego przejścia w środku** — a to nie jest detal, tylko tło dwóch grup tras i pierwsza rzecz widoczna po wejściu do aplikacji. Wartość dowolna wpisana wprost w `globals.css` byłaby gorsza: ten sam wyłom, ale bez nazwy i bez śladu. Token nazwany **pozycją w gradiencie** (`mid-2`), nie barwą — ta sama reguła, którą Krok 2 przyjął dla pozostałych stopni. **Bez nadpisania `.mocha`/`.latte`**, jak trzy pozostałe; czy gradient landingu w ogóle się motywuje, rozstrzyga Krok 5 |
+| **ODSTĘPSTWO od §8.11 — `/chat` dostaje układ jednopanelowy przy szerokości wąskiej** | jednostka **2b** (nowa, poza kolejką 28); wymuszona przez Z.8 | Po 1b Sidebar zwija się w hamburger, ale na `/chat` zostaje **druga** stała kolumna: szyna znajomych, 290px z 360px. Trasa przewija się w poziomie. **Z.8 i §8.11 są tu w bezpośredniej sprzeczności** — Z.8 mówi „żadna z **siedmiu** tras", nazywa to jedynym kryterium binarnym kroku, a `/chat` jest siódmą; §8.11 zamraża `/chat` jako wzorzec docelowy. Jedno z dwóch musi ustąpić | **podjęta 2026-08-10: ustępuje §8.11, nie Z.8.** Przy szerokości wąskiej `/chat` pokazuje **albo** listę znajomych, **albo** rozmowę — `/chat` to lista, `/chat?friend=<id>` to rozmowa z powrotem do listy; powyżej `lg:` oba panele bez zmian. Trzy powody: **(1)** Z.8 jest jedynym kryterium binarnym kroku i wynika wprost z decyzji ①, która zobowiązała aplikację do działania przy 360px — kryterium, które omija najtrudniejszą trasę, nie jest kryterium; **(2)** wzorzec jednopanelowy z nawigacją wstecz jest standardem każdego komunikatora przy szerokości telefonu, więc nie wymaga nauki; **(3)** rozwiązanie jest **sterowane adresem, nie stanem** — a to znaczy, że `?friend=`, który `OpenChatLink` wysyła od pozycji 25, wreszcie coś robi, i **domyka wiersz 12.5 o nieczytanym parametrze**. **Powód czwarty, podany przez osobę prowadzącą i najmocniejszy z czterech: eksport nie zawiera widoku 360px dla żadnego ekranu.** „Wzorzec docelowy" z §8.11 jest wzorcem **jednej szerokości** — artboardu desktopowego. Nie da się złamać wierności wobec projektu w wymiarze, którego projekt nie opisuje; zamrożenie chroni tu nie decyzję projektanta, tylko jej brak. Ta sama logika stała za 1b: Sidebar również nie miał w eksporcie żadnego zachowania przy wąskim ekranie i również trzeba je było wymyślić. §8.11 pozostaje w mocy dla **wyglądu** `/chat`: kolory, typografia i geometria obu paneli bez zmian, zmienia się wyłącznie to, który z nich jest widoczny. Rozliczana w **12.7**, osobnym commitem, testem działaniem — jak 1b i 2a |
+| **Przycisk „Change avatar" z eksportu użyty jako „Change name"** | jednostka 27 (`/[userId]`) | Eksport **nie ma żadnej edycji nazwy** — w hero profilu jest jeden przycisk, `Change avatar`. Aplikacja ma dwie edycje: nazwy i awatara. Dotychczasowy wyzwalacz nazwy był drobnym „Edit" obok tekstu, wyglądającym na niedokończony, a wyzwalacz awatara jest plakietką na samym awatarze i **działa dobrze** (ocena osoby prowadzącej) | **podjęta 2026-08-09: potraktowanie z `Change avatar` przechodzi na „Change name", plakietka awatara zostaje.** Przycisk bierze wartości z eksportu co do jednej: `10×20px`, promień 12px, 13,5px/700, tło `white/15`, obrys `white/60` — a ten obrys **jest już w słowniku** jako „wariant mocny" wiersza „krawędź na tle ciemnym", wpisany tam właśnie z tego przycisku. Etykieta skrócona do dwóch słów, równolegle do „Change avatar". **Dwa różne kształty dla dwóch różnych edycji są tu zaletą, nie niespójnością** — plakietka mówi „ten awatar", przycisk pod nazwą mówi „ta nazwa"; identyczne kontrolki wymagałyby czytania etykiet. Cancel/Save w trybie edycji dostały tę samą geometrię, żeby wiersz nie zmieniał kształtu po wejściu w edycję |
 | Kolor `#155e8f` — tekst akcentowy na tle jasnym | jednostka 13 (`LegalSection`); ta sama barwa wraca przy przycisku „Wstecz" | Eksport używa jej **dwa razy, w dwóch rolach**: nagłówki sekcji stron prawnych (18px/800) i tekst przycisku drugorzędnego. Nie odpowiada jej żaden token — `hub-blue` (`#2f9bcf`) i `hub-teal` (`#146b7a`) to inne odcienie, nie jaśniejszy/ciemniejszy wariant tego samego | **podjęta 2026-08-09: nagłówek dziedziczy `on-elevated-surface`, koloru nie odtwarzamy.** §8.7 reguła 2 zabrania nowego tokenu w Kroku 4, a `text-[#155e8f]` byłoby powrotem do surowego heksa, który Kroki 2–3 właśnie usunęły — ten sam argument co przy `#e3ebe6`. **Różnica jest tu jednak widoczna, w przeciwieństwie do tamtej.** Eksport celowo odróżnia nagłówki sekcji (niebieskie) od tekstu ciągłego (`#3d4a44`); u nas oba będą ciemnogranatowe i rozróżni je wyłącznie rozmiar i waga. To realna strata wizualna, przyjęta świadomie. **Do Kroku 7:** ta barwa jest najlepszym kandydatem na token „tekst akcentowy na powierzchni jasnej", bo ma już **dwie** czekające role, a nie jedną |
 | Obramowanie `#d6e4ee` | 12.0, Faza 0 | Krawędź przycisku drugorzędnego („Wstecz"). Też bez tokenu, wyraźnie chłodniejszy niż dwa powyższe — możliwe, że to trzecia rola (krawędź kontrolki), a nie wariant krawędzi panelu | otwarta — potrzebna przy Etapie B (`terms-of-service`, przycisk „Wstecz") |
 | **Odstępstwo od §8.11 — `/chat` zmienia wygląd** | jednostka 3 (`Avatar`) | `Avatar` nie ma **żadnej** osi wariantów: ani tonów jak `TextField`, ani wariantów jak `Button`. Jest jeden wygląd, wspólny dla wszystkiego, a `/chat` używa go przez `Conversation` i `FriendRow` → `PresenceAvatar`. Nie istnieje sposób, by ostylować ten komponent i nie ruszyć `/chat` | **podjęta 2026-08-07: stylujemy, odstępstwo zapisane.** Trzy uzasadnienia: (1) alternatywą było odłożenie całej jednostki, czyli trzeci z sześciu komponentów Etapu A bez stylowania; (2) awatary na `/chat` **i tak są tam zepsute** — `chat/page.tsx` podaje `color: 'bg-hub-panel'`, czyli nazwę klasy Tailwinda w miejsce wartości CSS, więc kolor jest cicho ignorowany; (3) zmiana **zbliża** `/chat` do eksportu, nie oddala. **To jest pierwsze świadome odstępstwo od §8.11 w tym kroku i ma pozostać jedynym** — każde następne wymaga osobnego wiersza i osobnego uzasadnienia, nie powołania się na ten. **Sprostowanie z tego samego dnia: odstępstwo jest utajone, nie czynne.** Pomiar `getComputedStyle` na `/chat` i `/[userId]` pokazał, że **wszystkie** awatary renderują się gałęzią `<Image>` — każdy użytkownik w obecnych danych ma wgrane zdjęcie, więc zmieniona gałąź zastępcza nie renderuje się nigdzie. Na `/chat` nie widać dziś żadnej różnicy. Odstępstwo pozostaje zapisane, bo dotyczy kodu wspólnego i ujawni się przy pierwszym użytkowniku bez awatara — ale uzasadnienie (3) jest na razie przewidywaniem, nie obserwacją |
@@ -1498,8 +1518,13 @@ już przy `Button` (poz. 2), a nie dopiero w Etapie B.
 | **`Hero` jest po pozycji 19 w połowie stały, w połowie motywowany.** Gradient karty stoi na `--theme-start-page-gradient-*`, które **nie mają nadpisania** w `.mocha`/`.latte`, więc tło zostaje mint→granat w każdym motywie. Tekst jest stałym `white`. Ale oba akcentowane słowa dostały `text-primary`, a to pod Mocha daje **mauve `rgb(209, 178, 248)`** — pomiar 2026-08-09. Wychodzi więc fioletowy akcent na miętowym gradiencie. **Wybór jest mimo to świadomy:** `Tag` renderuje się wewnątrz tej karty i wziął `bg-primary` na pozycji 6, więc `hub-lime` w `Hero` rozjechałby pigułki z wyróżnionymi słowami pod Mocha. Zgodność w dziwnym wyglądzie jest lepsza niż niezgodność | `app/components/Hero.tsx`, `app/components/Tag.tsx`, `app/globals.css` | **Krok 5** decyduje, czy gradient landingu w ogóle się motywuje — dziś nie, bo brak mu bloku `.mocha`/`.latte`, tak samo jak tokenom raila. **Pozycja 21** przebudowuje ten obszar i może problem unieważnić: jeśli tło stanie się ciemnym gradientem z eksportu, limonkowy akcent na nim jest wartością z eksportu, a nie kompromisem |
 | **Pola wypełnione autouzupełnianiem przeglądarki ignorują ton `elevated`.** Pomiar przy pozycji 22 zwrócił dla pola hasła `background-color: rgb(232, 240, 254)` i `color: rgb(0, 0, 0)` zamiast `rgba(255,255,255,0.08)` i bieli. To **styl `:-webkit-autofill` Chrome'a**, nakładany poza normalną kaskadą i nieusuwalny zwykłym `background-color`. Na ciemnej karcie daje jasnoniebieskie pole z czarnym tekstem — odwrotność tego, co projekt zakłada. Obramowanie i waga pisma przechodzą poprawnie, bo autouzupełnianie ich nie dotyka. **Widoczne tylko u osób z zapisanymi danymi logowania**, co jest też powodem, dla którego łatwo to przeoczyć: na czystym profilu przeglądarki problem nie istnieje | `app/components/TextField.tsx`, ton `elevated`; `/login` i `/register` | **Poza Krokiem 4.** Obejście wymaga niestandardowych reguł `-webkit-autofill` (`box-shadow: inset 0 0 0 1000px <kolor>` plus `-webkit-text-fill-color`), czyli hacka pod jeden silnik, a nie wartości ze słownika. Eksport nie ma na ten stan odpowiedzi, bo jest statycznym HTML-em bez działającego formularza. **Krok 6 lub 7** — razem z pozostałymi stanami pól, których projekt nie narysował (§8.9 pkt 2) |
 | **Gradient przycisku wiersza (`#eaf6fb → #e9f9f0`) wpisany jako wartość dowolna — dwie z trzech barw nie mają tokenów.** Przycisk wiersza w eksporcie (`isSearch`, linia 318) to `linear-gradient(135deg,#eaf6fb,#e9f9f0)` z tekstem `#146b7a`. Tekst dostał token, bo `hub-teal` **jest** tym `#146b7a`; oba stopnie gradientu odpowiednika nie mają i zostały wpisane wprost. Uzasadnienie to samo co przy karcie na pozycji 22: żadna skala Tailwinda nie wyraża dwustopniowego bladego gradientu, a reguła spod tabeli 12.0 każe takie wartości zostawiać dokładne. **Osobno hover:** eksport przechodzi na płaskie `#d2e9f6`, a z gradientu nie da się animować do koloru płaskiego — zastąpione `brightness-95`, które ciemnieje w tę samą stronę, ale nie w ten sam odcień | `app/(app)/friends/RemoveFriendButton.tsx` | Krok 7 — razem z `#155e8f` i `#d6e4ee` (12.4). **To trzecia rola koloru bez tokenu na powierzchni jasnej**, a wszystkie trzy są bladymi błękitami z rodziny `hub-teal`/`hub-blue`. Warto rozstrzygnąć je **jedną** decyzją o parze „tło drugorzędne + tekst drugorzędny", a nie trzema osobnymi |
-| **Warstwy dekoracyjne z eksportu nie są odtwarzane na żadnym ekranie aplikacji.** Eksport kładzie na ekranach `isHome` i `isSearch` statyczne, absolutnie pozycjonowane koła z gradientem promienistym — 160px `rgba(47,155,207,0.10)` na dashboardzie, 110px `rgba(163,230,53,0.10)` przy wyszukiwaniu — a na landingu cztery pływające kształty, te ostatnie animowane. Landingowe odpadły decyzją ② („uproszczone tło"), ale **te dwa nie są animowane i decyzja ② ich nie obejmuje**; pozycja 26 pominęła je mimo to, bez osobnego ustalenia | `app/(app)/friends/page.tsx` | **Sprostowanie 2026-08-09: dotyczy jednego ekranu, nie dwóch.** Pierwotnie zapisano, że pytanie wróci przy pozycji 27 — nieprawda: ekran `isProfile` (linia 281) **nie ma żadnej warstwy dekoracyjnej**, wchodzi wprost w nagłówek. Koła są tylko na `isHome` i `isSearch`, a `isHome` to dashboard, którego aplikacja nie ma. **Jedynym miejscem, gdzie ta decyzja cokolwiek zmienia, jest `/friends`.** Do rozstrzygnięcia w Kroku 4 lub odłożenia świadomie; jeśli koło ma powstać, żaden jego kolor nie ma tokenu (limonka i błękit przy 10% krycia) i trzeba to zapisać w 12.4 |
-| **`/chat` nie czyta parametru `?friend=`, który wskazuje na niego „Open Chat".** Pozycja 25 dodała do wierszy znajomych akcję prowadzącą na `/chat?friend=<id>`; adres niesie identyfikator, ale trasa docelowa go ignoruje, bo jest wciąż statyczną makietą na danych testowych (`chat/page.tsx`). Skutek: przycisk działa, prowadzi we właściwe miejsce i **zawsze pokazuje tę samą rozmowę**. Identyfikator jest przenoszony mimo to — link, który nie potrafi powiedzieć, kogo dotyczy, nie da się później uhonorować, a adres jest jedynym miejscem, gdzie ta informacja przeżywa nawigację | `app/(app)/friends/OpenChatLink.tsx` → `app/(app)/chat/page.tsx` | **Poza Krokiem 4 — i to nie z powodu zakresu, tylko z powodu §8.11.** Odczytanie parametru to zmiana **zachowania** trasy zamrożonej jako wzorzec docelowy, a nie zmiana wyglądu. **Krok 8**, razem z podłączeniem czatu do prawdziwych danych; do tego czasu przycisk jest poprawny w połowie, po której jesteśmy |
+| **Warstwy dekoracyjne z eksportu nie są odtwarzane na żadnym ekranie aplikacji.** Eksport kładzie na ekranach `isHome` i `isSearch` statyczne, absolutnie pozycjonowane koła z gradientem promienistym — 160px `rgba(47,155,207,0.10)` na dashboardzie, 110px `rgba(163,230,53,0.10)` przy wyszukiwaniu — a na landingu cztery pływające kształty, te ostatnie animowane. Landingowe odpadły decyzją ② („uproszczone tło"), ale **te dwa nie są animowane i decyzja ② ich nie obejmuje**; pozycja 26 pominęła je mimo to, bez osobnego ustalenia | `app/(app)/friends/page.tsx` | **Sprostowanie 2026-08-09: dotyczy jednego ekranu, nie dwóch.** Pierwotnie zapisano, że pytanie wróci przy pozycji 27 — nieprawda: ekran `isProfile` (linia 281) **nie ma żadnej warstwy dekoracyjnej**, wchodzi wprost w nagłówek. Koła są tylko na `isHome` i `isSearch`, a `isHome` to dashboard, którego aplikacja nie ma. **Jedynym miejscem, gdzie ta decyzja cokolwiek zmienia, jest `/friends`.** **Rozstrzygnięte 2026-08-09: nie odtwarzamy, świadomie i ostatecznie.** Powód podany przez osobę prowadzącą, mocniejszy niż argumenty projektowe: **w samym eksporcie tego koła nie widać, dopóki ktoś nie wskaże, gdzie patrzeć.** Dekoracja przy 10% krycia, której uważny obserwator nie zauważa, nie niesie intencji projektowej — niesie szum. Argument dodatkowy: pojedynczy taki akcent na jednym z dziewięciu ekranów czytałby się jak przypadek, a nie jak system; eksportowi uchodzi to dlatego, że ma jeszcze wersję na dashboardzie, którego aplikacja nie ma. **Gdyby kiedyś powstała trasa „Home", oba koła warto dodać razem albo wcale** |
+| **`/chat` przewijał się w pionie, bo liczył wysokość chromu zamiast ją dostawać.** Trasa miała `h-[calc(100vh-4rem)]`, a `4rem` odpowiadało dokładnie `p-8` (2×32px) elementu `main` w `app/(app)/layout.tsx`. **Pozycja 11 zmieniła ten padding** na `pt-20 pb-6` / `lg:py-12` i liczba przestała być prawdziwa — kontener robił się o 40px za wysoki przy 360px i o 32px przy 1280px. Objaw był mylący: po wejściu w rozmowę strona „skakała" do pola wiadomości, bo przeglądarka przewijała do elementu, który dostał fokus. **Żaden pomiar Z.8 tego nie widział — Z.8 mierzy wyłącznie przewijanie poziome** | `app/(app)/chat/page.tsx`, `app/(app)/layout.tsx` | **Naprawione przy 2b, 2026-08-10.** `main` dostaje `flex flex-col`, trasa `flex-1 min-h-0`: wysokość **pochodzi** z layoutu, zamiast być o nim założeniem. Wszystkie strony `(app)` i tak otwierały się od `flex flex-1 flex-col`, co przy blokowym `main` nic nie robiło. **Wniosek szerszy: `calc()` na wymiarze rodzica to zależność, której nic nie pilnuje** — zmiana paddingu w innym pliku unieważniła ją bez jednego ostrzeżenia z `tsc`, ESLinta ani Z.8 |
+| **Modal zmiany awatara był szerszy niż wąska szerokość oceny.** `w-96` to 384px, a nakładka `fixed inset-0` nie miała paddingu — przy 360px okno dialogowe wystawało poza ekran po obu stronach. **Nie jest to znalezisko projektowe, tylko błąd, którego żaden wcześniejszy pomiar nie mógł wyłapać:** kryterium Z.8 sprawdza `scrollWidth` strony, a element `fixed` nie powiększa przewijania dokumentu — po prostu zostaje przycięty. Naprawione na pozycji 28 (`w-full max-w-[440px]` plus `p-4` na nakładce) | `app/(app)/[userId]/EditAvatarButton.tsx` | **Naprawione w Kroku 4, pozycja 28.** Wniosek metodyczny do 12.7: **elementy `fixed` wymykają się obu naszym testom szerokości** — Z.8 ich nie widzi, a tabele `getComputedStyle` mierzyliśmy dotąd na tym, co widać po wejściu na trasę, a nie po otwarciu warstwy. To druga taka luka po nieprzewijalnej szufladzie z pozycji 18, i obie dotyczą elementów `fixed` |
+| **Karta informacyjna profilu ma dwa wiersze zamiast trzech — brakuje `Email`, bo brakuje danych.** Eksport pokazuje `Email / Username / Friends`. `Username` bierzemy z `displayName`, `Friends` z `totalElements` (pozycja 27 wraca po tę liczbę do `/friends` z `size=1`), ale **`/users/{userId}/details` zwraca wyłącznie `{ displayName, avatarId }`** — potwierdzone błędem `tsc` na wygenerowanych typach, nie domysłem. Wiersz został **usunięty, a nie wypełniony myślnikiem**: placeholder sugerowałby, że pole istnieje i jest puste, podczas gdy backend go nie oddaje | `app/(app)/[userId]/page.tsx`; kontrakt `/users/{userId}/details` | **Poza Krokiem 4 — to brak danych, nie brak stylu.** Wiersz jest gotowy i czeka: wystarczy dodać `<InfoRow label="Email" …>`, gdy endpoint zacznie zwracać adres. Ta sama sytuacja co „Last updated" na `/privacy-policy` — styl istnieje, treści nie ma. **Uwaga uboczna: na cudzym profilu karta ma jeden wiersz**, bo licznik znajomych dotyczy wyłącznie zalogowanego użytkownika (`GET /friends` ignoruje ścieżkę) |
+| **Przycisk „Change avatar" z eksportu nie jest odtworzony — u nas to plakietka na awatarze, nie przycisk obok nazwy.** Eksport stawia w hero profilu awatar, a **obok niego** kolumnę: nazwa 26px/800 i pod nią przycisk `Change avatar` (obrys `rgba(255,255,255,0.6)`, tło `rgba(255,255,255,0.15)`, 12px promienia, 13,5px/700). U nas wyzwalacz „Edit" jest małą plakietką pozycjonowaną absolutnie w rogu awatara. Pozycja 27 zbudowała układ hero, ale tej zamiany nie zrobiła: przycisk i modal siedzą w jednym komponencie (`EditAvatarButton`), więc przeniesienie wyzwalacza obok nazwy to rozdzielenie komponentu, a nie zmiana klasy | `app/(app)/[userId]/EditAvatarButton.tsx` | Krok 4, **pozycja 28** — tam i tak rozstrzyga się potraktowanie wszystkich przycisków profilu. **Ta sama uwaga dotyczy wyzwalacza „Edit" przy nazwie**, którego eksport nie ma wcale: tam nazwę zmienia się przez ten sam przycisk `Change avatar`, bo w makiecie nie ma osobnej edycji nazwy |
+| **Gradient wylogowania (`#e35b52 → #c0453f`) i gradient hero profilu (`#146b7a → #2f9bcf → #4ac9a0`) wpisane jako wartości dowolne.** Żaden z pięciu stopni nie ma tokenu. Dla wylogowania jest to szczególnie widoczne, bo **token `--theme-danger` istnieje** (`#e5484d`) i jest bliski pierwszemu stopniowi, ale rola wymaga gradientu, którego pojedyncza zmienna nie wyrazi — dokładnie ta sama sytuacja co przy CTA na pozycji 2, gdzie `--theme-primary` nie wyraził gradientu mint→limonka i rozwiązaniem był `@utility bg-hub-cta`. Rozbieżność `danger` vs gradient wylogowania jest zresztą zapisana w 12.5 od 11.5, jako odziedziczona | `app/(app)/[userId]/page.tsx`; `app/globals.css` | Krok 7 lub 8 — **jeśli te gradienty mają dostać nazwy, wzorcem jest `bg-hub-cta`**: `@utility` zbudowane z tokenów, nie surowe heksy w komponencie. Pozycja 27 tego nie robi, bo utworzenie dwóch nowych `@utility` plus pięciu tokenów byłoby największą zmianą w warstwie tokenów w całym Kroku 4, a §8.7 reguła 2 dopuściła dokładnie jeden wyjątek (12.4) |
+| ~~**`/chat` nie czyta parametru `?friend=`**~~ — **WPIS BŁĘDNY, wycofany 2026-08-10.** Twierdził, że `/chat` ignoruje `?friend=`, bo jest „statyczną makietą na danych testowych". **Nieprawda i to podwójnie:** trasa jest komponentem serwerowym pobierającym `/friends` i `/chats`, czyta `?friend=` **oraz** `?chat=` (linie 73–99) i rozwiązuje z nich aktywną rozmowę, a `FriendRow` od dawna jest `<Link>` na `/chat?friend=` z komentarzem tłumaczącym, że wybór jest stanem adresu. `OpenChatLink` działał więc poprawnie od chwili powstania na pozycji 25 | `app/(app)/chat/page.tsx`, `app/(app)/chat/FriendRow.tsx` | **Nic do zrobienia — wpis powstał z nieaktualnych notatek o `/chat`, nie z odczytu pliku.** Zostaje przekreślony, nie usunięty, bo pokazuje realny koszt §8.11: trasa była zamrożona, więc przez cały krok opisywaliśmy ją z pamięci zamiast z kodu, i **opis rozjechał się z rzeczywistością bez żadnego sygnału**. Ta sama przyczyna stoi za nieaktualnym TODO w `Sidebar.tsx` (wiersz wyżej). Wniosek do Kroku 8: **zamrożenie pliku nie zamraża wiedzy o nim** |
 
 ### 12.6 Rozjazdy wyłapane w przeglądzie wstecznym
 
@@ -1573,7 +1598,253 @@ nie było żadnej działającej nawigacji, więc dowodem jest wyłącznie kolumn
 | Jednostka | Co się zmieniło | Gdzie wygląd bez zmian | Sprawdzone działaniem | `'use client'` +? |
 |---|---|---|---|---|
 | **1b** — nawigacja mobilna | **Dwie konstrukcje, zapis mobile-first** (decyzja z 12.4, 2026-08-09). Bez prefiksu `<aside>` jest `fixed inset-y-0 left-0 z-40` i stoi wysunięty poza kadr (`-translate-x-full`), a otwiera się przez `translate-x-0`; `lg:static lg:translate-x-0` przywraca poprzednią kolumnę. Dochodzą trzy elementy, wszystkie `lg:hidden`: **przycisk hamburgera** (`fixed left-4 top-4 z-50`, chowany gdy szuflada otwarta, żeby nie leżeć na jej nagłówku), **przesłona** `bg-black/50 z-30` zrobiona jako `<button>` z etykietą, nie `<div>` — realny cel kliknięcia ma być fokusowalny i opisany — oraz zamykanie klawiszem **Escape**, nasłuchiwane wyłącznie gdy otwarte. Poza komponentem jedna zmiana: `main` w `app/(app)/layout.tsx` dostaje `pt-20` przy szerokości wąskiej. To **rezerwacja miejsca pod przycisk, nie decyzja o odstępie**, dlatego znika przy `lg:` | **na szerokim ekranie — ani o piksel.** Trzy nowe elementy są `lg:hidden`, a `lg:static lg:translate-x-0` cofa oba narzucone zachowania. `inset-y-0 left-0 z-40` zostają w łańcuchu klas, ale na elemencie `static` nie robią nic — offsety i `z-index` dotyczą wyłącznie elementów pozycjonowanych. Jedyne realne ryzyko to `pt-20` w `main`, dlatego `lg:pt-12` i `lg:pb-12` zapisane są **rozdzielnie**, zamiast polegać na kolejności `py-*` względem `pt-*` w wygenerowanym CSS **Sprawdzone 2026-08-09 — sześć na sześć.** Hamburger widoczny, rail schowany; kliknięcie wysuwa szufladę i chowa przycisk; wszystkie pięć pozycji osiągalnych; **kliknięcie pozycji przechodzi do trasy i zamyka szufladę**; Escape zamyka; kliknięcie przesłony zamyka. Punkt czwarty był jedynym niezależnym od CSS — zależy od efektu na `pathname`, nie od klasy. **Pomiar stanu spoczynkowego przy 288px:** `left: -250px`, `right: 0px`, czyli prawa krawędź szuflady leży dokładnie na lewej krawędzi okna — schowana, nie tylko niewidoczna. **Z.8 spełnione po raz pierwszy na trasach `(app)`:** `scrollWidth - innerWidth = 0` przy obu szerokościach. **Uzupełnienie 2026-08-09 — „sześć na sześć" było niepełne.** Pozycja 18 pokazała, że kryterium „każda pozycja osiągalna przy szerokości wąskiej" przechodziło wyłącznie dlatego, że sprawdzano je na **wysokim** oknie. Szuflada jest `fixed inset-y-0`, ma więc dokładnie wysokość okna, a jej treść ma ~430px; przy oknie ~270px ostatnie linki znalazły się pod krawędzią **bez możliwości przewinięcia** — widoczny pasek przewijania należał do strony pod przesłoną. Dołożone `overflow-y-auto overscroll-contain`. **Wniosek metodyczny: element `inset-y-0` trzeba sprawdzać na obu osiach okna, nie tylko na szerokości** — słownik 12.0 zna dwie szerokości oceny i ani jednej wysokości | **+0 — dopuszczenie z 12.2 okazało się niepotrzebne.** `Sidebar.tsx` jest komponentem klienckim od zawsze, bo używa `usePathname()`, więc `useState` i `useEffect` nie dokładają wpisu do listy z sekcji 6. Limit „najwyżej +2, oba nazwane" zostaje z zapasem jednego |
+| **2b** — `/chat` przy szerokości wąskiej | **Jeden panel naraz poniżej `lg:`, oba powyżej.** Trasa czytała `?friend=` **jeszcze przed** tą jednostką, więc wybór rozmowy był już stanem adresu, a nie komponentu — całą zmianę dało się wyrazić **trzema utility widoczności**: szyna `hidden lg:flex` gdy rozmowa jest wybrana, zastępnik „Select a chat" `hidden lg:flex` zawsze (poniżej `lg:` listą **jest** ekran), szyna `w-full lg:w-[290px] lg:border-e`. Doszedł jeden element: strzałka powrotu w nagłówku rozmowy, `lg:hidden`, prowadząca na `/chat` bez parametru. Naprawiona przy okazji **regresja z pozycji 11**: `h-[calc(100vh-4rem)]` kodowało `p-8` elementu `main` z innego pliku i przestało być prawdą, gdy padding się zmienił (12.5) | **powyżej `lg:` — ani o piksel.** Szyna 290px z krawędzią, oba panele, zastępnik widoczny. Wszystkie trzy klasy są `lg:`-warunkowe albo `lg:hidden`; żaden element nie istnieje w dwóch kopiach, więc Z.7 nienaruszone | **Sprawdzone 2026-08-10.** Przy 360px: lista pełnej szerokości, wejście w rozmowę, powrót strzałką, powrót przyciskiem przeglądarki, wejście z `/friends` prosto w rozmowę, wyszukiwarka w szynie działa. **`hOverflow` i `vOverflow` zerowe przy 360 i 1280** — Z.8 spełnione na siódmej trasie, tej, dla której powstała ta jednostka | **+0.** Żadnego nowego komponentu klienckiego: `page.tsx` pozostaje serwerowy, `FriendRail` i `Conversation` były klienckie wcześniej. **Wszystkie trzy jednostki strukturalne kroku zamknęły się bez ani jednego nowego wpisu** do listy z sekcji 6 |
 | **2a** — wydzielenie trasy znajomych | **Nowa trasa `/friends`** (decyzja z 12.4). Przeniesione `git mv`, bez zmiany treści: `FriendsPanel.tsx`, `AddFriendButton.tsx`, `RemoveFriendButton.tsx`. **`actions.ts` nie został przeniesiony, tylko rozdzielony** — trzymał akcje profilu (nazwa, awatar) razem z akcjami znajomych; profilowe zostały, pozostałe trzy odeszły. Nowy `friends/page.tsx` przejął `loadFriendsPage`, `FRIENDS_PAGE_SIZE`, `parsePageParam` i przekierowanie z pustej strony. Pager celuje teraz w `/friends?page=N`. Rail dostał czwarty link. **`UserSearch` i `UserList` NIE zostały ruszone** — leżą w `app/components/` i były już niezależne od trasy, co `UserSearch` deklaruje we własnym komentarzu; robocze założenie z 9.1 mówiło inaczej i **okazało się nietrafne**. Nowa lokalizacja ma tę samą głębokość co stara, więc żaden import `../../…` nie wymagał korekty | **w przeniesionym panelu — ani o piksel.** Żadna klasa nie została zmieniona w trzech przeniesionych plikach; jedyne zmiany treści to dwa adresy w pagerze i komentarz przy propie `currentUserId`. Na szerokim ekranie rail różni się wyłącznie **jednym dodanym linkiem**, co jest zamierzone i jest przedmiotem pozycji 18 | **Sprawdzone 2026-08-09, wszystkie punkty.** `/friends` ładuje się i wyszukuje; dodanie i usunięcie znajomego działa; pager prowadzi na `/friends?page=1`, nie na `/<userId>?page=1`; profil zachował baner, edycję nazwy i awatara oraz wylogowanie, a stracił wyłącznie panel — to jest dowód, że `actions.ts` rozdzielono w dobrym miejscu; cudzy profil renderuje się normalnie; rail podświetla „Friends" na trasie aktywnej. **Znaleziono przy okazji błąd sprzed migracji** (wykluczenia w wyszukiwarce obejmują tylko bieżącą stronę znajomych) — zapisany w 12.5, nieusuwany, bo właściwa naprawa jest po stronie API | **+0 — dopuszczenie z 12.2 znowu niewykorzystane.** `friends/page.tsx` jest komponentem serwerowym, `friends/actions.ts` to `'use server'`, a trzy przeniesione pliki były klienckie już wcześniej. **Obie jednostki strukturalne zamknęły się bez ani jednego nowego wpisu** do listy z sekcji 6; budżet „najwyżej +2" pozostał nietknięty |
+
+## 13. Krok 5 — przywrócenie obsługi motywów (plan, prefill 2026-08-10)
+
+### 13.0 Cel, warunki wejścia i to, czego plan z §Krok 5 nie przewidywał
+
+**Cel:** żadna powierzchnia aplikacji nie ignoruje `ThemeToggle` przez
+przeoczenie. Powierzchnie, które motywu **nie** przyjmują, mają być wyliczone
+i uzasadnione, a nie zostać takimi dlatego, że nikt nie dopisał bloku.
+
+**Warunki wejścia — spełnione:** Krok 4 zamknięty, `brand-*` bez użyć
+w komponentach, dokładnie jeden breakpoint, `globals.css` z jednym świadomym
+nowym tokenem.
+
+**Czego §Krok 5 nie mógł przewidzieć.** Plan opisuje ten krok jako jeden blok
+nadpisań dla czatu — „wystarczy dodać tutaj jeden blok i nie wykonywać żadnych
+zmian w JSX". **To już nieprawda.** Krok 4 dołożył trzy rzeczy, których wtedy
+nie było:
+
+1. **Rail** dostał na pozycji 10 potwierdzone wartości trzech tokenów on-shell,
+   ale wciąż bez bloku `.mocha`/`.latte` — komentarz w `Sidebar.tsx` wprost
+   odsyła to do Kroku 5.
+2. **Gradient landingu i auth** (pozycja 21) stoi na czterech tokenach, również
+   bez nadpisań. 12.5 zapisuje, że czy on się motywuje, rozstrzyga Krok 5.
+3. **Cztery gradienty wpisane jako wartości dowolne** (karta auth, hero profilu,
+   przycisk wylogowania, przycisk wiersza listy). **Tych nie da się zmotywować
+   bez uprzedniej tokenizacji** — nie mają nazw, więc nie ma czego nadpisać.
+
+Krok 5 jest więc szerszy niż „jeden blok" i zaczyna się od decyzji, nie od kodu.
+
+### 13.1 Inwentarz — co dziś przyjmuje motyw, a co nie
+
+Stan `app/globals.css` na 2026-08-10. Nadpisania w regule `.mocha, .latte`
+istnieją **wyłącznie** dla siedmiu tokenów semantycznych plus `success`/`danger`
+per odmiana. Wszystko poniżej jest zdefiniowane tylko na `:root`.
+
+| Grupa | Tokeny | Ile | Dziś | Gdzie widać |
+|---|---|---|---|---|
+| **A — semantyka czatu** | `hub-surface`, `hub-panel`, `hub-panel-sunken`, `hub-field`, `hub-border`, `hub-on-surface`, `hub-muted`, `hub-time`, `hub-row-active`, `hub-online`, `hub-status` | 11 | stałe | `/chat` w całości; `hub-muted` także w etykietach karty profilu |
+| **B — gradient raila** | `hub-shell-start`, `hub-shell-mid`, `hub-shell-end` | 3 | stałe | Sidebar na wszystkich trasach `(app)` |
+| **C — role on-shell** | `hub-on-shell-muted`, `hub-shell-hover`, `hub-on-shell` | 3 | stałe | nawigacja raila |
+| **D — gradient landingu** | `start-page-gradient-start`, `-mid`, `-mid-2`, `-end` | 4 | stałe | `BareLayout` — `/`, `/login`, `/register` |
+| **E — stałe barwy marki** | `hub-ink`, `hub-ink-deep`, `hub-teal`, `hub-blue`, `hub-mint`, `hub-lime` | 6 | stałe **z założenia** | bąbelki czatu, CTA, `Remove` |
+| **F — wartości dowolne, nie tokeny** | gradient karty auth, hero profilu, wylogowania, przycisku wiersza; cienie `rgba` | 4 + cienie | **nietokenizowalne bez zmiany kodu** | `/login`, `/register`, `/[userId]`, `/friends` |
+
+**Grupa E jest jedyną, która ma dziś uzasadnienie w kodzie** — komentarz
+w `globals.css` mówi wprost, że to *są* barwy marki i nie biorą pośrednictwa
+motywu. Grupy A–D są stałe **przez zaległość, nie przez decyzję**.
+
+### 13.2 Decyzja D1 — granica między „marką" a „motywem"
+
+**To jedyna decyzja tego kroku, z której wynika cała reszta**, i musi zapaść
+przed pierwszą linią kodu. Pytanie brzmi: **które powierzchnie aplikacji są
+znakiem firmowym, a które są ubraniem?**
+
+Trzy spójne odpowiedzi, każda do obrony:
+
+- **D1-a „wszystko się motywuje poza barwami marki".** Grupy A–D dostają
+  nadpisania, E zostaje. Najbliższe intencji `ThemeToggle`; najdroższe, bo
+  wymaga tokenizacji grupy F albo świadomej zgody, że cztery gradienty
+  pozostaną jasne w Mocha.
+- **D1-b „chrom jest marką, treść się motywuje".** Rail (B, C) i gradient
+  landingu (D) zostają stałe jako sygnatura wizualna; czat (A) się motywuje.
+  Najtańsza; ryzyko: ciemny rail obok jasnego Latte może wyglądać na
+  niedokończony — dokładnie ten zarzut, który §Krok 5 stawia dziś czatowi.
+- **D1-c „motywuje się tylko to, co i tak było semantyczne".** Grupa A tak,
+  B–D nie, i zapisujemy to jako trwałe. Uczciwe minimum; wymaga jawnego wpisu,
+  że rail i landing **nigdy** nie odpowiedzą na przełącznik.
+
+**Rekomendacja: D1-b**, z jednym zastrzeżeniem do sprawdzenia pomiarem przed
+podjęciem — czy ciemny rail obok Latte faktycznie razi. To pytanie ma
+odpowiedź empiryczną, nie teoretyczną: wystarczy tymczasowo nadpisać trzy
+tokeny grupy B i zobaczyć obie wersje obok siebie.
+
+### 13.3 Kolejka jednostek Kroku 5
+
+| # | Jednostka | Rodzaj | Zależy od | Status |
+|---|---|---|---|---|
+| 5.0 | **Macierz odniesienia** — pomiar wszystkich tras × 3 motywy **przed** zmianami | pomiar | — | w kolejce |
+| 5.1 | **Decyzja D1** na podstawie 5.0 i próbnego nadpisania grupy B | decyzja | 5.0 | w kolejce |
+| 5.2 | **Grupa A — semantyka czatu.** Blok z TODO: `panel → ctp-surface0`, `surface → ctp-base`, `border → ctp-surface1`, `muted/time → ctp-subtext0/overlay1`; pozostałe sześć tokenów **nie ma podanego odpowiednika i wymaga wyboru** | tokeny | 5.1 | w kolejce |
+| 5.3 | **Grupy B + C — rail** | tokeny | 5.1 | w kolejce |
+| 5.4 | **Grupa D — gradient landingu i auth** | tokeny | 5.1 | w kolejce |
+| 5.5 | **Grupa F — cztery gradienty dowolne**: tokenizować (`@utility` wzorem `bg-hub-cta`) czy zapisać jako trwale stałe | decyzja + kod | 5.1 | w kolejce |
+| 5.6 | **Kontrast per odmiana** — pomiar, bez naprawy; naprawa należy do Kroku 7 | pomiar | 5.2–5.5 | w kolejce |
+| 5.7 | **Macierz końcowa** — te same sondy co 5.0, porównanie | pomiar | wszystkie | w kolejce |
+
+**Uwaga do 5.2.** TODO podaje mapowanie dla **pięciu** ról z jedenastu.
+Bez odpowiednika zostają `hub-panel-sunken`, `hub-row-active`, `hub-online`,
+`hub-status` oraz `hub-surface`. Cztery pierwsze niosą **znaczenie**
+(zaznaczenie, obecność, status), więc ich odpowiedniki w Catppuccin trzeba
+wybrać, a nie odczytać — i zapisać w 13.4 jak każdą inną decyzję.
+
+### 13.4 Decyzje Kroku 5
+
+| Co | Gdzie się pojawiło | Pytanie | Status |
+|---|---|---|---|
+| **D1 — granica marka / motyw** | 13.2 | Które grupy tokenów przyjmują nadpisania? | otwarta — potrzebna przy 5.1, blokuje 5.2–5.5 |
+| Sześć ról czatu bez mapowania | 5.2 | `hub-surface`, `hub-panel-sunken`, `hub-row-active`, `hub-online`, `hub-status` — jakie odpowiedniki Catppuccin? | otwarta — potrzebna przy 5.2 |
+| Cztery gradienty dowolne | 5.5 | Tokenizować czy uznać za trwale stałe? | otwarta — potrzebna przy 5.5 |
+
+### 13.5 Znalezione, ale NIE naprawione (Krok 5)
+
+*(do wypełnienia w trakcie)*
+
+### 13.6 Metoda weryfikacji — macierz motywów
+
+Krok 4 sprawdzał **trasę po jednostce**. Krok 5 zmienia jedną rzecz naraz
+w warstwie tokenów, a skutek widać wszędzie — więc jednostką pomiaru jest
+**cała aplikacja w trzech motywach**, nie komponent.
+
+Dla każdej z siedmiu tras zbieramy ten sam zestaw sond (tło strony, tło panelu,
+tekst główny, tekst wyciszony, krawędź, akcent) w motywie domyślnym, Mocha
+i Latte, i sprawdzamy dwie rzeczy naraz:
+
+- role **motywowane** muszą się różnić między odmianami — jeśli nie, brakuje
+  nadpisania;
+- role **markowe** muszą być identyczne — jeśli się różnią, nadpisanie sięgnęło
+  za daleko.
+
+**Trzy wnioski z Kroku 4 wchodzą tu jako wymagania, nie sugestie:**
+
+1. **Mierzymy stany, nie tylko trasy.** Trzy z trzech defektów znalezionych
+   późno w Kroku 4 (nieprzewijalna szuflada, za szeroki modal, zła wysokość
+   czatu) siedziały w stanach, w które skryptowy przebieg nie wchodził.
+   Macierz musi obejmować: **otwartą szufladę nawigacji, otwarty modal awatara,
+   rozwiniętą wyszukiwarkę w railu, tryb edycji nazwy** i `/chat` w obu
+   wariantach `?friend=`.
+2. **Mierzymy geometrię, nie własności.** `space-y-*` w Tailwindzie 4 przeniosło
+   się z `margin-top` na `margin-block-end` i dwa pomiary z rzędu odpowiedziały
+   na źle zadane pytanie. Odstęp mierzymy przez `getBoundingClientRect()`.
+3. **Mierzymy przy obu wysokościach okna**, nie tylko szerokościach — słownik
+   12.0 zna dwie szerokości oceny i ani jednej wysokości.
+
+### 13.7 Definicja ukończenia Kroku 5
+
+- [ ] **T.1** D1 podjęta i zapisana w 13.4 **przed** pierwszą zmianą w `globals.css`
+- [ ] **T.2** Każdy token z grup A–D ma albo nadpisanie `.mocha`/`.latte`, albo
+      wiersz w 13.4 mówiący, że zostaje stały świadomie. **Zero tokenów bez
+      jednego z dwóch**
+- [ ] **T.3** Żadna zmiana w JSX poza tymi, które wymusza 5.5 (tokenizacja
+      gradientów). Warstwa pośrednia z Kroku 2 istnieje właśnie po to
+- [ ] **T.4** Macierz 5.7 pokazuje różnicę tam, gdzie D1 ją przewiduje, i brak
+      różnicy tam, gdzie D1 jej zabrania
+- [ ] **T.5** Żadna para tekst/tło w żadnej z trzech odmian nie jest
+      nieczytelna — pomiar, nie ocena wzrokowa. Wartości poniżej AA idą do 13.5
+      i do Kroku 7, ale **nieczytelność** jest blokerem tego kroku
+- [ ] **T.6** Stany z 13.6 pkt 1 sprawdzone w każdej odmianie
+- [ ] **T.7** Sekcja 13 wypełniona
+
+---
+
+## 14. Krok 6 — scalenie zduplikowanych wariantów (plan, prefill 2026-08-10)
+
+### 14.0 Cel i warunek, bez którego nie wolno zaczynać
+
+**Cel:** jedna paleta znaczy jeden wariant. Trzy komponenty mają dziś wariant
+równoległy istniejący **wyłącznie** dlatego, że istniała równoległa paleta.
+
+**Charakter kroku: refaktoryzacja. Nic nie może zmienić się wizualnie** — i to
+jest jednocześnie metoda weryfikacji (14.4).
+
+**Warunek wejścia, twardy:** Krok 5 zamknięty. `TextField` tone `chat` wolno
+scalić z `surface` **dopiero wtedy, gdy oba opisują to samo** — a dziś nie
+opisują, bo `surface` się motywuje, a `chat` nie. Scalenie ich przed Krokiem 5
+nie byłoby refaktoryzacją, tylko cichą zmianą wyglądu `/chat`.
+
+### 14.1 Kolejka jednostek Kroku 6
+
+Trzy pozycje pochodzą z §Krok 6, **dziewięć dołożył Krok 4** — każda ma już
+wiersz w 12.4 albo 12.5 z uzasadnieniem, dlaczego wtedy jej nie zrobiono.
+
+| # | Jednostka | Skąd | Odblokowuje |
+|---|---|---|---|
+| 6.1 | **`TextField`: tone `chat` → `surface`** | §Krok 6 | padding `SIZE_CLASSES` (12.5, zablokowany od pozycji 1 przez §8.11) |
+| 6.2 | **`TextField`: czwarty ton** — eksport ma **cztery** wyglądy pola przy trzech tonach | 12.5, pozycja 1 | wierność `UserSearch` (15×18px zamiast 16×12px) |
+| 6.3 | **`TextField`: nazwa tonu `elevated`** opisuje dziś **ciemną** kartę, a pochodzi od `--theme-elevated-surface`, które jest białe | 12.5, pozycja 1 | czytelność API |
+| 6.4 | **`Button`: variant `send` → `primary`** — §Krok 6 ostrzega, że to **realne pytanie**, nie mechaniczne usunięcie; sprawdzić eksport przed scaleniem | §Krok 6 | padding i typografia `Button` (12.5: `py-3` wobec 14px, `text-sm/700` wobec 15px/800) |
+| 6.5 | **`bg-hub-cta` → wariant `primary`** | §Krok 6 | — |
+| 6.6 | **`Button`: wariant neutralny** — dziś nie ma żadnego, przez co modal awatara i trzy inne miejsca powielają przyciski ręcznie | 12.5, pozycja 28 | 6.7 |
+| 6.7 | **Przyciski modala awatara → `Button`** | 12.5, pozycja 28 | — |
+| 6.8 | **`ThemeToggle`: oś wariantów powłoki** — eksport parametryzuje swoją odpowiedniczkę po powłoce (`langBtnStyle(active, isSidebar)`) | 12.5, pozycja 7 | 6.9 |
+| 6.9 | **Przebudowa powłoki `(app)`, jedną zmianą:** stopka znika z tras `(app)`, linki prawne schodzą na dół raila, `ThemeToggle` się przenosi i **traci obramowanie** | 12.5, pozycje 9/10/11 | zamknięcie wiersza o obramowaniu |
+| 6.10 | **`Avatar`: gałąź zastępcza** — nieosiągalna, bo backend wydaje `avatarId` każdemu. Zostawić jako zabezpieczenie czy usunąć razem z propami `initial`/`color`? | 12.5, pozycja 3 | — |
+| 6.11 | **`ActionResult` zdublowany** w dwóch plikach akcji po 2a | 12.5 | — |
+| 6.12 | **Autouzupełnianie przeglądarki** na ciemnej karcie — `:-webkit-autofill` omija kaskadę | 12.5, pozycja 22 | *alternatywnie Krok 7* |
+
+**Kolejność wymuszona zależnościami:** 6.1 → 6.2 → 6.3, potem 6.4 → 6.5,
+potem 6.6 → 6.7, potem 6.8 → 6.9. Pozostałe są niezależne.
+
+**6.9 jest strukturalna, nie stylistyczna** — rozlicza się jak 1b, 2a i 2b:
+osobnym commitem, testem działaniem, wpisem w 14.5, nie w tabeli wyglądu.
+
+### 14.2 Decyzje Kroku 6
+
+| Co | Gdzie | Pytanie | Status |
+|---|---|---|---|
+| `send` vs `primary` | 6.4 | Czy design **naprawdę** traktuje Send inaczej niż pozostałe CTA? §Krok 6 każe sprawdzić eksport, zanim się scali. Eksport daje Send gradient teal→blue (`bg-hub-bubble`), a CTA mint→lime (`bg-hub-cta`) — **to są dwa różne potraktowania i scalenie może być błędem** | otwarta — potrzebna przy 6.4 |
+| Czwarty ton `TextField` | 6.2 | Dodać czwarty ton czy pogodzić się z trzema? | otwarta — potrzebna przy 6.2 |
+| Gałąź zastępcza `Avatar` | 6.10 | Zabezpieczenie czy martwy kod? | otwarta — potrzebna przy 6.10 |
+| Nowe miejsce `ThemeToggle` | 6.9 | Rail, nagłówek trasy, czy gdzie indziej? | otwarta — potrzebna przy 6.9 |
+
+**Wiersz o `send` jest najważniejszy w tej tabeli.** Plan zakłada scalenie,
+ale eksport pokazuje dwa różne gradienty dla dwóch różnych ról — a `globals.css`
+przy `@utility bg-hub-cta` **sam to zapisuje**: „design daje CTA wypełnienie
+mint-lime, podczas gdy Send zachowuje bąbelkowy teal-blue, a pojedyncze
+`--theme-primary` nie wyrazi obu". Domyślną odpowiedzią jest więc
+**nie scalać**, a §Krok 6 zamienić w decyzję zapisaną w 14.2.
+
+### 14.3 Znalezione, ale NIE naprawione (Krok 6)
+
+*(do wypełnienia w trakcie)*
+
+### 14.4 Metoda weryfikacji — dowód braku zmiany
+
+Refaktoryzacja bez zmiany wizualnej ma jedną naturalną metodę: **ta sama sonda
+przed i po, wynik identyczny**.
+
+Dla każdej jednostki 6.x, **przed** zmianą, zbieramy `getComputedStyle` dla
+wszystkich miejsc użycia dotkniętego komponentu i zapisujemy wynik w 14.5.
+Po zmianie powtarzamy. **Każda różnica jest błędem tej jednostki**, dopóki nie
+zostanie uzasadniona wpisem — odwrotnie niż w Kroku 4, gdzie różnica była celem.
+
+Wyjątki, znane z góry: 6.1 i 6.4 mogą **odblokować** wartości zablokowane
+w Kroku 4 (padding, typografia). Te zmiany są zamierzone, ale **muszą pójść
+osobnymi commitami** niż samo scalenie — inaczej dowód „nic się nie zmieniło"
+przestaje cokolwiek dowodzić.
+
+### 14.5 Dziennik jednostek Kroku 6
+
+| Jednostka | Miejsca użycia | Sonda przed | Sonda po | Różnice i ich uzasadnienie |
+|---|---|---|---|---|
+
+### 14.6 Definicja ukończenia Kroku 6
+
+- [ ] **S.1** `TextField` ma o jeden ton mniej albo wpis w 14.2, dlaczego nie
+- [ ] **S.2** `Button` ma o jeden wariant mniej albo wpis w 14.2, dlaczego nie —
+      i wpis ten cytuje eksport, nie intuicję
+- [ ] **S.3** Żaden komponent nie nazywa dwóch palet naraz
+- [ ] **S.4** Sondy przed/po zgodne wszędzie poza zmianami odblokowanymi,
+      a te w osobnych commitach
+- [ ] **S.5** 6.9 rozliczona jak jednostka strukturalna: osobny commit,
+      test działaniem, `'use client'` bez przyrostu albo z uzasadnieniem
+- [ ] **S.6** Liczba wariantów w aplikacji **spadła** — jeśli po Kroku 6 jest
+      ich tyle samo, krok nie został wykonany, tylko udokumentowany
+- [ ] **S.7** Sekcja 14 wypełniona
 
 ### Materiał odniesienia
 

@@ -11,16 +11,10 @@ import Link from 'next/link';
 // Geometry is the export's row button (9x18px, 10px radius, 13.5px at 700),
 // which Remove now wears in full.
 //
-// The link names the friend: /chat?friend=<id>. Note that `/chat` does not read
-// that parameter yet - it is still the static preview the Sidebar TODO
-// describes - so today the destination looks the same whichever row you came
-// from. The id is carried anyway, because a link that cannot say who it is
-// about can never be honoured later, and the URL is the only place that
-// information survives navigation.
-//
-// Teaching /chat to consume it is deliberately NOT part of this unit: that
-// route is frozen by §8.11 and the change would be behavioural, not visual.
-// Recorded in 12.5.
+// The link names the friend: /chat?friend=<id>, which that route reads and
+// resolves into the active conversation - the same URL its own FriendRow links
+// to. Selection on /chat is URL state, not component state, so this is not a
+// special case being added for us; it is the existing contract.
 export default function OpenChatLink({ friendId }: { friendId: string }) {
   return (
     <Link
