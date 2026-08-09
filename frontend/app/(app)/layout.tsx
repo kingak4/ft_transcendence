@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { client } from '../lib/api-clients';
 import { assertValidSession } from '../lib/session';
 
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import ConnectionBanner from '../components/ConnectionBanner';
 import StompProvider from '../components/StompProvider';
 
 export default async function AppLayout({
@@ -28,11 +28,14 @@ export default async function AppLayout({
 
   return (
     <StompProvider>
-      <div className="bg-surface text-on-surface flex min-h-screen">
-        <Sidebar userId={userId} />
-        <div className="flex flex-1 flex-col">
-          <main className="flex-1 p-8">{children}</main>
-          <Footer />
+      <div className="bg-surface text-on-surface flex min-h-screen flex-col">
+        <ConnectionBanner />
+        <div className="flex flex-1">
+          <Sidebar userId={userId} />
+          <div className="flex flex-1 flex-col min-w-0">
+            <main className="flex-1 p-8">{children}</main>
+            <Footer />
+          </div>
         </div>
       </div>
     </StompProvider>
