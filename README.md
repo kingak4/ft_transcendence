@@ -167,6 +167,30 @@ simplest open source router that allowed for SSL certificate configuration
 ### Makefile orchestration
 this custom setup was made to adhere to the Separation of concerns.
 
+## 🔄 Development Lifecycle & Practices
+
+### Workflow
+All feature development followed a structured, API-first approach that enabled parallel execution across different technology layers:
+* **Requirements & Core Domain:** Feature development began with business requirements defined by the Project Manager (**Kinga**). The Technical Lead (**Szymon**) then implemented the core domain models and use cases in Java, exposing the functionality via REST and Async APIs.
+* **Parallel Integration:** Once the API contracts were established, the team split into simultaneous tracks to prevent bottlenecks:
+  * **Persistence Layer (Infra):** Implementing database repositories and integrating infrastructure (**Alina**).
+  * **Client Layer (Frontend):** Designing the UI components (**Zyta**) and consuming the backend endpoints (**Kacper**).
+
+### CI/CD Pipeline
+Integration standards were enforced through an CI pipeline combined with team policies and repository configuration:
+
+* **Continuous Integration (GitHub Actions):** Every push and pull request targeting `main` runs a three-job pipeline:
+  * **Backend tests** — the Gradle test suite executed inside Docker against PostgreSQL and Redis containers.
+  * **Dev/eval build verification** — brings up the containerized stack and asserts the security topology: REST and STOMP endpoints must answer through nginx's HTTPS proxy while the backend's ports are confirmed closed. It then generates API types from the live OpenAPI/AsyncAPI specs, lints and builds the Next.js frontend, and verifies the homepage is served end-to-end through nginx.
+  * **Local build verification** — validates the frontend developer workflow: the backend must be published on loopback only (`127.0.0.1:5001`, invisible to the network) with health and STOMP endpoints reachable for a host-run dev server.
+  * Docker layer, Gradle, and Next.js caches keep pipeline runs to a few minutes.
+
+### Team's Code Quality & Version Control Standards
+* **Formatters & Linters:** Integrated static analysis tools to eliminate stylistic debates, catch logical bugs before runtime, and enforce framework best practices. This allowed peer reviews to focus entirely on architecture and business logic.
+* **GitHub Flow:** Adopted a feature-branching strategy. Developers frequently synced with the main branch to preempt massive merge conflicts, submitting all work exclusively through Pull Requests.
+* **Conventional Commits:** Enforced structured commit messaging. This provided instant context for changes, streamlined debugging, and prepped the repository for automated release changelogs.
+* **Repository Protection & Linear History:** Configured GitHub branch protection rules to disable pushes to main and require peer approvals. All PRs were integrated using "Squash and Merge," ensuring the main branch maintained a clean, readable, and chronological history of deployable features.
+
 
 ## 🗄️ Database Schema
 TODO
@@ -258,7 +282,7 @@ TODO
 
 ### Kinga
 
-As Project Manager and Developer, Kinga led the project through its full development lifecycle, structuring task distribution, organizing hybrid team meetings, and coordinating cross-functional work between sub-teams. She authored the project's Confluence documentation, architecture diagrams, and feature specifications, and maintained the repository's [Documentation](docs/) folder as the team's centralized knowledge base. She designed the application's visual identity and high-fidelity mockups in Canva, supported their translation into the frontend implementation, and implemented the Real-Time Chat Module. She also managed pull requests and code reviews with the Technical Lead, and drafted and integrated the Privacy Policy, Terms of Service, and Open-Source License.
+As Project Manager and Developer, Kinga guided the project through its full development lifecycle — structuring task distribution, organizing hybrid team meetings, and coordinating work across sub-teams — while also contributing hands-on to the codebase. She shaped the application's visual identity from the ground up, designing high-fidelity mockups and feature visualizations in Canva that served as the team's shared reference point for UI/UX work. Beyond the design work itself, she was directly involved in bringing that vision into the product, collaborating with the frontend team on translating the mockups into the interface and helping integrate them with the existing codebase. She authored the project's Confluence documentation, architecture diagrams, and feature specifications, and maintained the repository's [Documentation](docs/) folder as the team's centralized knowledge base. She also implemented the Real-Time Chat Module, managed pull requests and code reviews with the Technical Lead, and drafted and integrated the Privacy Policy, Terms of Service, and Open-Source License.
 
 ### Zyta
 
@@ -267,6 +291,10 @@ As Frontend Developer, Designer, and Product Owner, Zyta owned the application's
 ### Szymon
 
 As Technical Lead and Software Architect, Szymon managed the technical side of the project during its initial stages and defined the technology stack and standards. He architected a Hexagonal Spring Boot backend following SOA, DDD, use-case-centric design, separation of concerns, and CQRS, and oversaw the JWT token integration between frontend and backend for the stateless REST API and STOMP WebSocket AsyncAPI. He documented the backend according to Docs as Code, Self-Documenting Code, and Living Documentation principles, used Gradle plugins and test pipelines for diagram and AsciiDoc generation, tested the backend following TDD and BDD practices with Spring context splitting, and integrated Spring WebSockets with Redis.
+
+### Alina
+
+As DevOps and Database Engineer, Alina designed and maintained the project's infrastructure and database layer. She containerized the backend and frontend applications using Docker, configured PostgreSQL and the Docker Compose environment for local development, and established a shared, idempotent Docker network alongside coordinated environment configuration across Docker Compose and Makefiles. On the database side, she designed and evolved the schema as new features were added, integrated PostgreSQL with the backend using Spring Data JPA, and implemented the repositories. She researched and applied transaction management to keep data consistent, set up database migrations, wrote integration tests for the repository layer, and created and maintained the database documentation, including the entity-relationship diagram.
 
 ### Kacper
 
