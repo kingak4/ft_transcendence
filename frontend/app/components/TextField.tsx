@@ -27,9 +27,18 @@ type TextFieldSize = 'sm' | 'md';
 // see MIGRATION-INVENTORY.md 12.5.
 const TONE_CLASSES: Record<TextFieldTone, string> = {
   surface:
-    'rounded-[14px] border border-elevated-border text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface shadow-[0_4px_14px_rgba(10,42,77,0.06)] focus:ring-primary',
+    'rounded-[14px] border border-elevated-border text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_rgba(10,42,77,0.06)] focus:ring-primary',
+  // Position 22 gave this tone the export's `inputStyle`: white text on
+  // `white/8`, a `white/15` hairline, 14.5px at 500. It had to change in the
+  // same commit as `Card` - it sits only on the auth card, and the dark text it
+  // carried before would have been invisible the moment that card darkened.
+  //
+  // The weight is here rather than in BASE_CLASSES on purpose: 12.5 recorded at
+  // position 1 that the export puts 500 on its fields and we render 400, and it
+  // is settable per tone, so `/chat` does not block it. `surface` is the other
+  // field the export weights at 500; `chat` keeps what it renders today.
   elevated:
-    'rounded-xl text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-on-elevated-surface/10 focus:ring-primary',
+    'rounded-xl border border-white/15 text-white placeholder:text-white/40 bg-white/8 font-medium focus:ring-primary',
   chat: 'rounded-lg text-hub-on-surface placeholder:text-hub-time bg-hub-field focus:ring-hub-blue',
 };
 

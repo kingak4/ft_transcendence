@@ -22,7 +22,7 @@ export default function LegalSection({
   // (#146b7a) - and Step 4 may not add one (§8.7 reguła 2), so the heading
   // inherits the card's on-elevated-surface instead. Recorded in 12.4.
   return (
-    <section className="border-elevated-border flex flex-col gap-2.5 border-t py-5.5">
+    <section className="border-elevated-border py-5.5 flex flex-col gap-2.5 border-t">
       <h2 className="text-lg font-extrabold">{title}</h2>
       {children}
     </section>

@@ -41,8 +41,8 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-1 items-center justify-center">
       <Card>
-        <h1 className="mb-1 text-2xl font-bold">Register</h1>
-        <p className="text-on-elevated-surface/60 mb-6 text-sm">
+        <h1 className="mb-1 text-xl font-extrabold">Register</h1>
+        <p className="mb-6 text-sm font-medium text-white/60">
           Nice to meet you!
         </p>
 
@@ -84,18 +84,18 @@ export default function RegisterPage() {
               onChange={(e) => setAgreedToTerms(e.target.checked)}
               className="accent-primary mt-0.5"
             />
-            <span className="text-on-elevated-surface/60 text-xs">
+            <span className="text-xs text-white/60">
               I agree to the{' '}
               <Link
                 href="/terms-of-service"
-                className="text-on-elevated-surface/80 hover:text-on-elevated-surface underline transition-colors"
+                className="text-white/80 underline transition-colors hover:text-white"
               >
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link
                 href="/privacy-policy"
-                className="text-on-elevated-surface/80 hover:text-on-elevated-surface underline transition-colors"
+                className="text-white/80 underline transition-colors hover:text-white"
               >
                 Privacy Policy
               </Link>
@@ -107,7 +107,7 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
+        <p className="mt-4 text-center text-xs text-white/50">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>

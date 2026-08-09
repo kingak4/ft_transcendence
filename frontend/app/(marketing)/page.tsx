@@ -49,7 +49,7 @@ export default async function LandingPage() {
         // page change shape depending on whether you were signed in.
         <Card>
           <h2 className="mb-1 text-xl font-extrabold">Hello!</h2>
-          <p className="text-on-elevated-surface/60 mb-6 text-sm font-medium">
+          <p className="mb-6 text-sm font-medium text-white/60">
             Do your thing. Grind.
           </p>
           <Button href="/login" fullWidth>

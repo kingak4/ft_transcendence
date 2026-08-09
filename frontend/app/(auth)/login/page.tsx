@@ -29,10 +29,8 @@ export default function LoginPage() {
   return (
     <div className="flex flex-1 items-center justify-center">
       <Card>
-        <h1 className="mb-1 text-2xl font-bold">Login</h1>
-        <p className="text-on-elevated-surface/60 mb-6 text-sm">
-          Welcome back!
-        </p>
+        <h1 className="mb-1 text-xl font-extrabold">Login</h1>
+        <p className="mb-6 text-sm font-medium text-white/60">Welcome back!</p>
 
         <form onSubmit={handleLogin}>
           <TextField
@@ -56,7 +54,7 @@ export default function LoginPage() {
           />
 
           <div className="mb-6 text-right">
-            <span className="text-on-elevated-surface/50 cursor-not-allowed text-xs">
+            <span className="cursor-not-allowed text-xs text-white/50">
               Forgot password?
             </span>
           </div>
@@ -66,7 +64,7 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
+        <p className="mt-4 text-center text-xs text-white/50">
           Don&apos;t have an account?{' '}
           <AccentLink href="/register">Register</AccentLink>
         </p>
