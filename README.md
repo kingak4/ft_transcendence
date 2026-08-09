@@ -29,9 +29,11 @@ Create and configure the environment files before running the project:
 - [backend/transcend/.env](backend/transcend/.env) and [backend/transcend/.env.example](backend/transcend/.env.example)
 - [frontend/.env](frontend/.env) and [frontend/.env.example](frontend/.env.example)
 
-## ▶️ Run the Project
+## ▶️ Instructions
 
-From the repository root, start the application on dev (docker) profile with `make up`. Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders (see supporting documentation).
+From the repository root, start the application on dev profile with `make up`. 
+
+Components can be started separately (on dev or local profiles) using makefiles in infra, backend, or frontend folders (see supporting documentation).
 
 Supporting documentation:
 
