@@ -1,41 +1,45 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePresence } from '../hooks/usePresence';
 
-const CONNECTION_LOST_MSG =
-  'Lost connection to the server. Attempting to recover session...';
-const GRACE_PERIOD_MS = 3000;
+const RECONNECTING_MSG = 'Reconnecting to the server...';
+const UNREACHABLE_MSG = 'Cannot reach the server. Retrying...';
+
+const RECONNECT_GRACE_MS = 5000;
+const INITIAL_GRACE_MS = 8000;
 
 export default function ConnectionBanner() {
   const { isConnected } = usePresence();
-  const [hasEverConnected, setHasEverConnected] = useState(false);
+  const hasEverConnected = useRef(false);
   const [showBanner, setShowBanner] = useState(false);
 
-  if (isConnected && !hasEverConnected) {
-    setHasEverConnected(true);
-  }
-
-  if (isConnected && showBanner) {
-    setShowBanner(false);
-  }
-
   useEffect(() => {
-    if (isConnected || !hasEverConnected) return;
+    if (isConnected) {
+      hasEverConnected.current = true;
+      setShowBanner(false);
+      return;
+    }
 
-    const timer = setTimeout(() => setShowBanner(true), GRACE_PERIOD_MS);
+    const delay = hasEverConnected.current
+      ? RECONNECT_GRACE_MS
+      : INITIAL_GRACE_MS;
+      
+    const timer = setTimeout(() => setShowBanner(true), delay);
     return () => clearTimeout(timer);
-  }, [isConnected, hasEverConnected]);
+  }, [isConnected]);
 
-  if (!showBanner || isConnected) return null;
+  if (isConnected || !showBanner) return null;
+
+  const message = hasEverConnected.current ? RECONNECTING_MSG : UNREACHABLE_MSG;
 
   return (
     <div
       role="status"
       aria-live="polite"
-      className="bg-danger/10 border-b border-danger/20 p-2 text-center text-xs font-medium text-danger shrink-0"
+      className="bg-danger/10 border-danger/20 text-danger shrink-0 border-b p-2 text-center text-xs font-medium"
     >
-      {CONNECTION_LOST_MSG}
+      {message}
     </div>
   );
 }
