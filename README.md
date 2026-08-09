@@ -152,20 +152,18 @@ Established a structured workflow for team coordination and task execution:
 
 ## 🛠️ Technical Stack
 
-### Spring Boot Backend
-was the backend of choice due to Szymon's pre-exiting knowledge of the technology.
+### Frontend Technologies and Frameworks
+* **Next.js**: The core frontend framework, chosen due to its industry-standard status, and its powerful Server-Side Rendering (SSR) capabilities which improve performance and SEO.
+* **TailwindCSS & Catppuccin**: Used for styling and theming, allowing for a robust, reusable, and easily switchable custom design system.
+* **openapi-fetch**: For type-safe API calls generated directly from backend OpenAPI specifications.
+* **sockJS & @stomp/stompjs**: For handling STOMP WebSocket connections to provide real-time updates and messaging.
 
-### Next.js Frontend
-was the frontend of choice due to Kacper's interest in the technology.
+### Backend Technologies and Frameworks
+*Space for Alina's part*
 
-### PostgreSQL and Redis
-were the most common open source technologies, and were the go-to choice for integration with Spring boot.
-
-### Nginx
-simplest open source router that allowed for SSL certificate configuration
-
-### Makefile orchestration
-this custom setup was made to adhere to the Separation of concerns.
+### Other Significant Technologies and Libraries
+* **Nginx**: A lightweight and powerful open-source router configured for SSL certificate termination and request proxying.
+* **Makefile & Docker**: Custom orchestration setup made to adhere to the separation of concerns and ensure simple, reproducible builds.
 
 ## 🔄 Development Lifecycle & Practices
 
@@ -210,73 +208,73 @@ TODO
 - SearchUsers
 - UpdateDisplayName
 
-## 🧩 Modules
+## Modules
 
-### ⚙️ Core Web Infrastructure
+**Total Points Calculated: 17 Points** (Major = 2pts, Minor = 1pt)
+
+### Core Web Infrastructure
 
 #### 1. Framework-Based Architecture (Major — 2pts)
-* **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** as a single-page application (SPA) using a Backend-for-Frontend (BFF) pattern with JWT based authentication.
+* **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** using a Backend-for-Frontend (BFF) pattern.
+* **Justification:** Provides a robust ecosystem, dependency injection on the backend, and industry-standard SSR capabilities on the frontend.
 
-* **Reasons:** Provides dependency injection, complete frontend-backend separation, secure token management, and enterprise-grade maintainability / future scalability.
-
-#### 2. Microservices Architecture (Major — 2pts)
-* **Implementation:** The backend was built using **Spring Modulith** with loosely-coupled modules. Services are documented with **OpenAPI** specifications for synchronous communication and **AsyncAPI** specifications for event-driven messaging. Each module contains independent services adhering to the single responsibility principle. REST endpoints are documented via OpenAPI/Swagger; asynchronous messaging patterns follow AsyncAPI standards for WebSocket and STOMP-based communication.
-
-* **Reasons:** Reduces dependency entanglement, ensures module autonomy, enables independent scaling, facilitates team parallelization, and provides clear API contracts. Modular structure allows straightforward migration to full microservices if needed.
+#### 2. Server-Side Rendering (SSR) (Minor — 1pt)
+* **Implementation:** Leveraged Next.js Server Components and server-side logic for rendering profiles and layouts before sending them to the client.
+* **Justification:** Ensures faster First Contentful Paint, improved performance, and significantly better SEO compared to a standard SPA.
 
 #### 3. Database Object-Relational Mapping (Minor — 1pt)
-* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping.
+* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping in PostgreSQL.
+* **Justification:** Prevents SQL injection vulnerabilities, maintains type safety, and abstracts database schema complexity.
 
-* **Reasons:** Prevents SQL injection vulnerabilities, maintains type safety, abstracts database schema complexity.
-
----
-
-### 💬 Communication & Social Features
-
-#### 4. Real-Time WebSockets Module (Major — 2pts)
-* **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)**. The architecture efficiently broadcasts messages across clients, gracefully handles connection/disconnection lifecycles, and synchronizes system state for live features.
-
-* **Reasons:** Eliminates constant HTTP polling, providing an immersive user experience essential for chatting and live updates.
-
-#### 5. User Interaction & Core Social Systems (Major — 2pts)
-* **Implementation:** Developed a suite for user interactions, including:
-    * **Chat:** A real-time messaging service to send/receive messages between users.
-    * **Profile Page:** Pages to view user-specific information.
-    * **Friends System:** Functionality to add/remove friends and view a list of friends with real-time online/offline statuses.
-
-* **Reasons:** Establishes the core pillars for a social platform, ensuring users can communicate with each other and build their network.
-
-#### 6. Organization System for Forums (Major — 2pts)
-* **Implementation:** Developed a forum platform, enabling users to create, edit, and delete sub-communities. It manages member lists (adding/removing users) and isolates permissions, allowing users to perform scoped CRUD actions, based on their given Role, only within an assigned organization.
-
-* **Reasons:** Grouping users enables structured sub-communities within the forum space, organizing interactions and related content.
-
+#### 4. Secured Public API (Major — 2pts)
+* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens, with rate limiting and comprehensive documentation (OpenAPI). Includes more than 5 distinct endpoints.
+* **Justification:** Essential for allowing secure client interactions while protecting the backend from unauthorized access or brute-force requests.
 
 ---
 
-### 🔐 Security, Authentication & Access Control
+### Communication, Social & UI Features
 
-#### 7. Standard User Management & Authentication (Major — 2pts)
-* **Implementation:** Using **Spring Security**, implemented email and password authentication (salted and hashed passwords). Features registration, login flows, profile modifications, and avatar uploads. Incorporates form and user input validation across both the frontend and backend.
+#### 5. Real-Time WebSockets Module (Major — 2pts)
+* **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)** and **sockJS** on the frontend. Broadcasts messages, synchronizes status, and handles disconnects.
+* **Justification:** Eliminates HTTP polling overhead, providing an immersive, low-latency user experience for chatting and presence updates.
 
-* **Reasons:** Securing user identity, preventing invalid data entry, and managing user profiles safely is critical for platform trust and data integrity.
+#### 6. User Interaction & Core Social Systems (Major — 2pts)
+* **Implementation:** Developed a chat system (send/receive messages), user profile pages, and a friends system (add/remove friends, online statuses).
+* **Justification:** Establishes the core pillars for a social platform, allowing users to connect and communicate effectively.
 
-#### 8. Secured Public API (Major — 2pts)
-* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens. It includes strict **rate limiting** and is fully documented following 'living documentation' principles.
-
-* **Reasons:** Exposing a public API safely allows external systems to interact with the platform / build on top of it, while ensuring strict control over traffic load and unauthorized access.
-
-#### 9. Advanced Permissions & Role Management (Major — 2pts)
-* **Implementation:** Built a Role-Based Access Control (RBAC) system managing distinct forum roles (Admin, Moderator, User, Guest). Features include per-role frontend UI views and backend action restrictions.
-
-* **Reasons:** Establishes hierarchies to prevent data tampering, enforces authorized data manipulation, and allows moderators/admins to maintain community standards.
+#### 7. Custom-made Design System (Minor — 1pt)
+* **Implementation:** Built a semantic design-token layer using TailwindCSS and Catppuccin, extracting more than 10 reusable components (Buttons, Cards, TextFields, Avatars, etc.).
+* **Justification:** Ensures visual consistency, allows rapid theming across the application, and standardizes UI development.
 
 ---
 
+### Accessibility & Compatibility
 
+#### 8. Support for Multiple Languages (Minor — 1pt)
+* **Implementation:** Implemented an i18n system supporting at least 3 languages with a UI language switcher.
+* **Justification:** Makes the platform accessible to an international user base.
+
+#### 9. Right-to-Left (RTL) Language Support (Minor — 1pt)
+* **Implementation:** Applied layout mirroring and RTL-specific CSS adjustments for RTL languages.
+* **Justification:** Ensures that users reading RTL languages have a native and seamless experience.
+
+#### 10. Support for Additional Browsers (Minor — 1pt)
+* **Implementation:** Verified and adjusted UI/UX consistency and feature compatibility across major modern browsers.
+* **Justification:** Broadens accessibility to users regardless of their browser preference.
 
 ---
 
+### Security & Devops
+
+#### 11. Standard User Management & Authentication (Major — 2pts)
+* **Implementation:** Used **Spring Security** for registration/login flows. Users can update their profile information and upload custom avatars.
+* **Justification:** Securing user identity and managing profiles is the foundational requirement for personalizing the user experience and maintaining data integrity.
+
+#### 12. Modules of Choice: CI on GitHub (Minor — 1pt)
+* **Implementation:** Created a comprehensive GitHub Actions CI pipeline separating frontend and backend jobs. It handles API type generation, Docker stack bring-up, Gradle caching, and end-to-end verification.
+* **Justification:** We chose GitHub Actions CI because automated verification is critical for a dual-stack architecture. It addresses the technical challenge of ensuring the API contracts (OpenAPI/AsyncAPI) stay synced with the frontend before merging, preventing regression bugs and broken builds. It deserves module recognition because it significantly stabilized our development workflow.
+
+---
 
 ## 🙋 Individual Contributions
 
