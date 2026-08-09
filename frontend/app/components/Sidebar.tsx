@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import BrandLink from './BrandLink';
 
@@ -57,10 +58,67 @@ interface Props {
 
 export default function Sidebar({ userId }: Props) {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Navigating is the one close trigger that is not a click on a control. Without
+  // it the drawer would stay open on top of the page it just navigated to, which
+  // reads as a broken link rather than as a menu left open.
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  // Escape closes any overlay that traps the eye - the backdrop handles the mouse,
+  // this handles the keyboard. Bound only while open so the app is not listening
+  // to every keystroke on every (app) route.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
 
   return (
-    // 250px is the design's rail width; w-52 (208px) left the nav labels tight.
-    <aside className="bg-hub-shell flex w-[250px] shrink-0 flex-col px-5 py-7">
+    // Unit 1b: two constructions, written mobile-first. Unprefixed classes are the
+    // narrow one - the rail is `fixed` and slid out of frame until opened - and
+    // `lg:` restores exactly what was there before (`static`, no transform), so
+    // above 1024px this component must not move by a pixel.
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        aria-label="Open navigation"
+        aria-expanded={isOpen}
+        aria-controls="app-nav"
+        className={`bg-hub-shell fixed left-4 top-4 z-50 rounded-xl p-2.5 text-white lg:hidden ${isOpen ? 'hidden' : ''}`}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            d="M2 5h16M2 10h16M2 15h16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
+
+      {/* A button rather than a div: it is a real click target, and making it a
+          button is what gives it keyboard focus and a label for free. */}
+      {isOpen && (
+        <button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          aria-label="Close navigation"
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+        />
+      )}
+
+      {/* 250px is the design's rail width; w-52 (208px) left the nav labels tight. */}
+      <aside
+        id="app-nav"
+        className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col px-5 py-7 transition-transform lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
       <BrandLink className="mb-5 px-2.5 text-white" />
 
       {userId && (
@@ -90,7 +148,8 @@ export default function Sidebar({ userId }: Props) {
             {item.label}
           </Link>
         ))}
-      </nav>
-    </aside>
+        </nav>
+      </aside>
+    </>
   );
 }

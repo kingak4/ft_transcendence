@@ -35,8 +35,15 @@ export default async function AppLayout({
           <div className="flex flex-1 flex-col">
             {/* Page padding for app routes, from the dictionary (12.0): 48/56px
               on wide screens, 24/16px narrow - two 56px gutters take a third of
-              a 360px viewport. Was a flat p-8 (32px) at both widths. */}
-            <main className="flex-1 px-4 py-6 lg:px-14 lg:py-12">{children}</main>
+              a 360px viewport. Was a flat p-8 (32px) at both widths.
+              
+              The narrow top padding is 80px rather than 24px because unit 1b
+              puts a fixed hamburger button in that corner. It is reserved space,
+              not a spacing decision, which is why it disappears at `lg:` where
+              the rail is a column again and nothing overlaps the content. */}
+            <main className="flex-1 px-4 pt-20 pb-6 lg:px-14 lg:pt-12 lg:pb-12">
+              {children}
+            </main>
             <Footer />
           </div>
         </div>
