@@ -159,7 +159,13 @@ Established a structured workflow for team coordination and task execution:
 * **sockJS & @stomp/stompjs**: For handling STOMP WebSocket connections to provide real-time updates and messaging.
 
 ### Backend Technologies and Frameworks
-*Space for Alina's part*
+* **Spring Boot**: Used as the core backend framework, mainly because Szymon (Technical Lead, Software Architect) already had experience with it, which made development faster and lowered the risk of getting stuck on the learning curve.
+* **Spring Data JPA (Hibernate)**: Handles the mapping between our Java objects and the PostgreSQL database, so we don't have to write repetitive SQL by hand.
+* **Liquibase**: Keeps track of database schema changes over time, so updates stay consistent and easy to reproduce across environments.
+
+### Database Technologies
+* **PostgreSQL**: Our main database. We went with it because it's one of the most popular and reliable open-source options out there, and it works smoothly with Spring Boot.
+* **Redis**: Used alongside PostgreSQL. Like Postgres, it's open-source, well-supported, and integrates easily with the rest of our Spring Boot setup.
 
 ### Other Significant Technologies and Libraries
 * **Nginx**: A lightweight and powerful open-source router configured for SSL certificate termination and request proxying.
