@@ -208,17 +208,30 @@ export default function UserSearch({
 
   const visibleResults = results.filter(isVisible);
 
+  // `size="md"`, not `sm`. 12.5 recorded this at position 1 as a call-site
+  // decision parked here: the export's search screen uses its LARGE field
+  // (`searchInputStyle`, 15x18px), not the small one it reserves for the field
+  // sunk into the chat rail. Neither of our two sizes is 15x18 - `SIZE_CLASSES`
+  // is still frozen by /chat via the shared `md` - but `md` (16x12) is the one
+  // the export means, and picking the right of two available sizes is what this
+  // call site can decide.
+  //
+  // The gap between the field and its results is the dictionary's "między
+  // sekcjami strony" row: the export puts 24px there, which 12.0 unified with
+  // the profile's 28px into 28px wide / 20px narrow.
   return (
-    <div className="mb-4 flex flex-col gap-2">
+    <div className="mb-4 flex flex-col gap-5 lg:gap-7">
       <TextField
         type="text"
         value={query}
         onChange={handleQueryChange}
         placeholder={placeholder}
-        size="sm"
+        size="md"
       />
 
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {/* `text-danger`, not `text-red-400`: the raw Tailwind palette is what
+          Steps 2-3 spent their effort removing, and a token already exists. */}
+      {error && <p className="text-danger text-xs">{error}</p>}
 
       {query.trim() && !isSearching && !error && (
         <>
@@ -235,7 +248,7 @@ export default function UserSearch({
             <button
               onClick={handleLoadMore}
               disabled={isLoadingMore}
-              className="text-on-surface/60 bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+              className="text-on-surface/60 bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoadingMore ? 'Loading…' : 'Load more'}
             </button>
