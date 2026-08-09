@@ -67,19 +67,6 @@ Lead the project through the full development lifecycle while contributing as a 
 * **Code Quality:** Managed pull requests and conducted code reviews with the Technical Lead.
 * **Legal & Compliance:** Created and integrated the Privacy Policy and Terms of Service pages, drafted the required legal documentation, and integrated the Open-Source License into the repository.
 
-#### 📊 Project Management
-
-Established a structured workflow for team coordination and task execution:
-
-* **Kick-off Meeting:** Defined the application concept, project scope, and allocated team roles through collaborative brainstorming.
-* **Task Distribution:** Assigned development tasks based on team members' responsibilities and agreed priorities.
-* **Synchronization:** Organized regular full-team and sub-team meetings to monitor progress and resolve blockers.
-* **Hybrid Meetings:** Coordinated both on-site sessions at the 42 Warsaw campus and remote meetings.
-* **Timeline Management:** Monitored project progress, adapted priorities to meet deadlines, and coordinated scope adjustments when necessary.
-* **Design Coordination:** Planned the application's interface and feature designs before implementation, ensuring developers followed a unified vision documented in Confluence.
-* **Team Support & Collaboration:** Supported and motivated team members throughout the development process, fostering a positive and collaborative atmosphere. Encouraged open communication, knowledge sharing, and teamwork to maintain strong team engagement and effective cooperation.
-
-**Tools:** Jira (task tracking), Confluence (project documentation, architecture & design specifications), Canva (UI/UX mockups and feature visualizations), Slack (project communication), Messenger (rapid team updates).
 
 ### [Szymon](https://github.com/monandszy) — Technical Lead, Software Architect
 Managed the technical side of the project during initial stages of development. Defined the technology stack and standards.
@@ -149,6 +136,19 @@ Owned the application's visual language and component library, built the identit
 *   **Build Reliability:** Repaired the root-to-service Makefile chain and added content-based staleness tracking, so `make up` rebuilds images only when their build context actually changed. Made the shared Docker network creation idempotent and fixed the environment strategy (`.env` + optional `.env.local`) so local and containerized runs stay consistent.
 *   **Automated Verification:** Authored `docs/env_verification.sh` — an end-to-end check of both builds covering HTTPS routes, closed backend ports, loopback isolation, and cross-build leak checks.
 
+### 📊 Project Management
+
+Established a structured workflow for team coordination and task execution:
+
+* **Kick-off Meeting:** Defined the application concept, project scope, and allocated team roles through collaborative brainstorming.
+* **Task Distribution:** Assigned development tasks based on team members' responsibilities and agreed priorities.
+* **Synchronization:** Organized regular full-team and sub-team meetings to monitor progress and resolve blockers.
+* **Hybrid Meetings:** Coordinated both on-site sessions at the 42 Warsaw campus and remote meetings.
+* **Timeline Management:** Monitored project progress, adapted priorities to meet deadlines, and coordinated scope adjustments when necessary.
+* **Design Coordination:** Planned the application's interface and feature designs before implementation, ensuring developers followed a unified vision documented in Confluence.
+* **Team Support & Collaboration:** Supported and motivated team members throughout the development process, fostering a positive and collaborative atmosphere. Encouraged open communication, knowledge sharing, and teamwork to maintain strong team engagement and effective cooperation.
+
+**Tools:** Jira (task tracking), Confluence (project documentation, architecture & design specifications), Canva (UI/UX mockups and feature visualizations), Slack (project communication), Messenger (rapid team updates).
 
 ## 🛠️ Technical Stack
 
