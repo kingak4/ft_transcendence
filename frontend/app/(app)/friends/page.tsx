@@ -84,10 +84,22 @@ export default async function FriendsRoute({ searchParams }: Props) {
     redirect(`/friends?page=${Math.max(0, friendsPage.totalPages - 1)}`);
   }
 
+  // The export's equivalent screen is a 640px column with a 30px/800 heading and
+  // a 24px gap - unified by 12.0 with the profile's 28px into 28/20. Page
+  // padding is NOT repeated here: (app)/layout.tsx already supplies it, and
+  // adding a second copy is the mistake positions 15 and 16 had to undo.
+  //
+  // The h1 is new. Until now this route had an h2 (inside FriendsPanel) and no
+  // h1 at all - a heading-level gap, and a duplicate once the route named
+  // itself. The panel's own heading went with this change.
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-6">
+    <div className="flex min-w-0 max-w-[640px] flex-1 flex-col gap-5 lg:gap-7">
+      <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
+        Friends
+      </h1>
+
       {friendsPage.loadError ? (
-        <p className="text-on-surface/40 text-sm">
+        <p className="text-on-surface/40 text-sm font-medium">
           Couldn&apos;t load friends. Please try again later.
         </p>
       ) : (
