@@ -17,6 +17,12 @@ export interface FriendCard {
 
 interface Props {
   friends: FriendCard[];
+  /**
+   * The signed-in user. Since unit 2a this is used for one thing only -
+   * excluding yourself from search results. It used to build the pager URLs
+   * too, back when this panel lived on `/[userId]`; the pager now targets
+   * `/friends`, which needs no id at all.
+   */
   currentUserId: string;
   /** Zero-based, matching the backend's `number` field. */
   page: number;
@@ -62,17 +68,14 @@ export default function FriendsPanel({
           aria-label="Friends pages"
           className="mt-3 flex items-center justify-between"
         >
-          <PagerLink
-            href={`/${currentUserId}?page=${page - 1}`}
-            disabled={page === 0}
-          >
+          <PagerLink href={`/friends?page=${page - 1}`} disabled={page === 0}>
             ‹ Prev
           </PagerLink>
           <span className="text-on-surface/60 text-xs">
             Page {page + 1} of {totalPages}
           </span>
           <PagerLink
-            href={`/${currentUserId}?page=${page + 1}`}
+            href={`/friends?page=${page + 1}`}
             disabled={page >= totalPages - 1}
           >
             Next ›

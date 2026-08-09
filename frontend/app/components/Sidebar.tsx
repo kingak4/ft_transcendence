@@ -58,22 +58,27 @@ interface Props {
 
 export default function Sidebar({ userId }: Props) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Navigating is the one close trigger that is not a click on a control. Without
-  // it the drawer would stay open on top of the page it just navigated to, which
-  // reads as a broken link rather than as a menu left open.
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+  // Open-ness is DERIVED, not stored: we remember which route the drawer was
+  // opened on, and it counts as open only while we are still on that route.
+  //
+  // The obvious version - a boolean plus an effect that resets it when
+  // `pathname` changes - is what react-hooks/set-state-in-effect rejects, and
+  // rightly: it renders the drawer open over the new page, then schedules a
+  // second render to close it. Deriving means the very first render after a
+  // navigation already has it closed. It also closes on navigations no link
+  // handler would catch, such as the browser back button.
+  const [openedOn, setOpenedOn] = useState<string | null>(null);
+  const isOpen = openedOn === pathname;
+  const close = () => setOpenedOn(null);
 
   // Escape closes any overlay that traps the eye - the backdrop handles the mouse,
   // this handles the keyboard. Bound only while open so the app is not listening
-  // to every keystroke on every (app) route.
+  // to every keystroke on every (app) route. This effect is fine by the same rule
+  // above: it sets state from an event callback, not synchronously in the body.
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') setOpenedOn(null);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -87,7 +92,7 @@ export default function Sidebar({ userId }: Props) {
     <>
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={() => setOpenedOn(pathname)}
         aria-label="Open navigation"
         aria-expanded={isOpen}
         aria-controls="app-nav"
@@ -108,7 +113,7 @@ export default function Sidebar({ userId }: Props) {
       {isOpen && (
         <button
           type="button"
-          onClick={() => setIsOpen(false)}
+          onClick={close}
           aria-label="Close navigation"
           className="fixed inset-0 z-30 bg-black/50 lg:hidden"
         />
@@ -119,35 +124,53 @@ export default function Sidebar({ userId }: Props) {
         id="app-nav"
         className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col px-5 py-7 transition-transform lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-      <BrandLink className="mb-5 px-2.5 text-white" />
+        <BrandLink className="mb-5 px-2.5 text-white" />
 
-      {userId && (
-        <>
-          <Link
-            href={`/${userId}`}
-            className={`mb-1.5 ${navLinkClasses(pathname === `/${userId}`)}`}
-          >
-            My Profile
-          </Link>
-          <Link
-            href={`/chat`}
-            className={`mb-1.5 ${navLinkClasses(pathname === `/chat`)}`}
-          >
-            Chat
-          </Link>
-        </>
-      )}
+        {/* `onClick={close}` on every link covers the one case deriving cannot:
+          tapping the link for the route you are already on leaves `pathname`
+          unchanged, so the drawer would sit there looking stuck. */}
+        {userId && (
+          <>
+            <Link
+              href={`/${userId}`}
+              onClick={close}
+              className={`mb-1.5 ${navLinkClasses(pathname === `/${userId}`)}`}
+            >
+              My Profile
+            </Link>
+            <Link
+              href={`/chat`}
+              onClick={close}
+              className={`mb-1.5 ${navLinkClasses(pathname === `/chat`)}`}
+            >
+              Chat
+            </Link>
+            {/* Added by unit 2a. The export reaches its equivalent screen from a
+              dashboard tile, not the rail - but we have no Home route, so this
+              is currently the only way in (12.4). It is also what makes queue
+              position 18 necessary: the rail now carries a fourth link and the
+              review done at position 10 no longer describes it. */}
+            <Link
+              href="/friends"
+              onClick={close}
+              className={`mb-1.5 ${navLinkClasses(pathname === '/friends')}`}
+            >
+              Friends
+            </Link>
+          </>
+        )}
 
-      <nav className="flex flex-col gap-1.5">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={navLinkClasses(pathname === item.href)}
-          >
-            {item.label}
-          </Link>
-        ))}
+        <nav className="flex flex-col gap-1.5">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={close}
+              className={navLinkClasses(pathname === item.href)}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </aside>
     </>
