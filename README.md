@@ -200,19 +200,19 @@ Integration standards were enforced through an CI pipeline combined with team po
 ![Diagram](docs/postgres_db_diagram.png)
 
 ## ✨ Features List
-- GetChatMessages
-- GetChats
-- ManageMessages
-- StartChat
-- GetProfile
-- ManageFriends
-- ReadPresence
-- Register
-- UpdateAvatar
-- UpdatePresence
-- Login
-- SearchUsers
-- UpdateDisplayName
+* **GetChatMessages** — *[Kinga](https://github.com/kingak4)* — Loads a chat's message history, page by page.
+* **GetChats** — *[Kinga](https://github.com/kingak4)* — Returns the list of chats a user is part of.
+* **ManageMessages** — *[Kinga](https://github.com/kingak4)* — Lets users send and delete messages, with checks in place so messages can't be empty and users can only delete their own.
+* **StartChat** — *[Kinga](https://github.com/kingak4)* — Starts a new chat between two users, or just returns the existing one if they already have a chat going.
+* **GetProfile** — *[Szymon](https://github.com/monandszy)* — Fetches a user's profile details, and their avatar (falling back to a default avatar if one isn't set).
+* **ManageFriends** — *[Szymon](https://github.com/monandszy)* — Lets users add, remove, and view their friends list.
+* **ReadPresence** — *[Szymon](https://github.com/monandszy)* — Checks whether a given user is currently online.
+* **Register** — *[Szymon](https://github.com/monandszy)* — Handles new user sign-up, making sure the email isn't already taken and setting up default profile details.
+* **UpdateAvatar** — *[Szymon](https://github.com/monandszy)* — Lets a user upload and set a new avatar.
+* **UpdatePresence** — *[Szymon](https://github.com/monandszy)* — Marks a user as online or offline based on their session.
+* **Login** — *[Szymon](https://github.com/monandszy)* — Verifies a user's email and password, and issues an access token if they match.
+* **SearchUsers** — *[Szymon](https://github.com/monandszy)* — Searches for users by name, with paging and a max page size to keep results manageable.
+* **UpdateDisplayName** — *[Szymon](https://github.com/monandszy)* — Lets a user change their display name.
 
 ## Modules
 
