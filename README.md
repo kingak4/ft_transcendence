@@ -191,7 +191,7 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 
 ## 🗄️ Database Schema
-TODO
+![Diagram](docs/postgres_db_diagram.png)
 
 ## ✨ Features List
 - GetChatMessages
