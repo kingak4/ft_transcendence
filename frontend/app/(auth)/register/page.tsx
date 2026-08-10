@@ -41,10 +41,12 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-1 items-center justify-center">
       <Card>
-        <h1 className="mb-1 text-2xl font-bold">Register</h1>
-        <p className="text-on-elevated-surface/60 mb-6 text-sm">
-          Nice to meet you!
-        </p>
+        <h1 className="mb-1 text-xl font-extrabold">Register</h1>
+        {/* Inherited and modulated rather than named - see login/page.tsx. Only
+            the leaf text nodes convert: `opacity` compounds down the tree and
+            colour alpha does not, so the two blocks below that wrap coloured
+            children keep their named colours (12.5). */}
+        <p className="mb-6 text-sm font-medium opacity-60">Nice to meet you!</p>
 
         <form onSubmit={handleRegister}>
           <TextField
@@ -84,18 +86,22 @@ export default function RegisterPage() {
               onChange={(e) => setAgreedToTerms(e.target.checked)}
               className="accent-primary mt-0.5"
             />
-            <span className="text-on-elevated-surface/60 text-xs">
+            {/* Named alpha, deliberately. `opacity-60` here plus `opacity-80` on
+                the links would multiply to 0.48 and render the links DIMMER
+                than the sentence they sit in, inverting the emphasis - alpha is
+                absolute, opacity compounds. Recorded in 12.5. */}
+            <span className="text-xs text-white/60">
               I agree to the{' '}
               <Link
                 href="/terms-of-service"
-                className="text-on-elevated-surface/80 hover:text-on-elevated-surface underline transition-colors"
+                className="text-white/80 underline transition-colors hover:text-white"
               >
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link
                 href="/privacy-policy"
-                className="text-on-elevated-surface/80 hover:text-on-elevated-surface underline transition-colors"
+                className="text-white/80 underline transition-colors hover:text-white"
               >
                 Privacy Policy
               </Link>
@@ -107,7 +113,10 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
+        {/* Named alpha for the same reason as the block above: this wraps an
+            `AccentLink` with its own `text-primary`, which opacity would fade
+            along with the sentence. */}
+        <p className="mt-4 text-center text-xs text-white/50">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>

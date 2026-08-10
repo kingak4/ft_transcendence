@@ -17,8 +17,14 @@ export default function ContactBlock({
 }: {
   className?: string;
 }) {
+  // 10px, not 8px, so the rhythm is continuous with `LegalSection`. In the export
+  // these lines are not a block at all - they are plain paragraphs of the contact
+  // section, spaced by that section's own `gap: 10px`. Our wrapper exists for the
+  // shared constant and the className hatch, so it has to reproduce that gap
+  // itself; leaving it at 8px puts a seam under the wrapper that the design has
+  // no reason to show.
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2.5 ${className}`}>
       {CONTACT_LINES.map((line) => (
         <p key={line}>{line}</p>
       ))}

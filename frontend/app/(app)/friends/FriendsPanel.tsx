@@ -6,6 +6,7 @@ import { useState, type ReactNode } from 'react';
 import UserList from '../../components/UserList';
 import UserSearch from '../../components/UserSearch';
 import AddFriendButton from './AddFriendButton';
+import OpenChatLink from './OpenChatLink';
 import RemoveFriendButton from './RemoveFriendButton';
 import { searchUsersAction } from './actions';
 
@@ -17,6 +18,12 @@ export interface FriendCard {
 
 interface Props {
   friends: FriendCard[];
+  /**
+   * The signed-in user. Since unit 2a this is used for one thing only -
+   * excluding yourself from search results. It used to build the pager URLs
+   * too, back when this panel lived on `/[userId]`; the pager now targets
+   * `/friends`, which needs no id at all.
+   */
   currentUserId: string;
   /** Zero-based, matching the backend's `number` field. */
   page: number;
@@ -36,7 +43,9 @@ export default function FriendsPanel({
 
   return (
     <section>
-      <h2 className="text-on-surface mb-3 text-xl font-bold">Friends</h2>
+      {/* The "Friends" heading moved up to the route at position 26. It was an
+          h2 with no h1 above it, and once the page named itself the two would
+          have read as the same word twice. */}
       <UserSearch
         currentUserId={currentUserId}
         excludedIds={friendIds}
@@ -45,16 +54,24 @@ export default function FriendsPanel({
           <AddFriendButton friendId={user.id} onAdded={dismiss} />
         )}
       />
+      {/* Two actions per row, where the export has one. Its single "Open chat"
+          keeps its label and position but becomes the accent action; Remove
+          takes over the pale treatment the export gave it. 12px between them is
+          the dictionary's in-group gap - 6px would crowd two buttons whose own
+          horizontal padding is 18px. */}
       <UserList
         users={friendCards}
         emptyMessage="No friends yet."
         renderAction={(user) => (
-          <RemoveFriendButton
-            friendId={user.id}
-            onRemoved={() =>
-              setRemovedIds((prev) => new Set(prev).add(user.id))
-            }
-          />
+          <div className="flex items-center gap-3">
+            <OpenChatLink friendId={user.id} />
+            <RemoveFriendButton
+              friendId={user.id}
+              onRemoved={() =>
+                setRemovedIds((prev) => new Set(prev).add(user.id))
+              }
+            />
+          </div>
         )}
       />
       {totalPages > 1 && (
@@ -62,17 +79,14 @@ export default function FriendsPanel({
           aria-label="Friends pages"
           className="mt-3 flex items-center justify-between"
         >
-          <PagerLink
-            href={`/${currentUserId}?page=${page - 1}`}
-            disabled={page === 0}
-          >
+          <PagerLink href={`/friends?page=${page - 1}`} disabled={page === 0}>
             ‹ Prev
           </PagerLink>
           <span className="text-on-surface/60 text-xs">
             Page {page + 1} of {totalPages}
           </span>
           <PagerLink
-            href={`/${currentUserId}?page=${page + 1}`}
+            href={`/friends?page=${page + 1}`}
             disabled={page >= totalPages - 1}
           >
             Next ›
@@ -95,7 +109,11 @@ function PagerLink({
   disabled: boolean;
   children: ReactNode;
 }) {
-  const base = 'rounded-lg px-3 py-1.5 text-xs font-medium transition-colors';
+  // Radius and weight from the dictionary's small-control rows; the pager stays
+  // at text-xs rather than adopting the row buttons' 14px, because it labels the
+  // list rather than acting on it.
+  const base =
+    'rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors';
 
   if (disabled) {
     return (

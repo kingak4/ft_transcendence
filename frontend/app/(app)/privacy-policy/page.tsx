@@ -3,15 +3,23 @@ import LegalSection from '../../components/LegalSection';
 
 export default function PrivacyPolicy() {
   return (
-    <main className="text mx-auto max-w-4xl px-6 py-12">
-      <h1 className="mb-8 text-4xl font-bold">Privacy Policy</h1>
+    // Same card as terms-of-service, and the same reasons - see the comment
+    // there. The two pages are one decision applied twice, not two decisions.
+    //
+    // One difference worth noticing rather than fixing: this page has no
+    // "Last updated" line, while terms-of-service does and the export gives one
+    // to both. That is missing content, not missing styling (12.5).
+    <div className="bg-elevated-surface text-on-elevated-surface mx-auto flex max-w-[720px] flex-col gap-1.5 rounded-3xl p-6 text-base font-medium leading-relaxed shadow-[0_8px_24px_rgba(10,42,77,0.08)] lg:px-14 lg:py-12">
+      <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
+        Privacy Policy
+      </h1>
 
       <LegalSection title="1. Introduction">
         <p>
           This Privacy Policy explains how ft_transcendence collects, uses, and
           protects user information.
         </p>
-        <p className="mt-4">
+        <p>
           ft_transcendence is a student project created as part of the 42 Warsaw
           curriculum.
         </p>
@@ -20,7 +28,7 @@ export default function PrivacyPolicy() {
       <LegalSection title="2. Data We Collect">
         <p>The application may collect the following information:</p>
 
-        <ul className="mt-4 list-disc space-y-2 pl-6">
+        <ul className="mt-1 list-disc space-y-2 ps-5">
           <li>Username and profile information</li>
           <li>Email address (if provided)</li>
           <li>Authentication data</li>
@@ -37,7 +45,7 @@ export default function PrivacyPolicy() {
           of the application, including:
         </p>
 
-        <ul className="mt-4 list-disc space-y-2 pl-6">
+        <ul className="mt-1 list-disc space-y-2 ps-5">
           <li>User authentication and account management</li>
           <li>Providing multiplayer game features</li>
           <li>Displaying rankings and match history</li>
@@ -52,7 +60,7 @@ export default function PrivacyPolicy() {
           authentication and ensure proper functionality of the application.
         </p>
 
-        <p className="mt-4">
+        <p>
           Users can disable cookies in their browser settings, although some
           features of the application may stop working properly.
         </p>
@@ -64,7 +72,7 @@ export default function PrivacyPolicy() {
           unauthorized access, modification, disclosure, or destruction.
         </p>
 
-        <p className="mt-4">
+        <p>
           However, no internet transmission or electronic storage method is
           completely secure.
         </p>
@@ -84,7 +92,7 @@ export default function PrivacyPolicy() {
           services required for application functionality.
         </p>
 
-        <p className="mt-4">
+        <p>
           These services may process data according to their own privacy
           policies.
         </p>
@@ -96,8 +104,8 @@ export default function PrivacyPolicy() {
           the project administrators:
         </p>
 
-        <ContactBlock className="mt-4" />
+        <ContactBlock />
       </LegalSection>
-    </main>
+    </div>
   );
 }
