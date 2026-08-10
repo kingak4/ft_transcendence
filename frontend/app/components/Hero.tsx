@@ -1,12 +1,5 @@
 import Tag from './Tag';
 
-const TAGS = [
-  'Time tracking',
-  'Task planning',
-  'Progress tracking',
-  'Stats',
-  'Community',
-];
 
 // This was a fixed brand statement, wired to nothing themeable. Step 4 left it
 // a MIXTURE - fixed gradient and fixed white text, themed accent words - and
@@ -52,21 +45,11 @@ export default function Hero() {
       {/* The bottom margins are gone: the column above spaces its children with
           a 14px gap, and a gap does not replace margins - it adds to them. */}
       <h1 className="text-on-start-page max-w-[600px] text-3xl font-extrabold leading-[1.1] tracking-[-1px] lg:text-5xl">
-        Every <span className="text-primary">skill</span> has a story –<br />
-        start yours!
+        Let's chat with your friends.
       </h1>
       <p className="text-on-start-page/80 max-w-[520px] text-lg font-medium leading-relaxed">
-        Turn your daily grind into a journey of mastery.
-        <br />
-        <span className="text-primary">42Hub</span> is a tool designed for
-        high-achievers who want to bridge the gap between &quot;getting things
-        done&quot; and &quot;getting better&quot;.
+       Join 42Hub to stay close to the people you care about — real conversations, made simple.
       </p>
-      <div className="flex flex-wrap justify-center gap-2">
-        {TAGS.map((tag) => (
-          <Tag key={tag}>{tag}</Tag>
-        ))}
-      </div>
     </div>
   );
 }
