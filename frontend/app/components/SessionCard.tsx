@@ -20,15 +20,27 @@ export default function SessionCard({
   headingLevel: Heading = 'h2',
 }: SessionCardProps) {
   return (
+    // The export has no card like this - its landing goes straight to the login
+    // form, with no "welcome back, continue" state - so nothing here is read
+    // from the design. Every value comes from the dictionary (12.0) instead:
+    // the heading takes the "nagłówek karty" row (20px/800, was 24px/700), the
+    // subtitle the "tekst drugorzędny" row, which asks for a weight this was
+    // not setting, and the button stack takes the 16px the export uses between
+    // stacked form controls.
+    //
+    // The trailing `mb-4` on the second button is gone. Inside a gap container
+    // it added 16px below the last child, on top of the card's own padding -
+    // the card already owns the space between its content and its edge.
     <Card>
-      <Heading className="mb-1 text-2xl font-bold">{title}</Heading>
-      <p className="text-on-elevated-surface/60 mb-6 text-sm">{subtitle}</p>
-      <div className="flex flex-col gap-3">
+      <Heading className="mb-1 text-xl font-extrabold">{title}</Heading>
+      {/* Inherited and modulated rather than named - see login/page.tsx. */}
+      <p className="mb-6 text-sm font-medium opacity-60">{subtitle}</p>
+      <div className="flex flex-col gap-4">
         <Button href={`/${userId}`} fullWidth>
           Go to my profile
         </Button>
         <form action={logoutAction}>
-          <Button type="submit" variant="outline" fullWidth className="mb-4">
+          <Button type="submit" variant="outline" fullWidth>
             Log out
           </Button>
         </form>

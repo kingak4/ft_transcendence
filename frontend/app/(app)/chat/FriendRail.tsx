@@ -11,9 +11,33 @@ interface Props {
   activeChats: { chatId: string; friend: Friend }[];
   allFriends: Friend[];
   activeFriendId: string;
+  /**
+   * Unit 2b makes this rail one of two panes that take turns below `lg:`, and
+   * only the route knows whose turn it is - it is the thing holding `?friend=`.
+   *
+   * The route passes the FACT, not the class. An earlier version took a
+   * `className` string for the same reason and the reasoning behind it was
+   * sound: `flex` and `hidden` are both `display`, so a component-level `flex`
+   * and a caller-level `hidden` resolve by stylesheet order, not by the order
+   * they are concatenated, and dropping the base `flex` genuinely avoided that.
+   * The cost was that the rail could no longer render itself - `flex-col`,
+   * `shrink-0` and `lg:w-[290px]` all assume a flex context it had stopped
+   * establishing, so `""` or a forgotten prop produced a silently mis-stacked
+   * rail and the route had to know this thing is built out of flexbox.
+   *
+   * A boolean keeps the cascade insight and takes the invariant back: exactly
+   * one display class is ever emitted, so there is still nothing to arbitrate,
+   * but the component is the one choosing it.
+   */
+  hiddenOnNarrow: boolean;
 }
 
-export default function FriendRail({ activeChats, allFriends, activeFriendId }: Props) {
+export default function FriendRail({
+  activeChats,
+  allFriends,
+  activeFriendId,
+  hiddenOnNarrow,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -21,7 +45,10 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
   const [searchInput, setSearchInput] = useState(currentQuery);
   const [isFocused, setIsFocused] = useState(false);
 
-  const activeChatFriends = useMemo(() => activeChats.map((c) => c.friend), [activeChats]);
+  const activeChatFriends = useMemo(
+    () => activeChats.map((c) => c.friend),
+    [activeChats],
+  );
 
   const searchResults = useMemo(() => {
     if (!currentQuery) {
@@ -41,7 +68,7 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
 
   useEffect(() => {
     if (isConnected && friendIds.length > 0) {
-      friendIds.forEach(id => checkPresence(id));
+      friendIds.forEach((id) => checkPresence(id));
     }
   }, [isConnected, friendIds, checkPresence]);
 
@@ -63,8 +90,18 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
 
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
-    <aside className="bg-hub-panel border-hub-border flex w-[290px] shrink-0 flex-col border-e">
-      <div 
+    // It only applies from `lg:` up, where there is a second pane for it to
+    // divide from; below that this rail is the whole width and the edge would
+    // draw against nothing.
+    //
+    // Width follows the same rule: full width when it is the only pane, the
+    // export's 290px once both are on screen.
+    <aside
+      className={`bg-hub-panel border-hub-border w-full shrink-0 flex-col lg:w-[290px] lg:border-e ${
+        hiddenOnNarrow ? 'hidden lg:flex' : 'flex'
+      }`}
+    >
+      <div
         className="relative flex flex-col gap-3 p-4"
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -86,20 +123,25 @@ export default function FriendRail({ activeChats, allFriends, activeFriendId }: 
 
         {/* Search Results Dropdown */}
         {(currentQuery || isFocused) && (
-          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
+          <div className="border-hub-border bg-hub-panel absolute left-4 right-4 top-[100%] z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border shadow-lg">
             {searchResults.length > 0 ? (
-              <div className="flex flex-col p-2 gap-1">
+              <div className="flex flex-col gap-1 p-2">
                 {searchResults.map((friend) => (
                   <FriendRow
                     key={friend.id}
-                    friend={{ ...friend, online: onlineStatus[friend.id] ?? false }}
+                    friend={{
+                      ...friend,
+                      online: onlineStatus[friend.id] ?? false,
+                    }}
                     isActive={false} // Never active in the search dropdown
                     onClick={() => setSearchInput('')}
                   />
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center text-sm text-hub-muted">No friends found</div>
+              <div className="text-hub-muted p-4 text-center text-sm">
+                No friends found
+              </div>
             )}
           </div>
         )}

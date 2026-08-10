@@ -29,10 +29,15 @@ export default function LoginPage() {
   return (
     <div className="flex flex-1 items-center justify-center">
       <Card>
-        <h1 className="mb-1 text-2xl font-bold">Login</h1>
-        <p className="text-on-elevated-surface/60 mb-6 text-sm">
-          Welcome back!
-        </p>
+        <h1 className="mb-1 text-xl font-extrabold">Login</h1>
+        {/* Colour is INHERITED and modulated, not named - the technique Footer
+            uses, applied to Card's children. Card sets `text-white` on itself,
+            and naming that same white again at reduced alpha declared the card's
+            foreground in five places, four of which are not Card and would only
+            be found by grep. Step 5 is still deciding whether these surfaces
+            theme; if this card ever goes light, `opacity` follows it and
+            `text-white/60` would be white on white. */}
+        <p className="mb-6 text-sm font-medium opacity-60">Welcome back!</p>
 
         <form onSubmit={handleLogin}>
           <TextField
@@ -56,7 +61,7 @@ export default function LoginPage() {
           />
 
           <div className="mb-6 text-right">
-            <span className="text-on-elevated-surface/50 cursor-not-allowed text-xs">
+            <span className="cursor-not-allowed text-xs opacity-50">
               Forgot password?
             </span>
           </div>
@@ -66,7 +71,12 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-on-elevated-surface/50 mt-4 text-center text-xs">
+        {/* Stays on named alpha, unlike the two above. This paragraph wraps an
+            `AccentLink`, which sets its own `text-primary`: colour alpha is
+            absolute and leaves that child alone, while `opacity` applies to the
+            whole subtree and would fade the accent to half. Same reason the
+            terms checkbox in register/page.tsx keeps its named colours (12.5). */}
+        <p className="mt-4 text-center text-xs text-white/50">
           Don&apos;t have an account?{' '}
           <AccentLink href="/register">Register</AccentLink>
         </p>
