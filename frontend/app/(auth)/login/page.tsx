@@ -45,7 +45,7 @@ export default function LoginPage() {
             type="text"
             value={loginValue}
             onChange={(e) => setLogin(e.target.value)}
-            placeholder="Username"
+            placeholder="Email"
             tone="card"
             className="mb-3"
           />

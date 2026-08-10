@@ -54,7 +54,7 @@ export default function RegisterPage() {
             type="text"
             value={nameValue}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Username"
+            placeholder="Email"
             tone="card"
             className="mb-3"
           />
