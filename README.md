@@ -261,11 +261,11 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 ### Security & Devops
 
-#### 11. Standard User Management & Authentication (Major — 2pts)
+#### 9. Standard User Management & Authentication (Major — 2pts)
 * **Implementation:** Used **Spring Security** for registration/login flows. Users can update their profile information and upload custom avatars.
 * **Justification:** Securing user identity and managing profiles is the foundational requirement for personalizing the user experience and maintaining data integrity.
 
-#### 12. Modules of Choice: CI on GitHub (Minor — 1pt)
+#### 10. Modules of Choice: CI on GitHub (Minor — 1pt)
 * **Implementation:** Created a comprehensive GitHub Actions CI pipeline separating frontend and backend jobs. It handles API type generation, Docker stack bring-up, Gradle caching, and end-to-end verification.
 * **Justification:** We chose GitHub Actions CI because automated verification is critical for a dual-stack architecture. It addresses the technical challenge of ensuring the API contracts (OpenAPI/AsyncAPI) stay synced with the frontend before merging, preventing regression bugs and broken builds. It deserves module recognition because it significantly stabilized our development workflow.
 
