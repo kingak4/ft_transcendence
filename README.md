@@ -200,6 +200,57 @@ Integration standards were enforced through an CI pipeline combined with team po
 ## 🗄️ Database Schema
 ![Diagram](docs/postgres_db_diagram.png)
 
+### Column Data Types
+
+#### `user_details`
+| Column | Type |
+|---|---|
+| `val` | `UUID` |
+| `display_name` | `varchar(255)` |
+| `avatar_id` | `UUID` |
+
+#### `avatars`
+| Column | Type |
+|---|---|
+| `val` | `UUID` |
+| `content` | `bytea` |
+
+#### `user_friends`
+| Column | Type |
+|---|---|
+| `user_id` | `UUID` |
+| `friend_id` | `UUID` |
+
+#### `users`
+| Column | Type |
+|---|---|
+| `val` | `UUID` |
+| `email` | `varchar(255)` |
+| `hash` | `varchar(255)` |
+| `role` | `public."user_role"` |
+
+**Note:** `role` uses a custom Postgres **enum** type.
+
+#### `chat`
+| Column | Type |
+|---|---|
+| `val` | `UUID` |
+
+#### `chat_participants`
+| Column | Type |
+|---|---|
+| `chat_id` | `UUID` |
+| `user_id` | `UUID` |
+
+#### `messages`
+| Column | Type |
+|---|---|
+| `val` | `UUID` |
+| `chat_id` | `UUID` |
+| `sender_id` | `UUID` |
+| `content` | `text` |
+| `created_at` | `timestamptz` |
+
 ## ✨ Features List
 * **GetChatMessages** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Loads a chat's message history, page by page.
 * **GetChats** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Returns the list of chats a user is part of.
