@@ -28,7 +28,7 @@ export default async function AppLayout({
 
   return (
     <StompProvider>
-      <div className="bg-surface text-on-surface flex min-h-screen flex-col">
+      <div className="bg-surface text-on-surface flex h-full flex-col min-h-0">
         <ConnectionBanner />
         {/* `flex-col` on the parent is load-bearing, not decoration. It was lost
           in a rebase and the default `row` turned ConnectionBanner - an in-flow
@@ -38,9 +38,9 @@ export default async function AppLayout({
           tell: a bottom border only means anything if the thing below it is
           below it. Only visible while the socket is down, which is why it
           survived review. */}
-        <div className="flex flex-1">
+        <div className="flex flex-1 min-h-0">
           <Sidebar userId={userId} />
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col min-h-0">
             {/* Page padding for app routes, from the dictionary (12.0): 48/56px
               on wide screens, 24/16px narrow - two 56px gutters take a third of
               a 360px viewport. Was a flat p-8 (32px) at both widths.
@@ -56,7 +56,7 @@ export default async function AppLayout({
               height and it got it from `calc(100vh-4rem)`, a number that was
               true only while this element had `p-8`. Position 11 changed the
               padding and quietly made it false. */}
-            <main className="flex flex-1 flex-col px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12">
+            <main className="flex flex-1 flex-col min-h-0 px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12">
               {children}
             </main>
             <Footer />
