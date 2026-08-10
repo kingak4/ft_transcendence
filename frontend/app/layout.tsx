@@ -52,7 +52,7 @@ export default function RootLayout({
           {themeInitScript}
         </Script>
       </head>
-      <body className="flex h-full flex-col min-h-0">
+      <body className="flex h-full flex-col">
         {children}
       </body>
     </html>

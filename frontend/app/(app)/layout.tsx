@@ -55,8 +55,21 @@ export default async function AppLayout({
               this was a block box - /chat was the only route that needed the
               height and it got it from `calc(100vh-4rem)`, a number that was
               true only while this element had `p-8`. Position 11 changed the
-              padding and quietly made it false. */}
-            <main className="flex flex-1 flex-col min-h-0 px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12">
+              padding and quietly made it false.
+
+              `overflow-y-auto` is the other half of the `min-h-0` chain above,
+              and the two only make sense together. `min-h-0` revokes a flex
+              item's refusal to shrink below its content, which is what gives
+              /chat's message pane a bounded height to scroll inside. But a
+              bound without an escape hatch is just clipping: every route that
+              is TALLER than the viewport - the legal pages, most obviously -
+              had its content spill out of this box with nothing to catch it,
+              because the shell is pinned to `h-full` and the document cannot
+              grow. This makes `main` the one scroll container. /chat is
+              unaffected: its content is already bounded to this height, so
+              this never scrolls there and its inner pane still owns the
+              scrolling. */}
+            <main className="flex flex-1 flex-col min-h-0 overflow-y-auto px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12">
               {children}
             </main>
             <Footer />
