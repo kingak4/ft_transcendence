@@ -275,18 +275,23 @@ Integration standards were enforced through an CI pipeline combined with team po
 #### 1. Framework-Based Architecture (Major — 2pts)
 * **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** using a Backend-for-Frontend (BFF) pattern.
 * **Justification:** Provides a robust ecosystem, dependency injection on the backend, and industry-standard SSR capabilities on the frontend.
+* **Contributors:** All team members
 
 #### 2. Server-Side Rendering (SSR) (Minor — 1pt)
 * **Implementation:** Leveraged Next.js Server Components and server-side logic for rendering profiles and layouts before sending them to the client.
 * **Justification:** Ensures faster First Contentful Paint, improved performance, and significantly better SEO compared to a standard SPA.
+* **Contributors:** Zyta, Kacper
 
 #### 3. Database Object-Relational Mapping (Minor — 1pt)
 * **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping in PostgreSQL.
 * **Justification:** Prevents SQL injection vulnerabilities, maintains type safety, and abstracts database schema complexity.
+* **Contributors:** Alina
+
 
 #### 4. Secured Public API (Major — 2pts)
 * **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens, with rate limiting and comprehensive documentation (OpenAPI). Includes more than 5 distinct endpoints.
 * **Justification:** Essential for allowing secure client interactions while protecting the backend from unauthorized access or brute-force requests.
+* **Contributors:** Szymon
 
 ---
 
@@ -295,18 +300,22 @@ Integration standards were enforced through an CI pipeline combined with team po
 #### 5. Real-Time WebSockets Module (Major — 2pts)
 * **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)** and **sockJS** on the frontend. Broadcasts messages, synchronizes status, and handles disconnects.
 * **Justification:** Eliminates HTTP polling overhead, providing an immersive, low-latency user experience for chatting and presence updates.
+* **Contributors:** Szymon, Kacper
 
 #### 6. User Interaction & Core Social Systems (Major — 2pts)
 * **Implementation:** Developed a chat system (send/receive messages), user profile pages, and a friends system (add/remove friends, online statuses).
 * **Justification:** Establishes the core pillars for a social platform, allowing users to connect and communicate effectively.
+* **Contributors:** All team members
 
 #### 7. Custom-made Design System (Minor — 1pt)
 * **Implementation:** Built a semantic design-token layer using TailwindCSS and Catppuccin, extracting more than 10 reusable components (Buttons, Cards, TextFields, Avatars, etc.).
 * **Justification:** Ensures visual consistency, allows rapid theming across the application, and standardizes UI 
+* **Contributors:** Zyta, Kinga
 
 #### 8. Support for Additional Browsers (Minor — 1pt)
 * **Implementation:** Verified and adjusted UI/UX consistency and feature compatibility across major modern browsers.
 * **Justification:** Broadens accessibility to users regardless of their browser preference.
+* **Contributors:** Alina
 
 ---
 
@@ -315,11 +324,13 @@ Integration standards were enforced through an CI pipeline combined with team po
 #### 9. Standard User Management & Authentication (Major — 2pts)
 * **Implementation:** Used **Spring Security** for registration/login flows. Users can update their profile information and upload custom avatars.
 * **Justification:** Securing user identity and managing profiles is the foundational requirement for personalizing the user experience and maintaining data integrity.
+* **Contributors:** Szymon, Kacper, Alina
 
 #### 10. Modules of Choice: CI on GitHub (Minor — 1pt)
 * **Implementation:** Created a comprehensive GitHub Actions CI pipeline separating frontend and backend jobs. It handles API type generation, Docker stack bring-up, Gradle caching, and end-to-end verification.
 * **Justification:** We chose GitHub Actions CI because automated verification is critical for a dual-stack architecture. It addresses the technical challenge of ensuring the API contracts (OpenAPI/AsyncAPI) stay synced with the frontend before merging, preventing regression bugs and broken builds. It deserves module recognition because it significantly stabilized our development workflow.
 
+* **Contributors:** Zyta
 ---
 
 ## 🙋 Individual Contributions
