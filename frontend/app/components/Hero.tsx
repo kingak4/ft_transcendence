@@ -8,20 +8,25 @@ const TAGS = [
   'Community',
 ];
 
-// This was a fixed brand statement, wired to nothing themeable. It is now a
-// mixture, and the mixture is deliberate but temporary:
+// This was a fixed brand statement, wired to nothing themeable. Step 4 left it
+// a MIXTURE - fixed gradient and fixed white text, themed accent words - and
+// recorded that as deliberate but temporary, pending Step 5's decision on
+// whether the gradient themes at all.
 //
-//   fixed   - the gradient (`--theme-start-page-gradient-*` has no .mocha or
-//             .latte override) and the body text, plain `white` for the same
-//             reason the sidebar's on-rail text is fixed on its fixed gradient.
-//   themed  - the two accent words, `text-primary`, which becomes Catppuccin
-//             mauve under Mocha.
+// Step 5 decided that it does, so the mixture is gone: the gradient now takes
+// .mocha/.latte overrides via BareLayout, and the two `white` literals here
+// became `on-start-page`. They were only ever shorthand for "the landing is
+// dark", which stopped being true under Latte.
 //
-// The accents follow `primary` rather than the fixed `hub-lime` on purpose:
-// `Tag` renders inside this card and took `bg-primary` at position 6, so if the
-// two disagreed the pills and the highlighted words would drift apart in Mocha.
-// Agreeing and both being odd beats disagreeing. Recorded in 12.5; position 21
-// rebuilds this area and Step 5 decides whether the gradient themes at all.
+// The accents still follow `primary` rather than `hub-lime`, and that reasoning
+// survives unchanged: `Tag` renders inside this column and took `bg-primary` at
+// position 6, so if the two disagreed the pills and the highlighted words would
+// drift apart. What HAS changed is that they no longer drift apart from the
+// background either.
+//
+// Alpha, not opacity, on the lead paragraph - it wraps a `text-primary` span,
+// and `opacity` would compound down onto that accent while colour alpha leaves
+// it alone. Same rule as login/page.tsx.
 //
 // This file held the last four `brand-*` references in the component layer, so
 // clearing them completes criterion 5 of §8.13 and unblocks Step 8's retirement
@@ -46,11 +51,11 @@ export default function Hero() {
     <div className="mx-auto flex max-w-[720px] flex-col items-center gap-3.5 text-center">
       {/* The bottom margins are gone: the column above spaces its children with
           a 14px gap, and a gap does not replace margins - it adds to them. */}
-      <h1 className="max-w-[600px] text-3xl font-extrabold leading-[1.1] tracking-[-1px] text-white lg:text-5xl">
+      <h1 className="text-on-start-page max-w-[600px] text-3xl font-extrabold leading-[1.1] tracking-[-1px] lg:text-5xl">
         Every <span className="text-primary">skill</span> has a story –<br />
         start yours!
       </h1>
-      <p className="max-w-[520px] text-lg font-medium leading-relaxed text-white/80">
+      <p className="text-on-start-page/80 max-w-[520px] text-lg font-medium leading-relaxed">
         Turn your daily grind into a journey of mastery.
         <br />
         <span className="text-primary">42Hub</span> is a tool designed for

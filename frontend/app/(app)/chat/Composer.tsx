@@ -45,7 +45,9 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
         disabled={!!isInputDisabled}
         suppressHydrationWarning
       />
-      <Button variant="send" disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
+      {/* Krok 6 unit 6.4: `send` was merged into `primary`, which is the
+          default, so the variant prop goes rather than changing value. */}
+      <Button disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
         {CHAT_DICT.composer.send}
       </Button>
     </form>

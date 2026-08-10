@@ -27,14 +27,15 @@ const NAV_BASE_CLASSES =
  * and churning the token layer costs more than it buys; hub-shell-hover has no
  * counterpart at all, since the export is static and draws no hover state.
  *
- * Still open, and deliberately not a Step 4 concern: these tokens carry no
- * .mocha/.latte override, so the rail stays a fixed dark column whatever
- * ThemeToggle says. That is Step 5's job, not a styling defect.
+ * Step 5 closed the last open item here: the three on-rail tokens now carry
+ * .mocha/.latte overrides, so the rail follows ThemeToggle instead of staying
+ * a fixed dark column. Under Latte it becomes a light column, which is why the
+ * two `text-white` literals below had to become `text-hub-on-shell` in the same
+ * unit - they were correct only while "the rail is dark" was guaranteed, and it
+ * no longer is. See MIGRATION-INVENTORY.md 13.4.
  *
- * The rail is a fixed dark gradient, so the text on it is fixed too - the same
- * reasoning that keeps the hub brand hues out of theme indirection. Extracted
- * because both the profile link and the nav items need the identical pair,
- * mirroring `buttonClasses()` in Button.tsx.
+ * `navLinkClasses` is extracted because both the profile link and the nav items
+ * need the identical pair, mirroring `buttonClasses()` in Button.tsx.
  */
 function navLinkClasses(isActive: boolean) {
   const state = isActive
@@ -119,7 +120,7 @@ export default function Sidebar({ userId }: Props) {
         aria-label="Open navigation"
         aria-expanded={isOpen}
         aria-controls="app-nav"
-        className={`bg-hub-shell fixed left-4 top-4 z-50 rounded-xl p-2.5 text-white lg:hidden ${isOpen ? 'hidden' : ''}`}
+        className={`bg-hub-shell text-hub-on-shell fixed left-4 top-4 z-50 rounded-xl p-2.5 lg:hidden ${isOpen ? 'hidden' : ''}`}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
           <path
@@ -166,7 +167,7 @@ export default function Sidebar({ userId }: Props) {
         id="app-nav"
         className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:visible lg:static lg:translate-x-0 ${isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'}`}
       >
-        <BrandLink className="mb-5 px-2.5 text-white" />
+        <BrandLink className="text-hub-on-shell mb-5 px-2.5" />
 
         {/* Three links left the rail on 2026-08-10: Terms of Service, Privacy
             Policy and the STOMP dev page. Nothing became unreachable - `Footer`

@@ -47,15 +47,20 @@
    * (--color-surface, --color-elevated-surface, ...) and retire the
    * --color-brand-* block, so components name one palette rather than two.
    *
-   * Fixed brand hues - these *are* the brand, so they do not take theme
-   * indirection. A teal-to-blue bubble stays teal-to-blue in any flavor.
+   * Accent hues. These were exempt from theme indirection until Step 5, on the
+   * grounds that they *are* the brand and a teal-to-blue bubble stays
+   * teal-to-blue in any flavor. Step 5 revoked that: there is no brand layer
+   * above the themes, only three named themes - 42Hub, Mocha and Latte - and a
+   * page has to be coherent inside each one. So a bubble in Mocha is a
+   * Mocha-family teal, and these take the same indirection as every other
+   * themeable role. See MIGRATION-INVENTORY.md 13.4, decision D1.
    */
-  --color-hub-ink: #0d2b47;
-  --color-hub-ink-deep: #0a3348;
-  --color-hub-teal: #146b7a;
-  --color-hub-blue: #2f9bcf;
-  --color-hub-mint: #4ac9a0;
-  --color-hub-lime: #a3e635;
+  --color-hub-ink: var(--theme-hub-ink);
+  --color-hub-ink-deep: var(--theme-hub-ink-deep);
+  --color-hub-teal: var(--theme-hub-teal);
+  --color-hub-blue: var(--theme-hub-blue);
+  --color-hub-mint: var(--theme-hub-mint);
+  --color-hub-lime: var(--theme-hub-lime);
 
   /*
    * Themeable semantics. Same pattern as the block above: the name is
@@ -102,6 +107,53 @@
   --color-hub-on-shell-muted: var(--theme-hub-on-shell-muted);
   --color-hub-shell-hover: var(--theme-hub-shell-hover);
   --color-hub-on-shell: var(--theme-hub-on-shell);
+
+  /*
+   * Step 5, unit 5.5. Four gradients were written as arbitrary values by Step
+   * 4 - the auth card, the profile hero, the logout button and the friends-row
+   * action. A value with no name cannot be overridden, so making them answer
+   * ThemeToggle means naming them first. Stops are named by POSITION, for the
+   * reason the shell gradient already records: a stop has no role beyond where
+   * it sits, and "start/end" survives a hue change that "teal" would not.
+   *
+   * The hero needs no tokens of its own - its three stops are exactly
+   * hub-teal, hub-blue and hub-mint, which now theme on their own.
+   */
+  --color-hub-card-start: var(--theme-hub-card-start);
+  --color-hub-card-end: var(--theme-hub-card-end);
+  --color-hub-danger-start: var(--theme-hub-danger-start);
+  --color-hub-danger-end: var(--theme-hub-danger-end);
+  --color-hub-row-action-start: var(--theme-hub-row-action-start);
+  --color-hub-row-action-end: var(--theme-hub-row-action-end);
+  /*
+   * The row action's label was `text-hub-teal`, which overloaded that hue as
+   * both a fill (the bubble) and a text colour. A fill and a label on top of
+   * each other cannot share one value once flavors invert, so the label gets
+   * its own role. Its 42Hub value is the same #146b7a it always was.
+   */
+  --color-hub-on-row-action: var(--theme-hub-on-row-action);
+
+  /*
+   * Step 5, unit 5.4. The auth surface decided its own foreground in four
+   * places - BareLayout's text-white, Card's text-white and hairline, and
+   * TextField's `elevated` tone - each of them correct only while that surface
+   * was guaranteed dark. Under Latte it is not, so the foreground becomes a
+   * role like any other. Naming them does NOT rename the `elevated` tone;
+   * that is unit 6.3 and stays there.
+   */
+  --color-on-start-page: var(--theme-on-start-page);
+  --color-hub-on-card: var(--theme-hub-on-card);
+  --color-hub-card-border: var(--theme-hub-card-border);
+  --color-hub-card-field: var(--theme-hub-card-field);
+  --color-hub-card-field-border: var(--theme-hub-card-field-border);
+
+  /*
+   * Text that sits on a saturated accent fill - the profile hero and the
+   * logout button. Distinct from `on-primary`, which the CTA already owns:
+   * the CTA's mint-lime fill is light in every flavor and takes dark text,
+   * while these two invert between flavors.
+   */
+  --color-hub-on-accent: var(--theme-hub-on-accent);
 }
 
 /* Default theme: original 42Hub look, active when no theme class is set */
@@ -138,14 +190,11 @@
      z designem, do Kroku 4/6). */
   --theme-danger: #e5484d;
 
-  /* 42Hub chat semantics. Defined here only - the chat surface is
-     deliberately a fixed-light island for now, so .mocha/.latte do not
-     override these. See PLAN-static-chat-page.md section 7.
-     TODO(design-migration): the chat page currently ignores ThemeToggle.
-     Add a --theme-hub-* override block to the .mocha, .latte rule below
-     (panel -> ctp-surface0, surface -> ctp-base, border -> ctp-surface1,
-     muted/time -> ctp-subtext0/overlay1). This indirection exists so that
-     is one added block here and zero JSX edits. */
+  /* 42Hub chat semantics. The chat surface was a fixed-light island until
+     Step 5, which added the .mocha/.latte overrides below - the TODO that
+     asked for them is closed, and the mapping it proposed was followed for
+     the five roles it named. The six it did not name are chosen in
+     MIGRATION-INVENTORY.md 13.4. */
   --theme-hub-surface: #f3f6f4;
   --theme-hub-panel: #ffffff;
   --theme-hub-panel-sunken: #f8faf9;
@@ -177,11 +226,49 @@
   --theme-start-page-gradient-end: #2f9bcf;
   /* ===== KONIEC ZMIANY ===== */
 
-  /* Placeholder values - identical to the white/70, white/10, white they
-     replace. See matching comment in @theme inline above. */
+  /* Confirmed against the export at Step 4, no longer placeholders - see the
+     note in Sidebar.tsx. See matching comment in @theme inline above. */
   --theme-hub-on-shell-muted: rgba(255, 255, 255, 0.7);
   --theme-hub-shell-hover: rgba(255, 255, 255, 0.1);
   --theme-hub-on-shell: #ffffff;
+
+  /* ===== ZMIANA — KROK 5, grupa E (odebrany wyjątek "to jest marka") =====
+     Wartości bez zmian - to jest ten sam 42Hub co przed krokiem. Zmienił się
+     wyłącznie sposób ich podania: przez --theme-*, żeby odmiany mogły je
+     nadpisać. Motyw domyślny musi zostać co do bajtu taki sam. */
+  --theme-hub-ink: #0d2b47;
+  --theme-hub-ink-deep: #0a3348;
+  --theme-hub-teal: #146b7a;
+  --theme-hub-blue: #2f9bcf;
+  --theme-hub-mint: #4ac9a0;
+  --theme-hub-lime: #a3e635;
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* ===== ZMIANA — KROK 5, jednostka 5.5 (tokenizacja czterech gradientów) =====
+     Każda wartość jest przepisana wprost z miejsca, w którym stała jako
+     wartość dowolna. Żadna się nie zmienia - to jest warunek, żeby 5.5 była
+     refaktoryzacją, a nie cichym redesignem motywu 42Hub. */
+  --theme-hub-card-start: rgba(20, 40, 45, 0.55);
+  --theme-hub-card-end: rgba(15, 26, 38, 0.6);
+  --theme-hub-danger-start: #e35b52;
+  --theme-hub-danger-end: #c0453f;
+  --theme-hub-row-action-start: #eaf6fb;
+  --theme-hub-row-action-end: #e9f9f0;
+  --theme-hub-on-row-action: #146b7a;
+  /* ===== KONIEC ZMIANY ===== */
+
+  /* ===== ZMIANA — KROK 5, jednostka 5.4 (pierwszy plan powierzchni auth) =====
+     Też przepisane 1:1: białe i alfy, które stały wprost w BareLayout, Card
+     i tonie `elevated` TextFielda. Dwie krawędzie zostają osobnymi tokenami
+     mimo różnicy 0.01 - scalenie ich na 0.14 byłoby zmianą wyglądu w kroku,
+     który ma jej nie mieć. */
+  --theme-on-start-page: #ffffff;
+  --theme-hub-on-card: #ffffff;
+  --theme-hub-card-border: rgba(255, 255, 255, 0.14);
+  --theme-hub-card-field: rgba(255, 255, 255, 0.08);
+  --theme-hub-card-field-border: rgba(255, 255, 255, 0.15);
+  --theme-hub-on-accent: #ffffff;
+  /* ===== KONIEC ZMIANY ===== */
 }
 
 /* Catppuccin flavors: --color-ctp-* already flip between these two
@@ -200,17 +287,170 @@
   --theme-on-elevated-surface: var(--color-ctp-text);
   --theme-elevated-border: var(--color-ctp-surface1);
   --theme-primary: var(--color-ctp-mauve-400);
-  --theme-on-primary: var(--color-ctp-crust);
+
+  /* ===== KROK 5, jednostka 5.2 — grupa A (semantyka czatu) =====
+     Pięć ról wprost z TODO, które ten krok zamyka; sześć pozostałych wybrano
+     w 13.4. Drabina elewacji jest ta sama, którą opisuje komentarz wyżej, i
+     czyta się ją jako ODLEGŁOŚĆ OD STRONY, nie jako jasność - dlatego działa
+     w obie strony, mimo że w Mocha surface0 jest jaśniejsze od base, a w
+     Latte ciemniejsze.
+     `field` i `border` celowo NIE trafiają oba na surface1: pole na tej samej
+     wartości co jego własna krawędź to pole bez widocznej krawędzi. */
+  --theme-hub-surface: var(--color-ctp-base);
+  --theme-hub-panel: var(--color-ctp-surface0);
+  --theme-hub-panel-sunken: var(--color-ctp-mantle);
+  --theme-hub-field: var(--color-ctp-base);
+  --theme-hub-border: var(--color-ctp-surface1);
+  --theme-hub-on-surface: var(--color-ctp-text);
+  --theme-hub-muted: var(--color-ctp-subtext0);
+  --theme-hub-time: var(--color-ctp-overlay1);
+  --theme-hub-row-active: var(--color-ctp-surface2);
+
+  /* ===== KROK 5, jednostka 5.3 — grupy B i C (szyna) =====
+     Szyna jest CHROMEM, nie kartą, więc bierze szczeble spod strony - to jest
+     dokładnie ta zasada, którą komentarz przy --theme-elevated-surface wyżej
+     zapisuje dla mantle i crust.
+     Role on-shell muszą iść RAZEM z gradientem: w Latte szyna robi się jasna,
+     a dotychczasowe #ffffff byłoby białym na jasnym. */
+  --theme-hub-shell-start: var(--color-ctp-crust);
+  --theme-hub-shell-mid: var(--color-ctp-mantle);
+  --theme-hub-shell-end: var(--color-ctp-crust);
+  --theme-hub-on-shell: var(--color-ctp-text);
+  --theme-hub-on-shell-muted: var(--color-ctp-subtext0);
+  --theme-hub-shell-hover: var(--color-ctp-surface0);
+
+  /* ===== KROK 5, grupa E — wypełnienia akcentowe =====
+     Odcienie wypełnień zostają wspólne dla obu odmian, bo `-400` jest jasne
+     w obu, a na jasnym wypełnieniu ciemny tekst działa w obu. Rozdzielają się
+     tylko role TEKSTOWE - tak jak już robią to --theme-success i
+     --theme-danger, i z tego samego powodu.
+     `hub-ink` opisuje partnera kontrastowego CTA, nie "granat": gdy
+     wypełnienie zmienia jasność, on musi zmienić się razem z nim. Ta sama
+     inwersja, którą --theme-on-primary wykonuje linijkę wyżej. */
+  --theme-hub-teal: var(--color-ctp-teal-400);
+  --theme-hub-blue: var(--color-ctp-blue-400);
+  --theme-hub-mint: var(--color-ctp-green-400);
+  --theme-hub-lime: var(--color-ctp-yellow-400);
+  --theme-hub-ink-deep: var(--color-ctp-mantle);
+  --theme-hub-danger-start: var(--color-ctp-red-400);
+  --theme-hub-danger-end: var(--color-ctp-maroon-400);
+
+  /* ===== KROK 5, jednostka 5.4 — gradient landingu i powierzchnia auth =====
+     `color-mix` zamiast gotowego odcienia, bo to jedyny zapis, który daje
+     JEDEN wiersz na obie odmiany: barwa pochodzi z akcentu, a jasność z
+     neutralnego szczebla, który i tak już się przełącza. W Mocha wychodzi
+     ciemne tło z barwą, w Latte jasne z tą samą barwą - i `ctp-text` czyta
+     się na obu, czego żadna stała wartość nie zapewniała.
+     Alfy karty i pola są zapisane jako procent `ctp-text` w przezroczystości,
+     czyli dokładnie ta sama relacja, którą wcześniej wyrażało `white/8` -
+     tyle że "white" przestało być prawdą. */
+  --theme-start-page-gradient-start: color-mix(
+    in oklab,
+    var(--color-ctp-sapphire-400) 20%,
+    var(--color-ctp-crust)
+  );
+  --theme-start-page-gradient-mid: color-mix(
+    in oklab,
+    var(--color-ctp-teal-400) 24%,
+    var(--color-ctp-base)
+  );
+  --theme-start-page-gradient-mid-2: color-mix(
+    in oklab,
+    var(--color-ctp-green-400) 20%,
+    var(--color-ctp-base)
+  );
+  --theme-start-page-gradient-end: color-mix(
+    in oklab,
+    var(--color-ctp-blue-400) 26%,
+    var(--color-ctp-mantle)
+  );
+  --theme-on-start-page: var(--color-ctp-text);
+
+  --theme-hub-card-start: color-mix(
+    in srgb,
+    var(--color-ctp-mantle) 78%,
+    transparent
+  );
+  --theme-hub-card-end: color-mix(
+    in srgb,
+    var(--color-ctp-crust) 82%,
+    transparent
+  );
+  --theme-hub-on-card: var(--color-ctp-text);
+  --theme-hub-card-border: color-mix(
+    in srgb,
+    var(--color-ctp-text) 14%,
+    transparent
+  );
+  --theme-hub-card-field: color-mix(
+    in srgb,
+    var(--color-ctp-text) 8%,
+    transparent
+  );
+  --theme-hub-card-field-border: color-mix(
+    in srgb,
+    var(--color-ctp-text) 15%,
+    transparent
+  );
+
+  /* Przycisk wiersza listy: barwa z akcentu, jasność z panelu, więc kafelek
+     zawsze siedzi tuż nad swoim wierszem, a nie świeci na ciemnym tle. */
+  --theme-hub-row-action-start: color-mix(
+    in oklab,
+    var(--color-ctp-sapphire-400) 16%,
+    var(--color-ctp-surface0)
+  );
+  --theme-hub-row-action-end: color-mix(
+    in oklab,
+    var(--color-ctp-green-400) 16%,
+    var(--color-ctp-surface0)
+  );
 }
 
+/* Roles that read as TEXT or as a small mark on the page's own background,
+   rather than as a fill someone else's text sits on. Those are the only ones
+   that need a per-flavor shade: a `-400` accent is legible on Mocha's dark
+   ground and washes out on Latte's light one, which is exactly why the two
+   pre-existing rows below were split in the first place.
+
+   The `on-accent` group joined them after the 5.7 matrix, and the reason is
+   worth keeping. The shared block above assigns accent FILLS at `-400` on the
+   assumption that `-400` means "light" - it does not. The numeric scale is
+   anchored PER FLAVOR, so Mocha's green-400 measured rgb(178,230,174) while
+   Latte's measured rgb(102,170,94), a mid-tone. Both of those want DARK text,
+   so the role is "the flavor's darkest neutral" - and that is `crust` in Mocha
+   but `text` in Latte, because Catppuccin's neutral ladder inverts between
+   them. Pointing both at `crust` put near-white text on a mid-green in Latte,
+   around 2:1. Same trap as the surface ladder, one layer up. */
 .mocha {
   --theme-success: var(--color-ctp-green-400);
   --theme-danger: var(--color-ctp-red-400);
+  --theme-on-primary: var(--color-ctp-crust);
+
+  /* KROK 5 — wskaźniki obecności/statusu i etykieta przycisku wiersza */
+  --theme-hub-online: var(--color-ctp-green-400);
+  --theme-hub-status: var(--color-ctp-teal-400);
+  --theme-hub-on-row-action: var(--color-ctp-teal-400);
+
+  /* Najciemniejszy neutralny odcień odmiany — tekst na wypełnieniu akcentowym */
+  --theme-hub-ink: var(--color-ctp-crust);
+  --theme-hub-on-accent: var(--color-ctp-crust);
 }
 
 .latte {
   --theme-success: var(--color-ctp-green-700);
   --theme-danger: var(--color-ctp-red-700);
+  --theme-on-primary: var(--color-ctp-text);
+
+  /* KROK 5 — jw. */
+  --theme-hub-online: var(--color-ctp-green-700);
+  --theme-hub-status: var(--color-ctp-teal-700);
+  --theme-hub-on-row-action: var(--color-ctp-teal-700);
+
+  /* W Latte najciemniejszym neutralnym jest `text`, nie `crust` — drabina
+     neutralnych odwraca się między odmianami. */
+  --theme-hub-ink: var(--color-ctp-text);
+  --theme-hub-on-accent: var(--color-ctp-text);
 }
 
 /* The landing/auth background. Step 4 position 21 brought its stops and angle
@@ -246,14 +486,15 @@
   );
 }
 
-/* Primary CTA treatment. Unused by the chat page: the design gives CTAs a
-   mint-lime fill while Send keeps the teal-blue bubble, and a single
-   --theme-primary cannot express both. Recorded here so the distinction
-   lives in the token layer rather than being rediscovered later.
-   TODO(design-migration): currently used only by Sidebar's active nav item.
-   When Button's `primary` variant adopts the new design it should take this
-   gradient, at which point `send` and `primary` become genuinely distinct
-   treatments rather than one being a stand-in. */
+/* Primary CTA treatment: a mint-to-lime fill, which a single --theme-primary
+   cannot express - that is why this is a utility and not a token.
+   Krok 6 unit 6.5 closed the TODO that used to sit here. It asked for Button's
+   `primary` variant to adopt this gradient; Krok 4 position 2 already did, so
+   the unit was a matter of removing a note that had outlived its task. The
+   second half of that note - that adopting it would leave `send` and `primary`
+   as two genuinely distinct treatments - was overtaken by unit 6.4, which
+   merged them. Three call sites now: Button's `primary`, the sidebar's active
+   nav item, and the active option of ThemeToggle. */
 @utility bg-hub-cta {
   background: linear-gradient(
     135deg,
@@ -262,8 +503,89 @@
   );
 }
 
+/*
+ * Step 5, unit 5.5. Four gradients that Step 4 wrote as arbitrary values at
+ * their call sites, moved here so they have names to override. Each one
+ * reproduces its previous value exactly under the default theme - unit 5.5 is
+ * a refactor of *where* the value lives, not a change to what 42Hub looks
+ * like. What is new is that all four now answer ThemeToggle.
+ */
+
+/* Profile hero. Needs no tokens of its own: its three stops were already the
+   literal values of hub-teal, hub-blue and hub-mint, so naming them was
+   enough. That the export reused the bubble's hues here is the reason. */
+@utility bg-hub-hero {
+  background: linear-gradient(
+    135deg,
+    var(--color-hub-teal),
+    var(--color-hub-blue) 55%,
+    var(--color-hub-mint)
+  );
+}
+
+/* The auth card. Translucent on purpose - it sits over the landing gradient
+   with a backdrop blur, so it tints what is behind it rather than covering
+   it. That is why its stops carry alpha and the others do not. */
+@utility bg-hub-card {
+  background: linear-gradient(
+    160deg,
+    var(--color-hub-card-start),
+    var(--color-hub-card-end)
+  );
+}
+
+/* Logout. The one destructive action in the app that is a filled button
+   rather than a text colour, which is why it needs gradient stops of its own
+   instead of reusing --theme-danger. */
+@utility bg-hub-danger-cta {
+  background: linear-gradient(
+    135deg,
+    var(--color-hub-danger-start),
+    var(--color-hub-danger-end)
+  );
+}
+
+/* The friends-row action. Pairs with text-hub-on-row-action, which is a
+   separate role for the reason recorded above: this button's label sits on
+   this button's fill, so the two cannot be the same hue token. */
+@utility bg-hub-row-action {
+  background: linear-gradient(
+    135deg,
+    var(--color-hub-row-action-start),
+    var(--color-hub-row-action-end)
+  );
+}
+
 body {
   font-family: var(--font-geist-sans), Arial, sans-serif;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
+}
+
+/*
+ * Krok 6, unit 6.12. Chrome paints autofilled inputs with its own background
+ * and text colour through a UA rule that no ordinary class can outrank - it
+ * bypasses the cascade rather than losing to it. On the auth card that turned a
+ * translucent dark field opaque pale blue mid-form, and after Krok 5 it does so
+ * in every flavour, since our fill now varies and Chrome's does not.
+ *
+ * Two properties, each doing a different job:
+ *
+ * `-webkit-text-fill-color` is the only way to reach autofilled text at all -
+ * `color` is ignored. `currentColor` resolves to whatever the field's own tone
+ * already set, so this works for `card` and `chat` and anything added later
+ * without naming a single colour here.
+ *
+ * The transition is the standard trick for the BACKGROUND, which cannot be
+ * overridden at all. Chrome applies its fill as a transitionable background,
+ * so an absurdly long delay means the change never visibly arrives and the
+ * field keeps the background its class gave it. It is a workaround, and it is
+ * the only one that preserves a translucent fill - the usual `box-shadow inset`
+ * alternative can only paint an opaque colour.
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: currentColor;
+  transition: background-color 100000s ease-in-out 0s;
 }

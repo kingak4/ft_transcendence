@@ -72,14 +72,23 @@ export function useTheme() {
     readServerTheme,
   );
 
-  function toggleTheme() {
-    const current = readAppliedTheme();
-    const next =
-      THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+  /**
+   * Added at Krok 6 unit 6.8, when `ThemeToggle` became a three-option control
+   * rather than a cycle. `toggleTheme` is expressed in terms of it rather than
+   * beside it: the apply/persist/notify trio has to happen together, and two
+   * copies of it is how one of them ends up missing the `emitChange` and
+   * leaving the DOM and the subscribers disagreeing.
+   */
+  function setTheme(next: Theme) {
     applyTheme(next);
     localStorage.setItem(THEME_STORAGE_KEY, next);
     emitChange();
   }
 
-  return { theme, toggleTheme };
+  function toggleTheme() {
+    const current = readAppliedTheme();
+    setTheme(THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length]);
+  }
+
+  return { theme, setTheme, toggleTheme };
 }

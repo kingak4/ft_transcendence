@@ -35,13 +35,20 @@ const FOOTER_LINKS = [
 // an API change (§8.7 reguła 3) and Step 6's business.
 //
 // Not `hub-time` either, even though --theme-hub-time is #9aa5a0, the export's
-// exact value: it is a fixed light-mode grey with no .mocha/.latte override, so
-// it would ignore ThemeToggle and fail §8.9 pkt 5.
+// exact value. The original reason - a fixed light-mode grey with no
+// .mocha/.latte override, which would ignore ThemeToggle and fail §8.9 pkt 5 -
+// expired at Krok 5, which gave it one. The conclusion survives on the other
+// half of the argument: `hub-time` is the chat's TIMESTAMP role, and this footer
+// renders on `(marketing)`, `(auth)` and every `(app)` route. Borrowing a role
+// from one surface to paint another is how a token layer stops meaning
+// anything, whether or not the value happens to fit.
 //
 // What is deliberately NOT fixed here: on (app) routes this footer has no
 // counterpart in the export at all - those links live at the bottom of the
-// sidebar, and GitHub is a dashboard card, not chrome. Both are structural, not
-// styling. See 12.5.
+// sidebar, and GitHub is a dashboard card, not chrome. Krok 6 unit 6.9 was the
+// unit that would have moved them, and it was CANCELLED (14.2.3): the footer
+// stays on every route and keeps its links. So this is no longer a deferral -
+// it is a deliberate divergence from the export. See 14.2.3.
 export default function Footer() {
   return (
     <footer className="border-current/10 mt-auto flex flex-wrap items-center justify-between gap-4 border-t px-4 py-4 text-xs lg:px-14">
