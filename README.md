@@ -9,14 +9,15 @@ This project is licensed under the GNU GPL v3 License.
 
 ➡️ [[GNU GPL v3 License](LICENSE.md)]
 
-## 📌 Description
+LICENSE.md)]
 
-The goal of this web application is to enable user interaction through real-time communication and community building.
+## 📌 42hub.tech Project Description
 
-The platform provides three functionalities:
-*   **Secure Authentication:** A user management system supporting registration, login, and session handling.
-*   **Chat:** A messaging system that allows users to connect and exchange messages in real time.
-*   **Community Forums:** A space for users to create discussions, post topics, share knowledge, and engage in threaded conversations.
+The goal is to enable user interaction through real-time communication.
+
+The platform provides the following functionalities:
+*   **Authentication:** A user management system supporting registration, login, and session handling.
+*   **Chat:** A messaging system that allows users to connect and exchange messages.
 
 ## ⚙️ Setup
 
