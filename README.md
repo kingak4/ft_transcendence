@@ -217,7 +217,7 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 ## Modules
 
-**Total Points Calculated: 17 Points** (Major = 2pts, Minor = 1pt)
+**Total Points Calculated: 15 Points** (Major = 2pts, Minor = 1pt)
 
 ### Core Web Infrastructure
 
@@ -251,21 +251,9 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 #### 7. Custom-made Design System (Minor — 1pt)
 * **Implementation:** Built a semantic design-token layer using TailwindCSS and Catppuccin, extracting more than 10 reusable components (Buttons, Cards, TextFields, Avatars, etc.).
-* **Justification:** Ensures visual consistency, allows rapid theming across the application, and standardizes UI development.
+* **Justification:** Ensures visual consistency, allows rapid theming across the application, and standardizes UI 
 
----
-
-### Accessibility & Compatibility
-
-#### 8. Support for Multiple Languages (Minor — 1pt)
-* **Implementation:** Implemented an i18n system supporting at least 3 languages with a UI language switcher.
-* **Justification:** Makes the platform accessible to an international user base.
-
-#### 9. Right-to-Left (RTL) Language Support (Minor — 1pt)
-* **Implementation:** Applied layout mirroring and RTL-specific CSS adjustments for RTL languages.
-* **Justification:** Ensures that users reading RTL languages have a native and seamless experience.
-
-#### 10. Support for Additional Browsers (Minor — 1pt)
+#### 8. Support for Additional Browsers (Minor — 1pt)
 * **Implementation:** Verified and adjusted UI/UX consistency and feature compatibility across major modern browsers.
 * **Justification:** Broadens accessibility to users regardless of their browser preference.
 
