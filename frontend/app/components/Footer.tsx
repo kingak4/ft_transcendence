@@ -10,6 +10,7 @@ const FOOTER_LINKS = [
   },
   { href: '/privacy-policy', label: 'Privacy Policy' },
   { href: '/terms-of-service', label: 'Terms of Service' },
+  { href: '/api/docs', label: 'API' },
 ];
 
 // Geometry follows the "padding nagłówka i stopki" row of the dictionary
