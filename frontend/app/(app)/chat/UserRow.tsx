@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
 import PresenceAvatar from '../../components/PresenceAvatar';
-import type { Friend } from './types';
+import type { ChatUser } from './types';
 
 interface Props {
-  friend: Friend;
+  user: ChatUser;
   isActive: boolean;
   onClick?: () => void;
 }
@@ -18,12 +18,12 @@ interface Props {
  * its timestamp, and an unread badge driven by the message feed.
  * Await the backend `/chats` PR to provide this data, then pass it down as optional props.
  */
-export default function FriendRow({ friend, isActive, onClick }: Props) {
-  const avatarSrc = friend.avatarId ? `/api/users/avatar/${friend.avatarId}` : null;
+export default function UserRow({ user, isActive, onClick }: Props) {
+  const avatarSrc = user.avatarId ? `/api/users/avatar/${user.avatarId}` : null;
 
   return (
     <Link
-      href={`/chat?friend=${friend.id}`}
+      href={`/chat?friend=${user.id}`}
       onClick={onClick}
       // `page` is the right token here: this link points at the current view.
       aria-current={isActive ? 'page' : undefined}
@@ -32,16 +32,16 @@ export default function FriendRow({ friend, isActive, onClick }: Props) {
     >
       <PresenceAvatar
         src={avatarSrc}
-        alt={friend.name}
+        alt={user.name}
         size={40}
-        initial={friend.initial}
-        color={friend.color}
-        online={friend.online}
+        initial={user.initial}
+        color={user.color}
+        online={user.online}
       />
       {/* min-w-0 is required for `truncate`: a flex item defaults to
           min-width:auto and will not shrink below its text otherwise. */}
       <span className="text-hub-on-surface min-w-0 flex-1 truncate text-sm font-semibold">
-        {friend.name}
+        {user.name}
       </span>
     </Link>
   );

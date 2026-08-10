@@ -28,14 +28,11 @@ export default async function AppLayout({
 
   return (
     <StompProvider>
-      <div className="bg-surface text-on-surface flex min-h-screen flex-col">
-        <ConnectionBanner />
-        <div className="flex flex-1">
-          <Sidebar userId={userId} />
-          <div className="flex flex-1 flex-col min-w-0">
-            <main className="flex-1 p-8">{children}</main>
-            <Footer />
-          </div>
+      <div className="bg-surface text-on-surface flex h-screen overflow-hidden">
+        <Sidebar userId={userId} />
+        <div className="flex flex-1 flex-col min-w-0">
+          <main className="flex-1 overflow-y-auto p-8">{children}</main>
+          <Footer />
         </div>
       </div>
     </StompProvider>
