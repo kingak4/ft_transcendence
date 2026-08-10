@@ -42,9 +42,11 @@ export default function RegisterPage() {
     <div className="flex flex-1 items-center justify-center">
       <Card>
         <h1 className="mb-1 text-xl font-extrabold">Register</h1>
-        <p className="mb-6 text-sm font-medium text-white/60">
-          Nice to meet you!
-        </p>
+        {/* Inherited and modulated rather than named - see login/page.tsx. Only
+            the leaf text nodes convert: `opacity` compounds down the tree and
+            colour alpha does not, so the two blocks below that wrap coloured
+            children keep their named colours (12.5). */}
+        <p className="mb-6 text-sm font-medium opacity-60">Nice to meet you!</p>
 
         <form onSubmit={handleRegister}>
           <TextField
@@ -84,6 +86,10 @@ export default function RegisterPage() {
               onChange={(e) => setAgreedToTerms(e.target.checked)}
               className="accent-primary mt-0.5"
             />
+            {/* Named alpha, deliberately. `opacity-60` here plus `opacity-80` on
+                the links would multiply to 0.48 and render the links DIMMER
+                than the sentence they sit in, inverting the emphasis - alpha is
+                absolute, opacity compounds. Recorded in 12.5. */}
             <span className="text-xs text-white/60">
               I agree to the{' '}
               <Link
@@ -107,6 +113,9 @@ export default function RegisterPage() {
           </Button>
         </form>
 
+        {/* Named alpha for the same reason as the block above: this wraps an
+            `AccentLink` with its own `text-primary`, which opacity would fade
+            along with the sentence. */}
         <p className="mt-4 text-center text-xs text-white/50">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>

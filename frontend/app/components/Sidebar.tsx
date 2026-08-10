@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import BrandLink from './BrandLink';
 
@@ -62,6 +62,30 @@ export default function Sidebar({ userId }: Props) {
   const isOpen = openedOn === pathname;
   const close = () => setOpenedOn(null);
 
+  // Dismissing without navigating - backdrop or Escape - unmounts the element
+  // holding focus, which drops it on <body>. Links do not need this: navigation
+  // moves focus on its own, so they keep using plain `close`.
+  //
+  // The focus cannot happen in the handler. The trigger carries `hidden` while
+  // the drawer is open, and `.focus()` on a `display:none` element is a no-op -
+  // so it has to wait until the re-render has un-hidden it. That is what this
+  // effect is for, and it is a focus effect, not state synchronised from state,
+  // which is the distinction react-hooks/set-state-in-effect actually cares
+  // about.
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const shouldRestoreFocus = useRef(false);
+
+  const closeAndRestoreFocus = () => {
+    shouldRestoreFocus.current = true;
+    setOpenedOn(null);
+  };
+
+  useEffect(() => {
+    if (isOpen || !shouldRestoreFocus.current) return;
+    shouldRestoreFocus.current = false;
+    triggerRef.current?.focus();
+  }, [isOpen]);
+
   // Escape closes any overlay that traps the eye - the backdrop handles the mouse,
   // this handles the keyboard. Bound only while open so the app is not listening
   // to every keystroke on every (app) route. This effect is fine by the same rule
@@ -69,7 +93,14 @@ export default function Sidebar({ userId }: Props) {
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpenedOn(null);
+      // Inlined rather than calling `closeAndRestoreFocus`: that function is
+      // rebuilt every render, so depending on it here would mean rebinding the
+      // listener on every render or lying to exhaustive-deps. Refs and the
+      // setter are stable, so the body is safe to repeat.
+      if (event.key === 'Escape') {
+        shouldRestoreFocus.current = true;
+        setOpenedOn(null);
+      }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -83,6 +114,7 @@ export default function Sidebar({ userId }: Props) {
     <>
       <button
         type="button"
+        ref={triggerRef}
         onClick={() => setOpenedOn(pathname)}
         aria-label="Open navigation"
         aria-expanded={isOpen}
@@ -104,7 +136,7 @@ export default function Sidebar({ userId }: Props) {
       {isOpen && (
         <button
           type="button"
-          onClick={close}
+          onClick={closeAndRestoreFocus}
           aria-label="Close navigation"
           className="fixed inset-0 z-30 bg-black/50 lg:hidden"
         />
@@ -118,10 +150,21 @@ export default function Sidebar({ userId }: Props) {
           the page behind. `overscroll-contain` stops a scroll gesture inside the
           drawer from chaining to that page once it hits the end.
           Both are inert above `lg:`, where the rail is `static` with no height
-          constraint: no constraint means no scroll container. */}
+          constraint: no constraint means no scroll container.
+
+          `invisible lg:visible` pairs with the transform and is not decoration.
+          `-translate-x-full` is a paint-time move: the drawer is still rendered,
+          still laid out and still FOCUSABLE, so below `lg:` a keyboard user
+          tabbing from the top of any (app) page walked into three off-screen
+          links with the focus ring travelling off-canvas after them.
+          `visibility: hidden` is what actually removes descendants from the tab
+          order, and unlike `display: none` it does not cancel the transition.
+          The `lg:` variant is what makes it width-aware for free - above 1024px
+          the rail is visible with `isOpen` false, which is why `inert` (no
+          media-query form) would have needed matchMedia to say the same thing. */}
       <aside
         id="app-nav"
-        className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:visible lg:static lg:translate-x-0 ${isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'}`}
       >
         <BrandLink className="mb-5 px-2.5 text-white" />
 
@@ -135,19 +178,29 @@ export default function Sidebar({ userId }: Props) {
         {/* `onClick={close}` on every link covers the one case deriving cannot:
           tapping the link for the route you are already on leaves `pathname`
           unchanged, so the drawer would sit there looking stuck. */}
+        {/* A real `<nav>`, restored at the review of position 18. The rewrite at
+          1b left the links as direct children of the `<aside>`, and `aside` is
+          the COMPLEMENTARY landmark - "tangentially related content", close to
+          the opposite of a primary navigation rail - so "jump to navigation"
+          found nothing anywhere in the (app) shell. The mismatch was visible in
+          the markup: the trigger declares `aria-controls="app-nav"`, and
+          `app-nav` had become an `aside`. The drawer stays the container,
+          because the scroll and transform belong to it; the landmark goes
+          inside. Having a wrapper again is also what lets three `mb-1.5` become
+          one `gap-1.5`, which is why the pre-1b code had one. */}
         {userId && (
-          <>
+          <nav className="flex flex-col gap-1.5" aria-label="Main">
             <Link
               href={`/${userId}`}
               onClick={close}
-              className={`mb-1.5 ${navLinkClasses(pathname === `/${userId}`)}`}
+              className={navLinkClasses(pathname === `/${userId}`)}
             >
               My Profile
             </Link>
             <Link
               href={`/chat`}
               onClick={close}
-              className={`mb-1.5 ${navLinkClasses(pathname === `/chat`)}`}
+              className={navLinkClasses(pathname === `/chat`)}
             >
               Chat
             </Link>
@@ -159,11 +212,11 @@ export default function Sidebar({ userId }: Props) {
             <Link
               href="/friends"
               onClick={close}
-              className={`mb-1.5 ${navLinkClasses(pathname === '/friends')}`}
+              className={navLinkClasses(pathname === '/friends')}
             >
               Friends
             </Link>
-          </>
+          </nav>
         )}
       </aside>
     </>

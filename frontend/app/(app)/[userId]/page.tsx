@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import Avatar from '../../components/Avatar';
 import { client } from '../../lib/api-clients';
 import { logout } from '../../lib/logout';
+import { AVATAR_RING_CLASSES } from './avatarRing';
 import EditAvatarButton from './EditAvatarButton';
 import EditDisplayNameButton from './EditDisplayNameButton';
 
@@ -30,7 +31,7 @@ async function loadFriendsCount(): Promise<number | null> {
 // text maps onto something we already had.
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b">
+    <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b last:border-b-0">
       <span className="text-hub-muted text-sm font-semibold">{label}</span>
       <span className="text-sm font-bold">{value}</span>
     </div>
@@ -75,8 +76,16 @@ export default async function UserProfilePage({ params }: Props) {
   // puts it alone at the bottom right, outside the cards.
   return (
     <div className="flex min-w-0 max-w-[720px] flex-1 flex-col gap-5 lg:gap-7">
+      {/* The heading has to answer "whose profile is this", because the route
+          serves both. Unit 27 promoted a static "My Profile" into this slot and
+          the non-owner branch was not revisited, so every stranger's page
+          claimed to be yours - the three blocks below are all gated on
+          `isOwnProfile`, and this was the one that was not. It also cost the
+          accessible name: before this h1 existed the display name WAS the h1,
+          which was right for both cases, and a screen reader navigating by
+          heading heard "My Profile" on someone else's page. */}
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
-        My Profile
+        {isOwnProfile ? 'My Profile' : `${displayName}'s profile`}
       </h1>
 
       {/* Hero. The gradient and its shadow are the export's; the shadow IS a
@@ -89,7 +98,7 @@ export default async function UserProfilePage({ params }: Props) {
             displayName={displayName}
           />
         ) : (
-          <div className="shrink-0 rounded-full ring-[3px] ring-white/50">
+          <div className={`shrink-0 ${AVATAR_RING_CLASSES}`}>
             <Avatar src={avatarSrc} alt={`${displayName}'s avatar`} size={96} />
           </div>
         )}

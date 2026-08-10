@@ -28,15 +28,23 @@ export default async function AppLayout({
 
   return (
     <StompProvider>
-      <div className="bg-surface text-on-surface flex min-h-screen">
+      <div className="bg-surface text-on-surface flex min-h-screen flex-col">
         <ConnectionBanner />
-        <div className="flex flex-1"> {/*TODO: CHECK THE VISUAL AFTER REBASE*/}
+        {/* `flex-col` on the parent is load-bearing, not decoration. It was lost
+          in a rebase and the default `row` turned ConnectionBanner - an in-flow
+          `shrink-0` block - into a full-height column pinned to the left edge,
+          shoving the rail and the whole page sideways. Every child's sizing rule
+          changes axis with the container, and the banner's `border-b` is the
+          tell: a bottom border only means anything if the thing below it is
+          below it. Only visible while the socket is down, which is why it
+          survived review. */}
+        <div className="flex flex-1">
           <Sidebar userId={userId} />
           <div className="flex flex-1 flex-col">
             {/* Page padding for app routes, from the dictionary (12.0): 48/56px
               on wide screens, 24/16px narrow - two 56px gutters take a third of
               a 360px viewport. Was a flat p-8 (32px) at both widths.
-              
+
               The narrow top padding is 80px rather than 24px because unit 1b
               puts a fixed hamburger button in that corner. It is reserved space,
               not a spacing decision, which is why it disappears at `lg:` where

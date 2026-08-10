@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Avatar from '../../components/Avatar';
 import { uploadAvatarAction } from './actions';
+import { AVATAR_RING_CLASSES } from './avatarRing';
 
 interface Props {
   avatarId: string | undefined;
@@ -84,11 +85,17 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
     <>
       {/* Avatar display + edit trigger. The 3px white ring is the export's, and
           closes a 12.5 entry that offered two routes to it - a prop on `Avatar`
-          or a class at the call site. The call site won: the ring appears on
-          exactly one avatar in the whole design, so a prop would add an API for
-          a single user. `ring` rather than `border` because it draws outside the
-          box and leaves the 96px circle at 96px. */}
-      <div className="relative shrink-0 rounded-full ring-[3px] ring-white/50">
+          or a class at the call site. The call site won, on the grounds that the
+          ring appears on exactly one avatar in the whole design, so a prop would
+          add an API for a single user.
+          UPDATE: that premise expired. The very next unit added the non-owner
+          branch in page.tsx and there are now two call sites, so the class moved
+          to `avatarRing.ts` rather than being duplicated. The prop-versus-class
+          question is genuinely reopened by that and belongs to Krok 6, where
+          changing `EditAvatarButton`'s API is allowed (§8.7 reguła 3). A
+          recorded rationale is a snapshot, and the unit that invalidates it is
+          the one that should say so. */}
+      <div className={`relative shrink-0 ${AVATAR_RING_CLASSES}`}>
         <Avatar src={currentSrc} alt={`${displayName}'s avatar`} size={96} />
         {/* The bubble stays a bubble. It reads as "this picture" purely by where
             it sits, which a labelled button under the name could not do - and

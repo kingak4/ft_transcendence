@@ -33,7 +33,8 @@ export default function SessionCard({
     // the card already owns the space between its content and its edge.
     <Card>
       <Heading className="mb-1 text-xl font-extrabold">{title}</Heading>
-      <p className="mb-6 text-sm font-medium text-white/60">{subtitle}</p>
+      {/* Inherited and modulated rather than named - see login/page.tsx. */}
+      <p className="mb-6 text-sm font-medium opacity-60">{subtitle}</p>
       <div className="flex flex-col gap-4">
         <Button href={`/${userId}`} fullWidth>
           Go to my profile

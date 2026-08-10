@@ -25,7 +25,9 @@ interface Props {
 // friends and search results go through.
 export default function UserList({ users, emptyMessage, renderAction }: Props) {
   if (users.length === 0) {
-    return <p className="text-on-surface/40 text-sm font-medium">{emptyMessage}</p>;
+    return (
+      <p className="text-on-surface/40 text-sm font-medium">{emptyMessage}</p>
+    );
   }
 
   return (
@@ -38,7 +40,7 @@ export default function UserList({ users, emptyMessage, renderAction }: Props) {
         return (
           <li
             key={user.id}
-            className="bg-elevated-surface text-on-elevated-surface flex items-center justify-between gap-4 rounded-2xl px-4.5 py-3.5 shadow-[0_6px_18px_rgba(10,42,77,0.07)]"
+            className="bg-elevated-surface text-on-elevated-surface px-4.5 flex items-center justify-between gap-4 rounded-2xl py-3.5 shadow-[0_6px_18px_rgba(10,42,77,0.07)]"
           >
             <div className="flex items-center gap-4">
               <Avatar

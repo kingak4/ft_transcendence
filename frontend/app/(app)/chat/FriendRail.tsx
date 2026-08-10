@@ -12,20 +12,31 @@ interface Props {
   allFriends: Friend[];
   activeFriendId: string;
   /**
-   * Display utility, supplied by the route. Unit 2b makes this rail one of two
-   * panes that take turns below `lg:`, and only the route knows whose turn it
-   * is - it is the thing holding `?friend=`. Deliberately not defaulted: the
-   * rail carries no display class of its own, so nothing can quietly win a
-   * cascade against what the caller asks for.
+   * Unit 2b makes this rail one of two panes that take turns below `lg:`, and
+   * only the route knows whose turn it is - it is the thing holding `?friend=`.
+   *
+   * The route passes the FACT, not the class. An earlier version took a
+   * `className` string for the same reason and the reasoning behind it was
+   * sound: `flex` and `hidden` are both `display`, so a component-level `flex`
+   * and a caller-level `hidden` resolve by stylesheet order, not by the order
+   * they are concatenated, and dropping the base `flex` genuinely avoided that.
+   * The cost was that the rail could no longer render itself - `flex-col`,
+   * `shrink-0` and `lg:w-[290px]` all assume a flex context it had stopped
+   * establishing, so `""` or a forgotten prop produced a silently mis-stacked
+   * rail and the route had to know this thing is built out of flexbox.
+   *
+   * A boolean keeps the cascade insight and takes the invariant back: exactly
+   * one display class is ever emitted, so there is still nothing to arbitrate,
+   * but the component is the one choosing it.
    */
-  className: string;
+  hiddenOnNarrow: boolean;
 }
 
 export default function FriendRail({
   activeChats,
   allFriends,
   activeFriendId,
-  className,
+  hiddenOnNarrow,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -86,7 +97,9 @@ export default function FriendRail({
     // Width follows the same rule: full width when it is the only pane, the
     // export's 290px once both are on screen.
     <aside
-      className={`bg-hub-panel border-hub-border w-full shrink-0 flex-col lg:w-[290px] lg:border-e ${className}`}
+      className={`bg-hub-panel border-hub-border w-full shrink-0 flex-col lg:w-[290px] lg:border-e ${
+        hiddenOnNarrow ? 'hidden lg:flex' : 'flex'
+      }`}
     >
       <div
         className="relative flex flex-col gap-3 p-4"

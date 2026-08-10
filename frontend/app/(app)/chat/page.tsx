@@ -139,7 +139,7 @@ export default async function ChatPage({
         activeChats={activeChats}
         allFriends={allFriends}
         activeFriendId={activeFriend?.id || ''}
-        className={activeFriend ? 'hidden lg:flex' : 'flex'}
+        hiddenOnNarrow={!!activeFriend}
       />
       {activeFriend ? (
         <Conversation
