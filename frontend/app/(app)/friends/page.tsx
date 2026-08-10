@@ -93,7 +93,7 @@ export default async function FriendsRoute({ searchParams }: Props) {
   // h1 at all - a heading-level gap, and a duplicate once the route named
   // itself. The panel's own heading went with this change.
   return (
-    <div className="flex min-w-0 max-w-[640px] flex-1 flex-col gap-5 lg:gap-7">
+    <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
         Friends
       </h1>

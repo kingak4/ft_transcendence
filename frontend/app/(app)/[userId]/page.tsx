@@ -75,7 +75,7 @@ export default async function UserProfilePage({ params }: Props) {
   // Logout also moves: it was a white button inside the banner, and the export
   // puts it alone at the bottom right, outside the cards.
   return (
-    <div className="flex min-w-0 max-w-[720px] flex-1 flex-col gap-5 lg:gap-7">
+    <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
       {/* The heading has to answer "whose profile is this", because the route
           serves both. Unit 27 promoted a static "My Profile" into this slot and
           the non-owner branch was not revisited, so every stranger's page
