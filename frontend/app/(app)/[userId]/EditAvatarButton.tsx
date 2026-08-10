@@ -150,6 +150,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                       alt="Current avatar"
                       width={96}
                       height={96}
+                      unoptimized
                       className="h-full w-full object-cover"
                     />
                   ) : (

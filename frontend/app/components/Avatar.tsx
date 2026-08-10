@@ -54,6 +54,7 @@ export default function Avatar({ src, alt, size, initial, color }: Props) {
       alt={alt}
       width={size}
       height={size}
+      unoptimized
       className="shrink-0 rounded-full object-cover"
       style={{ width: size, height: size }}
     />
