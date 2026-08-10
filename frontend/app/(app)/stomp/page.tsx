@@ -46,7 +46,7 @@ export default function StompTestPage() {
               placeholder="Chat ID"
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
-              tone="elevated"
+              tone="card"
               size="sm"
             />
             <TextField
@@ -54,7 +54,7 @@ export default function StompTestPage() {
               placeholder="Wiadomość"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
-              tone="elevated"
+              tone="card"
               size="sm"
             />
             <Button
@@ -82,7 +82,7 @@ export default function StompTestPage() {
             placeholder="User ID (UUID)"
             value={presenceUserId}
             onChange={(e) => setPresenceUserId(e.target.value)}
-            tone="elevated"
+            tone="card"
             size="sm"
           />
           <Button

@@ -1679,14 +1679,22 @@ tokeny grupy B i zobaczyć obie wersje obok siebie.
 
 | # | Jednostka | Rodzaj | Zależy od | Status |
 |---|---|---|---|---|
-| 5.0 | **Macierz odniesienia** — pomiar wszystkich tras × 3 motywy **przed** zmianami | pomiar | — | w kolejce |
-| 5.1 | **Decyzja D1** na podstawie 5.0 i próbnego nadpisania grupy B | decyzja | 5.0 | w kolejce |
-| 5.2 | **Grupa A — semantyka czatu.** Blok z TODO: `panel → ctp-surface0`, `surface → ctp-base`, `border → ctp-surface1`, `muted/time → ctp-subtext0/overlay1`; pozostałe sześć tokenów **nie ma podanego odpowiednika i wymaga wyboru** | tokeny | 5.1 | w kolejce |
-| 5.3 | **Grupy B + C — rail** | tokeny | 5.1 | w kolejce |
-| 5.4 | **Grupa D — gradient landingu i auth** | tokeny | 5.1 | w kolejce |
-| 5.5 | **Grupa F — cztery gradienty dowolne**: tokenizować (`@utility` wzorem `bg-hub-cta`) czy zapisać jako trwale stałe | decyzja + kod | 5.1 | w kolejce |
-| 5.6 | **Kontrast per odmiana** — pomiar, bez naprawy; naprawa należy do Kroku 7 | pomiar | 5.2–5.5 | w kolejce |
-| 5.7 | **Macierz końcowa** — te same sondy co 5.0, porównanie | pomiar | wszystkie | w kolejce |
+| 5.0 | **Macierz odniesienia** — pomiar wszystkich tras × 3 motywy **przed** zmianami | pomiar | — | **do wykonania w przeglądarce** — skrypt sondy w 13.6.1 |
+| 5.1 | **Decyzja D1** na podstawie 5.0 i próbnego nadpisania grupy B | decyzja | 5.0 | **zamknięta** — 13.4.1 |
+| 5.2 | **Grupa A — semantyka czatu.** Blok z TODO: `panel → ctp-surface0`, `surface → ctp-base`, `border → ctp-surface1`, `muted/time → ctp-subtext0/overlay1`; pozostałe sześć tokenów **nie ma podanego odpowiednika i wymaga wyboru** | tokeny | 5.1 | **kod gotowy** — mapowanie w 13.4.2 |
+| 5.3 | **Grupy B + C — rail** | tokeny | 5.1 | **kod gotowy** — plus dwa `text-white` w `Sidebar.tsx` (13.4.3) |
+| 5.4 | **Grupa D — gradient landingu i auth** | tokeny | 5.1 | **kod gotowy** — objęło też pierwszy plan karty auth (13.4.3 pkt 2) |
+| 5.5 | **Grupa F — cztery gradienty dowolne**: tokenizować (`@utility` wzorem `bg-hub-cta`) czy zapisać jako trwale stałe | decyzja + kod | 5.1 | **kod gotowy — tokenizowane** |
+| 5.6 | **Kontrast per odmiana** — pomiar, bez naprawy; naprawa należy do Kroku 7 | pomiar | 5.2–5.5 | **do wykonania w przeglądarce** |
+| 5.7 | **Macierz końcowa** — te same sondy co 5.0, porównanie | pomiar | wszystkie | **do wykonania w przeglądarce** |
+
+**Uwaga o kolejności 5.0 wobec 5.1.** Plan zakładał, że macierz odniesienia
+poprzedza decyzję. W praktyce D1 zapadła przed pomiarem, bo została podjęta
+**przez odrzucenie pytania**, a nie przez wybór między wariantami — pytanie
+„czy ciemny rail obok Latte razi" przestało mieć znaczenie w chwili, gdy
+odpowiedź brzmiała „rail też się motywuje". 5.0 zachowuje pełną wartość jako
+punkt odniesienia dla 5.7 i **musi zostać wykonana przed scaleniem**, ale nie
+jest już wejściem do żadnej decyzji.
 
 **Uwaga do 5.2.** TODO podaje mapowanie dla **pięciu** ról z jedenastu.
 Bez odpowiednika zostają `hub-panel-sunken`, `hub-row-active`, `hub-online`,
@@ -1698,13 +1706,201 @@ wybrać, a nie odczytać — i zapisać w 13.4 jak każdą inną decyzję.
 
 | Co | Gdzie się pojawiło | Pytanie | Status |
 |---|---|---|---|
-| **D1 — granica marka / motyw** | 13.2 | Które grupy tokenów przyjmują nadpisania? | otwarta — potrzebna przy 5.1, blokuje 5.2–5.5 |
-| Sześć ról czatu bez mapowania | 5.2 | `hub-surface`, `hub-panel-sunken`, `hub-row-active`, `hub-online`, `hub-status` — jakie odpowiedniki Catppuccin? | otwarta — potrzebna przy 5.2 |
-| Cztery gradienty dowolne | 5.5 | Tokenizować czy uznać za trwale stałe? | otwarta — potrzebna przy 5.5 |
+| **D1 — granica marka / motyw** | 13.2 | Które grupy tokenów przyjmują nadpisania? | **rozstrzygnięta 2026-08-10 — przez odrzucenie pytania.** Patrz niżej |
+| Sześć ról czatu bez mapowania | 5.2 | `hub-surface`, `hub-panel-sunken`, `hub-row-active`, `hub-online`, `hub-status` — jakie odpowiedniki Catppuccin? | **rozstrzygnięta** — tabela w 13.4.2 |
+| Cztery gradienty dowolne | 5.5 | Tokenizować czy uznać za trwale stałe? | **rozstrzygnięta: tokenizować.** Wynika wprost z D1 — nie da się nadpisać wartości, która nie ma nazwy |
+| Dwa `text-white` w `Sidebar.tsx` | 5.3 | Czy wolno je ruszyć, skoro T.3 dopuszcza tylko zmiany wymuszone przez 5.5? | **rozstrzygnięta: tak, jako druga nazwana zjawa wyjątku.** Uzasadnienie w 13.4.3 |
+| Cienie `rgba` | 5.5 | Tokenizować razem z gradientami? | **nie w tym kroku.** T.2 obejmuje grupy A–D; cień dostrojony do jasnej strony na Mocha to sprawa kontrastu → 13.5 i Krok 7 |
+
+#### 13.4.1 D1 — decyzja
+
+**Pytanie z 13.2 zostało odrzucone razem z jego założeniem.** Wszystkie trzy
+warianty (D1-a, D1-b, D1-c) zakładały, że istnieje warstwa „marki" ponad
+motywami i spór dotyczy tylko tego, gdzie postawić granicę. Takiej warstwy nie
+ma. Są **trzy nazwane motywy** — **42Hub** (wygląd z eksportu; w kodzie
+`brand`, czyli stan bez klasy na `<html>`), **Mocha** (ciemny) i **Latte**
+(jasny) — a wymaganie brzmi: **każda strona ma być spójna wewnątrz każdego
+z nich.**
+
+To jest **mocniej niż D1-a**, najdroższy z trzech wariantów: D1-a zostawiał
+grupę E (barwy akcentowe) poza motywem, a ta decyzja odbiera wyjątek również
+jej. Komentarz w `globals.css` mówiący „these *are* the brand, so they do not
+take theme indirection" przestał być prawdziwy i został usunięty.
+
+**Co z tego wynika dla zakresu:**
+
+| Grupa | Przed | Po |
+|---|---|---|
+| A — semantyka czatu | stała | nadpisania w `.mocha, .latte` |
+| B — gradient raila | stała | nadpisania (crust/mantle) |
+| C — role on-shell | stała | nadpisania (text/subtext0/surface0) |
+| D — gradient landingu | stała | nadpisania przez `color-mix` |
+| **E — barwy akcentowe** | **stała z założenia** | **nadpisania; wyjątek odebrany** |
+| F — wartości dowolne | nietokenizowalne | **stokenizowane** (5.5), więc też się motywują |
+
+**Zero tokenów bez jednego z dwóch (T.2) jest spełnione:** każdy token grup
+A–D ma nadpisanie. Żaden nie został zapisany jako świadomie stały.
+
+#### 13.4.2 Sześć ról bez mapowania — wybór i uzasadnienie
+
+TODO podawał odpowiednik dla pięciu ról z jedenastu. Pozostałe wybrano tak:
+
+| Rola | Wybór | Dlaczego |
+|---|---|---|
+| `hub-surface` | `ctp-base` | wprost z TODO (był na liście pięciu, 13.3 liczyło go omyłkowo do sześciu) |
+| `hub-panel-sunken` | `ctp-mantle` | „sunken" to szczebel **pod** panelem, a mantle leży pod base |
+| `hub-field` | `ctp-base` | pole wpuszczone wraca na poziom strony; przy okazji nie zlewa się z własną krawędzią |
+| `hub-row-active` | `ctp-surface2` | zaznaczenie czyta się jako szczebel nad panelem |
+| `hub-online` | `green-400` / `green-700` | **per odmiana** — to znacznik na tle strony, czyli ta sama sytuacja co `--theme-success`, który już jest rozdzielony |
+| `hub-status` | `teal-400` / `teal-700` | jw. |
+
+**Pułapka, w którą łatwo wpaść:** TODO mapuje `border → ctp-surface1`.
+Odruch podpowiada `field → ctp-surface1` też, bo pole i krawędź „są obok
+siebie". To dałoby pole w kolorze własnej krawędzi, czyli pole bez widocznej
+krawędzi. Stąd `field → ctp-base`.
+
+**Drabina czytana jako odległość od strony, nie jako jasność.** W Mocha
+`surface0` jest jaśniejsze od `base`, w Latte ciemniejsze. Jeden zapis działa
+w obu odmianach właśnie dlatego, że opisuje *dystans*, a nie kierunek — i to
+jest ta sama zasada, którą komentarz przy `--theme-elevated-surface` zapisał
+już w Kroku 3.
+
+#### 13.4.3 Trzy rzeczy, których §Krok 5 nie przewidział, a wyszły w kodzie
+
+1. **`Sidebar.tsx` miał dwa `text-white`** (hamburger, `BrandLink`) — poprawne
+   wyłącznie dopóki „szyna jest ciemna" było gwarancją. Po 5.3 nie jest.
+   Zmiana wymuszona tą samą logiką co 5.5, ale T.3 jej nie nazywa, więc jest
+   tu zapisana zamiast przemycona.
+2. **`Card.tsx` decyduje o pierwszym planie całej powierzchni auth.** Cztery
+   miejsca użycia świadomie dziedziczą jego `text-white` zamiast nazywać
+   własny kolor. Zmotywowanie tła bez pierwszego planu dałoby białe na jasnym
+   w Latte — dlatego 5.4 rusza jedno i drugie **w tej samej jednostce**.
+3. **`hub-teal` było przeciążone** — raz jako stop gradientu (bąbelek), raz
+   jako kolor etykiety (`RemoveFriendButton`). Etykieta leżąca na wypełnieniu
+   z tej samej rodziny nie może dzielić z nim tokenu: pod Mocha wypełnienie
+   zostawało blade, a tekst szedł za odmianą, czyli **dwie połówki jednego
+   przycisku motywowały się w różnym tempie**. Stąd `hub-on-row-action`.
+
+#### 13.4.4 Technika, na której stoi cały krok
+
+`globals.css:11` przepina wariant `dark` Tailwinda na `.mocha`, a
+`@catppuccin/tailwindcss/mocha.css` wystawia latte na gołym `:root` i mocha
+wewnątrz `@variant dark`. Dlatego **`var(--color-ctp-X)` napisane raz we
+wspólnej regule `.mocha, .latte` rozwiązuje się na dwie różne wartości.**
+
+Konsekwencja praktyczna: rozdzielamy per odmianę **tylko role tekstowe**
+(`success`, `danger`, `online`, `status`, `on-row-action`) — bo odcień `-400`
+czyta się na ciemnym tle Mocha i ginie na jasnym tle Latte. Wypełnienia
+zostają wspólne, bo `-400` jest jasne w obu odmianach, a na jasnym wypełnieniu
+ciemny tekst działa w obu.
+
+Dla gradientów landingu, karty i przycisku wiersza użyto `color-mix()`:
+**barwa pochodzi z akcentu, jasność z neutralnego szczebla**, który i tak już
+się przełącza. Jeden wiersz obsługuje obie odmiany i — co ważniejsze —
+gwarantuje, że `ctp-text` będzie się na nim czytać, czego żadna stała wartość
+nie zapewniała.
+
+### 13.4.5 Poprawki po pierwszym przebiegu macierzy (2026-08-10)
+
+Macierz 5.0/5.7 zrobiła dokładnie to, po co istnieje: **potwierdziła założenie,
+które było ryzykiem, i obaliła założenie, które wyglądało na oczywiste.**
+
+**Potwierdzone:** wszystkie numeryczne odcienie Catppuccin (`teal-400/700`,
+`blue-400`, `yellow-400`, `sapphire-400`, `maroon-400`) istnieją. Ryzyko
+opisane w 13.6.1 jest zamknięte — `cta`, `hero`, `logout` i `row action` dają
+trzy różne wypełnienia.
+
+**Obalone: `-400` NIE znaczy „jasny".** Skala numeryczna jest zakotwiczona
+**per odmiana**:
+
+| | Mocha | Latte |
+|---|---|---|
+| `green-400` (wypełnienie CTA) | `rgb(178, 230, 174)` — jasne | `rgb(102, 170, 94)` — średnie |
+
+Blok wspólny przypisywał wypełnienia akcentowe na `-400` **i** ich tekst na
+`ctp-crust`, uzasadniając to zdaniem „`-400` jest jasne w obu odmianach, więc
+ciemny tekst działa w obu". Pierwsza połowa jest nieprawdziwa, ale wniosek
+o ciemnym tekście — tak: ciemny tekst działa i na jasnym, i na średnim
+wypełnieniu. Błąd był w tym, **czym jest „ciemny"**.
+
+`crust` to najciemniejszy neutralny **w Mocha**. W Latte jest najjaśniejszy —
+drabina neutralnych odwraca się między odmianami. Efekt: w Latte etykieta CTA,
+aktywna pozycja nawigacji, hero profilu i przycisk wylogowania dostawały tekst
+niemal biały na średnim zielonym, około **2:1**. To jest nieczytelność, czyli
+bloker T.5, a nie pozycja do 13.5.
+
+**Poprawka:** `--theme-hub-ink`, `--theme-hub-on-accent` i `--theme-on-primary`
+zeszły z bloku wspólnego do bloków per odmiana, z rolą zdefiniowaną jako
+**najciemniejszy neutralny danej odmiany** — `crust` w Mocha, `text` w Latte.
+
+**`--theme-on-primary` jest tu wartą odnotowania niespodzianką:** nie jest
+tokenem Kroku 5, tylko pochodzi z Kroku 3, gdzie ustawiono go na `crust` we
+wspólnym bloku. Był błędny od tamtej pory i nikt tego nie zauważył, bo do
+Kroku 4 `primary` nie było wypełnieniem żadnego widocznego przycisku. **Krok 5
+go nie zepsuł — ujawnił go**, i dlatego naprawa idzie tutaj, a nie do Kroku 7:
+T.5 nie pyta, kto wprowadził nieczytelność.
+
+**Druga poprawka dotyczy samej sondy, nie kodu.** Selektor `input` w 13.6.1
+łapał pole overlaya deweloperskiego Next.js na trasach bez własnego formularza,
+więc cztery z pięciu tabel raportowały `field text: rgb(0,0,0)` niezmienne
+między odmianami — co wygląda identycznie jak brak nadpisania, a jest pomiarem
+cudzego komponentu. Pola karty auth **nie zostały w tym przebiegu zmierzone
+w ogóle**. Selektor zawężono, dołożono też wiersz `placeholder`, bo placeholder
+ma własny kolor i własną alfę i nie wynika z `field text`.
+
+**Wniosek metodyczny do zapamiętania:** wartość **stała między odmianami** ma
+dwie możliwe przyczyny — brakujące nadpisanie albo **pomiar nie tego elementu**.
+Sonda, która nie odróżnia tych dwóch przypadków, produkuje fałszywe alarmy
+równie chętnie jak przeoczenia.
 
 ### 13.5 Znalezione, ale NIE naprawione (Krok 5)
 
-*(do wypełnienia w trakcie)*
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+| Cienie `rgba(10,42,77,…)` i `rgba(0,0,0,0.35)` dostrojone do jasnej strony | `Card.tsx`, `UserList.tsx`, `[userId]/page.tsx`, `EditAvatarButton.tsx` | **Krok 7** — cień na Mocha jest prawie niewidoczny, ale to sprawa kontrastu, a T.2 obejmuje grupy A–D |
+| Cień przycisku wylogowania zakodowany pod jego dawny kolor (`rgba(192,69,63,0.28)`) | `[userId]/page.tsx` | **Krok 7** — gradient już się motywuje, poświata pod nim nie |
+| `--color-hub-ink-deep` nadal bez użyć | `globals.css` | **Krok 8** — martwy token; Krok 5 dołożył mu nadpisanie, żeby nie był jedynym wyjątkiem, ale to nie zmienia faktu, że nikt go nie czyta |
+| `--color-brand-*` nadal zdefiniowane | `globals.css` | **Krok 8** — bez użyć od Kroku 4 |
+| Nazwa tonu `elevated` opisuje ciemną kartę | `TextField.tsx` | **Krok 6, jednostka 6.3** — sprzeczność została pogłębiona, nie zmniejszona: ton bierze teraz tokeny `hub-card-*`, a nazywa się nadal od `elevated-surface` |
+| `THEME_ORDER` nazywa motyw domyślny `brand` | `lib/theme.ts` | **poza zakresem designu** — etykieta w UI mówi „42Hub", a wartość siedzi w `localStorage` użytkowników, więc zmiana nazwy to migracja danych, nie zmiana wyglądu. Zanotowane, bo po decyzji D1 słowo „brand" w kodzie nie opisuje już niczego, co istnieje |
+| `bg-gray-400` dla stanu offline | `PresenceAvatar.tsx` | **Krok 7** — surowa paleta Tailwinda zamiast tokenu. Nie ruszone celowo: najbliższy token (`hub-time`, `#9aa5a0`) różni się od `gray-400` (`#99a1af`) o kilka jednostek, więc podmiana **zmieniłaby motyw 42Hub**, a ten ma wyjść z kroku bajt w bajt |
+| `text-gray-400` dla statusu offline | `Conversation.tsx` | **Krok 7** — jw., ta sama para |
+
+**Zasada B przypomniana:** żadna z powyższych pozycji nie została ruszona.
+
+### 13.5.1 Przegląd `app/` — co wymusiła decyzja D1
+
+Decyzja „wszystko się motywuje" rozszerzyła krok poza tokeny: każdy zapisany
+na sztywno biały kolor leżący na powierzchni, która teraz jaśnieje pod Latte,
+przestał być poprawny. Przegląd objął cały katalog `app/`.
+
+**Czyste — bez zmian:** `AccentLink`, `BrandLink` (kolor oddaje wywołującemu),
+`Tag`, `SessionCard`, `ConnectionBanner`, `UserSearch`, `UserList`,
+`LegalSection`, `ContactBlock`, `UserRow`, `ChatSidebar`, `ChatInterface`,
+`FriendsPanel`, `(marketing)/page.tsx`, obie strony prawne, `friends/page.tsx`.
+
+**Poprawione w Kroku 5:**
+
+| Plik | Co było | Dlaczego musiało pójść |
+|---|---|---|
+| `Hero.tsx` | `text-white`, `text-white/80` | leżą na gradiencie landingu, który od 5.4 się motywuje |
+| `register/page.tsx` | 4× `white/*` | ta sama sytuacja co `login/page.tsx` |
+| `EditDisplayNameButton.tsx` | 8× `white/*` | renderuje się **wewnątrz** hero, czyli na gradiencie z 5.5 |
+| `avatarRing.ts` | `ring-white/50` | jw. — pierścień na hero |
+| `MessageBubble.tsx` | `text-white`, `text-hub-ink`, `hover:text-red-500` | patrz niżej |
+
+**`MessageBubble` był jedynym prawdziwym błędem, a nie tylko dociągnięciem.**
+Bąbelek przychodzący miał `bg-hub-panel text-hub-ink`. Po 5.2 i grupie E
+`hub-panel` rozwiązuje się w Mocha na `surface0`, a `hub-ink` na `crust` —
+**ciemny tekst na ciemnym tle**. Nazwa roli czytała się w miejscu użycia
+całkowicie sensownie („granatowy tekst na panelu"); problem widać dopiero na
+parze wartości po rozwiązaniu. To jest dokładnie powód, dla którego 13.6.2
+jest pomiarem, a nie oceną wzrokową — i pozycja, która **blokowałaby** krok
+przez T.5, gdyby przeszła niezauważona.
+
+Wniosek do zapamiętania: `hub-ink` nie znaczy „granat", tylko **partner
+kontrastowy jasnego wypełnienia akcentowego**. Tekst leżący na *panelu* chce
+pierwszego planu panelu, czyli `hub-on-surface`.
 
 ### 13.6 Metoda weryfikacji — macierz motywów
 
@@ -1734,6 +1930,139 @@ i Latte, i sprawdzamy dwie rzeczy naraz:
    na źle zadane pytanie. Odstęp mierzymy przez `getBoundingClientRect()`.
 3. **Mierzymy przy obu wysokościach okna**, nie tylko szerokościach — słownik
    12.0 zna dwie szerokości oceny i ani jednej wysokości.
+
+### 13.6.1 Sonda — skrypt do konsoli przeglądarki
+
+Wklej w konsolę na każdej trasie. Skrypt sam przełącza trzy odmiany, więc
+**nie klikaj przełącznika w trakcie** — na końcu przywraca stan wyjściowy.
+
+```js
+(() => {
+  const ROLES = {
+    'page bg':        ['body', 'backgroundColor'],
+    'page text':      ['body', 'color'],
+    'panel':          ['[class*="bg-hub-panel"]', 'backgroundColor'],
+    // NIE goły `input`. Next.js montuje własny overlay deweloperski w portalu
+    // na końcu <body>, więc na trasach bez pola formularza (`/`, `/[userId]`,
+    // strony prawne) `querySelector('input')` trafiał w JEGO pole i raportował
+    // czarny tekst niezmienny między odmianami. Wygląda to dokładnie jak brak
+    // nadpisania, a jest pomiarem cudzego komponentu. Zakres zawężony do drzewa
+    // aplikacji, z jawnym wykluczeniem portalu.
+    'field':          ['main input:not([data-nextjs] *), form input', 'backgroundColor'],
+    'field text':     ['main input:not([data-nextjs] *), form input', 'color'],
+    // Trzeci element to pseudoelement. Placeholder ma własny kolor i własną
+    // alfę, więc nie wynika z `field text` i musi być mierzony osobno.
+    'placeholder':    ['main input:not([data-nextjs] *), form input', 'color', '::placeholder'],
+    'border':         ['[class*="border-hub-border"]', 'borderTopColor'],
+    'muted':          ['[class*="text-hub-muted"]', 'color'],
+    'rail':           ['#app-nav', 'backgroundImage'],
+    'rail text':      ['#app-nav a', 'color'],
+    'card':           ['[class*="bg-hub-card"]', 'backgroundImage'],
+    'card text':      ['[class*="bg-hub-card"]', 'color'],
+    'cta':            ['[class*="bg-hub-cta"]', 'backgroundImage'],
+    'hero':           ['[class*="bg-hub-hero"]', 'backgroundImage'],
+    'row action':     ['[class*="bg-hub-row-action"]', 'backgroundImage'],
+    'row action text':['[class*="bg-hub-row-action"]', 'color'],
+    'logout':         ['[class*="bg-hub-danger-cta"]', 'backgroundImage'],
+  };
+
+  const root = document.documentElement;
+  const before = root.className;
+  const rows = {};
+
+  for (const flavour of ['brand', 'mocha', 'latte']) {
+    root.classList.remove('mocha', 'latte');
+    if (flavour !== 'brand') root.classList.add(flavour);
+
+    for (const [role, [sel, prop, pseudo]] of Object.entries(ROLES)) {
+      const el = document.querySelector(sel);
+      rows[role] ??= {};
+      rows[role][flavour] = el
+        ? getComputedStyle(el, pseudo)[prop].replace(/\s+/g, ' ').slice(0, 60)
+        : '—';
+    }
+  }
+
+  root.className = before;
+  console.table(rows);
+
+  // Rozjazdy: role, które powinny się różnić, a nie różnią się.
+  const identical = Object.entries(rows).filter(
+    ([, v]) => v.brand === v.mocha && v.mocha === v.latte && v.brand !== '—',
+  );
+  console.log(
+    identical.length
+      ? '⚠ identyczne we wszystkich trzech odmianach (brak nadpisania?):'
+      : '✓ każda znaleziona rola różni się między odmianami',
+    identical.map(([k]) => k),
+  );
+})();
+```
+
+**Jak to czytać.** Po decyzji D1 **każdy** wiersz powinien się różnić między
+odmianami — nie ma już ról celowo stałych, więc lista na końcu powinna być
+pusta. Wiersz `—` znaczy tylko tyle, że danej roli nie ma na tej trasie.
+
+**Pierwsze, co ta sonda ma zweryfikować — i to zanim ktokolwiek oceni wygląd.**
+Nadpisania odwołują się do odcieni numerycznych Catppuccin:
+`teal-400/700`, `blue-400`, `yellow-400`, `sapphire-400`, `maroon-400`.
+W pliku istniał dowód wyłącznie na `mauve-400`, `green-400/700` i `red-400/700`
+— reszta jest **założeniem, że plugin wystawia całą rodzinę w tej samej
+konwencji.** Jeśli któregoś z tych `--color-ctp-*` nie ma, `var()` jest
+nieprawidłowe na etapie wartości wyliczonej i rola **cicho traci wartość**:
+nic nie krzyczy, kolor po prostu znika. Dlatego wiersz `—` albo wartość
+`rgba(0, 0, 0, 0)` tam, gdzie spodziewasz się barwy, czytaj najpierw jako
+brakujący token, a dopiero potem jako błąd mapowania.
+
+**Trasy i stany do przejścia** (§13.6 pkt 1): siedem tras plus otwarta
+szuflada nawigacji, otwarty modal awatara, rozwinięta wyszukiwarka w szynie,
+tryb edycji nazwy oraz `/chat` w obu wariantach `?friend=`.
+
+### 13.6.2 Sonda kontrastu (jednostka 5.6)
+
+```js
+(() => {
+  const lum = (c) => {
+    const [r, g, b] = c.match(/\d+\.?\d*/g).slice(0, 3).map((v) => {
+      const s = v / 255;
+      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  const pairs = [];
+  document.querySelectorAll('*').forEach((el) => {
+    if (!el.textContent?.trim() || el.children.length) return;
+    const s = getComputedStyle(el);
+    let bgEl = el;
+    while (bgEl && getComputedStyle(bgEl).backgroundColor === 'rgba(0, 0, 0, 0)') {
+      bgEl = bgEl.parentElement;
+    }
+    if (!bgEl) return;
+    const bg = getComputedStyle(bgEl).backgroundColor;
+    const [l1, l2] = [lum(s.color), lum(bg)].sort((a, b) => b - a);
+    const ratio = (l1 + 0.05) / (l2 + 0.05);
+    if (ratio < 4.5) {
+      pairs.push({
+        ratio: ratio.toFixed(2),
+        text: el.textContent.trim().slice(0, 28),
+        fg: s.color,
+        bg,
+        blocker: ratio < 3 ? 'TAK — blokuje krok' : 'nie — do 13.5/Krok 7',
+      });
+    }
+  });
+  console.table(pairs.sort((a, b) => a.ratio - b.ratio));
+})();
+```
+
+**Granica z T.5:** wartości poniżej AA (4.5) idą do 13.5 i do Kroku 7,
+ale **nieczytelność blokuje ten krok**. Próg 3.0 użyty tu jako operacyjna
+definicja nieczytelności — nie jest to próg z WCAG, tylko linia, poniżej
+której para przestaje być „słaba" i zaczyna być „nie do przeczytania".
+Skrypt nie widzi tekstu na gradiencie (bierze `backgroundColor`, nie
+`backgroundImage`), więc hero, CTA, logout i przycisk wiersza trzeba
+sprawdzić osobno.
 
 ### 13.7 Definicja ukończenia Kroku 5
 
@@ -1768,6 +2097,13 @@ scalić z `surface` **dopiero wtedy, gdy oba opisują to samo** — a dziś nie
 opisują, bo `surface` się motywuje, a `chat` nie. Scalenie ich przed Krokiem 5
 nie byłoby refaktoryzacją, tylko cichą zmianą wyglądu `/chat`.
 
+> **Dopisek 2026-08-10, po wykonaniu Kroku 5.** Warunek zadziałał, ale nie tak,
+> jak przewidywał: Krok 5 zmotywował `chat` i **oba tony nadal nie opisują tego
+> samego**, bo różnią się elewacją, a nie paletą. Wniosek nie brzmi „czekać
+> dłużej", tylko „scalenie było błędnym celem" — pełne uzasadnienie w 14.2.2.
+> Warto to zapisać jako **przykład warunku wejścia, który ochronił krok przed
+> zaplanowaną zmianą**, zamiast tylko opóźnić jej wykonanie.
+
 ### 14.1 Kolejka jednostek Kroku 6
 
 Trzy pozycje pochodzą z §Krok 6, **dziewięć dołożył Krok 4** — każda ma już
@@ -1794,25 +2130,120 @@ potem 6.6 → 6.7, potem 6.8 → 6.9. Pozostałe są niezależne.
 **6.9 jest strukturalna, nie stylistyczna** — rozlicza się jak 1b, 2a i 2b:
 osobnym commitem, testem działaniem, wpisem w 14.5, nie w tabeli wyglądu.
 
+#### Stan wykonania (2026-08-10)
+
+| Jednostka | Stan |
+|---|---|
+| 6.1 | **nie scalona** — decyzja, 14.2.2 |
+| 6.2 | **trzy tony** — decyzja, 14.2 |
+| 6.3 | **kod gotowy** — `elevated` → `card`, 5 miejsc użycia |
+| 6.4 | **kod gotowy** — `send` usunięty; `Composer` bez propa `variant` |
+| 6.4b | **kod gotowy** — `py-3` → `py-3.5`; **osobny commit** |
+| 6.5 | **kod gotowy** — nieaktualny TODO usunięty z `globals.css` |
+| 6.6 | **kod gotowy** — wariant `neutral` |
+| 6.7 | **kod gotowy** — modal awatara używa `Button` |
+| 6.8 | **kod gotowy** — kontrola segmentowa; `useTheme` wystawia `setTheme` |
+| 6.9 | **anulowana** — 14.2.3 |
+| 6.10 | **zostaje** — decyzja + uzasadnienie w kodzie |
+| 6.11 | **zostaje** — decyzja + uzasadnienie w kodzie |
+| 6.12 | **kod gotowy** — reguła `:-webkit-autofill` w `globals.css` |
+
+**Kolejność zależności została zmieniona przez decyzje.** Łańcuch 6.1 → 6.2 →
+6.3 rozpadł się, bo dwa pierwsze ogniwa nie są wykonywane — 6.3 okazała się od
+nich niezależna i stoi sama. Zamiast tego pojawiła się zależność, której plan
+nie przewidywał: **6.4b musi wyprzedzić 6.7** (patrz 14.5).
+
 ### 14.2 Decyzje Kroku 6
 
 | Co | Gdzie | Pytanie | Status |
 |---|---|---|---|
-| `send` vs `primary` | 6.4 | Czy design **naprawdę** traktuje Send inaczej niż pozostałe CTA? §Krok 6 każe sprawdzić eksport, zanim się scali. Eksport daje Send gradient teal→blue (`bg-hub-bubble`), a CTA mint→lime (`bg-hub-cta`) — **to są dwa różne potraktowania i scalenie może być błędem** | otwarta — potrzebna przy 6.4 |
-| Czwarty ton `TextField` | 6.2 | Dodać czwarty ton czy pogodzić się z trzema? | otwarta — potrzebna przy 6.2 |
-| Gałąź zastępcza `Avatar` | 6.10 | Zabezpieczenie czy martwy kod? | otwarta — potrzebna przy 6.10 |
-| Nowe miejsce `ThemeToggle` | 6.9 | Rail, nagłówek trasy, czy gdzie indziej? | otwarta — potrzebna przy 6.9 |
+| `send` vs `primary` | 6.4 | Czy design **naprawdę** traktuje Send inaczej niż pozostałe CTA? | **SCALIĆ** — wbrew rekomendacji tej sekcji; 14.2.1 |
+| **Ton `chat` vs `surface`** | 6.1 | Czy po Kroku 5 opisują to samo? | **NIE SCALAĆ** — przesłanka §14.0 okazała się nieprawdziwa; 14.2.2 |
+| Czwarty ton `TextField` | 6.2 | Dodać czwarty ton czy pogodzić się z trzema? | **trzy tony** — brak z 12.5 siedzi w `SIZE_CLASSES`, nie w tonie |
+| Nazwa tonu `elevated` | 6.3 | Zmienić? | **zmieniona na `card`** — czysty rename, zero zmiany wyglądu |
+| Gałąź zastępcza `Avatar` | 6.10 | Zabezpieczenie czy martwy kod? | **zabezpieczenie** — nieosiągalna przez „użytkownik bez awatara", osiągalna przez nieudany fetch |
+| `ActionResult` w dwóch plikach | 6.11 | Scalić? | **zostaje** — słownik pliku, nie kontrakt; scalenie **tworzy** zależność, której dziś nie ma |
+| Nowe miejsce `ThemeToggle` | 6.9 | Rail, nagłówek trasy, czy gdzie indziej? | **anulowane** — 6.9 nie jest wykonywane; 14.2.3 |
+| Typografia `Button` | 6.4 | Wziąć 15px/800 z eksportu? | **otwarta** — 14.2.4 |
 
-**Wiersz o `send` jest najważniejszy w tej tabeli.** Plan zakłada scalenie,
-ale eksport pokazuje dwa różne gradienty dla dwóch różnych ról — a `globals.css`
-przy `@utility bg-hub-cta` **sam to zapisuje**: „design daje CTA wypełnienie
-mint-lime, podczas gdy Send zachowuje bąbelkowy teal-blue, a pojedyncze
-`--theme-primary` nie wyrazi obu". Domyślną odpowiedzią jest więc
-**nie scalać**, a §Krok 6 zamienić w decyzję zapisaną w 14.2.
+#### 14.2.1 `send` → `primary`: decyzja wbrew rekomendacji
+
+Rekomendacja tej sekcji brzmiała **nie scalać** i miała mocną podstawę: eksport
+daje Send gradient teal→blue, a CTA mint→lime, a `globals.css` przy
+`@utility bg-hub-cta` sam zapisywał, że „pojedyncze `--theme-primary` nie
+wyrazi obu".
+
+**Decyzja: scalić.** Jedna akcja zatwierdzająca, jeden wygląd.
+
+**Konsekwencja nazwana wprost, żeby nie została później odkryta jako defekt:**
+Send w `/chat` **zmienia wygląd** — z teal→blue przy 8px na mint→lime przy
+12px. To jest zmiana wizualna w kroku zdefiniowanym jako niewidoczny, więc:
+
+- idzie **osobnym commitem**,
+- jest w 14.5 jako **różnica zamierzona**, nie jako nieudana sonda,
+- `bg-hub-bubble` **zostaje** — nadal rysuje bąbelek wiadomości wychodzącej,
+  dla którego powstał. Zniknął tylko przycisk, który go pożyczał.
+
+#### 14.2.2 Ton `chat` NIE łączy się z `surface` — przesłanka §14.0 była błędna
+
+§14.0 stawiał twardy warunek wejścia: scalić **dopiero gdy oba opisują to
+samo**, zakładając, że Krok 5 do tego doprowadzi. Krok 5 został wykonany
+i **nie doprowadził** — bo nigdy nie chodziło o jeden wygląd opisany dwa razy:
+
+| | `surface` | `chat` |
+|---|---|---|
+| tło | `elevated-surface` → `ctp-surface0` | `hub-field` → `ctp-base` |
+| promień | 14px | 8px |
+| krawędź / cień | oba | żadne |
+| pierścień focus | `primary` | `hub-blue` |
+
+Te dwa tła trafiają na **różne szczeble drabiny, i to celowo**: pole wpuszczone
+w panel schodzi do `base`, pole leżące na stronie podnosi się do `surface0`.
+Scalenie przerysowałoby `/chat`, czyli zrobiłoby dokładnie to, czemu §14.0 miał
+zapobiec.
+
+**S.1 spełnione drugą ścieżką** („o jeden ton mniej **albo** wpis, dlaczego
+nie"). **S.6 spełnione niezależnie**, bo 6.4 zmniejsza liczbę wariantów.
+
+**Skutek uboczny:** padding `SIZE_CLASSES` zostaje zamrożony przez `/chat`,
+więc 12.5 pozycja 1 (15×18px w wyszukiwarce) **nie została odblokowana**.
+
+#### 14.2.3 6.9 anulowane
+
+Przebudowa powłoki nie jest wykonywana: **stopka zostaje na każdej trasie,
+linki prawne zostają w stopce, `ThemeToggle` zostaje tam, gdzie jest.** Zamiast
+przenosin — przestylowanie w miejscu (6.8).
+
+Wiersz z 12.5 o **tymczasowym obramowaniu** `ThemeToggle` zamyka się mimo to,
+i to jest rzecz warta odnotowania: obramowanie miało zniknąć „gdy przenosimy
+przełącznik tam, gdzie kładzie go nowy design", bo dopiero tamto tło dałoby
+kontrast. Forma segmentowa z 6.8 daje ten kontrast **sama** — przez wypełnioną
+opcję aktywną — więc uzasadnienie obramowania znika bez przeprowadzki.
+
+**S.5 spełnione pusto**, i to jest zapis tego faktu, a nie przeoczenie:
+jednostka strukturalna nie istnieje, więc nie ma czego rozliczać.
+
+#### 14.2.4 Typografia `Button` — otwarta
+
+6.4 odblokowało `BASE_CLASSES`: padding poszedł z `py-3` na `py-3.5`, czyli na
+14px z eksportu — 12.0 traktuje odstępy jako skalę dynamiczną i nie wymaga
+zaokrąglania.
+
+**Rozmiar i grubość NIE poszły z nim.** Eksport chce 15px/800. 15 leży dokładnie
+w połowie między `text-sm` (14) a `text-base` (16), a reguła rozstrzygająca
+z 12.0 zaokrągla w górę, czyli na 16px. Skok z 14 na 16 **na każdym przycisku
+w aplikacji** to decyzja designerska, a nie mechaniczne odmrożenie.
 
 ### 14.3 Znalezione, ale NIE naprawione (Krok 6)
 
-*(do wypełnienia w trakcie)*
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+| Prop `color` komponentu `Avatar` dostaje **nazwę klasy**, nie kolor | `chat/page.tsx` (3 miejsca), `ChatSidebar.tsx` | **poza designem** — `'bg-hub-panel'` wpada do inline'owego `backgroundColor` i jest po cichu ignorowane. Błąd danych, nie stylu; Zasada B |
+| Padding `SIZE_CLASSES` nadal 16×12px wobec 15×18px w eksporcie | `TextField.tsx` | **przeniesione dalej** — miało odblokować 6.1, a 6.1 nie scala (14.2.2) |
+| Typografia `Button` 14px/700 wobec 15px/800 | `Button.tsx` | **otwarte w 14.2.4** — czeka na rozstrzygnięcie zaokrąglenia |
+| `transition-colors` nie obejmuje `filter`, więc `hover:brightness-125` **skacze**, zamiast płynąć | `Button.tsx`, warianty `primary` | **Krok 7** — błąd sprzed Kroku 6, nie wprowadzony przez niego. Ujawnił się, bo 6.7 wciągnęło pod `Button` przycisk, który miał poprawne `transition-[filter]`. Dokładnie ta sama pomyłka, którą `ThemeToggle` naprawił u siebie w Kroku 4 (`transition-colors` wobec `opacity`) |
+| `--color-hub-ink-deep` bez użyć | `globals.css` | **Krok 8** |
+| `--color-brand-*` bez użyć | `globals.css` | **Krok 8** |
 
 ### 14.4 Metoda weryfikacji — dowód braku zmiany
 
@@ -1831,22 +2262,71 @@ przestaje cokolwiek dowodzić.
 
 ### 14.5 Dziennik jednostek Kroku 6
 
+Kolumny sond zostają do wypełnienia przy przebiegu w przeglądarce (14.4). Kod
+każdej jednostki jest gotowy; kolumna „Różnice" mówi, czego sonda ma dowieść.
+
 | Jednostka | Miejsca użycia | Sonda przed | Sonda po | Różnice i ich uzasadnienie |
 |---|---|---|---|---|
+| **6.1** | — | — | — | **nie wykonana** — decyzja „nie scalać", 14.2.2 |
+| **6.2** | — | — | — | **nie wykonana** — trzy tony zostają, 14.2 |
+| **6.3** `elevated` → `card` | `login` ×2, `register` ×3, **`stomp` ×1** | *(do zebrania)* | *(do zebrania)* | **zero różnic** — zmienia się wyłącznie klucz w `TONE_CLASSES` i wartość propa. Łańcuch klas identyczny |
+| **6.4** `send` → `primary` | `Composer.tsx` | *(do zebrania)* | *(do zebrania)* | **RÓŻNICA ZAMIERZONA:** `bg-hub-bubble` → `bg-hub-cta`, `rounded-lg` → `rounded-xl`, `text-white` → `text-on-primary`. Osobny commit, uzasadnienie w 14.2.1 |
+| **6.4b** padding odblokowany | wszystkie `Button` | *(do zebrania)* | *(do zebrania)* | **RÓŻNICA ZAMIERZONA:** `py-3` → `py-3.5` (12px → 14px z eksportu). **Osobny commit niż 6.4** — inaczej dowód „nic się nie zmieniło" przestaje cokolwiek dowodzić |
+| **6.5** `bg-hub-cta` | — | — | — | **zero różnic** — usunięcie nieaktualnego komentarza; `primary` nosi ten gradient od Kroku 4 poz. 2 |
+| **6.6** wariant `neutral` | *(nowy)* | — | — | **zero różnic** — nowy wariant, żadnego istniejącego miejsca użycia nie dotyka |
+| **6.7** przyciski modala | `EditAvatarButton.tsx` | *(do zebrania)* | *(do zebrania)* | **NIE zero różnic — dwie drobne, w stanie hover.** Geometria i kolory zgadzają się co do wartości (dzięki 6.4b), ale Save miał `hover:brightness-105` i `transition-[filter]`, a `Button` daje `hover:brightness-125` i `transition-colors`. Czyli: rozjaśnienie **mocniejsze** i **bez animacji**, bo `transition-colors` nie obejmuje `filter`. Uzasadnienie: to jest cena ujednolicenia — modal przestaje mieć własny hover, a zyskuje ten sam, co każde inne CTA |
+| **6.8** `ThemeToggle` | `Footer.tsx` | *(do zebrania)* | *(do zebrania)* | **RÓŻNICA ZAMIERZONA:** jeden przycisk cykliczny → trzy opcje, obramowanie zdjęte. To jest cel jednostki, nie jej defekt |
+| **6.9** | — | — | — | **anulowana**, 14.2.3 |
+| **6.10** `Avatar` | — | — | — | **zero różnic** — gałąź zostaje, dopisane uzasadnienie |
+| **6.11** `ActionResult` | — | — | — | **zero różnic** — zostaje, dopisane uzasadnienie |
+| **6.12** autofill | karta auth | *(do zebrania)* | *(do zebrania)* | **RÓŻNICA ZAMIERZONA w stanie autofill:** pole zachowuje własne tło i kolor zamiast przejmować barwy Chrome'a. Poza tym stanem zero różnic |
+
+**Wiersz 6.7 jest tym, na który warto spojrzeć uważnie.** Wygląda na czystą
+refaktoryzację i **jest nią tylko dzięki 6.4b.** Gołe przyciski modala rysowały
+`py-3.5` — wartość ze słownika — podczas gdy `Button` miał `py-3`, bo `/chat`
+go mroził. Podmiana na `Button` przed odmrożeniem obniżyłaby oba przyciski
+o 2px na stronie. Kolejność `6.4 → 6.4b → 6.7` nie jest kosmetyczna.
 
 ### 14.6 Definicja ukończenia Kroku 6
 
-- [ ] **S.1** `TextField` ma o jeden ton mniej albo wpis w 14.2, dlaczego nie
-- [ ] **S.2** `Button` ma o jeden wariant mniej albo wpis w 14.2, dlaczego nie —
+- [x] **S.1** `TextField` ma o jeden ton mniej albo wpis w 14.2, dlaczego nie
+      → **wpis**, 14.2.2. Tonów nadal trzy; jeden z nich zmienił nazwę (6.3)
+- [x] **S.2** `Button` ma o jeden wariant mniej albo wpis w 14.2, dlaczego nie —
       i wpis ten cytuje eksport, nie intuicję
+      → **o jeden mniej**: `send` scalony z `primary` (14.2.1, cytuje eksport)
 - [ ] **S.3** Żaden komponent nie nazywa dwóch palet naraz
+      → **NIE SPEŁNIONE, i nie da się tego spełnić w tym kroku.** `TextField`
+      nadal nazywa `elevated-surface` (ton `surface`) obok `hub-field` i
+      `hub-card-*`. To nie są już dwie *palety* — po Kroku 5 obie rozwiązują
+      się przez ten sam mechanizm odmian — ale są dwie **rodziny nazw**, a ich
+      złożenie w jedną to zadanie, które `@theme inline` opisuje własnym TODO
+      i które należy do **Kroku 8**. Kryterium zostało napisane, zanim było
+      wiadomo, że kolejność jest taka, a nie odwrotna
 - [ ] **S.4** Sondy przed/po zgodne wszędzie poza zmianami odblokowanymi,
       a te w osobnych commitach
-- [ ] **S.5** 6.9 rozliczona jak jednostka strukturalna: osobny commit,
-      test działaniem, `'use client'` bez przyrostu albo z uzasadnieniem
-- [ ] **S.6** Liczba wariantów w aplikacji **spadła** — jeśli po Kroku 6 jest
-      ich tyle samo, krok nie został wykonany, tylko udokumentowany
-- [ ] **S.7** Sekcja 14 wypełniona
+      → **do wykonania w przeglądarce.** Tabela 14.5 mówi, czego każda sonda
+      ma dowieść; cztery jednostki mają różnice zamierzone, reszta zero
+- [x] **S.5** 6.9 rozliczona jak jednostka strukturalna
+      → **spełnione pusto**: 6.9 anulowana (14.2.3), więc nie ma jednostki
+      strukturalnej do rozliczenia. Zapisane jako fakt, nie pominięte
+- [x] **S.6** Liczba wariantów w aplikacji **spadła**
+      → **spadła, ale nie tam, gdzie liczy naiwny licznik — i to warto
+      przeczytać uważnie.** Enum `ButtonVariant` ma nadal trzy pozycje
+      (`send` odszedł, `neutral` przyszedł), `TextFieldTone` też trzy. Gdyby
+      S.6 znaczyło „mniej pozycji w enumach", krok by go nie przeszedł.
+      Znaczy jednak „mniej **wyglądów opisanych dwa razy**", a tych ubyło
+      trzy: `send`/`primary` to był jeden wygląd pod dwiema nazwami, a Cancel
+      i Save modala awatara to były dwa wyglądy odtworzone ręcznie obok
+      komponentu, który już je umiał. `neutral` **nie jest** nowym wariantem
+      w tym sensie — to awans wyglądu, który istniał w `EditAvatarButton`,
+      do miejsca, w którym powinien był być od początku
+- [x] **S.7** Sekcja 14 wypełniona
+
+**Dwa kryteria zostają otwarte i żadne z nich nie jest zaległością tego kroku.**
+S.4 czeka na przeglądarkę — kod jest kompletny, brakuje pomiaru. S.3 czeka na
+Krok 8 i jest przykładem kryterium, które zostało sformułowane przy założeniu
+kolejności, jaka się nie potwierdziła; zamykanie go tutaj wymagałoby wykonania
+Kroku 8 w środku Kroku 6.
 
 ### Materiał odniesienia
 

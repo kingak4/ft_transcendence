@@ -14,6 +14,18 @@ interface Props {
   // callers that pass neither keep today's plain circle. Picking what to show
   // in place of a missing image is already this component's job, so this
   // extends its responsibility rather than adding a second one.
+  //
+  // Krok 6 unit 6.10 asked whether this is dead code, since the backend issues
+  // `avatarId` to every user and `src` is therefore never null. KEPT, as a
+  // guard: "user without an avatar" is not the only way in - a failed avatar
+  // fetch lands here too - and the TODO above commits to deriving initials and
+  // colours for real users, so deleting it now means writing it again shortly.
+  // Recorded in 14.2.
+  //
+  // `color` IS being misused today: the chat routes pass `bg-hub-panel`, a
+  // class name, into what becomes an inline `backgroundColor`, where it is
+  // simply ignored. That is a data bug rather than a styling one - logged in
+  // 14.3, not fixed here.
   initial?: string;
   color?: string;
 }

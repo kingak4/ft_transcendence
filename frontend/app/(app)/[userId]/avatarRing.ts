@@ -15,5 +15,11 @@
  *
  * `ring` rather than `border` because it draws outside the box and leaves the
  * 96px circle at 96px.
+ *
+ * Step 5 moved the ring off `white/50` onto `hub-on-accent/50`. It draws on the
+ * profile hero, whose gradient now themes - a white ring survived a dark hero
+ * and disappears into a light one, while the role that means "legible on the
+ * hero fill" tracks it.
  */
-export const AVATAR_RING_CLASSES = 'rounded-full ring-[3px] ring-white/50';
+export const AVATAR_RING_CLASSES =
+  'rounded-full ring-[3px] ring-hub-on-accent/50';

@@ -89,9 +89,14 @@ export default async function UserProfilePage({ params }: Props) {
       </h1>
 
       {/* Hero. The gradient and its shadow are the export's; the shadow IS a
-          dictionary row ("element podniesiony na gradiencie"), the gradient is
-          an arbitrary value because none of its three stops has a token. */}
-      <div className="flex items-center gap-7 rounded-3xl bg-[linear-gradient(135deg,#146b7a,#2f9bcf_55%,#4ac9a0)] p-6 shadow-[0_12px_32px_rgba(10,42,77,0.18)] lg:p-9">
+          dictionary row ("element podniesiony na gradiencie").
+          The gradient was an arbitrary value "because none of its three stops
+          has a token" - which turned out to be wrong on inspection at Step 5:
+          #146b7a, #2f9bcf and #4ac9a0 are the literal values of hub-teal,
+          hub-blue and hub-mint, because the export reuses the message bubble's
+          hues here. Unit 5.5 made it `bg-hub-hero` and it needed no new tokens
+          at all. */}
+      <div className="bg-hub-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_rgba(10,42,77,0.18)] lg:p-9">
         {isOwnProfile ? (
           <EditAvatarButton
             avatarId={data.avatarId}
@@ -107,7 +112,7 @@ export default async function UserProfilePage({ params }: Props) {
           {isOwnProfile ? (
             <EditDisplayNameButton displayName={displayName} />
           ) : (
-            <p className="truncate text-2xl font-extrabold text-white">
+            <p className="text-hub-on-accent truncate text-2xl font-extrabold">
               {displayName}
             </p>
           )}
@@ -130,7 +135,7 @@ export default async function UserProfilePage({ params }: Props) {
         <form action={logout} className="flex justify-end">
           <button
             type="submit"
-            className="px-7.5 py-3.25 rounded-[14px] bg-[linear-gradient(135deg,#e35b52,#c0453f)] text-sm font-bold text-white shadow-[0_8px_20px_rgba(192,69,63,0.28)] transition-[filter] hover:brightness-110"
+            className="bg-hub-danger-cta text-hub-on-accent px-7.5 py-3.25 rounded-[14px] text-sm font-bold shadow-[0_8px_20px_rgba(192,69,63,0.28)] transition-[filter] hover:brightness-110"
           >
             Logout
           </button>

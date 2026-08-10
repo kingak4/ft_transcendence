@@ -46,10 +46,14 @@ export default function EditDisplayNameButton({ displayName }: Props) {
 
   if (isEditing) {
     return (
-      // Colours moved from `on-primary` to white at unit 27. They were correct
-      // while the banner was flat lime; the hero is now the export's
-      // teal-to-mint gradient, where dark navy text would be unreadable. The
-      // sizing matches the display name beside it: 26px at 800, not 30px at 700.
+      // Colours moved from `on-primary` to white at unit 27, because the hero
+      // had become the export's teal-to-mint gradient where dark navy text
+      // would be unreadable. Step 5 took the next step: the hero gradient now
+      // themes, so "white" is no longer a safe stand-in for "legible on the
+      // hero" - `hub-on-accent` is the role that means that, and it inverts
+      // with the fill instead of assuming it. Every alpha below is unchanged;
+      // only what the alpha is taken off has moved.
+      // The sizing matches the display name beside it: 26px at 800, not 30px at 700.
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="text"
@@ -57,7 +61,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           onChange={(e) => setValue(e.target.value)}
           maxLength={32}
           autoFocus
-          className="w-full rounded-xl bg-white/10 px-3 py-1 text-2xl font-extrabold text-white outline-none placeholder:text-white/40 focus:ring-1 focus:ring-white"
+          className="bg-hub-on-accent/10 text-hub-on-accent placeholder:text-hub-on-accent/40 focus:ring-hub-on-accent w-full rounded-xl px-3 py-1 text-2xl font-extrabold outline-none focus:ring-1"
         />
         {error && <p className="text-danger text-sm">{error}</p>}
         {/* Same geometry as the trigger they replace - 10x20px at 12px radius,
@@ -68,7 +72,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-xl border border-white/60 bg-white/15 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-white/25"
+            className="border-hub-on-accent/60 bg-hub-on-accent/15 text-hub-on-accent hover:bg-hub-on-accent/25 rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
           >
             Cancel
           </button>
@@ -90,21 +94,23 @@ export default function EditDisplayNameButton({ displayName }: Props) {
     // 26px/800 line inside the hero - a value, not a section title.
     //
     // The trigger below it is the export's "Change avatar" button, borrowed for
-    // the name: 10x20px, 12px radius, 13.5px at 700, on a `white/15` fill with a
-    // `white/60` edge - which the dictionary already carries as the STRONG
-    // variant of "krawędź na tle ciemnym", sourced from this very button.
+    // the name: 10x20px, 12px radius, 13.5px at 700, on a 15% fill with a 60%
+    // edge - which the dictionary already carries as the STRONG variant of
+    // "krawędź na tle ciemnym", sourced from this very button. The percentages
+    // are the dictionary's; what they are taken off is now `hub-on-accent`
+    // rather than `white`, for the reason given in the editing branch above.
     // The avatar keeps its own bubble trigger, so the two affordances stay
     // visually distinct rather than competing.
     //
     // A fragment, not a wrapper: the hero column already spaces its children by
     // 10px, exactly the export's gap between the name and this button.
     <>
-      <p className="truncate text-2xl font-extrabold text-white">
+      <p className="text-hub-on-accent truncate text-2xl font-extrabold">
         {displayName}
       </p>
       <button
         onClick={handleEdit}
-        className="self-start rounded-xl border border-white/60 bg-white/15 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-white/25"
+        className="border-hub-on-accent/60 bg-hub-on-accent/15 text-hub-on-accent hover:bg-hub-on-accent/25 self-start rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
       >
         Change name
       </button>

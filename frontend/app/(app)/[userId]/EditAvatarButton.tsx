@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Avatar from '../../components/Avatar';
+import Button from '../../components/Button';
 import { uploadAvatarAction } from './actions';
 import { AVATAR_RING_CLASSES } from './avatarRing';
 
@@ -173,30 +174,28 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
 
               {error && <p className="text-danger text-sm">{error}</p>}
 
-              {/* Both take the dictionary's standard-button row - 12px radius,
-                  14px vertical, 14px/700 - so the pair is one control split in
-                  two rather than two controls that happen to be adjacent.
-                  Save uses `bg-hub-cta`, the gradient `Button`'s primary variant
-                  adopted at position 2, so "the committing action" looks the
-                  same here as everywhere else in the app. That these are bare
-                  buttons rather than `Button` itself is duplication worth
-                  collapsing in Step 6 - `Button` has no neutral variant that
-                  Cancel could use, which is the only reason it is not used. */}
+              {/* Krok 6 unit 6.7. These were bare buttons reproducing the
+                  dictionary's standard-button row by hand, for the one reason
+                  the previous note named exactly: `Button` had no neutral
+                  variant that Cancel could use. Unit 6.6 added one, taking these
+                  very values, so the duplication collapses.
+                  Nothing changes visually: `Button` carries the same 12px
+                  radius, the same 14px vertical padding (unfrozen by 6.4, which
+                  moved BASE_CLASSES from py-3 to py-3.5) and the same 14px/700,
+                  and its `primary` is the same `bg-hub-cta` Save drew by hand.
+                  `flex-1` goes through `className`, which is the layout escape
+                  hatch and precisely what it is for. */}
               <div className="flex gap-3">
-                <button
-                  type="button"
+                <Button
+                  variant="neutral"
                   onClick={handleClose}
-                  className="text-on-elevated-surface/70 bg-on-elevated-surface/10 hover:bg-on-elevated-surface/20 flex-1 rounded-xl py-3.5 text-sm font-bold transition-colors"
+                  className="flex-1"
                 >
                   Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-hub-cta text-on-primary flex-1 rounded-xl py-3.5 text-sm font-bold transition-[filter] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
-                >
+                </Button>
+                <Button type="submit" disabled={isSubmitting} className="flex-1">
                   {isSubmitting ? 'Saving…' : 'Save'}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

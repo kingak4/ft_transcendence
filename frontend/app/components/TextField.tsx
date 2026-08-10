@@ -1,18 +1,30 @@
 import { type InputHTMLAttributes, forwardRef } from 'react';
 
-type TextFieldTone = 'surface' | 'elevated' | 'chat';
+type TextFieldTone = 'surface' | 'card' | 'chat';
 type TextFieldSize = 'sm' | 'md';
 
 // Which surface the field sits on. Mirrors the design tokens rather than
 // inventing a parallel naming scheme, so the set of tones can only grow when
 // the token set does. `chat` became expressible once the hub-* tokens landed.
 //
-// The focus ring lives here rather than in BASE_CLASSES because it varies by
-// TODO(design-migration): `chat` is a third tone only because hub-* is a
-// parallel palette. Once hub-* becomes *the* palette, `surface` and `chat`
-// describe the same thing - collapse them and delete this tone rather than
-// leaving three names for two appearances.
+// Krok 6 resolved the two questions this block used to defer.
 //
+// 6.1 - the TODO here predicted that once hub-* became *the* palette, `surface`
+// and `chat` would describe the same thing and could collapse. Krok 5 made the
+// palette single and they did NOT converge, because they were never one
+// appearance described twice: `surface` sits ON the page and lifts to
+// ctp-surface0, `chat` sits IN a panel and drops to ctp-base. Two elevations,
+// two treatments - radius, border, shadow and focus ring all differ for the
+// same reason. Merging them would have restyled /chat, which is the silent
+// redesign §14.0 exists to prevent. Kept, with the reason in 14.2.
+//
+// 6.3 - the third tone WAS misnamed, though. It was `elevated`, taken from
+// --theme-elevated-surface, which is white - while the tone it named is the
+// dark auth card. Krok 5 pointed it at the hub-card-* tokens and made the
+// contradiction worse, so this is the rename: it is `card`, after the surface
+// it actually sits on. Appearance is untouched.
+//
+// The focus ring lives here rather than in BASE_CLASSES because it varies by
 // tone: `focus:ring-primary` and `focus:ring-hub-blue` carry equal specificity,
 // so a tone could not have overridden a base ring reliably - the cascade would
 // have resolved it by stylesheet order. Both pre-existing tones keep the ring
@@ -37,11 +49,24 @@ const TONE_CLASSES: Record<TextFieldTone, string> = {
   // position 1 that the export puts 500 on its fields and we render 400, and it
   // is settable per tone, so `/chat` does not block it. `surface` is the other
   // field the export weights at 500; `chat` keeps what it renders today.
-  elevated:
-    'rounded-xl border border-white/15 text-white placeholder:text-white/40 bg-white/8 font-medium focus:ring-primary',
+  //
+  // Step 5 unit 5.4 replaced the four white literals with tokens. The export's
+  // ratios are unchanged - the fill is still 8% of the foreground and the
+  // hairline still 15% - but "the foreground is white" stopped being true once
+  // this card could render under Latte, so the relationship is expressed
+  // against a role instead of against a colour. Krok 6 unit 6.3 then renamed it
+  // from `elevated` to `card`: it took its name from --theme-elevated-surface,
+  // which is white, while describing the dark auth card, and pointing it at the
+  // hub-card-* tokens made that mismatch worse rather than better.
+  card: 'rounded-xl border border-hub-card-field-border text-hub-on-card placeholder:text-hub-on-card/40 bg-hub-card-field font-medium focus:ring-primary',
   chat: 'rounded-lg text-hub-on-surface placeholder:text-hub-time bg-hub-field focus:ring-hub-blue',
 };
 
+// 6.2 - the export draws FOUR field appearances against these three tones: its
+// search field is 15x18px where our `md` is 16x12px. That gap is PADDING, and
+// padding lives here rather than in a tone, so a fourth tone would not have
+// closed it. It stays shared and stays frozen by /chat, because 6.1 kept `chat`
+// rather than merging it away. Recorded in 14.2; the field is logged in 12.5.
 const SIZE_CLASSES: Record<TextFieldSize, string> = {
   sm: 'px-3 py-2',
   md: 'px-4 py-3',

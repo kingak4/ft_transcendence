@@ -57,18 +57,35 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
          * Everything else here is already direction-agnostic (self-start/end,
          * text-start/end), so this is the only bit that needs an `rtl:` variant.
          */}
+        {/*
+         * Two Step 5 corrections, both of the same kind - a colour that was
+         * only ever correct while the chat was a fixed-light island:
+         *
+         * - the outgoing bubble was `text-white` on the teal-to-blue fill.
+         *   That fill now themes, so the label takes `hub-on-accent`, the role
+         *   that means "legible on an accent fill" and inverts with it.
+         * - the incoming bubble was `text-hub-ink` on `bg-hub-panel`. This one
+         *   was a genuine bug rather than a tightening: `hub-ink` describes the
+         *   CONTRAST PARTNER OF A LIGHT ACCENT FILL, and under Mocha it
+         *   resolves to crust while `hub-panel` resolves to surface0 - dark on
+         *   dark, unreadable. Text sitting on a panel wants the panel's own
+         *   foreground, which is `hub-on-surface`.
+         *
+         * The second is why 13.6.2 exists: the role name read plausibly at the
+         * call site and only the resolved pair showed the problem.
+         */}
         <div
           className={
             isMine
               ? `rounded-[18px_18px_4px_18px] px-4 py-2.5 text-sm leading-relaxed ${
                   message.isDeleted
                     ? 'bg-hub-panel/30 text-hub-muted italic'
-                    : 'bg-hub-bubble text-white'
+                    : 'bg-hub-bubble text-hub-on-accent'
                 }`
               : `rounded-[18px_18px_18px_4px] px-4 py-2.5 text-sm leading-relaxed shadow-[0_3px_10px_rgba(10,42,77,0.06)] ${
                   message.isDeleted
                     ? 'bg-hub-panel/30 text-hub-muted italic'
-                    : 'bg-hub-panel text-hub-ink'
+                    : 'bg-hub-panel text-hub-on-surface'
                 }`
           }
         >
@@ -78,7 +95,7 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
           <button
             onClick={onDelete}
             aria-label="Delete message"
-            className="text-hub-muted p-1 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+            className="text-hub-muted hover:text-danger p-1 opacity-0 transition-opacity group-hover:opacity-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -55,7 +55,7 @@ export default function RegisterPage() {
             value={nameValue}
             onChange={(e) => setName(e.target.value)}
             placeholder="Username"
-            tone="elevated"
+            tone="card"
             className="mb-3"
           />
 
@@ -65,7 +65,7 @@ export default function RegisterPage() {
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            tone="elevated"
+            tone="card"
             className="mb-3"
           />
 
@@ -75,7 +75,7 @@ export default function RegisterPage() {
             value={confirmPasswordValue}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm password"
-            tone="elevated"
+            tone="card"
             className="mb-5"
           />
 
@@ -90,18 +90,18 @@ export default function RegisterPage() {
                 the links would multiply to 0.48 and render the links DIMMER
                 than the sentence they sit in, inverting the emphasis - alpha is
                 absolute, opacity compounds. Recorded in 12.5. */}
-            <span className="text-xs text-white/60">
+            <span className="text-hub-on-card/60 text-xs">
               I agree to the{' '}
               <Link
                 href="/terms-of-service"
-                className="text-white/80 underline transition-colors hover:text-white"
+                className="text-hub-on-card/80 hover:text-hub-on-card underline transition-colors"
               >
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link
                 href="/privacy-policy"
-                className="text-white/80 underline transition-colors hover:text-white"
+                className="text-hub-on-card/80 hover:text-hub-on-card underline transition-colors"
               >
                 Privacy Policy
               </Link>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
         {/* Named alpha for the same reason as the block above: this wraps an
             `AccentLink` with its own `text-primary`, which opacity would fade
             along with the sentence. */}
-        <p className="mt-4 text-center text-xs text-white/50">
+        <p className="text-hub-on-card/50 mt-4 text-center text-xs">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>

@@ -46,7 +46,7 @@ export default function LoginPage() {
             value={loginValue}
             onChange={(e) => setLogin(e.target.value)}
             placeholder="Username"
-            tone="elevated"
+            tone="card"
             className="mb-3"
           />
 
@@ -56,7 +56,7 @@ export default function LoginPage() {
             value={passwordValue}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            tone="elevated"
+            tone="card"
             className="mb-2"
           />
 
@@ -75,8 +75,11 @@ export default function LoginPage() {
             `AccentLink`, which sets its own `text-primary`: colour alpha is
             absolute and leaves that child alone, while `opacity` applies to the
             whole subtree and would fade the accent to half. Same reason the
-            terms checkbox in register/page.tsx keeps its named colours (12.5). */}
-        <p className="mt-4 text-center text-xs text-white/50">
+            terms checkbox in register/page.tsx keeps its named colours (12.5).
+            Step 5 kept the technique and only changed what is named: the alpha
+            is now taken off `hub-on-card`, since `white` was an assumption
+            about the card rather than a fact about it. */}
+        <p className="text-hub-on-card/50 mt-4 text-center text-xs">
           Don&apos;t have an account?{' '}
           <AccentLink href="/register">Register</AccentLink>
         </p>
