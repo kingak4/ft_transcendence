@@ -69,7 +69,10 @@ async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: 
 export default async function ChatPage({
   searchParams,
 }: {
-  searchParams: Promise<{ friend?: string | string[]; chat?: string | string[] }>;
+  searchParams: Promise<{
+    friend?: string | string[];
+    chat?: string | string[];
+  }>;
 }) {
   const { friend, chat } = await searchParams;
   const userId = Array.isArray(friend) ? friend[0] : friend;
@@ -122,13 +125,25 @@ export default async function ChatPage({
 
   const isFriend = activeUser ? allUsers.some(f => f.id === activeUser?.id) : false;
 
+  // Unit 2b - one pane at a time below `lg:`, both above it.
+  //
+  // Which pane shows is decided by `?friend=`, which this route already read
+  // before 2b existed: no chat selected means the list, a chat selected means
+  // the conversation. So the narrow layout needed no new state, no new client
+  // component and no new prop threading - only three display utilities.
+  //
+  // The placeholder is the piece that simply has no narrow equivalent: "select a
+  // chat" is what you say beside a list, and below `lg:` the list IS the screen.
   return (
-    <div className="border-hub-border flex h-full overflow-hidden rounded-2xl border">
-      <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} />
+    // `flex-1 min-h-0` instead of `h-full`: the height now comes from the
+    // layout rather than from an assumption about it. `min-h-0` is what lets
+    // this shrink below its content so the panes' own `overflow-y-auto` engages.
+    <div className="border-hub-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
+      <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} hiddenOnNarrow={!!activeUser} />
       {activeUser ? (
         <Conversation user={activeUser} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
       ) : (
-        <div className="bg-hub-panel-sunken flex flex-1 items-center justify-center text-sm text-hub-muted">
+        <div className="bg-hub-panel-sunken hidden flex-1 items-center justify-center text-sm text-hub-muted lg:flex">
           {CHAT_DICT.page.selectChatToStart}
         </div>
       )}

@@ -11,7 +11,7 @@ const INITIAL_GRACE_MS = 8000;
 
 export default function ConnectionBanner() {
   const { isConnected } = usePresence();
-  
+
   const [state, setState] = useState({
     wasConnected: false,
     message: null as string | null,
@@ -45,7 +45,15 @@ export default function ConnectionBanner() {
     <div
       role="status"
       aria-live="polite"
-      className="bg-danger/10 border-danger/20 text-danger shrink-0 border-b p-2 text-center text-xs font-medium"
+      // `sticky top-0` keeps the status in view once the page scrolls, and pairs
+      // with the `flex-col` restored in (app)/layout.tsx: this banner is the
+      // first row of that column, so it must span the full width above the rail
+      // rather than sit beside it. The z-index puts it over page content; the
+      // narrow-width hamburger is `fixed z-50` too and later in DOM order, so it
+      // still paints over this strip's left end. That is accepted - the message
+      // is centred and stays readable, and both are only on screen at once while
+      // the connection is down.
+      className="bg-danger/10 border-danger/20 text-danger sticky top-0 z-50 shrink-0 border-b p-2 text-center text-xs font-medium"
     >
       {state.message}
     </div>

@@ -14,6 +14,7 @@ interface Props {
   allUsers: ChatUser[];
   activeUserId: string;
   myUserId: string | null;
+  hiddenOnNarrow?: boolean;
   searchPlaceholder?: string;
   emptyStateText?: string;
 }
@@ -23,6 +24,7 @@ export default function ChatSidebar({
   allUsers,
   activeUserId,
   myUserId,
+  hiddenOnNarrow = false,
   searchPlaceholder = CHAT_DICT.rail.searchPlaceholder,
   emptyStateText = CHAT_DICT.rail.noUsersFound
 }: Props) {
@@ -92,7 +94,9 @@ export default function ChatSidebar({
 
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
-    <aside className="bg-hub-panel border-hub-border flex w-[290px] shrink-0 flex-col border-e">
+    <aside
+      className={`bg-hub-panel border-hub-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
+    >
       <div
         className="relative flex flex-col gap-3 p-4"
         onBlur={(e) => {

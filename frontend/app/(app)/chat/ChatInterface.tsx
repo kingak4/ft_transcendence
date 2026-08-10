@@ -18,13 +18,20 @@ interface Props {
   initialChatId: string | null;
 }
 
-export default function ChatInterface({ myUserId, user, initialChatId }: Props) {
+export default function ChatInterface({
+  myUserId,
+  user,
+  initialChatId,
+}: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatId, setChatId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const creationPromiseRef = useRef<{ friendId: string; promise: Promise<string> } | null>(null);
+  const creationPromiseRef = useRef<{
+    friendId: string;
+    promise: Promise<string>;
+  } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -55,7 +62,7 @@ export default function ChatInterface({ myUserId, user, initialChatId }: Props) 
       }
       try {
         let currentChatId = initialChatId;
-        
+
         // If we don't know the chat ID yet, create it.
         if (!currentChatId) {
           if (creationPromiseRef.current?.friendId !== userId) {
@@ -84,7 +91,7 @@ export default function ChatInterface({ myUserId, user, initialChatId }: Props) 
             return;
           }
         }
-        
+
         if (!active) return;
         setChatId(currentChatId);
 
@@ -92,17 +99,17 @@ export default function ChatInterface({ myUserId, user, initialChatId }: Props) 
           params: { path: { chatId: currentChatId }, query: { page: 0, size: 1000 } },
         });
 
-          if (msgsRes.ok && msgsData && active) {
-            const historyMessages: ChatMessage[] = msgsData
-              .map((msg: BackendChatMessage) => ({
-                messageId: msg.messageId || '',
-                senderId: msg.senderId || '',
-                content: msg.content || '',
-                time: msg.createdAt || '', // Optional format later
-              }))
-              .reverse();
-            setMessages(historyMessages);
-          }
+        if (msgsRes.ok && msgsData && active) {
+          const historyMessages: ChatMessage[] = msgsData
+            .map((msg: BackendChatMessage) => ({
+              messageId: msg.messageId || '',
+              senderId: msg.senderId || '',
+              content: msg.content || '',
+              time: msg.createdAt || '', // Optional format later
+            }))
+            .reverse();
+          setMessages(historyMessages);
+        }
       } catch (e) {
         console.error('Error initializing chat:', e);
       }
@@ -115,22 +122,25 @@ export default function ChatInterface({ myUserId, user, initialChatId }: Props) 
   useChatSubscription(chatId || '', (newMessage) => {
     if (!chatId) return;
     setMessages((prev) => {
-        if (newMessage.content === undefined && newMessage.time === undefined) {
-          return prev.map((m) => 
-            m.messageId === newMessage.messageId
-              ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
-              : m
-          );
-        }
+      if (newMessage.content === undefined && newMessage.time === undefined) {
+        return prev.map((m) =>
+          m.messageId === newMessage.messageId
+            ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
+            : m,
+        );
+      }
 
       // Basic deduplication
       if (prev.find((m) => m.messageId === newMessage.messageId)) return prev;
-      return [...prev, {
-        messageId: newMessage.messageId,
-        senderId: newMessage.senderId,
-        content: newMessage.content || '',
-        time: newMessage.time,
-      }];
+      return [
+        ...prev,
+        {
+          messageId: newMessage.messageId,
+          senderId: newMessage.senderId,
+          content: newMessage.content || '',
+          time: newMessage.time,
+        },
+      ];
     });
   });
 
@@ -173,11 +183,13 @@ export default function ChatInterface({ myUserId, user, initialChatId }: Props) 
                 }
                 setErrorMsg(null);
                 // Optimistic UI update
-                setMessages((prev) => prev.map((m) => 
-                  m.messageId === message.messageId
-                    ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
-                    : m
-                ));
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.messageId === message.messageId
+                      ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
+                      : m,
+                  ),
+                );
               }
             }}
           />
