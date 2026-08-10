@@ -201,10 +201,10 @@ Integration standards were enforced through an CI pipeline combined with team po
 ![Diagram](docs/postgres_db_diagram.png)
 
 ## ✨ Features List
-* **GetChatMessages** — *[Kinga](https://github.com/kingak4)* — Loads a chat's message history, page by page.
-* **GetChats** — *[Kinga](https://github.com/kingak4)* — Returns the list of chats a user is part of.
-* **ManageMessages** — *[Kinga](https://github.com/kingak4)* — Lets users send and delete messages, with checks in place so messages can't be empty and users can only delete their own.
-* **StartChat** — *[Kinga](https://github.com/kingak4)* — Starts a new chat between two users, or just returns the existing one if they already have a chat going.
+* **GetChatMessages** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Loads a chat's message history, page by page.
+* **GetChats** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Returns the list of chats a user is part of.
+* **ManageMessages** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Lets users send and delete messages, with checks in place so messages can't be empty and users can only delete their own.
+* **StartChat** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Starts a new chat between two users, or just returns the existing one if they already have a chat going.
 * **GetProfile** — *[Szymon](https://github.com/monandszy)* — Fetches a user's profile details, and their avatar (falling back to a default avatar if one isn't set).
 * **ManageFriends** — *[Szymon](https://github.com/monandszy)* — Lets users add, remove, and view their friends list.
 * **ReadPresence** — *[Szymon](https://github.com/monandszy)* — Checks whether a given user is currently online.
