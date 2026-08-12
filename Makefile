@@ -2,6 +2,8 @@ include ./infra/.env
 
 .PHONY: up down re build rebuild
 
+.PHONY: local
+
 up:
 	$(MAKE) -C infra up
 	$(MAKE) -C backend up
@@ -37,7 +39,13 @@ clean:
 	$(MAKE) -C backend clean
 	$(MAKE) -C frontend clean
 
-frontend-local:
+frontend-local: backend-dev
+	$(MAKE) -C frontend -f Makefile.local up
+
+backend-dev:
 	$(MAKE) -C infra up
+	$(MAKE) -C backend -f Makefile.dev up
+
+backend-local:
+	$(MAKE) -C infra -f Makefile.local up
 	$(MAKE) -C backend -f Makefile.local up
-	$(MAKE) -C frontend -f Makefile.local local

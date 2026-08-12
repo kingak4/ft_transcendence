@@ -1,0 +1,10 @@
+include .env
+include ./../infra/.env
+export COMPOSE_IGNORE_ORPHANS
+
+.PHONY: up
+
+CONTAINER := transcend-backend
+
+up:
+	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up --wait ${CONTAINER}

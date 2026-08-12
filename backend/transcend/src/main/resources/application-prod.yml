@@ -1,19 +1,24 @@
 spring:
   application:
     name: transcend-backend
+  liquibase:
+    enabled: true
+    change-log: classpath:changelog/db.changelog-master.yaml
+    default_schema: prod
+    parameters:
+      schemaName: prod
   jpa:
+    defer-datasource-initialization: false
     properties:
       hibernate:
         default_schema: prod
     hibernate:
       ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?sslmode=disable&currentSchema=prod
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
 server:
-  port: 8000
-
-springdoc:
-  api-docs:
-    enabled: false
-  swagger-ui:
-    enabled: false
-springwolf:
-  enabled: false 
+  port: 5000
