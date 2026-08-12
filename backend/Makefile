@@ -23,4 +23,4 @@ clean:
 	${COMPOSE} down -v
 
 test:
-	${COMPOSE} up --build transcend-backend-test --abort-on-container-exit
+	${COMPOSE} up transcend-backend-test --abort-on-container-exit

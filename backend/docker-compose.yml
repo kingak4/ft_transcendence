@@ -18,6 +18,7 @@ services:
     restart: unless-stopped
 
   transcend-backend-test:
+    image: transcend-backend-test:latest
     container_name: transcend-backend-test
     build:
       context: .
