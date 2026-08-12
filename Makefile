@@ -23,7 +23,6 @@ re: down up
 
 # Setup
 .PHONY: env
-
 env:
 	cp infra/.env.example infra/.env
 	cp infra/postgres/.env.example infra/postgres/.env

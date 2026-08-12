@@ -1,0 +1,9 @@
+name: Setup repository environment
+description: Prepare shared env files needed by backend and frontend jobs.
+runs:
+  using: composite
+  steps:
+    - name: Create env files
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: make env

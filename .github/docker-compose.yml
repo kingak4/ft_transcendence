@@ -1,0 +1,7 @@
+services:
+  actionlint:
+    image: docker.io/rhysd/actionlint:latest
+    user: root
+    volumes:
+      - ./../:/repo:ro
+    working_dir: /repo
