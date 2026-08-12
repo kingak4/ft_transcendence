@@ -3,16 +3,19 @@
 ## API Documentation (Swagger / OpenAPI)
 
 `Ensure the infra is running before runnning the application or tests`
+
 **Run the backend locally with**
 ```bash
-make -f Makefile.local run
+make -f Makefile.local up
 ```
 The .env will be overriden with .env.local if present
 
 **or run in docker**
 ```bash
-make build up
+make -f Makefile.dev up
 ```
+
+## Endpoints for Local Development
 
 - **Swagger Interactive UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI Raw JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
@@ -29,7 +32,7 @@ make -f Makefile.local docs
 ## Test coverage and Linter
 **Run the tests**
 ```bash
-make check
+make -f Makefile.local check
 ```
 - **Test Coverage UI**: transcend/build/reports/jacoco/index.html
 - **PmdMain UI**: transcend/build/reports/pmd/main.html
@@ -37,5 +40,5 @@ make check
 
 **Run tests in docker**
 ```bash
-make test
+make -f Makefile.dev test
 ```
