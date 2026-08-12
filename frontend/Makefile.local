@@ -14,7 +14,7 @@ install:
 	@npm install
 
 ci:
-  @npm ci
+	@npm ci
 
 generate: 
 	@mkdir -p app/types
