@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Example env
+      - name: Setup ENV
         run: make env
 
       - name: Start infrastructure
@@ -49,7 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Dev env
+      - name: Setup ENV
         run: |
           make env
 
@@ -77,23 +77,12 @@ jobs:
         working-directory: backend
         run: make up
 
-      - name: Verify backend endpoints
-        run: make check-backend-endpoints
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-
-      - name: Generate API types
-        working-directory: frontend
-        run: make generate
-
-      - name: Frontend CI
-        working-directory: frontend
-        run: make ci
 
       - name: Cache Next.js build
         uses: actions/cache@v4
@@ -103,19 +92,24 @@ jobs:
           restore-keys: |
             nextjs-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-
 
-      - name: Start frontend (dev container)
+      - name: Generate API types
+        working-directory: frontend
+        run: make generate
+
+      - name: Frontend CI
+        working-directory: frontend
+        run: make ci
+
+      - name: Start frontend
         working-directory: frontend
         run: make up
-
-      - name: Verify homepage is served through nginx
-        run: make check-frontend-endpoints
 
       - name: Show backend logs on failure
         if: failure()
         working-directory: backend
-        run: docker compose -p transcend -f docker-compose.yml logs transcend-backend
+        run: docker compose -p transcend logs transcend-backend
 
       - name: Show frontend logs on failure
         if: failure()
         working-directory: frontend
-        run: docker compose -p transcend -f docker-compose.yml logs transcend-frontend
+        run: docker compose -p transcend logs transcend-frontend

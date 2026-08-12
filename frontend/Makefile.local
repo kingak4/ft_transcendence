@@ -7,19 +7,19 @@ PRETTIER = npx prettier
 
 .PHONY: up generate install build
 
-up: generate
+up: generate install build
 	@npm run dev
-
-generate: install
-	@mkdir -p app/types
-	@NODE_TLS_REJECT_UNAUTHORIZED=0 ./node_modules/.bin/openapi-typescript $(CODEGEN_URL)/api-docs -o app/types/api.d.ts
-	@NODE_TLS_REJECT_UNAUTHORIZED=0 BACKEND_URL=$(CODEGEN_URL) node scripts/generate-asyncapi.mjs
 
 install:
 	@npm install
 
 ci:
   @npm ci
+
+generate: 
+	@mkdir -p app/types
+	@NODE_TLS_REJECT_UNAUTHORIZED=0 ./node_modules/.bin/openapi-typescript $(CODEGEN_URL)/api-docs -o app/types/api.d.ts
+	@NODE_TLS_REJECT_UNAUTHORIZED=0 BACKEND_URL=$(CODEGEN_URL) node scripts/generate-asyncapi.mjs
 
 build:
 	@npm run build
