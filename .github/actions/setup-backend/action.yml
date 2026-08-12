@@ -1,0 +1,40 @@
+name: 'Build Backend Docker Image'
+description: 'Caches Gradle deps and builds Docker image with Buildx'
+
+inputs:
+  context:
+    description: 'Docker build context path'
+    required: false
+    default: './backend'
+  file:
+    description: 'Path to the Dockerfile'
+    required: false
+    default: './backend/transcend/Dockerfile'
+  tags:
+    description: 'Image tag(s)'
+    required: false
+    default: 'transcend-backend:latest'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v4
+      with:
+        path: backend/.gradle-docker-cache
+        key: gradle-docker-${{ runner.os }}-${{ hashFiles('backend/transcend/build.gradle.kts') }}
+        restore-keys: |
+          gradle-docker-${{ runner.os }}-
+
+    - name: Set up Docker Buildx Cache
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file }}
+        load: true
+        tags: ${{ inputs.tags }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
