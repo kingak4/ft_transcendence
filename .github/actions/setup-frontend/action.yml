@@ -19,6 +19,7 @@ runs:
           nextjs-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-
 
     - name: Frontend clean install
+      shell: bash
       working-directory: frontend
       run: make -f Makefile.local ci
 
