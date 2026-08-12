@@ -120,7 +120,7 @@ info "PART D — Cross-check: local's port didn't leak into dev"
 clean_slate
 make
 echo
-check_closed "http://localhost:5001/" "Backend NOT reachable on :5001 in plain dev build (no docker-compose.local.yml)"
+check_closed "http://localhost:5001/" "Backend NOT reachable on :5001 in plain dev build (no docker-compose.dev.yml)"
 
 clean_slate
 info "Done. Review any FAIL lines above."

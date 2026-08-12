@@ -214,7 +214,7 @@ jobs:
 
       - name: Start backend (local profile — published on loopback :5001)
         working-directory: backend
-        run: make -f Makefile.local up
+        run: make -f Makefile.dev up
 
       - name: Verify local topology
         run: |
@@ -262,4 +262,4 @@ jobs:
       - name: Show backend logs on failure
         if: failure()
         working-directory: backend
-        run: docker compose -p transcend -f docker-compose.yml -f docker-compose.local.yml logs transcend-backend
+        run: docker compose -p transcend -f docker-compose.yml -f docker-compose.dev.yml logs transcend-backend

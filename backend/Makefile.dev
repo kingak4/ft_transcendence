@@ -2,9 +2,12 @@ include .env
 include ./../infra/.env
 export COMPOSE_IGNORE_ORPHANS
 
-.PHONY: up
+.PHONY: up test
 
 CONTAINER := transcend-backend
 
 up:
 	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up --wait ${CONTAINER}
+
+test:
+	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up --build transcend-backend-test --abort-on-container-exit
