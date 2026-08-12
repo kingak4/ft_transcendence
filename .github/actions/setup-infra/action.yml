@@ -13,20 +13,31 @@ runs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
+      id: postgres-env
+      uses: xom9ikk/dotenv-action@v2
+      with:
+        path: ${{ inputs.infra-path }}/postgres/.env
+
     - name: Pre-build Postgres image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ${{ inputs.infra-path }}/postgres
+        build-args: ${{ steps.postgres-env.outputs.args }}
         load: true
         tags: postgres-db:latest
         cache-from: type=gha,scope=infra-postgres
         cache-to: type=gha,mode=max,scope=infra-postgres
 
+    - name: Read Nginx .env
+      id: nginx-env
+      uses: xom9ikk/dotenv-action@v2
+      with:
+        path: ${{ inputs.infra-path }}/nginx/.env
+
     - name: Pre-build Nginx image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ${{ inputs.infra-path }}/nginx
+        build-args: ${{ steps.nginx-env.outputs.string_values }}
         load: true
         tags: nginx:latest
-        cache-from: type=gha,scope=infra-nginx
-        cache-to: type=gha,mode=max,scope=infra-nginx
