@@ -8,19 +8,19 @@ up:
 	${GRADLE} bootRun --args='--spring.profiles.active=$(PROFILE)'
 
 build:
-	${GRADLE} build -Pprofile=$(PROFILE)
+	${GRADLE} build
 
 format:
-	${GRADLE} spotlessApply -Pprofile=$(PROFILE)
+	${GRADLE} spotlessApply
 
 clean:
 	${GRADLE} clean
 
 test:
-	${GRADLE} jacocoTestReport -Pprofile=$(PROFILE)
+	${GRADLE} jacocoTestReport 
 
 docs:
-	${GRADLE} docs -Pprofile=$(PROFILE)
+	${GRADLE} docs
 
 verify:
-	${GRADLE} test --tests "code.SpringContextTest" -Pprofile=$(PROFILE)
+	${GRADLE} test --tests "code.SpringContextTest"

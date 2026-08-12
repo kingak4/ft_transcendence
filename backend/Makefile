@@ -17,7 +17,10 @@ down:
 rebuild: down build up
 
 # Utils
-.PHONY: clean
+.PHONY: clean test
 
 clean:
 	${COMPOSE} down -v
+
+test:
+	${COMPOSE} up --build transcend-backend-test --abort-on-container-exit

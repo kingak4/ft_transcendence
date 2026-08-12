@@ -17,6 +17,17 @@ services:
       start_period: 210s
     restart: unless-stopped
 
+  transcend-backend-test:
+    container_name: transcend-backend-test
+    build:
+      context: .
+      dockerfile: transcend/Dockerfile.test
+    env_file:
+      - transcend/.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=test,prod
+    command: ["sh", "-c", "gradle test --no-daemon"]
+
 networks:
   default:
     external: true

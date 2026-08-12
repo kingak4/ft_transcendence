@@ -5,17 +5,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
   transcend-backend-test:
-    container_name: transcend-backend-test
-    build:
-      context: .
-      dockerfile: transcend/Dockerfile.test
-    env_file:
-      - transcend/.env
     environment:
       - SPRING_PROFILES_ACTIVE=test,dev
-    command: ["sh", "-c", "gradle test --no-daemon"]
-    profiles:
-      - test
 
 networks:
   default:

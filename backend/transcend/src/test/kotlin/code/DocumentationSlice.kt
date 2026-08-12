@@ -46,7 +46,7 @@ import kotlin.jvm.java
 )
 @OverrideAutoConfiguration(enabled = false)
 @Import(AutoMockingRegistrar::class)
-annotation class DocumentationSlice
+annotation class  DocumentationSlice
 
 @Configuration
 @ComponentScan(
