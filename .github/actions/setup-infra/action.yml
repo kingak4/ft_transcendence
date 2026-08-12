@@ -13,11 +13,18 @@ runs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Read Postgres .env
+    - name: Read Postgres .env for Docker Build
       id: postgres-env
-      uses: xom9ikk/dotenv@v2
-      with:
-        path: ${{ inputs.infra-path }}/postgres/.env
+      shell: bash
+      run: |
+        ENV_FILE="${{ inputs.infra-path }}/postgres/.env"
+        if [ -f "$ENV_FILE" ]; then
+          {
+            echo "args<<EOF"
+            grep -v '^[[:space:]]*#' "$ENV_FILE" | grep '='
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Pre-build Postgres image
       uses: docker/build-push-action@v6
@@ -29,11 +36,18 @@ runs:
         cache-from: type=gha,scope=infra-postgres
         cache-to: type=gha,mode=max,scope=infra-postgres
 
-    - name: Read Nginx .env
+    - name: Read Nginx .env for Docker Build
       id: nginx-env
-      uses: xom9ikk/dotenv@v2
-      with:
-        path: ${{ inputs.infra-path }}/nginx/.env
+      shell: bash
+      run: |
+        ENV_FILE="${{ inputs.infra-path }}/nginx/.env"
+        if [ -f "$ENV_FILE" ]; then
+          {
+            echo "args<<EOF"
+            grep -v '^[[:space:]]*#' "$ENV_FILE" | grep '='
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Pre-build Nginx image
       uses: docker/build-push-action@v6
