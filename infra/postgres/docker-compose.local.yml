@@ -1,0 +1,9 @@
+services:
+  postgres-db:
+    ports:
+      - "127.0.0.1:5432:5432"
+
+networks:
+  default:
+    external: true
+    name: transcend-net

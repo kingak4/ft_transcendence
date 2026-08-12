@@ -1,7 +1,7 @@
 include ../.env
 include .env
 export COMPOSE_IGNORE_ORPHANS
-.PHONY: up build down rebuild re 
+.PHONY: up build down rebuild re
 
 CONTAINER := postgres-db
 

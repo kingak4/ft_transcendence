@@ -1,0 +1,8 @@
+include .env
+export COMPOSE_IGNORE_ORPHANS
+
+.PHONY: up
+
+up:
+	make -C postgres -f Makefile.local up
+	make -C redis -f Makefile.local up
