@@ -25,11 +25,11 @@ re: down up
 .PHONY: env
 
 env:
-	cp infra/.env.example               infra/.env
-	cp infra/postgres/.env.example      infra/postgres/.env
-	cp infra/redis/.env.example         infra/redis/.env
-	cp backend/transcend/.env.example    backend/transcend/.env
-	cp backend/.env.example             backend/.env
+	cp infra/.env.example infra/.env
+	cp infra/postgres/.env.example infra/postgres/.env
+	cp infra/redis/.env.example infra/redis/.env
+	cp backend/transcend/.env.example backend/transcend/.env
+	cp backend/.env.example backend/.env
 
 # Utils
 .PHONY: frontend-local
