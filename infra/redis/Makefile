@@ -2,10 +2,12 @@ include ../.env
 include .env
 export COMPOSE_IGNORE_ORPHANS
 
-.PHONY: up build down rebuild re
+.PHONY: up build down rebuild re run
 CONTAINER := redis-db
 
-up:
+up: run
+
+run:
 	${COMPOSE} up --wait ${CONTAINER}
 
 build:

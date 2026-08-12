@@ -18,7 +18,7 @@ jobs:
 
       - name: Start infrastructure
         working-directory: infra
-        run: make
+        run: make run
 
       - name: Run PROD backend tests
         working-directory: backend
@@ -40,17 +40,17 @@ jobs:
 
       - name: Start infra
         working-directory: infra
-        run: make up
+        run: make run
 
       - name: Start backend
         working-directory: backend
-        run: make up
+        run: make run
 
       - uses: ./.github/actions/setup-frontend
 
       - name: Start frontend
         working-directory: frontend
-        run: make up
+        run: make run
 
       - name: Show backend logs on failure
         if: failure()
@@ -74,7 +74,7 @@ jobs:
 
       - name: Start infra
         working-directory: infra
-        run: make up
+        run: make run
 
       - name: Start backend (local profile — published on loopback :5001)
         working-directory: backend

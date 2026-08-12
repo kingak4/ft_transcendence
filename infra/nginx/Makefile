@@ -1,13 +1,15 @@
 include ../.env
 export COMPOSE_IGNORE_ORPHANS
-.PHONY: up build down rebuild re
+.PHONY: up build down rebuild re run
 
 CONTAINER := nginx
 BUILD_STAMP := .build.stamp
 BUILD_SOURCES := $(shell find . -type f -not -name '$(BUILD_STAMP)')
 
-up: $(BUILD_STAMP)
-	${COMPOSE} up -d
+up: $(BUILD_STAMP) run
+
+run:
+	${COMPOSE} up --wait ${CONTAINER}
 
 $(BUILD_STAMP): $(BUILD_SOURCES)
 	${COMPOSE} build

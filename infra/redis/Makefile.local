@@ -5,4 +5,4 @@ export COMPOSE_IGNORE_ORPHANS
 .PHONY: up
 
 up:
-		${COMPOSE} -f docker-compose.yml -f docker-compose.local.yml up --wait ${CONTAINER}
+  ${COMPOSE} -f docker-compose.yml -f docker-compose.local.yml up --wait ${CONTAINER}

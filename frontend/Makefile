@@ -3,7 +3,7 @@ include ./../infra/.env
 export COMPOSE_IGNORE_ORPHANS
 export BACKEND_URL
 
-.PHONY: up down re build rebuild
+.PHONY: up down re build rebuild run
 
 CONTAINER := transcend-frontend
 
@@ -14,8 +14,10 @@ BUILD_SOURCES := $(shell find . -type f \
 	-not -path './app/types/*' \
 	-not -name '$(BUILD_STAMP)')
 
-up: $(BUILD_STAMP)
-	$(COMPOSE) up ${CONTAINER} -d
+up: $(BUILD_STAMP) run
+
+run:
+	${COMPOSE} up --wait ${CONTAINER} -d
 
 $(BUILD_STAMP): $(BUILD_SOURCES)
 	make -f Makefile.local build

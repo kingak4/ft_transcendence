@@ -6,6 +6,11 @@ up: network
 	make -C postgres up
 	make -C redis up
 
+run: network
+	make -C nginx run
+	make -C postgres run
+	make -C redis run
+
 build:
 	make -C nginx build
 	make -C postgres build

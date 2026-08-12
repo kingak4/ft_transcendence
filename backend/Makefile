@@ -1,14 +1,16 @@
 include .env
 include ./../infra/.env
 export COMPOSE_IGNORE_ORPHANS
-.PHONY: up build down rebuild re
+.PHONY: up build down rebuild re run
 
 CONTAINER := transcend-backend
 
 BUILD_STAMP := .build.stamp
 BUILD_SOURCES := $(shell find transcend -type f -not -path 'transcend/build/*' -not -path 'transcend/.gradle/*')
 
-up: $(BUILD_STAMP)
+up: $(BUILD_STAMP) run
+
+run:
 	${COMPOSE} up --wait ${CONTAINER} -d
 
 $(BUILD_STAMP): $(BUILD_SOURCES)
