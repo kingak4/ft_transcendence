@@ -29,7 +29,10 @@ env:
 	cp infra/postgres/.env.example infra/postgres/.env
 	cp infra/redis/.env.example infra/redis/.env
 	cp backend/transcend/.env.example backend/transcend/.env
+	cp backend/transcend/.env.local.example backend/transcend/.env.local
 	cp backend/.env.example backend/.env
+	cp frontend/.env.example frontend/.env
+	cp frontend/.env.local.example frontend/.env.local
 
 # Utils
 .PHONY: frontend-local
@@ -49,3 +52,20 @@ backend-dev:
 backend-local:
 	$(MAKE) -C infra -f Makefile.local up
 	$(MAKE) -C backend -f Makefile.local up
+
+.PHONY: check-backend-endpoints
+
+BACKEND_ENDPOINTS := \
+	https://localhost:8443/api/api-docs \
+	https://localhost:8443/api/ws/info
+
+check-backend-endpoints:
+	@for url in $(BACKEND_ENDPOINTS); do \
+		code=$$(curl -k -s -o /dev/null -w "%{http_code}" --connect-timeout 2 "$$url" || true); \
+		if [ "$$code" = "200" ]; then \
+			echo "$$url accessible"; \
+		else \
+			echo "$$url inaccessible ($$code)"; \
+			exit 1; \
+		fi; \
+	done

@@ -41,3 +41,81 @@ jobs:
           mkdir -p .gradle-docker-cache
           chmod -R 777 .gradle-docker-cache
           make -f Makefile.dev test
+          
+  prod:
+    name: Evaluation Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Dev env
+        run: |
+          make env
+
+      - name: Set up Docker Buildx Cache
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/transcend/Dockerfile
+          load: true
+          tags: transcend-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Mark backend image as freshly built
+        run: touch backend/.build.stamp
+
+      - name: Start infra
+        working-directory: infra
+        run: make up
+
+      - name: Start backend
+        working-directory: backend
+        run: make up
+
+      - name: Verify backend endpoints
+        run: make check-backend-endpoints
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Generate API types
+        working-directory: frontend
+        run: make generate
+
+      - name: Frontend CI
+        working-directory: frontend
+        run: make ci
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: frontend/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/**/*.ts', 'frontend/**/*.tsx') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-
+
+      - name: Start frontend (dev container)
+        working-directory: frontend
+        run: make up
+
+      - name: Verify homepage is served through nginx
+        run: make check-frontend-endpoints
+
+      - name: Show backend logs on failure
+        if: failure()
+        working-directory: backend
+        run: docker compose -p transcend -f docker-compose.yml logs transcend-backend
+
+      - name: Show frontend logs on failure
+        if: failure()
+        working-directory: frontend
+        run: docker compose -p transcend -f docker-compose.yml logs transcend-frontend
