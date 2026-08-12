@@ -17,7 +17,7 @@ runs:
       id: postgres-env
       uses: xom9ikk/dotenv@v2
       with:
-        path: ${{ inputs.infra-path }}/postgres
+        path: ${{ inputs.infra-path }}/postgres/.env
 
     - name: Pre-build Postgres image
       uses: docker/build-push-action@v6
@@ -33,7 +33,7 @@ runs:
       id: nginx-env
       uses: xom9ikk/dotenv@v2
       with:
-        path: ${{ inputs.infra-path }}/nginx
+        path: ${{ inputs.infra-path }}/nginx/.env
 
     - name: Pre-build Nginx image
       uses: docker/build-push-action@v6
