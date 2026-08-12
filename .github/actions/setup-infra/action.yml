@@ -13,11 +13,11 @@ runs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Read Postgres .env  # 👈 Added missing step dash (-) and name
+    - name: Read Postgres .env
       id: postgres-env
-      uses: xom9ikk/dotenv-action@v2
+      uses: xom9ikk/dotenv@v2
       with:
-        path: ${{ inputs.infra-path }}/postgres/.env
+        path: ${{ inputs.infra-path }}/postgres
 
     - name: Pre-build Postgres image
       uses: docker/build-push-action@v6
@@ -31,9 +31,9 @@ runs:
 
     - name: Read Nginx .env
       id: nginx-env
-      uses: xom9ikk/dotenv-action@v2
+      uses: xom9ikk/dotenv@v2
       with:
-        path: ${{ inputs.infra-path }}/nginx/.env
+        path: ${{ inputs.infra-path }}/nginx
 
     - name: Pre-build Nginx image
       uses: docker/build-push-action@v6
