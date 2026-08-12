@@ -18,6 +18,7 @@ up: $(BUILD_STAMP)
 	$(COMPOSE) up ${CONTAINER} -d
 
 $(BUILD_STAMP): $(BUILD_SOURCES)
+	make -f Makefile.local build
 	$(COMPOSE) build ${CONTAINER}
 	@touch $(BUILD_STAMP)
 
