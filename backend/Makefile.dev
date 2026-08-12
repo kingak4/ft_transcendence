@@ -10,7 +10,8 @@ up:
 	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up --wait ${CONTAINER}
 
 test:
-	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up --build transcend-backend-test --abort-on-container-exit
+	${COMPOSE} down -v transcend-backend-test
+	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up transcend-backend-test --abort-on-container-exit
 
 
 BACKEND_ENDPOINTS := \

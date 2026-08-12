@@ -36,10 +36,10 @@ env:
 # Utils
 .PHONY: frontend-local
 
-clean:
-	$(MAKE) -C infra clean
-	$(MAKE) -C backend clean
-	$(MAKE) -C frontend clean
+fclean:
+	$(MAKE) -C infra fclean
+	$(MAKE) -C backend fclean
+	$(MAKE) -C frontend fclean
 
 frontend-local: backend-dev
 	$(MAKE) -C frontend -f Makefile.local up

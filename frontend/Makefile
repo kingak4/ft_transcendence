@@ -36,7 +36,7 @@ rebuild: down build up
 re: down up
 
 # Utils
-.PHONY: clean
+.PHONY: fclean
 
-clean:
+fclean:
 	$(COMPOSE) down -v

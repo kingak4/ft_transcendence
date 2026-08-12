@@ -27,11 +27,11 @@ rebuild: down build up
 re: down up
 
 # Utils
-.PHONY: ps clean killall
+.PHONY: ps fclean killall
 
-clean:
-	$(MAKE) -C postgres clean
-	$(MAKE) -C redis clean
+fclean:
+	$(MAKE) -C postgres fclean
+	$(MAKE) -C redis fclean
 
 ps:
 	$(MAKE) -C postgres ps

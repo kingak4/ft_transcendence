@@ -21,7 +21,7 @@ rebuild: down build up
 re: down up
 
 # Utils
-.PHONY: redis logs clean ps
+.PHONY: redis logs fclean ps
 
 redis:
 	${DOCKER} exec -it ${CONTAINER} redis-cli
@@ -29,11 +29,8 @@ redis:
 logs:
 	${DOCKER} logs -f ${CONTAINER}
 
-clean:
-	${COMPOSE} down
-
 fclean:
-	${COMPOSE} down -v
+	${COMPOSE} down -v ${CONTAINER}
 
 ps:
 	${COMPOSE} ps

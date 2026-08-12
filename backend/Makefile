@@ -30,10 +30,11 @@ logs:
 	docker compose -p transcend -f docker-compose.yml logs transcend-backend
 
 # Utils
-.PHONY: clean test
+.PHONY: fclean test
 
-clean:
-	${COMPOSE} down -v
+fclean:
+	${COMPOSE} down -v ${CONTAINER}
 
 test:
+	${COMPOSE} down -v transcend-backend-test
 	${COMPOSE} up transcend-backend-test --abort-on-container-exit

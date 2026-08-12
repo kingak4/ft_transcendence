@@ -21,7 +21,7 @@ rebuild: down build up
 re: down up
 
 # Utils
-.PHONY: db logs clean ps tables users_table
+.PHONY: db logs fclean ps tables users_table
 
 db:
 	${DOCKER} exec -it ${CONTAINER} psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
@@ -29,11 +29,8 @@ db:
 logs:
 	${DOCKER} logs -f ${CONTAINER}
 
-clean:
-	${COMPOSE} down
-
 fclean:
-	${COMPOSE} down -v
+	${COMPOSE} down -v ${CONTAINER}
 
 ps:
 	${COMPOSE} ps
