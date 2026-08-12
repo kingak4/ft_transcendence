@@ -16,6 +16,9 @@ down:
 
 rebuild: down build up
 
+logs:
+	docker compose -p transcend -f docker-compose.yml logs transcend-backend
+
 # Utils
 .PHONY: clean test
 

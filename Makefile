@@ -53,18 +53,3 @@ backend-local:
 	$(MAKE) -C backend -f Makefile.local up
 
 .PHONY: check-backend-endpoints
-
-BACKEND_ENDPOINTS := \
-	https://localhost:8443/api/api-docs \
-	https://localhost:8443/api/ws/info
-
-check-backend-endpoints:
-	@for url in $(BACKEND_ENDPOINTS); do \
-		code=$$(curl -k -s -o /dev/null -w "%{http_code}" --connect-timeout 2 "$$url" || true); \
-		if [ "$$code" = "200" ]; then \
-			echo "$$url accessible"; \
-		else \
-			echo "$$url inaccessible ($$code)"; \
-			exit 1; \
-		fi; \
-	done

@@ -11,3 +11,25 @@ up:
 
 test:
 	${COMPOSE} -f docker-compose.yml -f docker-compose.dev.yml up --build transcend-backend-test --abort-on-container-exit
+
+
+BACKEND_ENDPOINTS := \
+	https://localhost:8443/api/api-docs \
+	https://localhost:8443/api/ws/info
+
+check-endpoints:
+	@for url in $(BACKEND_ENDPOINTS); do \
+		echo "Checking $$url ..."; \
+		code=$$(curl -k -s -o /dev/null -w "%{http_code}" \
+			--retry 2 \
+			--retry-delay 3 \
+			--retry-connrefused \
+			--connect-timeout 2 \
+			"$$url" || true); \
+		if [ "$$code" = "200" ]; then \
+			echo "[v] $$url accessible"; \
+		else \
+			echo "[x] $$url inaccessible (HTTP $$code)"; \
+			exit 1; \
+		fi; \
+	done
