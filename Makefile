@@ -1,4 +1,4 @@
-include ./infra/.env
+-include ./infra/.env
 
 .PHONY: up down re build rebuild
 
