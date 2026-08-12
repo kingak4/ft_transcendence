@@ -6,17 +6,14 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  backend-test:
+backend-test:
     name: Backend Tests
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
-
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-backend
+      - uses: ./.github/actions/setup-backend-test
 
       - name: Start infrastructure
         working-directory: infra
@@ -24,14 +21,11 @@ jobs:
 
       - name: Run PROD backend tests
         working-directory: backend
-        run: |
-          mkdir -p .gradle-docker-cache
-          make test
+        run: make test
+
       - name: Run DEV backend tests
         working-directory: backend
-        run: |
-          mkdir -p .gradle-docker-cache
-          make -f Makefile.dev test
+        run: make -f Makefile.dev test
           
   prod:
     name: Evaluation Build
@@ -40,8 +34,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
-
-      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-backend
 
       - name: Start infra

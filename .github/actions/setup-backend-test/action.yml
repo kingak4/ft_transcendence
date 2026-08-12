@@ -1,0 +1,23 @@
+name: 'Cache Backend Test Gradle'
+description: 'Caches Gradle dependencies mounted into Docker test containers'
+
+inputs:
+  cache-path:
+    description: 'Path to local Gradle docker cache directory'
+    required: false
+    default: 'backend/.gradle-docker-cache'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create cache directory
+      shell: bash
+      run: mkdir -p ${{ inputs.cache-path }}
+
+    - name: Cache Gradle Dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.cache-path }}
+        key: gradle-test-${{ runner.os }}-${{ hashFiles('backend/**/build.gradle.kts', 'backend/**/settings.gradle.kts') }}
+        restore-keys: |
+          gradle-test-${{ runner.os }}-
