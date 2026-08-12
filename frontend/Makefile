@@ -7,22 +7,8 @@ export BACKEND_URL
 
 CONTAINER := transcend-frontend
 
-BUILD_STAMP := .build.stamp
-# app/types is excluded: `generate` rewrites it on every `up` regardless of
-# content, which would make the stamp look permanently stale. See project
-# notes on the idempotent-write alternative if this ever needs revisiting.
-BUILD_SOURCES := $(shell find . -type f \
-	-not -path './node_modules/*' \
-	-not -path './.next/*' \
-	-not -path './app/types/*' \
-	-not -name '$(BUILD_STAMP)')
-
-up: generate $(BUILD_STAMP)
+up: generate
 	$(COMPOSE) up ${CONTAINER} -d
-
-$(BUILD_STAMP): $(BUILD_SOURCES)
-	$(COMPOSE) build ${CONTAINER}
-	@touch $(BUILD_STAMP)
 
 # nginx uses a self-signed cert in the dev build; NODE_TLS_REJECT_UNAUTHORIZED=0
 # is scoped to just these two one-shot codegen calls (plain Node fetch, not
@@ -38,7 +24,6 @@ down:
 
 build:
 	$(COMPOSE) build
-	@touch $(BUILD_STAMP)
 
 rebuild: down build up
 

@@ -1,11 +1,22 @@
 services:
   transcend-frontend:
+    container_name: transcend-frontend
+    image: transcend-frontend:latest
     build:
       context: .
-    container_name: transcend-frontend
     env_file:
       - .env
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 networks:
   default:
