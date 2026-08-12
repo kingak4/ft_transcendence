@@ -1,23 +1,44 @@
-name: 'Cache Backend Test Gradle'
-description: 'Caches Gradle dependencies mounted into Docker test containers'
+name: 'Setup Backend Test Container'
+description: 'Caches Gradle dependencies and pre-builds the backend test Docker image with Buildx GHA cache'
 
 inputs:
-  cache-path:
-    description: 'Path to local Gradle docker cache directory'
+  context:
+    description: 'Docker build context path'
     required: false
-    default: 'backend/.gradle-docker-cache'
+    default: './backend'
+  file:
+    description: 'Path to the test Dockerfile'
+    required: false
+    default: './backend/transcend/Dockerfile.test'
+  tags:
+    description: 'Image tag(s)'
+    required: false
+    default: 'transcend-backend-test:latest'
 
 runs:
   using: "composite"
   steps:
-    - name: Create cache directory
+    - name: Ensure cache directory exists
       shell: bash
-      run: mkdir -p ${{ inputs.cache-path }}
+      run: mkdir -p ${{ inputs.context }}/.gradle-docker-cache
 
-    - name: Cache Gradle Dependencies
+    - name: Cache Gradle dependencies
       uses: actions/cache@v4
       with:
-        path: ${{ inputs.cache-path }}
-        key: gradle-test-${{ runner.os }}-${{ hashFiles('backend/**/build.gradle.kts', 'backend/**/settings.gradle.kts') }}
+        path: ${{ inputs.context }}/.gradle-docker-cache
+        key: gradle-test-${{ runner.os }}-${{ hashFiles('backend/transcend/build.gradle.kts', 'backend/settings.gradle.kts') }}
         restore-keys: |
           gradle-test-${{ runner.os }}-
+
+    - name: Set up Docker Buildx Cache
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build backend test image
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file }}
+        load: true
+        tags: ${{ inputs.tags }}
+        cache-from: type=gha,scope=backend-test
+        cache-to: type=gha,mode=max,scope=backend-test
