@@ -4,23 +4,18 @@ Welcome to the Next.js frontend application for `ft_transcendence`.
 
 ## Running the Application
 
-### Local Development (Recommended)
+### Local Development 
 
-To start the full development environment with automatic API type generation, use:
 ```bash
-make -f Makefile.local local
+make -f Makefile.local up
 ```
-**What this command does:**
-1. Installs all NPM dependencies.
-2. Waits for the local Spring Boot backend API to be ready.
-3. Automatically fetches and generates TypeScript interfaces for both REST (OpenAPI) and WebSockets (AsyncAPI).
-4. Starts the Next.js development server on [http://localhost:3000](http://localhost:3000).
+Next.js development server will be accessible on [http://localhost:3000](http://localhost:3000).
+
 
 ### Docker Environment
 
-If you prefer to run the frontend inside Docker:
 ```bash
-make build up
+make up
 ```
 
 ## Generated API Types

@@ -14,7 +14,7 @@ BUILD_SOURCES := $(shell find . -type f \
 	-not -path './app/types/*' \
 	-not -name '$(BUILD_STAMP)')
 
-up: generate $(BUILD_STAMP)
+up: $(BUILD_STAMP)
 	$(COMPOSE) up ${CONTAINER} -d
 
 $(BUILD_STAMP): $(BUILD_SOURCES)
