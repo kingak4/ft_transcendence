@@ -1,14 +1,11 @@
--include .env
+include .env
 -include .env.local
--include ./../infra/.env
-
+include ./../infra/.env
 export BACKEND_URL
 
 PRETTIER = npx prettier
 
-.PHONY: all up generate install build lint format check clean fclean re
-
-all: build
+.PHONY: up generate install build
 
 up: generate
 	@npm run dev
@@ -21,8 +18,13 @@ generate: install
 install:
 	@npm install
 
+ci:
+  @npm ci
+
 build:
 	@npm run build
+
+.PHONY: lint format check clean fclean re
 
 lint:
 	@npm run lint
