@@ -7,14 +7,26 @@ export BACKEND_URL
 
 CONTAINER := transcend-frontend
 
-up: 
-	$(COMPOSE) up --wait ${CONTAINER} -d
+BUILD_STAMP := .build.stamp
+BUILD_SOURCES := $(shell find . -type f \
+	-not -path './node_modules/*' \
+	-not -path './.next/*' \
+	-not -path './app/types/*' \
+	-not -name '$(BUILD_STAMP)')
+
+up: generate $(BUILD_STAMP)
+	$(COMPOSE) up ${CONTAINER} -d
+
+$(BUILD_STAMP): $(BUILD_SOURCES)
+	$(COMPOSE) build ${CONTAINER}
+	@touch $(BUILD_STAMP)
 
 down:
 	$(COMPOSE) down ${CONTAINER}
 
 build:
 	$(COMPOSE) build
+	@touch $(BUILD_STAMP)
 
 rebuild: down build up
 
