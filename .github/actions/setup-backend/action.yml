@@ -18,6 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Ensure cache directory exists and has permissions
+      shell: bash
+      run: |
+        mkdir -p ${{ inputs.context }}/.gradle-docker-cache
+        sudo chown -R $USER:$USER ${{ inputs.context }}/.gradle-docker-cache
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
       with:

@@ -18,9 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Ensure cache directory exists
+    - name: Ensure cache directory exists and has permissions
       shell: bash
-      run: mkdir -p ${{ inputs.context }}/.gradle-docker-cache
+      run: |
+        mkdir -p ${{ inputs.context }}/.gradle-docker-cache
+        sudo chown -R $USER:$USER ${{ inputs.context }}/.gradle-docker-cache
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
@@ -30,7 +32,7 @@ runs:
         restore-keys: |
           gradle-test-${{ runner.os }}-
 
-    - name: Set up Docker Buildx Cache
+    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
     - name: Build backend test image
