@@ -18,7 +18,11 @@ runs:
         restore-keys: |
           nextjs-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-
 
+    - name: Frontend clean install
+      working-directory: frontend
+      run: make -f Makefile.local ci
+
     - name: Generate API types
       shell: bash
       working-directory: frontend
-      run: make generate
+      run: make -f Makefile.local generate
