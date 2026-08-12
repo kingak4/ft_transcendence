@@ -77,17 +77,6 @@ java {
 
 val profileToUse = (project.findProperty("profile") ?: System.getenv("SPRING_PROFILES_ACTIVE") ?: "default").toString()
 
-allprojects {
-   tasks.withType<Test>().configureEach {
-      systemProperty("spring.profiles.include", profileToUse)
-      systemProperty("spring.profiles.active", profileToUse)
-
-      testLogging {
-         showStandardStreams = true
-      }
-   }
-}
-
 tasks {
    compileJava {
       options.encoding = "UTF-8"

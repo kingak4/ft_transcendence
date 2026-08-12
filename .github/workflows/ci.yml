@@ -59,3 +59,25 @@ jobs:
         if: failure()
         working-directory: frontend
         run: docker compose -p transcend logs transcend-frontend
+
+  dev-backend:
+    name: Dev Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-env
+      - uses: ./.github/actions/setup-backend
+
+      - name: Start infra
+        working-directory: infra
+        run: make up
+
+      - name: Start backend (local profile — published on loopback :5001)
+        working-directory: backend
+        run: make -f Makefile.dev up
+
+      - name: Show backend logs on failure
+        if: failure()
+        working-directory: backend
+        run: docker compose -p transcend -f docker-compose.yml -f docker-compose.local.yml logs transcend-backend
