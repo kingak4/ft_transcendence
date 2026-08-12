@@ -25,7 +25,10 @@ services:
     env_file:
       - transcend/.env
     environment:
+      - GRADLE_USER_HOME=/home/gradle/.gradle
       - SPRING_PROFILES_ACTIVE=test,prod
+    volumes:
+      - ./.gradle-docker-cache:/home/gradle/.gradle
     command: ["sh", "-c", "gradle test --no-daemon"]
 
 networks:

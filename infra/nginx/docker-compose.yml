@@ -6,6 +6,12 @@ services:
     ports:
       - "8443:443"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -k -sS -o /dev/null https://localhost || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 networks:
   default:

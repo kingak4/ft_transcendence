@@ -4,6 +4,7 @@ build
 
 # Make build-stamp cache
 .build.stamp
+.gradle-docker-cache/
 
 # Compiled class file
 *.class
