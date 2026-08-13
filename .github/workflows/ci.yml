@@ -53,7 +53,7 @@ jobs:
         run: make run
 
       - name: Validate Frontend is accessible via https
-        working-directory: backend
+        working-directory: frontend
         run: make check-endpoints
 
       - name: Show backend logs on failure
