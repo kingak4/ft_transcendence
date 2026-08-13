@@ -36,7 +36,28 @@ rebuild: down build up
 re: down up
 
 # Utils
-.PHONY: fclean
+.PHONY: fclean check-endpoints
 
 fclean:
 	$(COMPOSE) down -v
+
+
+FRONTEND_ENDPOINTS := \
+	https://localhost:8443
+
+check-endpoints:
+	@for url in $(FRONTEND_ENDPOINTS); do \
+		echo "Checking $$url ..."; \
+		code=$$(curl -k -s -o /dev/null -w "%{http_code}" \
+			--retry 2 \
+			--retry-delay 3 \
+			--retry-connrefused \
+			--connect-timeout 2 \
+			"$$url" || true); \
+		if [ "$$code" = "200" ]; then \
+			echo "[v] $$url accessible"; \
+		else \
+			echo "[x] $$url inaccessible (HTTP $$code)"; \
+			exit 1; \
+		fi; \
+	done
