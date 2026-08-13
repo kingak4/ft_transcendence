@@ -49,7 +49,7 @@ backend-dev:
 	$(MAKE) -C backend -f Makefile.dev up
 
 backend-local:
-	$(MAKE) -C infra -f Makefile.local up
+	$(MAKE) -C infra -f Makefile.dev up
 	$(MAKE) -C backend -f Makefile.local up
 
 .PHONY: check-backend-endpoints
