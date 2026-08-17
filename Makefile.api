@@ -156,7 +156,7 @@ test-malformed-springwolf-group:
 	$(MAKE) -f Makefile.api get-springwolf-docs-group GROUP="../../etc/passwd" # expect 400/404, must not leak files
 	$(MAKE) -f Makefile.api get-springwolf-docs-group GROUP= # expect 400/404
 
-!!!! TESTS TO PAY ATTENTION TO:
+# !!!! TESTS TO PAY ATTENTION TO:
 # non-existent chat id
 make -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9deaq # expect 404, result 400 ("detail":"Failed to convert 'chatId' with value: 'a98ae259-2159-4850-96c2-433e2eb9deaq)
 # removed one character from the chat_id
