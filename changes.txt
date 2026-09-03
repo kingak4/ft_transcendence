@@ -1,0 +1,464 @@
+diff --git a/Makefile b/Makefile
+index 7f3bde5..8ee5dca 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,4 +1,4 @@
+-include ./infra/.env
++-include ./infra/.env
+ 
+ .PHONY: up down re build rebuild
+ 
+@@ -21,13 +21,15 @@ re: down up
+ 
+ # Setup
+ .PHONY: env
+-
+ env:
+-	find . -name ".env.example" -type f | while read file; do \
+-		dir=$$(dirname $$file); \
+-		cp $$file $$dir/.env; \
+-		echo "Created $$dir/.env from $$file"; \
+-	done
++	cp infra/.env.example infra/.env
++	cp infra/postgres/.env.example infra/postgres/.env
++	cp infra/redis/.env.example infra/redis/.env
++	cp backend/transcend/.env.example backend/transcend/.env
++	cp backend/transcend/.env.local.example backend/transcend/.env.local
++	cp backend/.env.example backend/.env
++	cp frontend/.env.example frontend/.env
++	cp frontend/.env.local.example frontend/.env.local
+ 
+ # Utils
+ .PHONY: frontend-local
+diff --git a/Makefile.api b/Makefile.api
+new file mode 100644
+index 0000000..5a5c0df
+--- /dev/null
++++ b/Makefile.api
+@@ -0,0 +1,165 @@
++include ./infra/.env
++
++# ---- Config ----
++BASE_URL ?= https://localhost:8443
++CURL := curl -k
++HEADERS := -H "accept: */*" -H "Content-Type: application/json"
++
++AUTH_HEADER := $(if $(ACCESS_TOKEN),-H "Authorization: Bearer $(ACCESS_TOKEN)",)
++
++EMAIL ?= $(EMAIL)
++PASSWORD ?= $(PASSWORD)
++REG_EMAIL ?= $(REG_EMAIL)
++REG_PASSWORD ?= $(REG_PASSWORD)
++AVATAR_ID ?= 00000000-0000-0000-0000-000000000000
++USER_ID ?= $(USER_ID)
++DISPLAY_NAME ?= NewTest
++USER_NAME ?= $(USER_NAME)
++PAGE ?= 0
++SIZE ?= 10
++GROUP ?= default
++CHAT_ID ?= $(CHAT_ID)
++
++.PHONY: help
++help: ## Show this help
++	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "%-20s %s\n", $$1, $$2}'
++
++# ---- Endpoints Users ----
++.PHONY: register
++register: ## POST /api/users/register
++	$(CURL) -X POST $(HEADERS) $(BASE_URL)/api/users/register -d '{"email": "$(REG_EMAIL)", "password": "$(REG_PASSWORD)"}'
++
++.PHONY: login
++login: ## POST /api/users/login (usage: make login EMAIL=... PASSWORD=...)
++	$(CURL) -X POST $(HEADERS) $(BASE_URL)/api/users/login -d '{"email": "$(EMAIL)", "password": "$(PASSWORD)"}'
++
++.PHONY: get-session
++get-session: ## GET /api/auth/session
++	$(CURL) -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/auth/session
++
++.PHONY: get-avatar
++get-avatar: ## GET /api/users/avatar/:id (usage: make get-avatar AVATAR_ID=...)
++	$(CURL) -H "accept: image/jpeg" $(AUTH_HEADER) $(BASE_URL)/api/users/avatar/$(AVATAR_ID)
++
++.PHONY: add-friend
++add-friend: ## POST /api/friends/:id (usage: make add-friend USER_ID=...)
++	$(CURL) -X POST -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/friends/$(USER_ID) -d ''
++
++.PHONY: remove-friend
++remove-friend: ## DELETE /api/friends/:id (usage: make remove-friend USER_ID=...)
++	$(CURL) -X DELETE -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/friends/$(USER_ID)
++
++.PHONY: update-display-name
++update-display-name: ## PATCH /api/users/display-name (usage: make update-display-name DISPLAY_NAME=...)
++	$(CURL) -X PATCH -H "accept: */*" -H "Content-Type: application/json" $(AUTH_HEADER) $(BASE_URL)/api/users/display-name -d '{"displayName": "$(DISPLAY_NAME)"}'
++
++.PHONY: get-user-details
++get-user-details: ## GET /api/users/:id/details (usage: make get-user-details USER_ID=...)
++	$(CURL) -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/users/$(USER_ID)/details
++
++.PHONY: search-users
++search-users: ## GET /api/users/search (usage: make search-users USER_NAME=... PAGE=... SIZE=...)
++	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/users/search?query=$(USER_NAME)&page=$(PAGE)&size=$(SIZE)"
++
++.PHONY: get-friends
++get-friends: ## GET /api/friends (usage: make get-friends PAGE=... SIZE=...)
++	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/friends?page=$(PAGE)&size=$(SIZE)"
++
++.PHONY: get-springwolf-config
++get-springwolf-config: ## GET /api/springwolf/ui-config
++	$(CURL) -H "accept: application/json" $(AUTH_HEADER) $(BASE_URL)/api/springwolf/ui-config
++
++.PHONY: get-springwolf-docs
++get-springwolf-docs: ## GET /api/springwolf/docs
++	$(CURL) -H "accept: application/yaml" $(AUTH_HEADER) $(BASE_URL)/api/springwolf/docs
++
++.PHONY: get-springwolf-docs-group
++get-springwolf-docs-group: ## GET /api/springwolf/docs/:group (usage: make get-springwolf-docs-group GROUP=...)
++	$(CURL) -H "accept: application/yaml" $(AUTH_HEADER) $(BASE_URL)/api/springwolf/docs/$(GROUP)
++
++# ---- Endpoints Chat ----
++.PHONY: create-chat
++create-chat: ## POST /api/chats/:id (usage: make create-chat USER_ID=...)
++	$(CURL) -X POST -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/chats/$(USER_ID) -d ''
++
++.PHONY: get-chats
++get-chats: ## GET /api/chats (usage: make get-chats PAGE=... SIZE=...)
++	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/chats?page=$(PAGE)&size=$(SIZE)"
++
++.PHONY: get-chat-messages
++get-chat-messages: ## GET /api/chats/:id/messages (usage: make get-chat-messages CHAT_ID=... PAGE=... SIZE=...)
++	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/chats/$(CHAT_ID)/messages?page=$(PAGE)&size=$(SIZE)"
++
++# ---- Batch runs ----
++# Excludes get-springwolf-docs-group (needs a GROUP param, tested separately)
++ALL_TARGETS := get-session add-friend remove-friend update-display-name get-user-details search-users get-friends get-springwolf-config get-springwolf-docs create-chat
++
++.PHONY: authorize
++authorize: ## Register + login to obtain a fresh token
++	$(MAKE) -f Makefile.api register login
++
++.PHONY: test-all-authorized
++test-all-authorized: ## Run all endpoints (except get-springwolf-docs-group) WITH auth
++	$(MAKE) -f Makefile.api $(ALL_TARGETS)
++
++.PHONY: test-chat-authorized
++test-chat-authorized: ## Run get-chats + get-chat-messages WITH auth (usage: make test-chat-authorized CHAT_ID=...)
++	$(MAKE) -f Makefile.api get-chats get-chat-messages
++
++.PHONY: test-all-unauthorized
++test-all-unauthorized: ## Run all endpoints (except get-springwolf-docs-group) WITHOUT auth
++	$(MAKE) -f Makefile.api $(ALL_TARGETS) ACCESS_TOKEN=
++
++# make -f Makefile.api authorize
++# make -f Makefile.api test-all-authorized
++# make -f Makefile.api test-chat-authorized
++
++# make -f Makefile.api test-all-unauthorized
++
++# ------------ Malformed params ------------
++.PHONY: test-malformed-authorization
++test-malformed-authorization:
++	$(MAKE) -f Makefile.api login EMAIL=not-an-email PASSWORD=zxcvb12345 # 401
++	$(MAKE) -f Makefile.api login EMAIL= PASSWORD= # 401
++	$(MAKE) -f Makefile.api register REG_EMAIL=test@test.com REG_PASSWORD=$$(python3 -c "print('a'*10000)") # 400
++	$(MAKE) -f Makefile.api register REG_EMAIL=alraltse@gmail.com REG_PASSWORD=zxcvb12345 # 409 - resource already exists
++
++.PHONY: test-malformed-user-ids
++test-malformed-user-ids:
++	$(MAKE) -f Makefile.api get-user-details USER_ID=not-a-uuid # expect 400
++	$(MAKE) -f Makefile.api get-user-details USER_ID=00000000-0000-0000-0000-000000000000 # expect 404 (check for 500 bug)
++	$(MAKE) -f Makefile.api get-user-details USER_ID= # expect 400/404
++	$(MAKE) -f Makefile.api add-friend USER_ID=1dd037e3-3cc7-4e75-9b6f-e712a0c58b91 # 404
++	$(MAKE) -f Makefile.api get-user-details USER_ID=$$(python3 -c "print('x'*5000)") # expect 400
++
++.PHONY: test-malformed-search
++test-malformed-search:
++	$(MAKE) -f Makefile.api search-users USER_NAME=Alina PAGE=-1 # expect 400
++	$(MAKE) -f Makefile.api search-users USER_NAME=Alina PAGE=999999 # expect 200
++	$(MAKE) -f Makefile.api search-users USER_NAME=Alina SIZE=0 # expect 400
++	$(MAKE) -f Makefile.api search-users USER_NAME=Alina SIZE=-5 # expect 400
++	$(MAKE) -f Makefile.api search-users USER_NAME=Alina SIZE=1000000 # expect 400, or capped result
++	$(MAKE) -f Makefile.api search-users USER_NAME=Alina PAGE=abc SIZE=xyz # expect 400
++
++.PHONY: test-malformed-friends-chats
++test-malformed-friends-chats:
++	$(MAKE) -f Makefile.api get-friends PAGE=-1 SIZE=0 # expect 400
++	$(MAKE) -f Makefile.api get-chats PAGE=abc SIZE=abc # expect 400
++	$(MAKE) -f Makefile.api get-chat-messages CHAT_ID=not-a-uuid # expect 400
++	$(MAKE) -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9deaq # expect 404, result 400 ("detail":"Failed to convert 'chatId' with value: 'a98ae259-2159-4850-96c2-433e2eb9deaq)
++	$(MAKE) -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9dea # 500 !!! ("detail":"An unexpected error occurred", "instance":"/api/chats/a98ae259-2159-4850-96c2-433e2eb9dea/messages")
++	$(MAKE) -f Makefile.api create-chat USER_ID=not-a-uuid # expect 400
++	$(MAKE) -f Makefile.api create-chat USER_ID=1dd037e3-3cc7-4e75-9b6f-e712a0c58b91 # expects 404, result - 201 !!!
++
++.PHONY: test-malformed-springwolf-group
++test-malformed-springwolf-group:
++	$(MAKE) -f Makefile.api get-springwolf-docs-group GROUP="../../etc/passwd" # expect 400/404, must not leak files
++	$(MAKE) -f Makefile.api get-springwolf-docs-group GROUP= # expect 400/404
++
++# !!!! TESTS TO PAY ATTENTION TO:
++# non-existent chat id
++# make -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9deaq # expect 404, result 400 ("detail":"Failed to convert 'chatId' with value: 'a98ae259-2159-4850-96c2-433e2eb9deaq)
++# removed one character from the chat_id
++# make -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9dea # 500 !!! ("detail":"An unexpected error occurred", "instance":"/api/chats/a98ae259-2159-4850-96c2-433e2eb9dea/messages")
++# non-existent user id
++# make -f Makefile.api create-chat USER_ID=1dd037e3-3cc7-4e75-9b6f-e712a0c58b91 # expects 404, result - 201 !!!
+\ No newline at end of file
+diff --git a/backend/docker-compose.local.yml b/backend/docker-compose.local.yml
+index 27436ea..bb2a45a 100644
+--- a/backend/docker-compose.local.yml
++++ b/backend/docker-compose.local.yml
+@@ -2,6 +2,9 @@ services:
+   transcend-backend:
+     ports:
+       - "127.0.0.1:5001:5000"
++    environment:
++      - LOGGING_LEVEL_ROOT=DEBUG
++      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG
+ 
+ networks:
+   default:
+diff --git a/backend/transcend/.env.example b/backend/transcend/.env.example
+index ca278b0..09bbe37 100644
+--- a/backend/transcend/.env.example
++++ b/backend/transcend/.env.example
+@@ -4,4 +4,5 @@ POSTGRES_HOST=postgres-db
+ REDIS_HOST=redis-db
+ POSTGRES_DB=postgres_db
+ POSTGRES_USER=postgres
+-POSTGRES_PASSWORD=postgres
+\ No newline at end of file
++POSTGRES_PASSWORD=postgres
++JWT_SECRET=LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
+\ No newline at end of file
+diff --git a/backend/transcend/src/main/java/code/chat/entrypoints/ChatExceptionHandler.java b/backend/transcend/src/main/java/code/chat/entrypoints/ChatExceptionHandler.java
+new file mode 100644
+index 0000000..ff233c7
+--- /dev/null
++++ b/backend/transcend/src/main/java/code/chat/entrypoints/ChatExceptionHandler.java
+@@ -0,0 +1,34 @@
++package code.chat.entrypoints;
++
++import code.chat.domain.exception.ChatNotFoundException;
++import code.chat.domain.exception.EmptyMessageException;
++import code.chat.domain.exception.MessageNotFoundException;
++import code.chat.domain.exception.NotMessageOwnerException;
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ProblemDetail;
++import org.springframework.web.bind.annotation.ControllerAdvice;
++import org.springframework.web.bind.annotation.ExceptionHandler;
++
++@ControllerAdvice
++class ChatExceptionHandler {
++
++  @ExceptionHandler(ChatNotFoundException.class)
++  public ProblemDetail handleNotFoundException(ChatNotFoundException ex) {
++    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
++  }
++
++  @ExceptionHandler(EmptyMessageException.class)
++  public ProblemDetail handleEmptyMessageException(EmptyMessageException ex) {
++    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
++  }
++
++  @ExceptionHandler(MessageNotFoundException.class)
++  public ProblemDetail handleMessageNotFoundException(MessageNotFoundException ex) {
++    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
++  }
++
++  @ExceptionHandler(NotMessageOwnerException.class)
++  public ProblemDetail handleNotMessageOwnerException(NotMessageOwnerException ex) {
++    return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
++  }
++}
+\ No newline at end of file
+diff --git a/backend/transcend/src/main/java/code/chat/logic/GetChatMessages.java b/backend/transcend/src/main/java/code/chat/logic/GetChatMessages.java
+index a25ce9d..90b17ee 100644
+--- a/backend/transcend/src/main/java/code/chat/logic/GetChatMessages.java
++++ b/backend/transcend/src/main/java/code/chat/logic/GetChatMessages.java
+@@ -16,7 +16,11 @@ public class GetChatMessages implements GetChatMessagesUseCase {
+ 
+   @Override
+   public List<Message> getChatMessages(ChatId chatId, int page, int size) {
+-    if (dao.getChat(chatId).isEmpty()) throw new ChatNotFoundException();
++    try {
++      if (dao.getChat(chatId).isEmpty()) throw new ChatNotFoundException();
++    } catch (Exception e) {
++      throw new ChatNotFoundException();
++    }
+     return dao.getRecentMessages(chatId, page, size);
+   }
+-}
++}
+\ No newline at end of file
+diff --git a/backend/transcend/src/main/java/code/shared/exceptions/GlobalExceptionHandler.java b/backend/transcend/src/main/java/code/shared/exceptions/GlobalExceptionHandler.java
+index 71a9adc..a52231c 100644
+--- a/backend/transcend/src/main/java/code/shared/exceptions/GlobalExceptionHandler.java
++++ b/backend/transcend/src/main/java/code/shared/exceptions/GlobalExceptionHandler.java
+@@ -1,10 +1,13 @@
+ package code.shared.exceptions;
+ 
++import code.chat.domain.exception.ChatNotFoundException;
+ import jakarta.validation.ConstraintViolationException;
+ import java.util.Map;
+ import java.util.stream.Collectors;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ProblemDetail;
++import org.springframework.http.ResponseEntity;
++import org.springframework.messaging.handler.annotation.support.MethodArgumentTypeMismatchException;
+ import org.springframework.web.bind.annotation.ExceptionHandler;
+ import org.springframework.web.bind.annotation.ResponseStatus;
+ import org.springframework.web.bind.annotation.RestControllerAdvice;
+@@ -13,6 +16,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
+ @RestControllerAdvice
+ public class GlobalExceptionHandler {
+ 
++  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
++  public ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
++    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
++  }
++
+   @ExceptionHandler(IllegalArgumentException.class)
+   @ResponseStatus(HttpStatus.BAD_REQUEST)
+   public ProblemDetail handleIllegalArgumentException(IllegalArgumentException ex) {
+@@ -52,4 +60,4 @@ public class GlobalExceptionHandler {
+   public ProblemDetail handleNotImplementedException(NotImplementedException ex) {
+     return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_IMPLEMENTED, ex.getMessage());
+   }
+-}
++}
+\ No newline at end of file
+diff --git a/backend/transcend/src/main/java/code/users/infrastructure/security/config/SecurityConfig.java b/backend/transcend/src/main/java/code/users/infrastructure/security/config/SecurityConfig.java
+index 4b50c66..7f3db58 100644
+--- a/backend/transcend/src/main/java/code/users/infrastructure/security/config/SecurityConfig.java
++++ b/backend/transcend/src/main/java/code/users/infrastructure/security/config/SecurityConfig.java
+@@ -34,7 +34,9 @@ public class SecurityConfig {
+                         "/api-docs/**",
+                         "/swagger-ui/**",
+                         "/swagger-ui.html",
+-                        "/users/**",
++//                        "/users/**",
++                        "/users/login",
++                        "/users/register",
+                         "/ws/**",
+                         "/springwolf/**",
+                         "/actuator/health")
+diff --git a/backend/transcend/src/main/resources/application.yml b/backend/transcend/src/main/resources/application.yml
+index e601581..2dda8c8 100644
+--- a/backend/transcend/src/main/resources/application.yml
++++ b/backend/transcend/src/main/resources/application.yml
+@@ -59,7 +59,7 @@ springwolf:
+ 
+ security:
+   jwt:
+-    secret: LV2UPLQ2YXOIWh3swq4RcQWXjtwKPFuvG1z7I0dfgII=
++    secret: ${JWT_SECRET}
+     expiration-ms: 86400000
+ 
+ bucket4j:
+diff --git a/frontend/.env.local.example b/frontend/.env.local.example
+new file mode 100644
+index 0000000..e4815c6
+--- /dev/null
++++ b/frontend/.env.local.example
+@@ -0,0 +1,2 @@
++BACKEND_URL=http://localhost:5001
++CODEGEN_URL=https://localhost:8443/api
+\ No newline at end of file
+diff --git a/frontend/app/(app)/chat/MessageBubble.tsx b/frontend/app/(app)/chat/MessageBubble.tsx
+index b061e77..54c9625 100644
+--- a/frontend/app/(app)/chat/MessageBubble.tsx
++++ b/frontend/app/(app)/chat/MessageBubble.tsx
+@@ -1,4 +1,5 @@
+ import type { ChatMessage } from './types';
++import Link from 'next/link';
+ 
+ interface Props {
+   message: ChatMessage;
+@@ -89,7 +90,33 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
+                 }`
+           }
+         >
+-          {message.content}
++          {(() => {
++            const gameInviteMatch = message.content.match(/^#game-invite:([a-zA-Z0-9_-]+)#$/);
++            const isGameInvite = !!gameInviteMatch && !message.isDeleted;
++            const gameName = gameInviteMatch ? gameInviteMatch[1] : '';
++
++            if (isGameInvite) {
++              return (
++                <div className="flex flex-col gap-1">
++                  <span className="font-semibold text-sm">Wyzwanie: {gameName} 🎮</span>
++                  <p className="text-[11px] opacity-80 mb-1">
++                    {isMine ? 'Wysłałeś zaproszenie do gry.' : 'Zaprasza Cię do wspólnej gry!'}
++                  </p>
++                  <Link
++                    href={`/games/${gameName}`}
++                    className={`mt-1 inline-block rounded-md px-3 py-1.5 text-center text-xs font-bold transition-colors ${
++                      isMine
++                        ? 'bg-black/20 text-hub-on-accent hover:bg-black/30 dark:bg-white/20 dark:hover:bg-white/30'
++                        : 'bg-hub-bubble text-hub-on-accent hover:opacity-90'
++                    }`}
++                  >
++                    Zagraj w {gameName}
++                  </Link>
++                </div>
++              );
++            }
++            return message.content;
++          })()}
+         </div>
+         {isMine && onDelete && !message.isDeleted && (
+           <button
+diff --git a/infra/.env.example b/infra/.env.example
+index 6f754bd..543558a 100644
+--- a/infra/.env.example
++++ b/infra/.env.example
+@@ -1,3 +1,14 @@
+ DOCKER = docker
+ COMPOSE = docker compose -p transcend
+ COMPOSE_IGNORE_ORPHANS=True
++EMAIL=makeTest@gmail.com
++REG_EMAIL=makeTest@gmail.com
++PASSWORD=12345asdfg
++REG_PASSWORD=12345asdfg
++ACCESS_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMzM4ZGU2Ny0xOTdlLTRhODYtOWZkOS02ODM2NTM3MTllMjUiLCJpYXQiOjE3ODY5NjE4NjksImV4cCI6MTc4NzA0ODI2OX0.OIcKmlgNyD0MUh5TUX3Fakza9h8n6l7ZgTPlBRYOGME
++AVATAR_ID=00000000-0000-0000-0000-000000000000
++USER_ID=d3d9611e-f75b-440b-abea-df6960052510
++DISPLAY_NAME=MakeTestChack
++USER_NAME=Alina
++# GROUP=default
++CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9deac
+diff --git a/infra/nginx/nginx.conf b/infra/nginx/nginx.conf
+index 0132831..de499d7 100644
+--- a/infra/nginx/nginx.conf
++++ b/infra/nginx/nginx.conf
+@@ -3,11 +3,16 @@ map $http_upgrade $connection_upgrade {
+     ''      close;
+ }
+ 
+-map $cookie_auth_token $auth_header {
++map $cookie_auth_token $auth_header_from_cookie {
+     default "Bearer $cookie_auth_token";
+     ""      "";
+ }
+ 
++map $http_authorization $auth_header_final {
++    default   $http_authorization;
++    ""        $auth_header_from_cookie;
++}
++
+ server {
+     listen 443 ssl;
+     server_name localhost;
+@@ -51,10 +56,10 @@ server {
+         proxy_set_header Connection $connection_upgrade;
+         
+         # Inject Authorization header from auth_token cookie
+-        proxy_set_header Authorization $auth_header;
++		proxy_set_header Authorization $auth_header_final;
+         
+         # Standard forwarding headers
+-        proxy_set_header X-Forwarded-Prefix /api;
++        proxy_set_header X-Forwarded-Prefix /api; # causes authorization error
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Host $http_host;
+         # proxy_set_header X-Forwarded-Port $server_port;
