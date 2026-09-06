@@ -1,0 +1,165 @@
+include ./infra/.env
+
+# ---- Config ----
+BASE_URL ?= https://localhost:8443
+CURL := curl -k
+HEADERS := -H "accept: */*" -H "Content-Type: application/json"
+
+AUTH_HEADER := $(if $(ACCESS_TOKEN),-H "Authorization: Bearer $(ACCESS_TOKEN)",)
+
+EMAIL ?= $(EMAIL)
+PASSWORD ?= $(PASSWORD)
+REG_EMAIL ?= $(REG_EMAIL)
+REG_PASSWORD ?= $(REG_PASSWORD)
+AVATAR_ID ?= 00000000-0000-0000-0000-000000000000
+USER_ID ?= $(USER_ID)
+DISPLAY_NAME ?= NewTest
+USER_NAME ?= $(USER_NAME)
+PAGE ?= 0
+SIZE ?= 10
+GROUP ?= default
+CHAT_ID ?= $(CHAT_ID)
+
+.PHONY: help
+help: ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "%-20s %s\n", $$1, $$2}'
+
+# ---- Endpoints Users ----
+.PHONY: register
+register: ## POST /api/users/register
+	$(CURL) -X POST $(HEADERS) $(BASE_URL)/api/users/register -d '{"email": "$(REG_EMAIL)", "password": "$(REG_PASSWORD)"}'
+
+.PHONY: login
+login: ## POST /api/users/login (usage: make login EMAIL=... PASSWORD=...)
+	$(CURL) -X POST $(HEADERS) $(BASE_URL)/api/users/login -d '{"email": "$(EMAIL)", "password": "$(PASSWORD)"}'
+
+.PHONY: get-session
+get-session: ## GET /api/auth/session
+	$(CURL) -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/auth/session
+
+.PHONY: get-avatar
+get-avatar: ## GET /api/users/avatar/:id (usage: make get-avatar AVATAR_ID=...)
+	$(CURL) -H "accept: image/jpeg" $(AUTH_HEADER) $(BASE_URL)/api/users/avatar/$(AVATAR_ID)
+
+.PHONY: add-friend
+add-friend: ## POST /api/friends/:id (usage: make add-friend USER_ID=...)
+	$(CURL) -X POST -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/friends/$(USER_ID) -d ''
+
+.PHONY: remove-friend
+remove-friend: ## DELETE /api/friends/:id (usage: make remove-friend USER_ID=...)
+	$(CURL) -X DELETE -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/friends/$(USER_ID)
+
+.PHONY: update-display-name
+update-display-name: ## PATCH /api/users/display-name (usage: make update-display-name DISPLAY_NAME=...)
+	$(CURL) -X PATCH -H "accept: */*" -H "Content-Type: application/json" $(AUTH_HEADER) $(BASE_URL)/api/users/display-name -d '{"displayName": "$(DISPLAY_NAME)"}'
+
+.PHONY: get-user-details
+get-user-details: ## GET /api/users/:id/details (usage: make get-user-details USER_ID=...)
+	$(CURL) -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/users/$(USER_ID)/details
+
+.PHONY: search-users
+search-users: ## GET /api/users/search (usage: make search-users USER_NAME=... PAGE=... SIZE=...)
+	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/users/search?query=$(USER_NAME)&page=$(PAGE)&size=$(SIZE)"
+
+.PHONY: get-friends
+get-friends: ## GET /api/friends (usage: make get-friends PAGE=... SIZE=...)
+	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/friends?page=$(PAGE)&size=$(SIZE)"
+
+.PHONY: get-springwolf-config
+get-springwolf-config: ## GET /api/springwolf/ui-config
+	$(CURL) -H "accept: application/json" $(AUTH_HEADER) $(BASE_URL)/api/springwolf/ui-config
+
+.PHONY: get-springwolf-docs
+get-springwolf-docs: ## GET /api/springwolf/docs
+	$(CURL) -H "accept: application/yaml" $(AUTH_HEADER) $(BASE_URL)/api/springwolf/docs
+
+.PHONY: get-springwolf-docs-group
+get-springwolf-docs-group: ## GET /api/springwolf/docs/:group (usage: make get-springwolf-docs-group GROUP=...)
+	$(CURL) -H "accept: application/yaml" $(AUTH_HEADER) $(BASE_URL)/api/springwolf/docs/$(GROUP)
+
+# ---- Endpoints Chat ----
+.PHONY: create-chat
+create-chat: ## POST /api/chats/:id (usage: make create-chat USER_ID=...)
+	$(CURL) -X POST -H "accept: */*" $(AUTH_HEADER) $(BASE_URL)/api/chats/$(USER_ID) -d ''
+
+.PHONY: get-chats
+get-chats: ## GET /api/chats (usage: make get-chats PAGE=... SIZE=...)
+	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/chats?page=$(PAGE)&size=$(SIZE)"
+
+.PHONY: get-chat-messages
+get-chat-messages: ## GET /api/chats/:id/messages (usage: make get-chat-messages CHAT_ID=... PAGE=... SIZE=...)
+	$(CURL) -H "accept: */*" $(AUTH_HEADER) "$(BASE_URL)/api/chats/$(CHAT_ID)/messages?page=$(PAGE)&size=$(SIZE)"
+
+# ---- Batch runs ----
+# Excludes get-springwolf-docs-group (needs a GROUP param, tested separately)
+ALL_TARGETS := get-session add-friend remove-friend update-display-name get-user-details search-users get-friends get-springwolf-config get-springwolf-docs create-chat
+
+.PHONY: authorize
+authorize: ## Register + login to obtain a fresh token
+	$(MAKE) -f Makefile.api register login
+
+.PHONY: test-all-authorized
+test-all-authorized: ## Run all endpoints (except get-springwolf-docs-group) WITH auth
+	$(MAKE) -f Makefile.api $(ALL_TARGETS)
+
+.PHONY: test-chat-authorized
+test-chat-authorized: ## Run get-chats + get-chat-messages WITH auth (usage: make test-chat-authorized CHAT_ID=...)
+	$(MAKE) -f Makefile.api get-chats get-chat-messages
+
+.PHONY: test-all-unauthorized
+test-all-unauthorized: ## Run all endpoints (except get-springwolf-docs-group) WITHOUT auth
+	$(MAKE) -f Makefile.api $(ALL_TARGETS) ACCESS_TOKEN=
+
+# make -f Makefile.api authorize
+# make -f Makefile.api test-all-authorized
+# make -f Makefile.api test-chat-authorized
+
+# make -f Makefile.api test-all-unauthorized
+
+# ------------ Malformed params ------------
+.PHONY: test-malformed-authorization
+test-malformed-authorization:
+	$(MAKE) -f Makefile.api login EMAIL=not-an-email PASSWORD=zxcvb12345 # 401
+	$(MAKE) -f Makefile.api login EMAIL= PASSWORD= # 401
+	$(MAKE) -f Makefile.api register REG_EMAIL=test@test.com REG_PASSWORD=$$(python3 -c "print('a'*10000)") # 400
+	$(MAKE) -f Makefile.api register REG_EMAIL=alraltse@gmail.com REG_PASSWORD=zxcvb12345 # 409 - resource already exists
+
+.PHONY: test-malformed-user-ids
+test-malformed-user-ids:
+	$(MAKE) -f Makefile.api get-user-details USER_ID=not-a-uuid # expect 400
+	$(MAKE) -f Makefile.api get-user-details USER_ID=00000000-0000-0000-0000-000000000000 # expect 404 (check for 500 bug)
+	$(MAKE) -f Makefile.api get-user-details USER_ID= # expect 400/404
+	$(MAKE) -f Makefile.api add-friend USER_ID=1dd037e3-3cc7-4e75-9b6f-e712a0c58b91 # 404
+	$(MAKE) -f Makefile.api get-user-details USER_ID=$$(python3 -c "print('x'*5000)") # expect 400
+
+.PHONY: test-malformed-search
+test-malformed-search:
+	$(MAKE) -f Makefile.api search-users USER_NAME=Alina PAGE=-1 # expect 400
+	$(MAKE) -f Makefile.api search-users USER_NAME=Alina PAGE=999999 # expect 200
+	$(MAKE) -f Makefile.api search-users USER_NAME=Alina SIZE=0 # expect 400
+	$(MAKE) -f Makefile.api search-users USER_NAME=Alina SIZE=-5 # expect 400
+	$(MAKE) -f Makefile.api search-users USER_NAME=Alina SIZE=1000000 # expect 400, or capped result
+	$(MAKE) -f Makefile.api search-users USER_NAME=Alina PAGE=abc SIZE=xyz # expect 400
+
+.PHONY: test-malformed-friends-chats
+test-malformed-friends-chats:
+	$(MAKE) -f Makefile.api get-friends PAGE=-1 SIZE=0 # expect 400
+	$(MAKE) -f Makefile.api get-chats PAGE=abc SIZE=abc # expect 400
+	$(MAKE) -f Makefile.api get-chat-messages CHAT_ID=not-a-uuid # expect 400
+	$(MAKE) -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9deaq # expect 404, result 400 ("detail":"Failed to convert 'chatId' with value: 'a98ae259-2159-4850-96c2-433e2eb9deaq)
+	$(MAKE) -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9dea # 500 !!! ("detail":"An unexpected error occurred", "instance":"/api/chats/a98ae259-2159-4850-96c2-433e2eb9dea/messages")
+	$(MAKE) -f Makefile.api create-chat USER_ID=not-a-uuid # expect 400
+	$(MAKE) -f Makefile.api create-chat USER_ID=1dd037e3-3cc7-4e75-9b6f-e712a0c58b91 # expects 404, result - 201 !!!
+
+.PHONY: test-malformed-springwolf-group
+test-malformed-springwolf-group:
+	$(MAKE) -f Makefile.api get-springwolf-docs-group GROUP="../../etc/passwd" # expect 400/404, must not leak files
+	$(MAKE) -f Makefile.api get-springwolf-docs-group GROUP= # expect 400/404
+
+# !!!! TESTS TO PAY ATTENTION TO:
+# non-existent chat id
+# make -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9deaq # expect 404, result 400 ("detail":"Failed to convert 'chatId' with value: 'a98ae259-2159-4850-96c2-433e2eb9deaq)
+# removed one character from the chat_id
+# make -f Makefile.api get-chat-messages CHAT_ID=a98ae259-2159-4850-96c2-433e2eb9dea # 500 !!! ("detail":"An unexpected error occurred", "instance":"/api/chats/a98ae259-2159-4850-96c2-433e2eb9dea/messages")
+# non-existent user id
+# make -f Makefile.api create-chat USER_ID=1dd037e3-3cc7-4e75-9b6f-e712a0c58b91 # expects 404, result - 201 !!!

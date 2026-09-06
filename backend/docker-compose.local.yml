@@ -2,6 +2,9 @@ services:
   transcend-backend:
     ports:
       - "127.0.0.1:5001:5000"
+    environment:
+      - LOGGING_LEVEL_ROOT=DEBUG
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG
 
 networks:
   default:
