@@ -44,13 +44,12 @@ export function addRandomTile(tiles: Tile[]): boolean {
 
 export function moveTiles(
   tiles: Tile[],
-  direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
+  direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT',
 ): { newTiles: Tile[]; changed: boolean; score: number } {
-  // Usuwamy płytki z flagą toDestroy przed nowym ruchem i czyścimy stare flagi
-  let newTiles = tiles
+  const newTiles = tiles
     .filter((t) => !t.toDestroy)
     .map((t) => ({ ...t, isNew: false, isMerged: false }));
-  
+
   let changed = false;
   let score = 0;
 
@@ -72,8 +71,8 @@ export function moveTiles(
   const rTraverse = direction === 'DOWN' ? [3, 2, 1, 0] : [0, 1, 2, 3];
   const cTraverse = direction === 'RIGHT' ? [3, 2, 1, 0] : [0, 1, 2, 3];
 
-  for (let r of rTraverse) {
-    for (let c of cTraverse) {
+  for (const r of rTraverse) {
+    for (const c of cTraverse) {
       const tile = grid[r][c];
       if (!tile) continue;
 
@@ -94,7 +93,6 @@ export function moveTiles(
           !nextTile.isMerged &&
           !nextTile.toDestroy
         ) {
-          // Merge logic
           currR = nextR;
           currC = nextC;
           break;

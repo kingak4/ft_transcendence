@@ -13,19 +13,26 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   myUserId: string | null;
+  currentScore?: number;
 }
 
-export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Props) {
+export default function InviteModal({
+  gameName,
+  isOpen,
+  onClose,
+  myUserId,
+  currentScore,
+}: Props) {
   const [searchInput, setSearchInput] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [searchResults, setSearchResults] = useState<ChatUser[]>([]);
   const [isSending, setIsSending] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [includeScore, setIncludeScore] = useState(true);
 
   const { sendMessage, isConnected } = useChat();
 
-  // Debounce search
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedQuery(searchInput);
@@ -33,7 +40,6 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
     return () => clearTimeout(timeout);
   }, [searchInput]);
 
-  // Perform search
   useEffect(() => {
     let active = true;
     async function performSearch() {
@@ -54,7 +60,7 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
               initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
               color: 'bg-hub-panel',
               avatarId: u.avatarId?.val ?? null,
-              online: false, // We don't fetch presence here for simplicity
+              online: false,
               status: 'Offline',
             }));
           setSearchResults(results);
@@ -69,9 +75,16 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
     };
   }, [debouncedQuery, myUserId]);
 
+  const handleClose = () => {
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    setSearchInput('');
+    onClose();
+  };
+
   const handleInvite = async (user: ChatUser) => {
     if (!isConnected) {
-      setErrorMsg('Brak połączenia z czatem (STOMP)');
+      setErrorMsg('No connection to chat service (STOMP)');
       return;
     }
     setErrorMsg(null);
@@ -79,7 +92,6 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
     setIsSending(user.id);
 
     try {
-      // 1. Get or create chat
       const { data, response } = await client.POST('/chats/{recipientId}', {
         params: { path: { recipientId: user.id } },
       });
@@ -89,20 +101,22 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
       }
 
       const chatId = data.chatId;
+      const payload =
+        includeScore && currentScore !== undefined && currentScore > 0
+          ? `#game-invite:${gameName}:${currentScore}#`
+          : `#game-invite:${gameName}#`;
 
-      // 2. Send the invite message
-      const success = sendMessage(chatId as string, `#game-invite:${gameName}#`);
-      
+      const success = sendMessage(chatId as string, payload);
+
       if (success) {
-        setSuccessMsg(`Wysłano zaproszenie do ${user.name}!`);
-        // Clear search to prepare for next
+        setSuccessMsg(`Challenge sent to ${user.name}!`);
         setSearchInput('');
       } else {
-        setErrorMsg('Błąd podczas wysyłania przez socket.');
+        setErrorMsg('Failed to send challenge over socket.');
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg('Błąd przy zapraszaniu gracza.');
+      setErrorMsg('Failed to send challenge.');
     } finally {
       setIsSending(null);
     }
@@ -111,27 +125,55 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl bg-hub-panel p-6 shadow-xl border border-hub-border">
+    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200">
+      <div className="bg-hub-panel border-hub-border w-full max-w-md rounded-2xl border p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-hub-on-surface">Zaproś do gry</h2>
+          <h2 className="text-hub-on-surface text-xl font-bold">
+            {currentScore !== undefined && currentScore > 0
+              ? 'Share & Challenge'
+              : 'Challenge a Friend'}
+          </h2>
           <button
-            onClick={onClose}
-            className="text-hub-muted hover:text-hub-on-surface"
+            onClick={handleClose}
+            className="text-hub-muted hover:text-hub-on-surface cursor-pointer rounded-lg p-1 transition-colors"
             aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        <p className="mb-4 text-sm text-hub-muted">
-          Wyszukaj znajomego, któremu chcesz wysłać wyzwanie w grze {gameName}.
+        <p className="text-hub-muted mb-4 text-sm">
+          Search for a friend to challenge them in{' '}
+          <span className="text-hub-on-surface font-bold">{gameName}</span>.
         </p>
+
+        {currentScore !== undefined && currentScore > 0 && (
+          <div className="bg-hub-panel-sunken border-hub-border mb-4 flex items-center justify-between rounded-xl border p-3">
+            <div className="flex flex-col">
+              <span className="text-hub-on-surface text-xs font-bold">
+                Brag with current score
+              </span>
+              <span className="text-hub-muted text-[11px]">
+                Include score to beat:{' '}
+                <strong className="text-hub-teal">{currentScore} pts</strong>
+              </span>
+            </div>
+            <label className="relative inline-flex cursor-pointer items-center">
+              <input
+                type="checkbox"
+                checked={includeScore}
+                onChange={(e) => setIncludeScore(e.target.checked)}
+                className="peer sr-only"
+              />
+              <div className="bg-hub-field peer-checked:bg-hub-teal peer h-5 w-10 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
+            </label>
+          </div>
+        )}
 
         <TextField
           id="friend-search"
           type="search"
-          placeholder="Szukaj graczy..."
+          placeholder="Search players..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           className="mb-4"
@@ -139,44 +181,51 @@ export default function InviteModal({ gameName, isOpen, onClose, myUserId }: Pro
         />
 
         {errorMsg && (
-          <div className="mb-4 rounded-md bg-red-500/10 p-2 text-sm text-red-500">
+          <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 p-2.5 text-xs font-medium text-red-500">
             {errorMsg}
           </div>
         )}
         {successMsg && (
-          <div className="mb-4 rounded-md bg-green-500/10 p-2 text-sm text-green-500">
+          <div className="mb-4 rounded-xl border border-green-500/20 bg-green-500/10 p-2.5 text-xs font-medium text-green-500">
             {successMsg}
           </div>
         )}
 
-        <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
+        <div className="flex max-h-60 flex-col gap-2 overflow-y-auto">
           {searchResults.length > 0 ? (
             searchResults.map((u) => (
               <div
                 key={u.id}
-                className="flex items-center justify-between rounded-lg border border-hub-border bg-black/5 dark:bg-white/5 p-3"
+                className="border-hub-border bg-hub-field/50 hover:bg-hub-field flex items-center justify-between rounded-xl border p-3 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <Avatar user={u} size="sm" />
-                  <span className="font-semibold text-hub-on-surface">{u.name}</span>
+                  <Avatar
+                    src={u.avatarId ? `/api/avatars/${u.avatarId}` : null}
+                    alt={u.name}
+                    initial={u.initial}
+                    size={36}
+                  />
+                  <span className="text-hub-on-surface text-sm font-semibold">
+                    {u.name}
+                  </span>
                 </div>
                 <Button
-                  size="sm"
                   variant="primary"
                   onClick={() => handleInvite(u)}
                   disabled={isSending === u.id}
+                  className="px-3.5 py-1.5 text-xs"
                 >
-                  {isSending === u.id ? 'Wysyłanie...' : 'Zaproś'}
+                  {isSending === u.id ? 'Sending...' : 'Challenge'}
                 </Button>
               </div>
             ))
           ) : debouncedQuery ? (
-            <div className="p-4 text-center text-sm text-hub-muted">
-              Nie znaleziono graczy.
+            <div className="text-hub-muted p-4 text-center text-sm">
+              No players found.
             </div>
           ) : (
-            <div className="p-4 text-center text-sm text-hub-muted opacity-60">
-              Wpisz nazwę gracza powyżej.
+            <div className="text-hub-muted p-4 text-center text-sm opacity-60">
+              Type a player name above to search.
             </div>
           )}
         </div>
