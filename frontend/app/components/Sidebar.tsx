@@ -217,6 +217,13 @@ export default function Sidebar({ userId }: Props) {
             >
               Friends
             </Link>
+            <Link
+              href="/games"
+              onClick={close}
+              className={navLinkClasses(pathname.startsWith('/games'))}
+            >
+              Games
+            </Link>
           </nav>
         )}
       </aside>

@@ -91,26 +91,38 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
           }
         >
           {(() => {
-            const gameInviteMatch = message.content.match(/^#game-invite:([a-zA-Z0-9_-]+)#$/);
+            const gameInviteMatch = message.content.match(
+              /^#game-invite:([a-zA-Z0-9_-]+)(?::(\d+))?#$/,
+            );
             const isGameInvite = !!gameInviteMatch && !message.isDeleted;
             const gameName = gameInviteMatch ? gameInviteMatch[1] : '';
+            const targetScore =
+              gameInviteMatch && gameInviteMatch[2] ? gameInviteMatch[2] : null;
 
             if (isGameInvite) {
               return (
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-sm">Wyzwanie: {gameName} 🎮</span>
-                  <p className="text-[11px] opacity-80 mb-1">
-                    {isMine ? 'Wysłałeś zaproszenie do gry.' : 'Zaprasza Cię do wspólnej gry!'}
+                  <span className="text-sm font-semibold">
+                    Challenge: {gameName}
+                  </span>
+                  <p className="mb-1 text-[11px] opacity-80">
+                    {targetScore
+                      ? isMine
+                        ? `You challenged with a score of ${targetScore} pts!`
+                        : `Challenged you! Score to beat: ${targetScore} pts.`
+                      : isMine
+                        ? 'You sent a game invitation.'
+                        : 'Invited you to check out the game.'}
                   </p>
                   <Link
                     href={`/games/${gameName}`}
                     className={`mt-1 inline-block rounded-md px-3 py-1.5 text-center text-xs font-bold transition-colors ${
                       isMine
-                        ? 'bg-black/20 text-hub-on-accent hover:bg-black/30 dark:bg-white/20 dark:hover:bg-white/30'
+                        ? 'text-hub-on-accent bg-black/20 hover:bg-black/30 dark:bg-white/20 dark:hover:bg-white/30'
                         : 'bg-hub-bubble text-hub-on-accent hover:opacity-90'
                     }`}
                   >
-                    Zagraj w {gameName}
+                    Play {gameName}
                   </Link>
                 </div>
               );
