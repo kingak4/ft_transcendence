@@ -37,9 +37,14 @@ type TextFieldSize = 'sm' | 'md';
 // out of scope for this step. One shared base radius could not satisfy both.
 // Padding is still shared via SIZE_CLASSES and so is still frozen by /chat;
 // see MIGRATION-INVENTORY.md 12.5.
+//
+// `surface` takes `elevated-edge`, not `elevated-border` (Krok 7 unit 7.1): it
+// is a white field on a near-white page, so its border is the only thing that
+// shows where the control is - a boundary WCAG 1.4.11 holds to 3:1, which the
+// divider role (~1.1:1) never met.
 const TONE_CLASSES: Record<TextFieldTone, string> = {
   surface:
-    'rounded-[14px] border border-elevated-border text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_rgba(10,42,77,0.06)] focus:ring-primary',
+    'rounded-[14px] border border-elevated-edge text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_rgba(10,42,77,0.06)] focus:ring-primary',
   // Position 22 gave this tone the export's `inputStyle`: white text on
   // `white/8`, a `white/15` hairline, 14.5px at 500. It had to change in the
   // same commit as `Card` - it sits only on the auth card, and the dark text it

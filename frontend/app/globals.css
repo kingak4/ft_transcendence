@@ -37,6 +37,11 @@
   --color-on-elevated-surface-accent: var(--theme-on-elevated-surface-accent);
   --color-on-elevated-surface-body: var(--theme-on-elevated-surface-body);
   --color-elevated-border: var(--theme-elevated-border);
+  /* Krok 7 unit 7.1 - `elevated-border` is now the DIVIDER role only (lines
+     inside one panel, decorative under WCAG 1.4.11). Where a border is what
+     identifies a control - a light field on a light page - it takes this
+     EDGE role instead, held at >=3:1 against both sides of the line. */
+  --color-elevated-edge: var(--theme-elevated-edge);
   --color-primary: var(--theme-primary);
   --color-on-primary: var(--theme-on-primary);
   --color-success: var(--theme-success);
@@ -186,6 +191,15 @@
   /* ===== ZMIANA — KROK 3, elevated-border (towarzyszy Parze 2) ===== */
   --theme-elevated-border: #eef2ef; /* wcześniej var(--color-brand-reversed-main-color) */
   /* ===== KONIEC ZMIANY ===== */
+
+  /* KROK 7, jednostka 7.1 — podział ról obramowania z 12.4. `elevated-border`
+     (1.04–1.13:1, 11.3) zostaje jako LINIA PODZIAŁU wewnątrz panelu —
+     dekoracyjna w rozumieniu WCAG 1.4.11, bo sekcje rozdziela też odstęp
+     i nagłówek. KRAWĘDŹ kontrolki potrzebuje 3:1 względem obu stron linii:
+     #808b85 to ciemniejszy szczebel zielonkawej szarości eksportu
+     (#8b968f, #9aa5a0 — obie poniżej progu): ~3.2:1 na `surface`, ~3.5:1
+     na `elevated-surface`. Eksportowe #e3ebe6 tej roli nie spełnia. */
+  --theme-elevated-edge: #808b85;
 
   /* ===== ZMIANA — KROK 3, Para 3 ===== */
   --theme-primary: #a3e635; /* wcześniej var(--color-brand-secondary-color) */
@@ -464,6 +478,9 @@
   --theme-hub-on-row-action: var(--color-ctp-teal-400);
   /* KROK 7 — subtext0 na surface0: ~5.6:1 */
   --theme-hub-on-offline: var(--color-ctp-subtext0);
+  /* KROK 7, jednostka 7.1 — krawędź: ~3.4:1 na surface0, ~4.5:1 na base.
+     overlay0 (~2.6:1) nie wystarcza. */
+  --theme-elevated-edge: var(--color-ctp-overlay1);
   /* KROK 7, jednostka 7.6 — na surface0: ~6.7:1 i ~7.1:1 */
   --theme-on-elevated-surface-accent: var(--color-ctp-sapphire-400);
   --theme-on-elevated-surface-body: var(--color-ctp-subtext1);
@@ -485,6 +502,9 @@
   /* KROK 7 — w Latte surface0 jest na tyle ciemne, że subtext0 (~3.2:1)
      i subtext1 (~4.0:1) nie dochodzą do AA; dopiero `text` (~5.2:1). */
   --theme-hub-on-offline: var(--color-ctp-text);
+  /* KROK 7, jednostka 7.1 — krawędź: ~3.2:1 na surface0, ~4.4:1 na base.
+     overlay1 jest za jasne; drabina odwrócona względem Mocha. */
+  --theme-elevated-edge: var(--color-ctp-subtext0);
   /* KROK 7, jednostka 7.6 — ten sam problem co wyżej: na latte-owym surface0
      żaden czysty akcent nie dochodzi do AA (blue ~3.2:1). `color-mix` bierze
      barwę z akcentu, a jasność z `text` — ta sama technika co gradienty
