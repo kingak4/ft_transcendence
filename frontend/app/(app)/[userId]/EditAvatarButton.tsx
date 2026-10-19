@@ -105,7 +105,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
             from the small-label and subtle-shadow rows of 12.0. */}
         <button
           onClick={handleOpen}
-          className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_rgba(10,42,77,0.06)] transition hover:brightness-90"
+          className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_var(--color-shadow-subtle)] transition hover:brightness-90"
         >
           Edit
         </button>

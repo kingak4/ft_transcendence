@@ -18,7 +18,7 @@ export default function TermsOfService() {
     // ContactBlock - and the two exceptions name their own colour: this h1
     // keeps the navy of on-elevated-surface, LegalSection's h2 takes the
     // accent. "Last updated" already named its own and is untouched.
-    <div className="bg-elevated-surface text-on-elevated-surface-body mx-auto flex max-w-[720px] flex-col gap-1.5 rounded-3xl p-6 text-base font-medium leading-relaxed shadow-[0_8px_24px_rgba(10,42,77,0.08)] lg:px-14 lg:py-12">
+    <div className="bg-elevated-surface text-on-elevated-surface-body mx-auto flex max-w-[720px] flex-col gap-1.5 rounded-3xl p-6 text-base font-medium leading-relaxed shadow-[0_8px_24px_var(--color-shadow-card)] lg:px-14 lg:py-12">
       <h1 className="text-on-elevated-surface text-2xl font-extrabold tracking-tight lg:text-3xl">
         Terms of Service
       </h1>

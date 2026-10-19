@@ -40,7 +40,7 @@ export default function UserList({ users, emptyMessage, renderAction }: Props) {
         return (
           <li
             key={user.id}
-            className="bg-elevated-surface text-on-elevated-surface px-4.5 flex items-center justify-between gap-4 rounded-2xl py-3.5 shadow-[0_6px_18px_rgba(10,42,77,0.07)]"
+            className="bg-elevated-surface text-on-elevated-surface px-4.5 flex items-center justify-between gap-4 rounded-2xl py-3.5 shadow-[0_6px_18px_var(--color-shadow-row)]"
           >
             <div className="flex items-center gap-4">
               <Avatar

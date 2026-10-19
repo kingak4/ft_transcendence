@@ -82,7 +82,7 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
                     ? 'bg-hub-panel/30 text-hub-muted italic'
                     : 'bg-hub-bubble text-hub-on-accent'
                 }`
-              : `rounded-[18px_18px_18px_4px] px-4 py-2.5 text-sm leading-relaxed shadow-[0_3px_10px_rgba(10,42,77,0.06)] ${
+              : `rounded-[18px_18px_18px_4px] px-4 py-2.5 text-sm leading-relaxed shadow-[0_3px_10px_var(--color-shadow-subtle)] ${
                   message.isDeleted
                     ? 'bg-hub-panel/30 text-hub-muted italic'
                     : 'bg-hub-panel text-hub-on-surface'

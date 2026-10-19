@@ -42,6 +42,15 @@
      identifies a control - a light field on a light page - it takes this
      EDGE role instead, held at >=3:1 against both sides of the line. */
   --color-elevated-edge: var(--theme-elevated-edge);
+
+  /* Krok 7 unit 7.4 - shadow COLOURS, one per strength row of the dictionary
+     (12.0). Geometry stays literal at the call site, the same split Step 2
+     made for gradients: the offset and blur are shape, only the rgba is
+     colour. Used as `shadow-[0_6px_18px_var(--color-shadow-row)]`. */
+  --color-shadow-subtle: var(--theme-shadow-subtle);
+  --color-shadow-row: var(--theme-shadow-row);
+  --color-shadow-card: var(--theme-shadow-card);
+  --color-shadow-hero: var(--theme-shadow-hero);
   --color-primary: var(--theme-primary);
   --color-on-primary: var(--theme-on-primary);
   --color-success: var(--theme-success);
@@ -200,6 +209,14 @@
      (#8b968f, #9aa5a0 — obie poniżej progu): ~3.2:1 na `surface`, ~3.5:1
      na `elevated-surface`. Eksportowe #e3ebe6 tej roli nie spełnia. */
   --theme-elevated-edge: #808b85;
+
+  /* KROK 7, jednostka 7.4 — kolory cieni przepisane 1:1 z miejsc użycia, więc
+     42Hub zostaje co do bajtu taki sam. Granat 10,42,77 to `hub-ink-deep`
+     w przybliżeniu — cień „z barwą strony", nie czarny. */
+  --theme-shadow-subtle: rgba(10, 42, 77, 0.06);
+  --theme-shadow-row: rgba(10, 42, 77, 0.07);
+  --theme-shadow-card: rgba(10, 42, 77, 0.08);
+  --theme-shadow-hero: rgba(10, 42, 77, 0.18);
 
   /* ===== ZMIANA — KROK 3, Para 3 ===== */
   --theme-primary: #a3e635; /* wcześniej var(--color-brand-secondary-color) */
@@ -481,6 +498,13 @@
   /* KROK 7, jednostka 7.1 — krawędź: ~3.4:1 na surface0, ~4.5:1 na base.
      overlay0 (~2.6:1) nie wystarcza. */
   --theme-elevated-edge: var(--color-ctp-overlay1);
+  /* KROK 7, jednostka 7.4 — granat 6–18% ginie na ciemnej stronie (13.5).
+     Cień na ciemnym tle widać tylko blisko czerni, więc crust i dużo wyższa
+     alfa. Wartości startowe — do oceny wzrokowej. */
+  --theme-shadow-subtle: color-mix(in srgb, var(--color-ctp-crust) 30%, transparent);
+  --theme-shadow-row: color-mix(in srgb, var(--color-ctp-crust) 35%, transparent);
+  --theme-shadow-card: color-mix(in srgb, var(--color-ctp-crust) 40%, transparent);
+  --theme-shadow-hero: color-mix(in srgb, var(--color-ctp-crust) 50%, transparent);
   /* KROK 7, jednostka 7.6 — na surface0: ~6.7:1 i ~7.1:1 */
   --theme-on-elevated-surface-accent: var(--color-ctp-sapphire-400);
   --theme-on-elevated-surface-body: var(--color-ctp-subtext1);
@@ -505,6 +529,12 @@
   /* KROK 7, jednostka 7.1 — krawędź: ~3.2:1 na surface0, ~4.4:1 na base.
      overlay1 jest za jasne; drabina odwrócona względem Mocha. */
   --theme-elevated-edge: var(--color-ctp-subtext0);
+  /* KROK 7, jednostka 7.4 — Latte jest jasne jak 42Hub, więc te same alfy;
+     zmienia się tylko barwa, na najciemniejszy neutralny odmiany. */
+  --theme-shadow-subtle: color-mix(in srgb, var(--color-ctp-text) 6%, transparent);
+  --theme-shadow-row: color-mix(in srgb, var(--color-ctp-text) 7%, transparent);
+  --theme-shadow-card: color-mix(in srgb, var(--color-ctp-text) 8%, transparent);
+  --theme-shadow-hero: color-mix(in srgb, var(--color-ctp-text) 18%, transparent);
   /* KROK 7, jednostka 7.6 — ten sam problem co wyżej: na latte-owym surface0
      żaden czysty akcent nie dochodzi do AA (blue ~3.2:1). `color-mix` bierze
      barwę z akcentu, a jasność z `text` — ta sama technika co gradienty
