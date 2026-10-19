@@ -3,10 +3,11 @@ import LegalSection from '../../components/LegalSection';
 
 export default function TermsOfService() {
   return (
-    // The nested <main> is gone: app/(app)/layout.tsx already provides one, and
-    // two main landmarks in a document is invalid. Page padding went with it -
-    // that belongs to the layout, and having both applied 40px of gutter per side
-    // at 360px instead of the dictionary's 16px.
+    // The nested <main> is gone: app/(legal)/layout.tsx already provides one
+    // (through AppShell or PublicShell), and two main landmarks in a document is
+    // invalid. Page padding went with it - that belongs to the layout, and having
+    // both applied 40px of gutter per side at 360px instead of the dictionary's
+    // 16px.
     //
     // What replaces it is the card the export actually draws (12.0): 720px wide,
     // white, 24px radius, 24px of padding narrow and 48/56px wide, on the page's
