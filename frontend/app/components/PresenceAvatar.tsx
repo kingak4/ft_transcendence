@@ -25,7 +25,7 @@ export default function PresenceAvatar({ online, ...avatarProps }: Props) {
       <Avatar {...avatarProps} />
       <span
         className={`${
-          online ? 'bg-hub-online' : 'bg-gray-400'
+          online ? 'bg-hub-online' : 'bg-hub-offline'
         } ring-hub-panel absolute bottom-0 right-0 rounded-full ring-2`}
         style={{ width: dotSize, height: dotSize }}
       >

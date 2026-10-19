@@ -3,6 +3,121 @@
 **Dokument uzupełniający do:** `PLAN-static-chat-page.md` (w ramach którego dostarczono stronę czatu i tokeny `hub-*`)
 **Data:** 2026-07-30
 
+## Spis treści
+
+*Dopisany 2026-08-20. Po myślniku stoi **pytanie, na które dana sekcja odpowiada** — przeczytaj
+najpierw te opisy i otwórz wyłącznie to, co dotyczy Twojego pytania. Dokument ma ~2700 linii
+i lektura w całości jest potrzebna tylko przy pierwszym wejściu w migrację.*
+
+### Szybka nawigacja
+
+| Mam pytanie o… | Idę do |
+|---|---|
+| po co ta migracja i jak w ogóle działa system kolorów | [Część 1](#część-1--co-właściwie-robisz) |
+| wszystkie kroki i ich kolejność | [Część 2](#część-2--ogólny-plan) |
+| szczegóły Kroku 0 / 1 / 2 / 3 / 4 | [Cz. 3](#część-3--krok-0-w-szczegółach) · [Cz. 5](#część-5--krok-1-w-szczegółach) · [Cz. 6](#część-6--krok-2-w-szczegółach) · [Cz. 7](#część-7--krok-3-w-szczegółach) · [Cz. 8](#część-8--krok-4-w-szczegółach-jedna-osoba-dwie-szerokości) |
+| **szczegóły Kroków 5–8** | **Nie ma ich w tym dokumencie.** Plan urywa się na Kroku 4. Kroki 5 i 6 są rozpisane w `MIGRATION-INVENTORY.md` (sekcje 13 i 14); Kroki 7 i 8 mają wyłącznie opis ogólny w [Części 2](#krok-7--odroczone-prace-przekrojowe) |
+| kiedy krok wolno uznać za skończony | [3.7](#37-definicja-ukończenia-kroku-0) · [5.9](#59-definicja-ukończenia-kroku-1) · [6.10](#610-definicja-ukończenia-kroku-2) · [7.12](#712-definicja-ukończenia-kroku-3) · [8.13](#813-definicja-ukończenia-kroku-4) |
+| czego w danym kroku **nie wolno** robić | [3.6](#36-czego-nie-wolno-robić-w-kroku-0) · [5.8](#58-czego-nie-wolno-robić-w-kroku-1) · [6.8](#68-czego-nie-wolno-robić-w-kroku-2) · [7.10](#710-czego-nie-wolno-robić-w-kroku-3) · [8.11](#811-czego-nie-wolno-robić-w-kroku-4) |
+| jak udowodnić, że krok wyszedł | [6.6](#66-weryfikacja--jak-udowodnić-że-nic-się-nie-zmieniło) (Computed) · [7.9](#79-weryfikacja--inne-pytanie-niż-w-kroku-2) (trzy pytania) · [8.10](#810-weryfikacja--czym-zastępujesz-branch-odniesienia) (cztery narzędzia) |
+| ryzyka i pytania otwarte | [Część 4 — rejestr ryzyk](#część-4--rejestr-ryzyk) · [Otwarte pytania](#otwarte-pytania-do-osoby-odpowiedzialnej-za-migrację) |
+| jaki artefakt zostawia po sobie krok | [6.9](#69-artefakt--sekcja-10-w-migration-inventorymd) · [7.11](#711-artefakt--sekcja-11-w-migration-inventorymd) · [8.12](#812-artefakt--sekcja-12-w-migration-inventorymd) |
+
+> **Ostrzeżenie o nieaktualnych liczbach.** Część 8 w kilku miejscach cytuje **robocze**
+> wartości z 2026-08-06: szerokość wąską 390px i breakpoint `md:` (768px). Obowiązujące są
+> ustalenia Fazy 0 zapisane w `MIGRATION-INVENTORY.md` 12.0: **360px / 1280px** i breakpoint
+> **`lg:` (1024px)**. Przy każdej liczbie w §8.1 i §8.3 sprawdzaj 12.0, nie ten dokument.
+
+### Pełna zawartość
+
+- [Jak czytać ten dokument](#jak-czytać-ten-dokument) — dlaczego nie wolno zacząć od Kroku 1
+
+- **[Część 1 — Co właściwie robisz](#część-1--co-właściwie-robisz)** — model mentalny całej migracji; czytaj, jeśli nie wiesz, czym jest token designu
+  - [Wersja w jednym akapicie](#wersja-w-jednym-akapicie) — dwie palety obok siebie, cel: jedna
+  - [Model mentalny: skrzynka bezpiecznikowa](#model-mentalny-skrzynka-bezpiecznikowa) — token = etykieta obwodu; kolor na sztywno = lampa podłączona z pominięciem skrzynki
+  - [Dlaczego wcześniejsze prace pozostawiły dwie palety zamiast jednej](#dlaczego-wcześniejsze-prace-pozostawiły-dwie-palety-zamiast-jednej)
+  - [Jak wygląda stan „gotowe"](#jak-wygląda-stan-gotowe) — pięć warunków końcowych **całej** migracji
+
+- **[Część 2 — Ogólny plan](#część-2--ogólny-plan)** — jedyne miejsce z opisem **wszystkich dziewięciu kroków**
+  - [Dwie zasady, które zapewniają bezpieczeństwo migracji](#dwie-zasady-które-zapewniają-bezpieczeństwo-migracji) — **Zasada A** (krok jest refaktorem *albo* redesignem) i **Zasada B** (zapisuj, nie naprawiaj)
+  - [Krok 0 — inwentaryzacja](#krok-0--zorientuj-się-w-systemie-i-zbuduj-inwentaryzację)
+  - [Krok 1 — uporządkuj obszary według ryzyka](#krok-1--uporządkuj-obszary-według-ryzyka)
+  - [Krok 2 — usuń kolory wpisane na sztywno](#krok-2--usuń-kolory-wpisane-na-sztywno-refaktoryzacja-umożliwiająca-migrację)
+  - [Krok 3 — połącz obie skrzynki bezpiecznikowe](#krok-3--połącz-obie-skrzynki-bezpiecznikowe)
+  - [Krok 4 — przejdź przez trasy w ustalonej kolejności](#krok-4--przejdź-przez-trasy-w-kolejności-ustalonej-w-kroku-1)
+  - [Krok 5 — przywróć nowej palecie obsługę motywów](#krok-5--przywróć-nowej-palecie-obsługę-motywów)
+  - [Krok 6 — scal zduplikowane warianty komponentów](#krok-6--scal-zduplikowane-warianty-komponentów) — `TextField` tone `chat`, `Button` variant `send`, `bg-hub-cta`
+  - [Krok 7 — odroczone prace przekrojowe](#krok-7--odroczone-prace-przekrojowe) — **siedem pozycji**: RWD, `100vh`→`100dvh`, kontrast, fonty, dostępność, grupa tras pełnej wysokości, i18n/RTL
+  - [Krok 8 — usuń scaffolding](#krok-8--usuń-scaffolding) — usunięcie `--color-brand-*`, martwych tokenów i komentarzy `TODO(design-migration)`
+
+- **[Część 3 — Krok 0 w szczegółach](#część-3--krok-0-w-szczegółach)** — jak zbudować inwentaryzację
+  - [3.1 Trzy dokumenty referencyjne](#31-potwierdź-że-masz-trzy-dokumenty-referencyjne)
+  - [3.2 Uruchom aplikację i obejrzyj ją](#32-uruchom-aplikację-i-obejrzyj-ją)
+  - [3.3 Pięć pojęć](#33-pięć-pojęć) — **najważniejsza sekcja teoretyczna w całym dokumencie**: dwie warstwy nazw, `@theme inline`, remis specyficzności, `'use client'`
+  - [3.4 Zbuduj inwentaryzację](#34-zbuduj-inwentaryzację) — komplet poleceń wyszukiwania, każde z wyjaśnieniem
+  - [3.5 Przeczytaj stronę czatu jako kompletny przykład](#35-przeczytaj-stronę-czatu-jako-kompletny-przykład)
+  - [3.6 Czego nie wolno robić w Kroku 0](#36-czego-nie-wolno-robić-w-kroku-0)
+  - [3.7 Definicja ukończenia Kroku 0](#37-definicja-ukończenia-kroku-0)
+
+- **[Część 4 — Rejestr ryzyk](#część-4--rejestr-ryzyk)** — R1–R6; **R2 (lint) jest nieaktualne**, patrz §5.1 ②
+- **[Otwarte pytania do osoby odpowiedzialnej za migrację](#otwarte-pytania-do-osoby-odpowiedzialnej-za-migrację)** — trzy pytania z Kroku 0; wszystkie rozstrzygnięte później w 12.2 inwentaryzacji
+
+- **[Część 5 — Krok 1 w szczegółach](#część-5--krok-1-w-szczegółach)** — ryzyko i kolejność
+  - [5.0 Dlaczego ten krok nie jest biurokracją](#50-dlaczego-ten-krok-nie-jest-biurokracją)
+  - [5.1 Ustalenia wejściowe — trzy rzeczy już rozstrzygnięte](#51-ustalenia-wejściowe--trzy-rzeczy-już-rozstrzygnięte) — weryfikacja przez równoległe branche zamiast screenshotów; **R2 zamknięte**; **zakres Kroku 2 zamknięty na trzech pozycjach**
+  - [5.2 Sześć pytań P1–P6](#52-zamień-trzy-kategorie-ryzyka-w-pytania-rozstrzygalne) — zasada agregacji: wygrywa najwyższa kategoria, nie średnia
+  - [5.3 Mapa zależności: trasa → komponenty](#53-zbuduj-mapę-zależności-trasa--komponenty) — fan-in
+  - [5.4 Proponowana klasyfikacja — do zweryfikowania, nie do przepisania](#54-proponowana-klasyfikacja--do-zweryfikowania-nie-do-przepisania)
+  - [5.5 Kolejność prac — cztery etapy](#55-kolejność-prac--cztery-etapy) — Etapy A → B → C → D i uzasadnienie „od liści"
+  - [5.6 Format artefaktu](#56-format-artefaktu) — szkielet sekcji 9 inwentaryzacji
+  - [5.7 Otwarte pytania — teraz jest moment, żeby je zadać](#57-otwarte-pytania--teraz-jest-moment-żeby-je-zadać)
+  - [5.8 Czego nie wolno robić w Kroku 1](#58-czego-nie-wolno-robić-w-kroku-1)
+  - [5.9 Definicja ukończenia Kroku 1](#59-definicja-ukończenia-kroku-1)
+
+- **[Część 6 — Krok 2 w szczegółach](#część-6--krok-2-w-szczegółach)** — usunięcie kolorów na sztywno; **pierwszy kod w całej migracji**
+  - [6.0 Kontrakt: kod się zmienia, piksele nie](#60-kontrakt-tego-kroku-kod-się-zmienia-piksele-nie) — tu **każda widoczna różnica jest błędem**
+  - [6.1 Co robisz i czego nie robisz](#61-co-robisz-i-czego-nie-robisz) — trzy pozycje zakresu i lista rzeczy poza nim
+  - [6.2 Pojęcie: co to właściwie jest gradient](#62-pojęcie-co-to-właściwie-jest-gradient) — co tokenizujesz (kolory), a co przepisujesz dosłownie (geometria)
+  - [6.3 Pozycja 1 — `bg-hub-shell`](#63-pozycja-1--bg-hub-shell-linia-152) — jak nazwać token: **rola, nie wygląd**
+  - [6.4 Pozycja 2 — gradient w liniach 144–145](#64-pozycja-2--gradient-w-liniach-144145)
+  - [6.5 Pozycja 3 — `white/70` w `Sidebar.tsx`](#65-pozycja-3--white70-w-sidebartsx-27) — **dlaczego `white` jest kolorem na sztywno mimo braku `#`**; grep znajduje składnię, człowiek znajduje intencję
+  - [6.6 Weryfikacja — jak udowodnić, że nic się nie zmieniło](#66-weryfikacja--jak-udowodnić-że-nic-się-nie-zmieniło) — zakładka **Computed**, nie Styles
+  - [6.7 Podział na commity](#67-podział-na-commity) — granica commita = granica decyzji
+  - [6.8 Czego nie wolno robić w Kroku 2](#68-czego-nie-wolno-robić-w-kroku-2)
+  - [6.9 Artefakt — sekcja 10 inwentaryzacji](#69-artefakt--sekcja-10-w-migration-inventorymd)
+  - [6.10 Definicja ukończenia Kroku 2](#610-definicja-ukończenia-kroku-2)
+
+- **[Część 7 — Krok 3 w szczegółach](#część-7--krok-3-w-szczegółach)** — połączenie palet; **redesign bez dotknięcia jednego pliku `.tsx`**
+  - [7.0 Kontrakt: teraz różnica jest sukcesem](#70-kontrakt-tego-kroku-teraz-różnica-jest-sukcesem) — zmieniają się **wyłącznie kolory**; nowa paleta na starym layoucie
+  - [7.1 Warunki wejścia — trzy rzeczy otwarte po Kroku 2](#71-warunki-wejścia--trzy-rzeczy-zostawione-otwarte-przez-krok-2) — **okno na dowód poprawności Kroku 2 zamyka się tutaj**
+  - [7.2 Token może wskazywać na inny token](#72-pojęcie-token-może-wskazywać-na-inny-token--i-dlaczego-ten-łańcuch-ma-mieć-koniec) — trzy sposoby zapisu i który wybrać
+  - [7.3 Mapa par: stary token → nowa wartość](#73-zbuduj-mapę-par-stary-token--nowa-wartość) — dziewięć tokenów semantycznych; **bliźniaczy blok `.mocha`/`.latte`**
+  - [7.4 Dlaczego para, a nie pojedynczy token](#74-dlaczego-para-a-nie-pojedynczy-token) — kontrast jest właściwością pary, nie koloru
+  - [7.5 Kolejność par i podział na commity](#75-kolejność-par-i-podział-na-commity) — od podłoża w górę, jeden commit na parę
+  - [7.6 Ostatnia referencja `brand-*` w CSS](#76-czwarta-pozycja-ostatnia-referencja-brand--w-css) — **ta sama wartość to nie ta sama rola**
+  - [7.7 Czego nie robisz z `hub-*`](#77-czego-w-tym-kroku-nie-robisz-z-hub-)
+  - [7.8 Co się zmieni, co się zepsuje, a co tylko będzie wyglądać na zepsute](#78-co-się-zmieni-co-się-zepsuje-a-co-tylko-będzie-wyglądać-na-zepsute) — trzy grupy plików; **Krok 8 odblokowuje Etap D Kroku 4, nie Krok 3**
+  - [7.9 Weryfikacja — inne pytanie niż w Kroku 2](#79-weryfikacja--inne-pytanie-niż-w-kroku-2) — obwód minimalny po każdej parze
+  - [7.10 Czego nie wolno robić w Kroku 3](#710-czego-nie-wolno-robić-w-kroku-3)
+  - [7.11 Artefakt — sekcja 11 inwentaryzacji](#711-artefakt--sekcja-11-w-migration-inventorymd)
+  - [7.12 Definicja ukończenia Kroku 3](#712-definicja-ukończenia-kroku-3)
+
+- **[Część 8 — Krok 4 w szczegółach](#część-8--krok-4-w-szczegółach-jedna-osoba-dwie-szerokości)** — **najdłuższy krok planu**; jedna osoba, dwie szerokości
+  - [8.0 Kontrakt tego kroku](#80-kontrakt-tego-kroku) — co wchodzi w zakres, co nie; **dwie jednostki strukturalne: 1b i 2a**
+  - [8.1 Warunki wejścia — cztery decyzje, jedna odwrócona](#81-warunki-wejścia--cztery-decyzje-z-czego-jedna-odwrócona) — ① mobile ② uproszczone tło ③ wydzielenie znajomych ④ `/stomp` poza zakresem
+  - [8.2 Konflikt systemowy nie potrzebuje drugiej osoby](#82-pojęcie-konflikt-systemowy-nie-potrzebuje-drugiej-osoby) — **kluczowe pojęcie tej części**: „Ty z poniedziałku i Ty z czwartku to dwie osoby"
+  - [8.3 Faza 0 — słownik layoutu](#83-faza-0--słownik-layoutu-pół-dnia-zanim-cokolwiek-ostylujesz) — sześć kategorii wartości; reguła drugiej kolumny *(liczby w tej sekcji są robocze — patrz ostrzeżenie wyżej)*
+  - [8.4 Kolejność musi przebiegać po granicy importów](#84-kolejność-musi-przebiegać-po-granicy-importów)
+  - [8.5 Faza 1 — komponenty i powłoka](#85-faza-1--komponenty-i-powłoka-w-jednej-kolejce) — Etapy A, C, 1b, B
+  - [8.6 Faza 2 — Etap D](#86-faza-2--etap-d-po-decyzjach--i-) — jednostka 2a i kolejność dziewięciu pozycji
+  - [8.7 Sześć reguł pracy](#87-sześć-reguł--i-dwie-które-zniknęły-razem-z-drugą-osobą) — jedna jednostka w toku; `globals.css` zamrożony; zero zmian API
+  - [8.8 Rytm pracy — przegląd wsteczny](#88-rytm-pracy--czym-zastępujesz-drugą-parę-oczu) — dwadzieścia minut **rano**, dwa okna obok siebie
+  - [8.9 Definicja ukończenia **jednostki**](#89-definicja-ukończenia-jednostki-komponentu-albo-trasy) — jedenaście punktów; **pkt 6 × pkt 8 to prawdziwy koszt kroku**
+  - [8.10 Weryfikacja — czym zastępujesz branch odniesienia](#810-weryfikacja--czym-zastępujesz-branch-odniesienia) — eksport, screenshoty `before_migration`, przegląd wsteczny, słownik
+  - [8.11 Czego nie wolno robić w Kroku 4](#811-czego-nie-wolno-robić-w-kroku-4) — m.in. **nie ruszać `/chat`** i nie dodawać tokenów
+  - [8.12 Artefakt — sekcja 12 inwentaryzacji](#812-artefakt--sekcja-12-w-migration-inventorymd)
+  - [8.13 Definicja ukończenia Kroku 4](#813-definicja-ukończenia-kroku-4) — dziewięć warunków; **kryterium 5 odblokowuje Krok 8**
+
 ---
 
 ## Jak czytać ten dokument

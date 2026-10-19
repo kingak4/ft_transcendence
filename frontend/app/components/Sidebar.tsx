@@ -173,8 +173,8 @@ export default function Sidebar({ userId }: Props) {
             Policy and the STOMP dev page. Nothing became unreachable - `Footer`
             renders on every route and carries both legal links - and the rail
             now holds three items, the same count the export's does.
-            /stomp keeps its route and loses only its link, which is what
-            decision (4) means by "not styled and not removed" in Step 4. */}
+            /stomp lost its link here and its route at Krok 7, as decision (4)
+            planned: "out of scope, to be deleted before final assessment". */}
 
         {/* `onClick={close}` on every link covers the one case deriving cannot:
           tapping the link for the route you are already on leaves `pathname`

@@ -105,7 +105,7 @@ export default function ChatSidebar({
           }
         }}
       >
-        <h2 className="text-hub-on-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
+        <h2 id="chat-rail-title" className="text-hub-on-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
         <TextField
           tone="chat"
           size="sm"
@@ -142,8 +142,11 @@ export default function ChatSidebar({
        * actually engage; without it the list would push the rail taller.
        * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
        * not every friend. Needs infinite scroll on this container to load subsequent pages.
+       * Labelled by the rail's own heading (Krok 7 unit 7.10): the (app) shell
+       * already has a "Main" nav, and two unlabelled navigation landmarks are
+       * indistinguishable to a screen reader.
        */}
-      <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
+      <nav aria-labelledby="chat-rail-title" className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
         {sidebarUsers.map((user) => {
           return (
             <div key={user.id}>

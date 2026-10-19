@@ -79,7 +79,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-elevated-surface text-on-elevated-surface rounded-xl px-5 py-2.5 text-sm font-bold transition-colors hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-elevated-surface text-on-elevated-surface rounded-xl px-5 py-2.5 text-sm font-bold transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? 'Saving…' : 'Save'}
           </button>

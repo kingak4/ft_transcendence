@@ -79,6 +79,8 @@
   --color-hub-row-active: var(--theme-hub-row-active);
   --color-hub-online: var(--theme-hub-online);
   --color-hub-status: var(--theme-hub-status);
+  --color-hub-offline: var(--theme-hub-offline);
+  --color-hub-on-offline: var(--theme-hub-on-offline);
 
   /*
    * Gradient stops that were hardcoded raw hex values before Step 2 of
@@ -185,10 +187,12 @@
   --theme-success: #49b47a; /* wcześniej var(--color-brand-secondary-color) */
   /* ===== KONIEC ZMIANY ===== */
 
-  /* NIE ZMIENIONE — już niezależne od --color-brand-*, poza zakresem
-     Kroku 3. Patrz MIGRATION-INVENTORY.md 11.5 (obserwacja o rozbieżności
-     z designem, do Kroku 4/6). */
-  --theme-danger: #e5484d;
+  /* KROK 7, jednostka 7.2 — było #e5484d: 3.60:1 na `surface` i 3.91:1 na
+     `elevated-surface`, poniżej AA dla tekstu (11.3). #c0453f to końcowy
+     stopień gradientu wylogowania z eksportu, więc wartość jest odczytem,
+     nie wymysłem: ~4.6:1 i ~5.0:1. Przy okazji zbliża `danger` do jedynego
+     wypełnienia „niebezpiecznego" w eksporcie — rozbieżność z 11.5. */
+  --theme-danger: #c0453f;
 
   /* 42Hub chat semantics. The chat surface was a fixed-light island until
      Step 5, which added the .mocha/.latte overrides below - the TODO that
@@ -206,6 +210,17 @@
   --theme-hub-row-active: #eaf4fa;
   --theme-hub-online: #49b47a;
   --theme-hub-status: #1a8a7a;
+  /* KROK 7, jednostka 7.5 — stan offline był surowym `gray-400` w dwóch
+     plikach (13.5). Wartość to dokładnie `gray-400` Tailwinda 4, zapisany
+     w oklch, a nie przybliżony heksem #99a1af: motyw 42Hub ma wyjść z tej
+     jednostki co do bajtu taki sam, także w wartości wyliczonej. */
+  --theme-hub-offline: oklch(70.7% 0.022 261.325);
+  /* KROK 7 — etykieta „Offline" osobno od kropki, ten sam podział znacznik /
+     tekst co `hub-on-row-action`. Kropka to element nietekstowy (3:1) i stoi
+     obok etykiety; etykieta to tekst i potrzebuje 4.5:1, a `gray-400` dawał
+     na białym nagłówku ~2.6:1. `gray-500` Tailwinda 4: ta sama barwa, szczebel
+     niżej, ~4.8:1. */
+  --theme-hub-on-offline: oklch(55.1% 0.027 264.364);
 
   /* See matching comment in @theme inline above. */
   --theme-hub-shell-start: #0b2b3a;
@@ -305,6 +320,9 @@
   --theme-hub-muted: var(--color-ctp-subtext0);
   --theme-hub-time: var(--color-ctp-overlay1);
   --theme-hub-row-active: var(--color-ctp-surface2);
+  /* KROK 7, jednostka 7.5 — ten sam szczebel co `hub-time`: obie role to
+     informacja drugorzędna na panelu czatu. */
+  --theme-hub-offline: var(--color-ctp-overlay1);
 
   /* ===== KROK 5, jednostka 5.3 — grupy B i C (szyna) =====
      Szyna jest CHROMEM, nie kartą, więc bierze szczeble spod strony - to jest
@@ -431,6 +449,8 @@
   --theme-hub-online: var(--color-ctp-green-400);
   --theme-hub-status: var(--color-ctp-teal-400);
   --theme-hub-on-row-action: var(--color-ctp-teal-400);
+  /* KROK 7 — subtext0 na surface0: ~5.6:1 */
+  --theme-hub-on-offline: var(--color-ctp-subtext0);
 
   /* Najciemniejszy neutralny odcień odmiany — tekst na wypełnieniu akcentowym */
   --theme-hub-ink: var(--color-ctp-crust);
@@ -446,6 +466,9 @@
   --theme-hub-online: var(--color-ctp-green-700);
   --theme-hub-status: var(--color-ctp-teal-700);
   --theme-hub-on-row-action: var(--color-ctp-teal-700);
+  /* KROK 7 — w Latte surface0 jest na tyle ciemne, że subtext0 (~3.2:1)
+     i subtext1 (~4.0:1) nie dochodzą do AA; dopiero `text` (~5.2:1). */
+  --theme-hub-on-offline: var(--color-ctp-text);
 
   /* W Latte najciemniejszym neutralnym jest `text`, nie `crust` — drabina
      neutralnych odwraca się między odmianami. */

@@ -139,6 +139,10 @@ export default async function ChatPage({
     // layout rather than from an assumption about it. `min-h-0` is what lets
     // this shrink below its content so the panes' own `overflow-y-auto` engages.
     <div className="border-hub-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
+      {/* Krok 7 unit 7.10: every other route names itself with an h1; this one
+          had none. The export draws no visible heading here and §8.11 keeps the
+          look of /chat, so it is `sr-only` - in the outline, not on screen. */}
+      <h1 className="sr-only">Chat</h1>
       <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} hiddenOnNarrow={!!activeUser} />
       {activeUser ? (
         <Conversation user={activeUser} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />

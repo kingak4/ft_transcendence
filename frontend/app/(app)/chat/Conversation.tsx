@@ -58,7 +58,7 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
             {user.name}
           </h2>
           <span
-            className={`${isOnline ? 'text-hub-status' : 'text-gray-400'} text-xs font-semibold`}
+            className={`${isOnline ? 'text-hub-status' : 'text-hub-on-offline'} text-xs font-semibold`}
           >
             {statusText}
           </span>

@@ -6,7 +6,7 @@ import type { ComponentProps } from 'react';
 // export's prose link (#2f9bcf, the global `a` rule) - all three call sites put
 // this at the foot of a card, not inside running text. Weight was 700 here.
 const ACCENT_LINK_CLASSES =
-  'text-primary font-semibold transition-colors hover:brightness-125';
+  'text-primary font-semibold transition hover:brightness-125';
 
 // Takes exactly what `next/link` takes — this component adds styling and
 // nothing else, so it should not narrow what callers can pass through.

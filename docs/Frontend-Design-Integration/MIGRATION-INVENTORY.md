@@ -3,6 +3,137 @@
 Inwentaryzacja wykonana w ramach Kroku 0 planu migracji do designu 42Hub.
 Data: 2026-07-31
 
+## Spis treści
+
+*Dopisany 2026-08-20. Dokument ma ~2400 linii i rośnie z każdym krokiem: sekcje 1–8 to
+inwentaryzacja z Kroku 0, a każda kolejna sekcja (9, 10, 11, …) jest **artefaktem jednego
+kroku migracji**. Po myślniku stoi pytanie, na które sekcja odpowiada — czytaj te opisy
+i otwieraj wyłącznie to, co dotyczy Twojego pytania.*
+
+### Gdzie sprawdzić stan kroku
+
+**Nie zgaduj postępu z treści sekcji — każdy krok ma własną listę warunków ukończenia
+i to ona jest źródłem prawdy.** Uwaga: listy bywają nieodhaczone mimo wykonanej pracy,
+więc czytaj je razem z tabelą statusu jednostek obok.
+
+| Krok | Artefakt | Warunki ukończenia | Kolejka / status jednostek |
+|---|---|---|---|
+| 0 — inwentaryzacja | [sekcje 1–8](#1-wszystkie-trasy-w-aplikacji) | §3.7 planu | [Podsumowanie](#podsumowanie-i-wnioski-ogólne) |
+| 1 — ryzyko i kolejność | [sekcja 9](#9-krok-1--ryzyko-i-kolejność) | §5.9 planu | [9.1](#91-klasyfikacja-tras) · [9.3](#93-proponowana-kolejność-wykonania-kroku-4) |
+| 2 — kolory na sztywno | [sekcja 10](#10-krok-2--usunięcie-kolorów-wpisanych-na-sztywno) | §6.10 planu; **[10.3](#103-weryfikacja-porównanie-wartości-wyliczonych-między-branchami) zamknięte analitycznie dopiero w [11.3a](#113a-weryfikacja-chat-kryterium-4-712--metoda-analityczna)** | [10.2](#102-trzy-pozycje--przed-i-po) |
+| 3 — połączenie palet | [sekcja 11](#11-krok-3--połączenie-palet) | [11.8](#118-status-ukończenia-kroku-3-wg-712) | [11.1](#111-mapa-par-token-semantyczny--nowa-wartość) |
+| 4 — redesign trasa po trasie | [sekcja 12](#12-krok-4--redesign-trasa-po-trasie-jedna-osoba-dwie-szerokości) | [Checklista wykonawcza](#checklista-wykonawcza--kolejność-pracy) (Z.1–Z.9) | [12.1 — 28/28 zamkniętych](#121-kolejka-jednostek) |
+| 5 — motywy | [sekcja 13](#13-krok-5--przywrócenie-obsługi-motywów-plan-prefill-2026-08-10) | [13.7](#137-definicja-ukończenia-kroku-5) (T.1–T.7) | [13.3](#133-kolejka-jednostek-kroku-5) |
+| 6 — scalenie wariantów | [sekcja 14](#14-krok-6--scalenie-zduplikowanych-wariantów-plan-prefill-2026-08-10) | [14.6](#146-definicja-ukończenia-kroku-6) (S.1–S.7) | [Stan wykonania](#stan-wykonania-2026-08-10) |
+| 7 — prace przekrojowe | **brak sekcji — nierozpoczęty** | §Krok 7 planu | zaległości zebrane w [11.5](#115-znalezione-ale-nie-naprawione-zasada-b) · [12.5](#125-znalezione-ale-nie-naprawione-zasada-b--pozycje-założone-z-góry) · [13.5](#135-znalezione-ale-nie-naprawione-krok-5) · [14.3](#143-znalezione-ale-nie-naprawione-krok-6) |
+| 8 — usunięcie scaffoldingu | **brak sekcji — nierozpoczęty**, odblokowany od [12.1 poz. 19](#121-kolejka-jednostek) | §Krok 8 planu | jw. |
+
+### Szybka nawigacja
+
+| Mam pytanie o… | Idę do |
+|---|---|
+| jakie są trasy, komponenty i ile ich jest | [1](#1-wszystkie-trasy-w-aplikacji) · [2](#2-wszystkie-współdzielone-komponenty) · [12.1](#121-kolejka-jednostek) |
+| **dlaczego coś wygląda tak, a nie inaczej** | [12.2 — cztery decyzje wejściowe](#122-rozstrzygnięcie-czterech-pytań-wejściowych-81) · [12.4 — decyzje projektowe](#124-decyzje-projektowe-i-odstępstwa-od-słownika) · [13.4](#134-decyzje-kroku-5) · [14.2](#142-decyzje-kroku-6) |
+| jakiej wartości użyć (odstęp, promień, cień, typografia) | [12.0 — słownik layoutu](#120-słownik-layoutu-faza-0) |
+| jakie są szerokości oceny i breakpoint | [12.0](#120-słownik-layoutu-faza-0) — **360 / 1280px, `lg:` 1024px** |
+| **co jest znane, ale świadomie nienaprawione** | [10.5](#105-znalezione-ale-nie-naprawione-zasada-b) · [11.5](#115-znalezione-ale-nie-naprawione-zasada-b) · [12.5](#125-znalezione-ale-nie-naprawione-zasada-b--pozycje-założone-z-góry) · [13.5](#135-znalezione-ale-nie-naprawione-krok-5) · [14.3](#143-znalezione-ale-nie-naprawione-krok-6) |
+| jakie tokeny istnieją i skąd się wzięły | [10.1](#101-dodane-tokeny) · [11.1](#111-mapa-par-token-semantyczny--nowa-wartość) · [13.1](#131-inwentarz--co-dziś-przyjmuje-motyw-a-co-nie) |
+| problemy z kontrastem | [11.3](#113-kontrast-po-każdej-parze) — cztery pomiary poniżej progu; sonda w [13.6.2](#1362-sonda-kontrastu-jednostka-56) |
+| skrypty pomiarowe do konsoli | [13.6.1 — macierz motywów](#1361-sonda--skrypt-do-konsoli-przeglądarki) · [13.6.2 — kontrast](#1362-sonda-kontrastu-jednostka-56) |
+| co się stało z `/stomp` | [9.4](#94-trasy-zablokowane-brak-ekranu-w-eksporcie-designu) (zablokowana) → [12.2 decyzja ④](#122-rozstrzygnięcie-czterech-pytań-wejściowych-81) (poza zakresem, do usunięcia) |
+| screenshoty sprzed migracji | [Materiał odniesienia](#materiał-odniesienia) |
+
+### Pełna zawartość
+
+**Krok 0 — inwentaryzacja (2026-07-31)**
+
+- [1. Wszystkie trasy w aplikacji](#1-wszystkie-trasy-w-aplikacji) — osiem tras, z czego `/chat` jest wzorcem docelowym
+- [2. Wszystkie współdzielone komponenty](#2-wszystkie-współdzielone-komponenty) — 19 plików w `app/components`
+- [3. Pliki nadal używające STAREJ palety](#3-pliki-nadal-używające-starej-palety-brand-) — tylko `Hero.tsx` i `Tag.tsx`
+- [4. Pliki poprawnie podłączone do tokenów semantycznych](#4-pliki-poprawnie-podłączone-do-nowych-tokenów-semantycznych) — 20 plików, które zmieniły się same w Kroku 3
+- [5. Kolory wpisane na sztywno w `.tsx`](#5-kolory-wpisane-na-sztywno-w-plikach-tsx) — **zero wyników; wniosek okazał się niepełny**, patrz Krok 2 poz. 3
+- [6. Pliki `'use client'`](#6-pliki-działające-po-stronie-przeglądarki-use-client) — lista kontrolna, która **nie ma rosnąć**
+- [7. Notatki `TODO(design-migration)`](#7-notatki-tododesign-migration-zostawione-przez-poprzedniego-developera) — 12 notatek z przypisaniem do kroków
+- [8. Surowe kolory hex w `globals.css`](#8-surowe-kolory-hex-w-appglobalscss) — co jest w porządku w `:root`, a co jest pracą Kroku 2
+- [Podsumowanie i wnioski ogólne](#podsumowanie-i-wnioski-ogólne) — tabela zbiorcza stanu wyjściowego
+- [Odpowiedzi na 5 pytań kontrolnych](#odpowiedzi-na-5-pytań-kontrolnych) — dwie warstwy nazw, `inline`, specyficzność, ryzyko tokenów
+
+**Krok 1 — ryzyko i kolejność**
+
+- [9. Krok 1 — ryzyko i kolejność](#9-krok-1--ryzyko-i-kolejność)
+  - [9.1 Klasyfikacja tras](#91-klasyfikacja-tras) — P1–P6 dla każdej z siedmiu tras
+  - [9.2 Fan-in komponentów współdzielonych](#92-fan-in-komponentów-współdzielonych) — policzony, nie oszacowany
+  - [9.3 Proponowana kolejność wykonania Kroku 4](#93-proponowana-kolejność-wykonania-kroku-4) — Etapy A → B → C → D
+  - [9.4 Trasy zablokowane](#94-trasy-zablokowane-brak-ekranu-w-eksporcie-designu) — `/stomp`, brak ekranu w eksporcie
+  - [9.5 Odchylenia od propozycji planu](#95-odchylenia-od-propozycji-z-54-planu-i-ich-uzasadnienie) — sześć pozycji, w tym **założenie robocze o breakpointach** (unieważnione przez 12.2)
+- [Odpowiedzi na pytania kontrolne Kroku 1](#odpowiedzi-na-pytania-kontrolne-kroku-1) — m.in. „żaden komponent nie dotyka wszystkich siedmiu tras"
+
+**Krok 2 — usunięcie kolorów na sztywno**
+
+- [10. Krok 2 — usunięcie kolorów wpisanych na sztywno](#10-krok-2--usunięcie-kolorów-wpisanych-na-sztywno)
+  - [10.1 Dodane tokeny](#101-dodane-tokeny) — osiem tokenów z uzasadnieniem nazwy; **trzy oznaczone jako placeholder**
+  - [10.2 Trzy pozycje — przed i po](#102-trzy-pozycje--przed-i-po)
+  - [10.3 Weryfikacja](#103-weryfikacja-porównanie-wartości-wyliczonych-między-branchami) — **tabela nigdy nie została zamknięta empirycznie**, patrz 11.3a
+  - [10.4 Decyzje odesłane do designu](#104-decyzje-odesłane-do-designu) — trzy tokeny on-shell (potwierdzone dopiero w [12.4](#124-decyzje-projektowe-i-odstępstwa-od-słownika))
+  - [10.5 Znalezione, ale NIE naprawione](#105-znalezione-ale-nie-naprawione-zasada-b)
+- [Odpowiedzi na pytania kontrolne Kroku 2](#odpowiedzi-na-pytania-kontrolne-kroku-2) — **dlaczego `white/70` jest kolorem na sztywno**
+
+**Krok 3 — połączenie palet**
+
+- [11. Krok 3 — połączenie palet](#11-krok-3--połączenie-palet)
+  - [11.0 Domknięcie warunku wejścia](#110-domknięcie-warunku-wejścia-71) — krok ruszył przed zamknięciem 10.3; zapis tego faktu
+  - [11.1 Mapa par: token semantyczny → nowa wartość](#111-mapa-par-token-semantyczny--nowa-wartość) — **dziewięć tokenów; tu sprawdzisz, skąd wzięła się każda wartość**
+  - [11.2 Tokeny bez odpowiednika w eksporcie](#112-tokeny-bez-odpowiednika-w-eksporcie-designu)
+  - [11.3 Kontrast po każdej parze](#113-kontrast-po-każdej-parze) — obliczony wg WCAG; **cztery pozycje FAIL, zapisane, nie naprawione**
+  - [11.3a Weryfikacja `/chat` — metoda analityczna](#113a-weryfikacja-chat-kryterium-4-712--metoda-analityczna) — dowód źródłowy zamiast pomiaru w przeglądarce
+  - [11.4 Prognoza kontra rzeczywistość](#114-prognoza-kontra-rzeczywistość)
+  - [11.5 Znalezione, ale NIE naprawione](#115-znalezione-ale-nie-naprawione-zasada-b) — **tu zapisano, że Krok 8 czeka na Etap D Kroku 4**
+  - [11.6 `success`/`danger`: `text-` czy `bg-`](#116-sprawdzenie-roli-successdanger-text--czy-bg--74--zamknięte) — jedyne użycie to `/stomp`
+  - [11.7 Bliźniaczy blok `.mocha`/`.latte`](#117-sprawdzenie-bliźniaczego-bloku-mochalatte-73-krok-b--zamknięte) — nigdy nie wskazywał na `brand-*`
+  - [11.8 Status ukończenia Kroku 3](#118-status-ukończenia-kroku-3-wg-712) — sześć kryteriów
+- [Odpowiedzi na pytania kontrolne Kroku 3](#odpowiedzi-na-pytania-kontrolne-kroku-3)
+
+**Krok 4 — redesign trasa po trasie (najobszerniejsza sekcja dokumentu)**
+
+- [12. Krok 4 — redesign trasa po trasie](#12-krok-4--redesign-trasa-po-trasie-jedna-osoba-dwie-szerokości)
+  - [Checklista wykonawcza — kolejność pracy](#checklista-wykonawcza--kolejność-pracy) — Fazy 0/1/2, rytm R.1–R.4 i **dziewięć warunków zamknięcia Z.1–Z.9**
+  - [12.0 Słownik layoutu](#120-słownik-layoutu-faza-0) — **36 wierszy wartości + warunki oceny**; pierwsze miejsce do sprawdzenia przy pisaniu jakiejkolwiek klasy
+  - [12.1 Kolejka jednostek](#121-kolejka-jednostek) — 28 pozycji ze statusem i datą zamknięcia
+  - [12.2 Rozstrzygnięcie czterech pytań wejściowych](#122-rozstrzygnięcie-czterech-pytań-wejściowych-81) — **tabela referencyjna dla Kroków 5–8**; decyzja ① z historią odwrócenia
+  - [12.3 Dziennik ukończonych jednostek](#123-dziennik-ukończonych-jednostek) — co dokładnie sprawdzono na każdej jednostce i przy jakich szerokościach
+  - [12.4 Decyzje projektowe i odstępstwa od słownika](#124-decyzje-projektowe-i-odstępstwa-od-słownika) — **nie ma zewnętrznej strony „design"**; każda decyzja własna z uzasadnieniem
+  - [12.5 Znalezione, ale NIE naprawione](#125-znalezione-ale-nie-naprawione-zasada-b--pozycje-założone-z-góry) — **najdłuższa lista zaległości w całym projekcie**; wejście do Kroków 6, 7 i 8
+  - [12.6 Rozjazdy wyłapane w przeglądzie wstecznym](#126-rozjazdy-wyłapane-w-przeglądzie-wstecznym) — dwa wiersze i co z nich wynika
+  - [12.7 Jednostki strukturalne](#127-jednostki-strukturalne-1b--nawigacja-mobilna-2a--wydzielenie-trasy) — **1b** (nawigacja mobilna), **2a** (trasa `/friends`), **2b** (`/chat` jednopanelowy)
+
+**Krok 5 — motywy**
+
+- [13. Krok 5 — przywrócenie obsługi motywów](#13-krok-5--przywrócenie-obsługi-motywów-plan-prefill-2026-08-10)
+  - [13.0 Cel i warunki wejścia](#130-cel-warunki-wejścia-i-to-czego-plan-z-krok-5-nie-przewidywał) — **plan mówił „jeden blok"; to już nieprawda**
+  - [13.1 Inwentarz — co przyjmuje motyw, a co nie](#131-inwentarz--co-dziś-przyjmuje-motyw-a-co-nie) — grupy A–F
+  - [13.2 Decyzja D1 — granica marka / motyw](#132-decyzja-d1--granica-między-marką-a-motywem) — trzy warianty do wyboru
+  - [13.4 Decyzje Kroku 5](#134-decyzje-kroku-5) — **D1 rozstrzygnięta przez odrzucenie pytania: motywuje się wszystko**; mapowania Catppuccin
+  - [13.3 Kolejka jednostek Kroku 5](#133-kolejka-jednostek-kroku-5) — 5.0–5.7 ze statusem
+  - [13.4.5 Poprawki po pierwszym przebiegu macierzy](#1345-poprawki-po-pierwszym-przebiegu-macierzy-2026-08-10) — **`-400` nie znaczy „jasny"**; naprawa nieczytelności w Latte
+  - [13.5 Znalezione, ale NIE naprawione](#135-znalezione-ale-nie-naprawione-krok-5)
+  - [13.5.1 Przegląd `app/` wymuszony decyzją D1](#1351-przegląd-app--co-wymusiła-decyzja-d1) — które pliki miały biel na sztywno
+  - [13.6 Metoda weryfikacji — macierz motywów](#136-metoda-weryfikacji--macierz-motywów) — mierz **stany i geometrię**, nie tylko trasy i własności
+  - [13.6.1 Sonda — skrypt do konsoli](#1361-sonda--skrypt-do-konsoli-przeglądarki) · [13.6.2 Sonda kontrastu](#1362-sonda-kontrastu-jednostka-56)
+  - [13.7 Definicja ukończenia Kroku 5](#137-definicja-ukończenia-kroku-5) — T.1–T.7
+
+**Krok 6 — scalenie wariantów**
+
+- [14. Krok 6 — scalenie zduplikowanych wariantów](#14-krok-6--scalenie-zduplikowanych-wariantów-plan-prefill-2026-08-10)
+  - [14.0 Cel i warunek wejścia](#140-cel-i-warunek-bez-którego-nie-wolno-zaczynać) — **warunek zadziałał inaczej, niż przewidywał: scalenie okazało się błędnym celem**
+  - [14.1 Kolejka jednostek Kroku 6](#141-kolejka-jednostek-kroku-6) — 6.1–6.12, z czego dziewięć dołożył Krok 4
+  - [Stan wykonania](#stan-wykonania-2026-08-10) — status każdej jednostki 6.x
+  - [14.2 Decyzje Kroku 6](#142-decyzje-kroku-6) — `send`→`primary` **scalone wbrew rekomendacji**; ton `chat` **nie scalony**; 6.9 anulowana
+  - [14.3 Znalezione, ale NIE naprawione](#143-znalezione-ale-nie-naprawione-krok-6)
+  - [14.4 Metoda weryfikacji — dowód braku zmiany](#144-metoda-weryfikacji--dowód-braku-zmiany) — ta sama sonda przed i po
+  - [14.5 Dziennik jednostek Kroku 6](#145-dziennik-jednostek-kroku-6) — czego każda sonda ma dowieść; **cztery różnice zamierzone**
+  - [14.6 Definicja ukończenia Kroku 6](#146-definicja-ukończenia-kroku-6) — S.1–S.7; **S.3 czeka na Krok 8, S.4 na przeglądarkę**
+- [Materiał odniesienia](#materiał-odniesienia) — screenshoty `before_migration` i zakres ich ważności
+
 ---
 
 ## 1. Wszystkie trasy w aplikacji

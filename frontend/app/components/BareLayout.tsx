@@ -26,9 +26,13 @@ interface Props {
 // literal only because this gradient was guaranteed dark, and under Latte it is
 // not - the gradient's lightness now comes from the flavour's own neutrals, so
 // its foreground has to come from the same place.
+//
+// `min-h-dvh`, not `min-h-screen` (Krok 7 unit 7.8): `100vh` on mobile assumes
+// the address bar is hidden, so a full-height page overshoots the visible area
+// while the bar is showing. `dvh` tracks the bar.
 export default function BareLayout({ children }: Props) {
   return (
-    <div className="bg-gradient-start-page text-on-start-page relative flex min-h-screen flex-col">
+    <div className="bg-gradient-start-page text-on-start-page relative flex min-h-dvh flex-col">
       <BrandLink className="absolute left-6 top-6" />
       <div className="flex flex-1 flex-col">{children}</div>
       <Footer />

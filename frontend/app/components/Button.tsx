@@ -53,8 +53,14 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 // 15 falls exactly between `text-sm` and `text-base`, so 12.0's tie-break sends
 // it to 16px, and a jump from 14 to 16 on every button in the app is a design
 // call rather than the mechanical unfreezing this is. Left open in 14.2.
+//
+// `transition`, not `transition-colors` (Krok 7 unit 7.7). `primary` hovers by
+// `brightness`, which is a `filter`, and `transition-colors` lists colour
+// properties only - so the hover snapped instead of easing. The plain utility
+// covers colours and `filter` both, which is what a base shared by a
+// colour-hovering variant (`outline`) and a filter-hovering one needs.
 const BASE_CLASSES =
-  'inline-block py-3.5 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-block py-3.5 text-center text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-50';
 
 function buttonClasses(
   variant: ButtonVariant,

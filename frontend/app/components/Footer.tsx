@@ -52,7 +52,7 @@ const FOOTER_LINKS = [
 export default function Footer() {
   return (
     <footer className="border-current/10 mt-auto flex flex-wrap items-center justify-between gap-4 border-t px-4 py-4 text-xs lg:px-14">
-      <nav className="flex flex-wrap gap-5">
+      <nav className="flex flex-wrap gap-5" aria-label="Footer">
         {FOOTER_LINKS.map((link) =>
           link.external ? (
             <a

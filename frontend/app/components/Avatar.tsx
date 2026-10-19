@@ -37,14 +37,16 @@ export default function Avatar({ src, alt, size, initial, color }: Props) {
         // Hidden from assistive tech: the initial duplicates the name that
         // sits next to it, and this branch carries no accessible name today.
         aria-hidden="true"
-        // Fallback colours follow the export's profile avatar: #0d2b47 on
-        // #a3e635, which are exactly --theme-on-surface and --theme-primary,
-        // so this needs no new tokens. The previous pairing was white on
-        // bg-elevated-border (#eef2ef) - an initial that was very nearly
-        // invisible whenever no per-user colour was supplied.
-        className="bg-on-surface text-primary flex shrink-0 items-center justify-center rounded-full font-extrabold"
+        // Krok 7 unit 7.3: `primary` / `on-primary`, the pair Krok 5 tuned per
+        // flavour (13.4.5). The export's profile avatar is the same two colours
+        // the other way round - a lime initial on navy - and that was what this
+        // drew, as `bg-on-surface text-primary`. But those are two unrelated
+        // roles that only happened to contrast in 42Hub; under Mocha and Latte
+        // they resolved to text-on-mauve at roughly 1-2:1. Inverting it in
+        // 42Hub was accepted so that the pairing holds in every flavour.
+        className="bg-primary text-on-primary flex shrink-0 items-center justify-center rounded-full font-extrabold"
         // Inline styles outrank stylesheet rules, so `color` overrides
-        // bg-on-surface when given and leaves it in place when not.
+        // bg-primary when given and leaves it in place when not.
         style={{
           width: size,
           height: size,
