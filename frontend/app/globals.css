@@ -526,6 +526,11 @@
   /* KROK 7 — w Latte surface0 jest na tyle ciemne, że subtext0 (~3.2:1)
      i subtext1 (~4.0:1) nie dochodzą do AA; dopiero `text` (~5.2:1). */
   --theme-hub-on-offline: var(--color-ctp-text);
+  /* KROK 7 — wspólny blok daje `hub-muted` = subtext0, który na latte-owym
+     surface0 ma ~3.2:1. subtext1 podnosi to do ~4.0:1: nadal poniżej AA,
+     ale tekst zostaje wyciszony, a `text` (~5.2:1) przestałby nim być.
+     Decyzja 2026-10-19, świadomie poniżej progu — zapisana w 15. */
+  --theme-hub-muted: var(--color-ctp-subtext1);
   /* KROK 7, jednostka 7.1 — krawędź: ~3.2:1 na surface0, ~4.4:1 na base.
      overlay1 jest za jasne; drabina odwrócona względem Mocha. */
   --theme-elevated-edge: var(--color-ctp-subtext0);
