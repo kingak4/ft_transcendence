@@ -90,18 +90,18 @@ export default function RegisterPage() {
                 the links would multiply to 0.48 and render the links DIMMER
                 than the sentence they sit in, inverting the emphasis - alpha is
                 absolute, opacity compounds. Recorded in 12.5. */}
-            <span className="text-hub-on-card/60 text-xs">
+            <span className="text-on-card/60 text-xs">
               I agree to the{' '}
               <Link
                 href="/terms-of-service"
-                className="text-hub-on-card/80 hover:text-hub-on-card underline transition-colors"
+                className="text-on-card/80 hover:text-on-card underline transition-colors"
               >
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link
                 href="/privacy-policy"
-                className="text-hub-on-card/80 hover:text-hub-on-card underline transition-colors"
+                className="text-on-card/80 hover:text-on-card underline transition-colors"
               >
                 Privacy Policy
               </Link>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
         {/* Named alpha for the same reason as the block above: this wraps an
             `AccentLink` with its own `text-primary`, which opacity would fade
             along with the sentence. */}
-        <p className="text-hub-on-card/50 mt-4 text-center text-xs">
+        <p className="text-on-card/50 mt-4 text-center text-xs">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>

@@ -77,9 +77,9 @@ export default function LoginPage() {
             whole subtree and would fade the accent to half. Same reason the
             terms checkbox in register/page.tsx keeps its named colours (12.5).
             Step 5 kept the technique and only changed what is named: the alpha
-            is now taken off `hub-on-card`, since `white` was an assumption
+            is now taken off `on-card`, since `white` was an assumption
             about the card rather than a fact about it. */}
-        <p className="text-hub-on-card/50 mt-4 text-center text-xs">
+        <p className="text-on-card/50 mt-4 text-center text-xs">
           Don&apos;t have an account?{' '}
           <AccentLink href="/register">Register</AccentLink>
         </p>

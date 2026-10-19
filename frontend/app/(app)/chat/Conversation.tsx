@@ -23,8 +23,8 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
   const statusText = isOnline ? CHAT_DICT.conversation.online : CHAT_DICT.conversation.offline;
 
   return (
-    <section className="bg-hub-panel-sunken flex min-h-0 flex-1 flex-col">
-      <header className="bg-hub-panel border-hub-border flex shrink-0 items-center gap-3 border-b px-5 py-4">
+    <section className="bg-sunken-surface flex min-h-0 flex-1 flex-col">
+      <header className="bg-elevated-surface border-elevated-border flex shrink-0 items-center gap-3 border-b px-5 py-4">
         {/* Unit 2b. Below `lg:` this conversation is the whole screen, so the
             list it came from needs a way back - `/chat` with no parameter is
             exactly that state, which is why a plain link does the job and no
@@ -33,7 +33,7 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
         <Link
           href="/chat"
           aria-label="Back to conversations"
-          className="text-hub-muted hover:bg-hub-row-active hover:text-hub-on-surface -ml-2 rounded-lg p-2 transition-colors lg:hidden"
+          className="text-muted hover:bg-row-active hover:text-on-elevated-surface -ml-2 rounded-lg p-2 transition-colors lg:hidden"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
             <path
@@ -54,11 +54,11 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
           color={user.color}
         />
         <div className="flex flex-col">
-          <h2 className="text-hub-on-surface text-sm font-bold">
+          <h2 className="text-on-elevated-surface text-sm font-bold">
             {user.name}
           </h2>
           <span
-            className={`${isOnline ? 'text-hub-status' : 'text-hub-on-offline'} text-xs font-semibold`}
+            className={`${isOnline ? 'text-online-text' : 'text-offline-text'} text-xs font-semibold`}
           >
             {statusText}
           </span>
@@ -66,8 +66,8 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
       </header>
 
       {isFriend === false && (
-        <div className="bg-hub-panel border-hub-border flex shrink-0 items-center justify-between border-b px-5 py-3">
-          <span className="text-hub-muted text-sm font-medium">{CHAT_DICT.conversation.notFriendBanner}</span>
+        <div className="bg-elevated-surface border-elevated-border flex shrink-0 items-center justify-between border-b px-5 py-3">
+          <span className="text-muted text-sm font-medium">{CHAT_DICT.conversation.notFriendBanner}</span>
           <AddFriendButton friendId={user.id} onAdded={() => {}} />
         </div>
       )}

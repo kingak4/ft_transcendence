@@ -182,7 +182,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                   Nothing changes visually: `Button` carries the same 12px
                   radius, the same 14px vertical padding (unfrozen by 6.4, which
                   moved BASE_CLASSES from py-3 to py-3.5) and the same 14px/700,
-                  and its `primary` is the same `bg-hub-cta` Save drew by hand.
+                  and its `primary` is the same `bg-cta` Save drew by hand.
                   `flex-1` goes through `className`, which is the layout escape
                   hatch and precisely what it is for. */}
               <div className="flex gap-3">

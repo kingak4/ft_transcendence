@@ -53,7 +53,9 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
          * physical (non-logical) value on this page; the design export mirrors
          * them for RTL, which is deferred with the rest of i18n.
          *
-         * TODO(design-migration): when RTL (#86) lands, mirror these four corners.
+         * TODO(rtl #86): mirror these four corners. Re-tagged from
+         * design-migration at Krok 8 - RTL was deferred, so the work is still
+         * open, but it no longer belongs to the migration that closed.
          * Everything else here is already direction-agnostic (self-start/end,
          * text-start/end), so this is the only bit that needs an `rtl:` variant.
          */}
@@ -62,14 +64,14 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
          * only ever correct while the chat was a fixed-light island:
          *
          * - the outgoing bubble was `text-white` on the teal-to-blue fill.
-         *   That fill now themes, so the label takes `hub-on-accent`, the role
+         *   That fill now themes, so the label takes `on-accent`, the role
          *   that means "legible on an accent fill" and inverts with it.
-         * - the incoming bubble was `text-hub-ink` on `bg-hub-panel`. This one
-         *   was a genuine bug rather than a tightening: `hub-ink` describes the
-         *   CONTRAST PARTNER OF A LIGHT ACCENT FILL, and under Mocha it
-         *   resolves to crust while `hub-panel` resolves to surface0 - dark on
-         *   dark, unreadable. Text sitting on a panel wants the panel's own
-         *   foreground, which is `hub-on-surface`.
+         * - the incoming bubble was dark CTA text (today's `on-primary`) on the
+         *   panel. This one was a genuine bug rather than a tightening: that
+         *   role is the CONTRAST PARTNER OF A LIGHT ACCENT FILL, and under
+         *   Mocha it resolves to crust while the panel resolves to surface0 -
+         *   dark on dark, unreadable. Text sitting on a panel wants the
+         *   panel's own foreground, which is `on-elevated-surface`.
          *
          * The second is why 13.6.2 exists: the role name read plausibly at the
          * call site and only the resolved pair showed the problem.
@@ -79,13 +81,13 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
             isMine
               ? `rounded-[18px_18px_4px_18px] px-4 py-2.5 text-sm leading-relaxed ${
                   message.isDeleted
-                    ? 'bg-hub-panel/30 text-hub-muted italic'
-                    : 'bg-hub-bubble text-hub-on-accent'
+                    ? 'bg-elevated-surface/30 text-muted italic'
+                    : 'bg-bubble text-on-accent'
                 }`
               : `rounded-[18px_18px_18px_4px] px-4 py-2.5 text-sm leading-relaxed shadow-[0_3px_10px_var(--color-shadow-subtle)] ${
                   message.isDeleted
-                    ? 'bg-hub-panel/30 text-hub-muted italic'
-                    : 'bg-hub-panel text-hub-on-surface'
+                    ? 'bg-elevated-surface/30 text-muted italic'
+                    : 'bg-elevated-surface text-on-elevated-surface'
                 }`
           }
         >
@@ -95,7 +97,7 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
           <button
             onClick={onDelete}
             aria-label="Delete message"
-            className="text-hub-muted hover:text-danger p-1 opacity-0 transition-opacity group-hover:opacity-100"
+            className="text-muted hover:text-danger p-1 opacity-0 transition-opacity group-hover:opacity-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +119,7 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
       </div>
       <time
         dateTime={message.time}
-        className={`text-hub-time mt-1 text-[11px] font-semibold ${isMine ? 'text-end' : 'text-start'}`}
+        className={`text-timestamp mt-1 text-[11px] font-semibold ${isMine ? 'text-end' : 'text-start'}`}
       >
         {formatTime(message.time)}
       </time>

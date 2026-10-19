@@ -50,7 +50,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
       // had become the export's teal-to-mint gradient where dark navy text
       // would be unreadable. Step 5 took the next step: the hero gradient now
       // themes, so "white" is no longer a safe stand-in for "legible on the
-      // hero" - `hub-on-accent` is the role that means that, and it inverts
+      // hero" - `on-accent` is the role that means that, and it inverts
       // with the fill instead of assuming it. Every alpha below is unchanged;
       // only what the alpha is taken off has moved.
       // The sizing matches the display name beside it: 26px at 800, not 30px at 700.
@@ -61,7 +61,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           onChange={(e) => setValue(e.target.value)}
           maxLength={32}
           autoFocus
-          className="bg-hub-on-accent/10 text-hub-on-accent placeholder:text-hub-on-accent/40 focus:ring-hub-on-accent w-full rounded-xl px-3 py-1 text-2xl font-extrabold outline-none focus:ring-1"
+          className="bg-on-accent/10 text-on-accent placeholder:text-on-accent/40 focus:ring-on-accent w-full rounded-xl px-3 py-1 text-2xl font-extrabold outline-none focus:ring-1"
         />
         {error && <p className="text-danger text-sm">{error}</p>}
         {/* Same geometry as the trigger they replace - 10x20px at 12px radius,
@@ -72,7 +72,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           <button
             type="button"
             onClick={handleCancel}
-            className="border-hub-on-accent/60 bg-hub-on-accent/15 text-hub-on-accent hover:bg-hub-on-accent/25 rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
+            className="border-on-accent/60 bg-on-accent/15 text-on-accent hover:bg-on-accent/25 rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
           >
             Cancel
           </button>
@@ -97,7 +97,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
     // the name: 10x20px, 12px radius, 13.5px at 700, on a 15% fill with a 60%
     // edge - which the dictionary already carries as the STRONG variant of
     // "krawędź na tle ciemnym", sourced from this very button. The percentages
-    // are the dictionary's; what they are taken off is now `hub-on-accent`
+    // are the dictionary's; what they are taken off is now `on-accent`
     // rather than `white`, for the reason given in the editing branch above.
     // The avatar keeps its own bubble trigger, so the two affordances stay
     // visually distinct rather than competing.
@@ -105,12 +105,12 @@ export default function EditDisplayNameButton({ displayName }: Props) {
     // A fragment, not a wrapper: the hero column already spaces its children by
     // 10px, exactly the export's gap between the name and this button.
     <>
-      <p className="text-hub-on-accent truncate text-2xl font-extrabold">
+      <p className="text-on-accent truncate text-2xl font-extrabold">
         {displayName}
       </p>
       <button
         onClick={handleEdit}
-        className="border-hub-on-accent/60 bg-hub-on-accent/15 text-hub-on-accent hover:bg-hub-on-accent/25 self-start rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
+        className="border-on-accent/60 bg-on-accent/15 text-on-accent hover:bg-on-accent/25 self-start rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
       >
         Change name
       </button>

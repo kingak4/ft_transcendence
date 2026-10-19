@@ -16,9 +16,9 @@ interface Props {
 // text. In the export that styling belongs to its "Open chat" action; here it
 // marks the secondary one, with the accent going to OpenChatLink beside it.
 //
-// Step 5 unit 5.5 made the gradient `bg-hub-row-action` and moved the label off
-// `hub-teal` onto `hub-on-row-action`. The second half is the less obvious one:
-// `hub-teal` is a FILL hue - it is one stop of the message bubble - and this
+// Step 5 unit 5.5 made the gradient `bg-row-action` and moved the label off
+// the teal accent onto `on-row-action`. The second half is the less obvious
+// one: `accent-teal` is a FILL hue - it is one stop of the message bubble - and this
 // label sits on top of a fill built from the same family. Sharing one token
 // meant that under Mocha the pale gradient stayed pale while the text followed
 // the flavour, so the two halves of one button themed at different rates. A
@@ -45,7 +45,7 @@ export default function RemoveFriendButton({ friendId, onRemoved }: Props) {
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className="bg-hub-row-action text-hub-on-row-action px-4.5 py-2.25 rounded-[10px] text-sm font-bold transition-[filter] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-row-action text-on-row-action px-4.5 py-2.25 rounded-[10px] text-sm font-bold transition-[filter] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? 'Removing…' : 'Remove'}
       </button>

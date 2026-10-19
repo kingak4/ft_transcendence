@@ -24,9 +24,9 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
   ref,
 ) {
   return (
-    <div className="bg-hub-panel border-hub-border flex shrink-0 flex-col border-t p-4">
+    <div className="bg-elevated-surface border-elevated-border flex shrink-0 flex-col border-t p-4">
       {errorMsg && (
-        <div className="mb-2 text-sm text-red-500">
+        <div className="text-danger mb-2 text-sm">
           {errorMsg}
         </div>
       )}

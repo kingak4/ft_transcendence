@@ -29,7 +29,6 @@ async function loadUsers(): Promise<ChatUser[]> {
     id: friend.id ?? '',
     name: friend.details?.displayName ?? 'Unknown User',
     initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
-    color: 'bg-hub-panel', // Assign a default or dynamic color
     avatarId: friend.details?.avatarId?.val ?? null,
     online: false, // We'll handle this in ChatInterface
     status: 'Offline',
@@ -55,7 +54,6 @@ async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: 
         id: fallbackId,
         name: fallbackName,
         initial: fallbackName.charAt(0).toUpperCase(),
-        color: 'bg-hub-panel',
         avatarId: chat.avatarId ?? null,
         online: false,
         status: 'Offline',
@@ -109,7 +107,6 @@ export default async function ChatPage({
           id: userId,
           name: userDetails.displayName ?? 'Unknown User',
           initial: (userDetails.displayName ?? 'U').charAt(0).toUpperCase(),
-          color: 'bg-hub-panel',
           avatarId: userDetails.avatarId ?? null,
           online: false,
           status: 'Offline',
@@ -138,7 +135,7 @@ export default async function ChatPage({
     // `flex-1 min-h-0` instead of `h-full`: the height now comes from the
     // layout rather than from an assumption about it. `min-h-0` is what lets
     // this shrink below its content so the panes' own `overflow-y-auto` engages.
-    <div className="border-hub-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
+    <div className="border-elevated-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
       {/* Krok 7 unit 7.10: every other route names itself with an h1; this one
           had none. The export draws no visible heading here and §8.11 keeps the
           look of /chat, so it is `sr-only` - in the outline, not on screen. */}
@@ -147,7 +144,7 @@ export default async function ChatPage({
       {activeUser ? (
         <Conversation user={activeUser} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
       ) : (
-        <div className="bg-hub-panel-sunken hidden flex-1 items-center justify-center text-sm text-hub-muted lg:flex">
+        <div className="bg-sunken-surface hidden flex-1 items-center justify-center text-sm text-muted lg:flex">
           {CHAT_DICT.page.selectChatToStart}
         </div>
       )}

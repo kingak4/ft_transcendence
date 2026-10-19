@@ -24,7 +24,7 @@ import type { ReactNode } from 'react';
 //
 // The background gradient WAS an arbitrary value, on the grounds that no
 // Tailwind scale expresses a two-stop translucent dark gradient. Step 5 unit
-// 5.5 made it `bg-hub-card`: that reasoning explained why it could not be a
+// 5.5 made it `bg-card`: that reasoning explained why it could not be a
 // scale utility, but a value with no name also cannot be overridden per
 // flavour, and this card had to stop being permanently dark.
 //
@@ -41,7 +41,7 @@ import type { ReactNode } from 'react';
 // way, so it needs no per-flavour value.
 export default function Card({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-hub-card border-hub-card-border text-hub-on-card w-full max-w-[440px] rounded-3xl border p-6 shadow-[0_25px_60px_rgba(0,0,0,0.35)] backdrop-blur-[18px] lg:p-9">
+    <div className="bg-card border-card-border text-on-card w-full max-w-[440px] rounded-3xl border p-6 shadow-[0_25px_60px_rgba(0,0,0,0.35)] backdrop-blur-[18px] lg:p-9">
       {children}
     </div>
   );

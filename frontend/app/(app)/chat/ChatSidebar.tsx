@@ -55,7 +55,6 @@ export default function ChatSidebar({
             id: u.id ?? '',
             name: u.displayName ?? 'Unknown User',
             initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
-            color: 'bg-hub-panel',
             avatarId: u.avatarId?.val ?? null,
             online: false,
             status: 'Offline',
@@ -95,7 +94,7 @@ export default function ChatSidebar({
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
     <aside
-      className={`bg-hub-panel border-hub-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
+      className={`bg-elevated-surface border-elevated-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
     >
       <div
         className="relative flex flex-col gap-3 p-4"
@@ -105,7 +104,7 @@ export default function ChatSidebar({
           }
         }}
       >
-        <h2 id="chat-rail-title" className="text-hub-on-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
+        <h2 id="chat-rail-title" className="text-on-elevated-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
         <TextField
           tone="chat"
           size="sm"
@@ -119,7 +118,7 @@ export default function ChatSidebar({
 
         {/* Search Results Dropdown */}
         {(debouncedQuery || isFocused) && (
-          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
+          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-elevated-border bg-elevated-surface shadow-lg">
             {searchResults.length > 0 ? (
               <div className="flex flex-col p-2 gap-1">
                 {searchResults.map((user) => (
@@ -132,7 +131,7 @@ export default function ChatSidebar({
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center text-sm text-hub-muted">{emptyStateText}</div>
+              <div className="p-4 text-center text-sm text-muted">{emptyStateText}</div>
             )}
           </div>
         )}

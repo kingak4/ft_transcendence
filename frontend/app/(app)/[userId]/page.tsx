@@ -26,13 +26,13 @@ async function loadFriendsCount(): Promise<number | null> {
 }
 
 // A row of the export's info card: label left, value right, hairline under.
-// The label colour IS a token - `hub-muted` is exactly the #7c8a92 the export
+// The label colour IS a token - `muted` is exactly the #7c8a92 the export
 // uses - which makes this the one place in Etap D where the export's secondary
 // text maps onto something we already had.
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b last:border-b-0">
-      <span className="text-hub-muted text-sm font-semibold">{label}</span>
+      <span className="text-muted text-sm font-semibold">{label}</span>
       <span className="text-sm font-bold">{value}</span>
     </div>
   );
@@ -92,11 +92,11 @@ export default async function UserProfilePage({ params }: Props) {
           dictionary row ("element podniesiony na gradiencie").
           The gradient was an arbitrary value "because none of its three stops
           has a token" - which turned out to be wrong on inspection at Step 5:
-          #146b7a, #2f9bcf and #4ac9a0 are the literal values of hub-teal,
-          hub-blue and hub-mint, because the export reuses the message bubble's
-          hues here. Unit 5.5 made it `bg-hub-hero` and it needed no new tokens
-          at all. */}
-      <div className="bg-hub-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_var(--color-shadow-hero)] lg:p-9">
+          #146b7a, #2f9bcf and #4ac9a0 are the literal values of accent-teal,
+          accent-blue and accent-mint, because the export reuses the message
+          bubble's hues here. Unit 5.5 made it `bg-hero` and it needed no new
+          tokens at all. */}
+      <div className="bg-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_var(--color-shadow-hero)] lg:p-9">
         {isOwnProfile ? (
           <EditAvatarButton
             avatarId={data.avatarId}
@@ -112,7 +112,7 @@ export default async function UserProfilePage({ params }: Props) {
           {isOwnProfile ? (
             <EditDisplayNameButton displayName={displayName} />
           ) : (
-            <p className="text-hub-on-accent truncate text-2xl font-extrabold">
+            <p className="text-on-accent truncate text-2xl font-extrabold">
               {displayName}
             </p>
           )}
@@ -135,7 +135,7 @@ export default async function UserProfilePage({ params }: Props) {
         <form action={logout} className="flex justify-end">
           <button
             type="submit"
-            className="bg-hub-danger-cta text-hub-on-accent px-7.5 py-3.25 rounded-[14px] text-sm font-bold shadow-[0_8px_20px_color-mix(in_srgb,var(--color-hub-danger-end)_28%,transparent)] transition-[filter] hover:brightness-110"
+            className="bg-danger-cta text-on-accent px-7.5 py-3.25 rounded-[14px] text-sm font-bold shadow-[0_8px_20px_color-mix(in_srgb,var(--color-danger-end)_28%,transparent)] transition-[filter] hover:brightness-110"
           >
             Logout
           </button>

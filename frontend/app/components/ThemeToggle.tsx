@@ -24,7 +24,7 @@ const THEME_LABEL: Record<Theme, string> = {
 //     because a lone `bg-surface` button on a `surface` background had nothing
 //     to distinguish it. A filled active option supplies that contrast itself,
 //     so this stops being the only bordered control in the app.
-//  2. The active option takes `bg-hub-cta text-hub-ink` - the same treatment the
+//  2. The active option takes `bg-cta text-on-primary` - the same treatment the
 //     rail gives its active nav item. Reusing the app's existing "this one is
 //     current" vocabulary is the point; inventing a second one would be the
 //     systemic conflict §8.2 warns about.
@@ -60,7 +60,7 @@ export default function ThemeToggle() {
             aria-pressed={isActive}
             className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition-opacity ${
               isActive
-                ? 'bg-hub-cta text-hub-ink'
+                ? 'bg-cta text-on-primary'
                 : 'opacity-60 hover:opacity-100'
             }`}
           >

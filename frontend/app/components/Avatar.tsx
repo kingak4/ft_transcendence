@@ -22,10 +22,10 @@ interface Props {
   // colours for real users, so deleting it now means writing it again shortly.
   // Recorded in 14.2.
   //
-  // `color` IS being misused today: the chat routes pass `bg-hub-panel`, a
-  // class name, into what becomes an inline `backgroundColor`, where it is
-  // simply ignored. That is a data bug rather than a styling one - logged in
-  // 14.3, not fixed here.
+  // `color` was misused until Krok 8: the chat routes passed a Tailwind class
+  // name into what becomes an inline `backgroundColor`, where it was silently
+  // ignored (14.3). They now pass nothing, so the fallback pair below applies.
+  // A caller that does pass `color` must pass a CSS colour, not a class.
   initial?: string;
   color?: string;
 }

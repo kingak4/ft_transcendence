@@ -17,7 +17,8 @@ export default function LegalSection({
   // border plus symmetric padding does the same job with a visible boundary.
   //
   // The heading takes its dictionary row (12.0, "nagłówek sekcji w treści"):
-  // 18px at 800, down from 24px at 600. Its colour is the export's #155e8f,
+  // 18px at 800, down from 24px at 600. Its colour is the export's #155e8f
+  // (neither the blue nor the teal accent - a third hue),
   // which Step 4 could not reproduce - no token had it and §8.7 reguła 2
   // forbade adding one (12.4). Krok 7 unit 7.6 added the role.
   return (
