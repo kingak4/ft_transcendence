@@ -32,6 +32,10 @@
   --color-on-surface: var(--theme-on-surface);
   --color-elevated-surface: var(--theme-elevated-surface);
   --color-on-elevated-surface: var(--theme-on-elevated-surface);
+  /* Krok 7 unit 7.6 - the export's two other text levels on a raised surface:
+     accent (section headings) and body (running text). */
+  --color-on-elevated-surface-accent: var(--theme-on-elevated-surface-accent);
+  --color-on-elevated-surface-body: var(--theme-on-elevated-surface-body);
   --color-elevated-border: var(--theme-elevated-border);
   --color-primary: var(--theme-primary);
   --color-on-primary: var(--theme-on-primary);
@@ -169,6 +173,15 @@
   --theme-elevated-surface: #ffffff; /* wcześniej var(--color-brand-reversed-main-color) */
   --theme-on-elevated-surface: #0d2b47; /* wcześniej var(--color-brand-main-color) */
   /* ===== KONIEC ZMIANY ===== */
+
+  /* KROK 7, jednostka 7.6 — dwie barwy, które 12.4 i 12.5 odesłały tutaj,
+     bo Krok 4 nie mógł dodać tokenu. Wartości wprost z eksportu (strony
+     prawne): nagłówek sekcji #155e8f (~6.9:1 na bieli), tekst ciągły #3d4a44
+     (~9.3:1). Trzecia barwa z tej rodziny, #d6e4ee, NIE dostaje tokenu:
+     przycisk „Wstecz", który ją nosi, nie istnieje w aplikacji (zasada
+     z 12.2 — najpierw sprawdź, czy rola ma użytkownika). */
+  --theme-on-elevated-surface-accent: #155e8f;
+  --theme-on-elevated-surface-body: #3d4a44;
 
   /* ===== ZMIANA — KROK 3, elevated-border (towarzyszy Parze 2) ===== */
   --theme-elevated-border: #eef2ef; /* wcześniej var(--color-brand-reversed-main-color) */
@@ -451,6 +464,9 @@
   --theme-hub-on-row-action: var(--color-ctp-teal-400);
   /* KROK 7 — subtext0 na surface0: ~5.6:1 */
   --theme-hub-on-offline: var(--color-ctp-subtext0);
+  /* KROK 7, jednostka 7.6 — na surface0: ~6.7:1 i ~7.1:1 */
+  --theme-on-elevated-surface-accent: var(--color-ctp-sapphire-400);
+  --theme-on-elevated-surface-body: var(--color-ctp-subtext1);
 
   /* Najciemniejszy neutralny odcień odmiany — tekst na wypełnieniu akcentowym */
   --theme-hub-ink: var(--color-ctp-crust);
@@ -469,6 +485,17 @@
   /* KROK 7 — w Latte surface0 jest na tyle ciemne, że subtext0 (~3.2:1)
      i subtext1 (~4.0:1) nie dochodzą do AA; dopiero `text` (~5.2:1). */
   --theme-hub-on-offline: var(--color-ctp-text);
+  /* KROK 7, jednostka 7.6 — ten sam problem co wyżej: na latte-owym surface0
+     żaden czysty akcent nie dochodzi do AA (blue ~3.2:1). `color-mix` bierze
+     barwę z akcentu, a jasność z `text` — ta sama technika co gradienty
+     z 5.4. Tekst ciągły to po prostu `text`. Szacunek ~4.7:1, do
+     potwierdzenia sondą 13.6.2. */
+  --theme-on-elevated-surface-accent: color-mix(
+    in oklab,
+    var(--color-ctp-blue-400) 30%,
+    var(--color-ctp-text)
+  );
+  --theme-on-elevated-surface-body: var(--color-ctp-text);
 
   /* W Latte najciemniejszym neutralnym jest `text`, nie `crust` — drabina
      neutralnych odwraca się między odmianami. */
