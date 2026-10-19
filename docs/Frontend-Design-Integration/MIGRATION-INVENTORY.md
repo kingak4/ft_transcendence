@@ -25,8 +25,8 @@ więc czytaj je razem z tabelą statusu jednostek obok.
 | 4 — redesign trasa po trasie | [sekcja 12](#12-krok-4--redesign-trasa-po-trasie-jedna-osoba-dwie-szerokości) | [Checklista wykonawcza](#checklista-wykonawcza--kolejność-pracy) (Z.1–Z.9) | [12.1 — 28/28 zamkniętych](#121-kolejka-jednostek) |
 | 5 — motywy | [sekcja 13](#13-krok-5--przywrócenie-obsługi-motywów-plan-prefill-2026-08-10) | [13.7](#137-definicja-ukończenia-kroku-5) (T.1–T.7) | [13.3](#133-kolejka-jednostek-kroku-5) |
 | 6 — scalenie wariantów | [sekcja 14](#14-krok-6--scalenie-zduplikowanych-wariantów-plan-prefill-2026-08-10) | [14.6](#146-definicja-ukończenia-kroku-6) (S.1–S.7) | [Stan wykonania](#stan-wykonania-2026-08-10) |
-| 7 — prace przekrojowe | **brak sekcji — nierozpoczęty** | §Krok 7 planu | zaległości zebrane w [11.5](#115-znalezione-ale-nie-naprawione-zasada-b) · [12.5](#125-znalezione-ale-nie-naprawione-zasada-b--pozycje-założone-z-góry) · [13.5](#135-znalezione-ale-nie-naprawione-krok-5) · [14.3](#143-znalezione-ale-nie-naprawione-krok-6) |
-| 8 — usunięcie scaffoldingu | **brak sekcji — nierozpoczęty**, odblokowany od [12.1 poz. 19](#121-kolejka-jednostek) | §Krok 8 planu | jw. |
+| 7 — prace przekrojowe | [sekcja 15](#15-krok-7--prace-przekrojowe) | [15.5](#155-definicja-ukończenia-kroku-7) — **kod gotowy, sondy w przeglądarce otwarte** | [15.2](#152-jednostki-kroku-7) |
+| 8 — usunięcie scaffoldingu | [sekcja 16](#16-krok-8--usunięcie-scaffoldingu) | [16.5](#165-definicja-ukończenia-kroku-8) — **grep pusty, sonda przed/po otwarta** | [16.2](#162-scalone--dowód-tożsamości-roli-i-wartości) · [16.3](#163-przemianowane--przedrostek-hub--zdjęty) |
 
 ### Szybka nawigacja
 
@@ -40,7 +40,8 @@ więc czytaj je razem z tabelą statusu jednostek obok.
 | jakie tokeny istnieją i skąd się wzięły | [10.1](#101-dodane-tokeny) · [11.1](#111-mapa-par-token-semantyczny--nowa-wartość) · [13.1](#131-inwentarz--co-dziś-przyjmuje-motyw-a-co-nie) |
 | problemy z kontrastem | [11.3](#113-kontrast-po-każdej-parze) — cztery pomiary poniżej progu; sonda w [13.6.2](#1362-sonda-kontrastu-jednostka-56) |
 | skrypty pomiarowe do konsoli | [13.6.1 — macierz motywów](#1361-sonda--skrypt-do-konsoli-przeglądarki) · [13.6.2 — kontrast](#1362-sonda-kontrastu-jednostka-56) |
-| co się stało z `/stomp` | [9.4](#94-trasy-zablokowane-brak-ekranu-w-eksporcie-designu) (zablokowana) → [12.2 decyzja ④](#122-rozstrzygnięcie-czterech-pytań-wejściowych-81) (poza zakresem, do usunięcia) |
+| co się stało z `/stomp` | [9.4](#94-trasy-zablokowane-brak-ekranu-w-eksporcie-designu) (zablokowana) → [12.2 decyzja ④](#122-rozstrzygnięcie-czterech-pytań-wejściowych-81) (poza zakresem, do usunięcia) → [15.1](#151-usunięcie-stomp-decyzja--z-122) (usunięta) |
+| jak nazywał się token przed Krokiem 8 (`hub-*`) | [16.2](#162-scalone--dowód-tożsamości-roli-i-wartości) · [16.3](#163-przemianowane--przedrostek-hub--zdjęty) |
 | screenshoty sprzed migracji | [Materiał odniesienia](#materiał-odniesienia) |
 
 ### Pełna zawartość
@@ -131,7 +132,26 @@ więc czytaj je razem z tabelą statusu jednostek obok.
   - [14.3 Znalezione, ale NIE naprawione](#143-znalezione-ale-nie-naprawione-krok-6)
   - [14.4 Metoda weryfikacji — dowód braku zmiany](#144-metoda-weryfikacji--dowód-braku-zmiany) — ta sama sonda przed i po
   - [14.5 Dziennik jednostek Kroku 6](#145-dziennik-jednostek-kroku-6) — czego każda sonda ma dowieść; **cztery różnice zamierzone**
-  - [14.6 Definicja ukończenia Kroku 6](#146-definicja-ukończenia-kroku-6) — S.1–S.7; **S.3 czeka na Krok 8, S.4 na przeglądarkę**
+  - [14.6 Definicja ukończenia Kroku 6](#146-definicja-ukończenia-kroku-6) — S.1–S.7; **S.3 zamknięte w Kroku 8, S.4 czeka na przeglądarkę**
+
+**Krok 7 — prace przekrojowe (2026-10-19)**
+
+- [15. Krok 7 — prace przekrojowe](#15-krok-7--prace-przekrojowe)
+  - [15.0 Cel i decyzje wejściowe](#150-cel-i-decyzje-wejściowe) — i18n odłożone, dwie role obramowania, AA 24px; **`danger` jako tekst nadal ma użytkowników**
+  - [15.1 Usunięcie `/stomp`](#151-usunięcie-stomp-decyzja--z-122) — strona deweloperska, nie endpoint WebSocket
+  - [15.2 Jednostki Kroku 7](#152-jednostki-kroku-7) — 7.1–7.10 + `muted` w Latte
+  - [15.3 Decyzje Kroku 7](#153-decyzje-kroku-7) — **co świadomie zostało poniżej AA i dlaczego**
+  - [15.4 Znalezione, ale NIE naprawione](#154-znalezione-ale-nie-naprawione-krok-7)
+  - [15.5 Definicja ukończenia Kroku 7](#155-definicja-ukończenia-kroku-7)
+
+**Krok 8 — usunięcie scaffoldingu (2026-10-19)**
+
+- [16. Krok 8 — usunięcie scaffoldingu](#16-krok-8--usunięcie-scaffoldingu)
+  - [16.1 Usunięte](#161-usunięte) — `brand-*`, martwe `hub-*`, nieaktualny TODO
+  - [16.2 Scalone](#162-scalone--dowód-tożsamości-roli-i-wartości) — **cztery nazwy, z dowodem we wszystkich odmianach**
+  - [16.3 Przemianowane](#163-przemianowane--przedrostek-hub--zdjęty) — **tabela stara → nowa nazwa**
+  - [16.4 Poprawki przy okazji](#164-poprawki-przy-okazji) — dwie różnice zamierzone
+  - [16.5 Definicja ukończenia Kroku 8](#165-definicja-ukończenia-kroku-8)
 - [Materiał odniesienia](#materiał-odniesienia) — screenshoty `before_migration` i zakres ich ważności
 
 ---
@@ -2425,8 +2445,9 @@ o 2px na stronie. Kolejność `6.4 → 6.4b → 6.7` nie jest kosmetyczna.
 - [x] **S.2** `Button` ma o jeden wariant mniej albo wpis w 14.2, dlaczego nie —
       i wpis ten cytuje eksport, nie intuicję
       → **o jeden mniej**: `send` scalony z `primary` (14.2.1, cytuje eksport)
-- [ ] **S.3** Żaden komponent nie nazywa dwóch palet naraz
-      → **NIE SPEŁNIONE, i nie da się tego spełnić w tym kroku.** `TextField`
+- [x] **S.3** Żaden komponent nie nazywa dwóch palet naraz
+      → **spełnione w Kroku 8 (2026-10-19), 16.5.** Zapis z Kroku 6 poniżej
+      zostaje jako historia: **NIE SPEŁNIONE, i nie da się tego spełnić w tym kroku.** `TextField`
       nadal nazywa `elevated-surface` (ton `surface`) obok `hub-field` i
       `hub-card-*`. To nie są już dwie *palety* — po Kroku 5 obie rozwiązują
       się przez ten sam mechanizm odmian — ale są dwie **rodziny nazw**, a ich
@@ -2458,6 +2479,205 @@ S.4 czeka na przeglądarkę — kod jest kompletny, brakuje pomiaru. S.3 czeka n
 Krok 8 i jest przykładem kryterium, które zostało sformułowane przy założeniu
 kolejności, jaka się nie potwierdziła; zamykanie go tutaj wymagałoby wykonania
 Kroku 8 w środku Kroku 6.
+
+---
+
+## 15. Krok 7 — prace przekrojowe
+
+*Wykonany 2026-10-19 na branchu `feat/design-migration-steps-7-8`. Kod każdej
+jednostki gotowy, `npm run lint` i `npm run build` przechodzą po każdej z nich.
+Sondy przeglądarkowe (13.6.1, 13.6.2) **nie zostały jeszcze uruchomione** —
+wartości kontrastu w tej sekcji są wyliczone ręcznie z luminancji względnej
+WCAG i oznaczone jako szacunek tam, gdzie zależą od wartości wyliczanej przez
+przeglądarkę (`color-mix`, odcienie Catppuccin).*
+
+### 15.0 Cel i decyzje wejściowe
+
+Krok 7 zbiera zaległości, które Kroki 4–6 zapisały regułą B, zamiast je
+naprawiać (11.5, 12.5, 13.5, 14.3). Przed startem zapadły cztery decyzje, które
+ustalają zakres:
+
+| Pytanie | Decyzja | Skutek |
+|---|---|---|
+| i18n / RTL (pozycja 7 listy przekrojowej) | **odłożone** — osobny projekt | Ładujemy tylko Manrope, bez Noto Sans Arabic; TODO w `MessageBubble` przetagowane na `TODO(rtl #86)` |
+| Jedno `elevated-border` na linie podziału i krawędzie kontrolek | **rozdzielić na dwie role** | 15.2, jednostka 7.1 |
+| Minimalny rozmiar celu dotykowego | **WCAG 2.2 AA — 24px**, decyzja dla całej aplikacji | Żadna kontrolka nie zmienia rozmiaru; zamyka wiersz `ThemeToggle` w 12.5 (15.2, 7.10) |
+| Jasne akcenty stron prawnych (12.4, 12.5) | **jedna rodzina tokenów**, motywowana per odmiana | 15.2, jednostka 7.6 |
+
+**Korekta listy „do zrobienia" przy okazji `/stomp`.** Lista zakładała, że
+usunięcie `/stomp` unieważnia oba wpisy kontrastu dla `success`/`danger` jako
+tekstu (11.6). To tylko połowa prawdy: Krok 4 przeniósł pięć plików na
+`text-danger` (`UserSearch`, `AddFriendButton`, `RemoveFriendButton`,
+`EditAvatarButton`, `EditDisplayNameButton`), więc **`danger` jako tekst nadal ma
+użytkowników**. Swojego ostatniego użytkownika traci wyłącznie `success` jako
+tekst. To jest zasada z 12.2 w działaniu: najpierw sprawdź, czy rola ma
+użytkownika, potem mierz jej kontrast.
+
+### 15.1 Usunięcie `/stomp` (decyzja ④ z 12.2)
+
+Trasa `app/(app)/stomp/` usunięta w całości. Przed usunięciem sprawdzono jej
+importy: korzystała wyłącznie z współdzielonych `Button`, `TextField`
+i `usePresence` — żaden z nich nie był jej własnością, więc nic współdzielonego
+nie poszło razem z nią.
+
+**Nietknięte, bo to nie jest ta sama rzecz:** klient STOMP czatu
+(`StompProvider`, `useChat`, `usePresence`), logika ponownego łączenia z #99
+i `location /stomp` w Nginx z #111. To jest prawdziwy endpoint WebSocket
+aplikacji; `/stomp` był stroną deweloperską, która go testowała. Nazwa ta sama,
+rola inna.
+
+Skutki w innych sekcjach: wiersz 6.3 w 14.5 (`stomp ×1`) traci jedno miejsce
+użycia; komentarz w `Sidebar.tsx` zapisuje, że trasa zniknęła w Kroku 7.
+
+### 15.2 Jednostki Kroku 7
+
+Jedna jednostka = jeden commit, zgodnie z zasadą A: każda jest albo
+refaktoryzacją (zero zmiany pikseli), albo redesignem jednego nazwanego obszaru.
+
+| Jednostka | Zmiana | Rodzaj | Miejsca użycia |
+|---|---|---|---|
+| **7.1** krawędzie | `elevated-border` zostaje **linią podziału** (dekoracyjna w rozumieniu WCAG 1.4.11 — sekcje rozdziela też odstęp i nagłówek). Nowa rola **`elevated-edge`** dla krawędzi, która jest jedynym znakiem kontrolki: 42Hub `#808b85` (~3.2:1 na `surface`, ~3.5:1 na `elevated-surface`), Mocha `ctp-overlay1` (~3.4:1 / ~4.5:1), Latte `ctp-subtext0` (~3.2:1 / ~4.4:1) | redesign | `TextField` ton `surface` |
+| **7.2** `danger` jako tekst | 42Hub: `#e5484d` → **`#c0453f`** (było 3.60:1 na `surface`, 3.91:1 na `elevated-surface`; teraz ~4.6:1 i ~5.0:1). Wartość to końcowy stopień gradientu wylogowania z eksportu — odczyt, nie wymysł. Mocha/Latte (`red-400`/`red-700`) bez zmian. **Wypełnienia (`danger-start/end`) bez zmian.** `success` jako tekst: zero użytkowników po 15.1 — zapisane, nie mierzone | redesign | pięć plików z 15.0 + `Composer` (od Kroku 8) |
+| **7.3** paleta awatarów | **Paleta nie istniała już do naprawienia** — plan zakładał pięć kolorów zastępczych, z czego trzy poniżej AA, ale zostały wycofane wcześniej. Jedyna pozostała rzecz: gałąź zastępcza `Avatar` dostaje parę `bg-primary text-on-primary` (~9.6:1 w 42Hub) | redesign | `Avatar.tsx` |
+| **7.4** cienie | Cztery tokeny **koloru** cienia, po jednym na wiersz siły ze słownika 12.0: `shadow-subtle`, `shadow-row`, `shadow-card`, `shadow-hero`. Geometria zostaje dosłowna przy miejscu użycia (`shadow-[0_6px_18px_var(--color-shadow-row)]`) — ten sam podział kształt/kolor, który Krok 2 zrobił dla gradientów. 42Hub przepisany 1:1 (`rgba(10,42,77,…)`). Mocha: `crust` przy 30/35/40/50%, Latte: `text` przy 6/7/8/18%. Poświata wylogowania: `color-mix` z `danger-end` 28%, więc idzie za motywem | redesign w Mocha/Latte, refaktor w 42Hub | `UserList`, `[userId]/page.tsx`, `EditAvatarButton`, `MessageBubble`, `TextField`, obie strony prawne |
+| **7.5** stan offline | `bg-gray-400` / `text-gray-400` → dwie role: **`offline`** (kropka, znacznik nietekstowy, 3:1) i **`offline-text`** (etykieta, tekst, 4.5:1). 42Hub `offline` = dokładnie `gray-400` Tailwinda 4 w oklch — **co do bajtu ten sam wynik**. `offline-text` w 42Hub to `gray-500` (było ~2.6:1 na białym nagłówku, teraz ~4.8:1). Mocha `subtext0` (~5.6:1), Latte `text` (~5.2:1) | refaktor (kropka, 42Hub) + redesign (etykieta, Mocha/Latte) | `PresenceAvatar`, `Conversation` |
+| **7.6** rodzina jasnych akcentów | Dwie nowe role tekstu na powierzchni podniesionej: **`on-elevated-surface-accent`** (nagłówki sekcji, 42Hub `#155e8f` ~6.9:1) i **`on-elevated-surface-body`** (tekst ciągły, `#3d4a44` ~9.3:1). Mocha: `sapphire-400` / `subtext1`. Latte: `color-mix(blue-400 30%, text)` / `text`. Przywraca trzy poziomy tekstu stron prawnych, które Krok 4 musiał spłaszczyć (12.4). **`#d6e4ee` nie dostaje tokenu** — przycisk „Wstecz", który go nosi w eksporcie, nie istnieje w aplikacji. **Gradient przycisku wiersza był stokenizowany już w 5.5**, więc z planowanych pięciu tokenów powstały dwa | redesign | `LegalSection`, `privacy-policy`, `terms-of-service` |
+| **7.7** przejście `Button` | `transition-colors` → `transition`: `transition-colors` nie obejmuje `filter`, więc `hover:brightness-125` skakał zamiast płynąć (14.3). Ta sama poprawka w każdym miejscu z `hover:brightness-*` | poprawka błędu | `Button`, `AccentLink`, `AddFriendButton`, `OpenChatLink`, `EditAvatarButton`, `EditDisplayNameButton` |
+| **7.8** `100vh` → `100dvh` | `min-h-screen` → `min-h-dvh`. `vh` na telefonie liczy wysokość bez paska adresu, więc dół strony chował się pod nim | poprawka błędu | `BareLayout` |
+| **7.9** czcionka | **Manrope** przez `next/font/google` (`subsets: ['latin', 'latin-ext']`, `variable: '--font-manrope'`), podpięta pod `--font-sans` i `body`. `latin-ext` dla polskich znaków. Czcionka arabska odłożona razem z i18n (15.0) | redesign | `layout.tsx`, `globals.css` |
+| **7.10** dostępność | Każdy `<nav>` ma nazwę: `Main` (rail), `Footer` (stopka), `aria-labelledby` na nagłówek listy czatu. `/chat` dostał jedyny brakujący `<h1>` — `sr-only`, bo widocznym nagłówkiem trasy jest lista rozmów. Cele dotykowe: decyzja AA 24px (15.0); `ThemeToggle` ma ~28px wysokości, więc jego wiersz w 12.5 się zamyka | a11y | `Footer`, `ChatSidebar`, `chat/page.tsx` |
+| **7.L** `muted` w Latte | Latte: `muted` z `subtext0` (~3.2:1 na `surface0`) na **`subtext1`** (~4.0:1). **Świadomie poniżej AA** — patrz 15.3 | redesign | wszystkie `text-muted` |
+
+**Czego 7.11 nie robi, bo już jest zrobione.** Pozycja 1 listy przekrojowej
+(układ responsywny) została wykonana w Kroku 4 (decyzja ①, 360/1280px, `lg:`).
+Pozycja 6 (wysokość grupy tras) — w jednostce 2b (`flex-1 min-h-0` zamiast
+`calc`). Pozycja 7 (i18n/RTL) jest odłożona (15.0).
+
+### 15.3 Decyzje Kroku 7
+
+| Co | Decyzja | Uzasadnienie |
+|---|---|---|
+| Ramka panelu czatu i lista podpowiedzi wyszukiwarki | **zostają linią podziału** (`elevated-border`), nie krawędzią | WCAG 1.4.11 obejmuje **kontrolki i obiekty graficzne potrzebne do zrozumienia treści**. Ramka panelu nie jest kontrolką — panel odróżnia się tłem i układem. Lista podpowiedzi ma cień, który sam wyznacza jej granicę. Krawędź 3:1 dostaje tylko pole, którego obramowanie jest **jedynym** znakiem, gdzie zaczyna się kontrolka |
+| `muted` w Latte ~4.0:1 | **przyjęte poniżej AA** | Dalsze przyciemnienie oznacza `text` (~5.2:1), a wtedy tekst drugorzędny przestaje być drugorzędny — znika hierarchia, dla której ta rola istnieje. Kompromis zapisany jawnie, nie przeoczony |
+| `offline` i `offline-text` jako dwie role | **rozdzielone** | Kropka i etykieta stoją obok siebie, ale podlegają różnym progom (3:1 / 4.5:1), a jedna wartość rzadko spełnia oba. Ten sam podział znacznik/tekst co `on-row-action` z Kroku 5 |
+| Cień karty auth (`Card.tsx`) | **zostaje czarny 35%**, poza tokenami cienia | Tokeny 7.4 opisują cień na **jasnej stronie aplikacji**. Karta auth leży na gradiencie landingu i ma własną relację z tłem; wpis w komentarzu `Card.tsx` |
+| Wartości startowe Mocha (cienie) i Latte (akcent nagłówka ~4.7:1) | **szacunek, do potwierdzenia sondą** | `color-mix` jest wyliczany przez przeglądarkę; ręczne wyliczenie w oklab jest przybliżeniem. Potwierdzenie w T.5 / 13.6.2 |
+| Typografia `Button` (14.2.4) | **zostaje otwarta** | Pytanie designerskie (14 → 16px na każdym przycisku), nie przekrojowe |
+
+### 15.4 Znalezione, ale NIE naprawione (Krok 7)
+
+| Co | Gdzie | Do którego kroku należy |
+|---|---|---|
+| `text-danger` na tle `danger/10` ~4.05:1 | `ConnectionBanner` | **otwarte** — półprzezroczyste tło zależy od tego, co pod nim; wymaga pomiaru sondą 13.6.2, zanim warto coś zmieniać |
+| `muted` w Latte ~4.0:1 | wszystkie `text-muted` | **przyjęte** — 15.3 |
+| Typografia `Button` 14px/700 wobec 15px/800 | `Button.tsx` | **otwarte w 14.2.4** |
+| Padding `SIZE_CLASSES` 16×12px wobec 15×18px | `TextField.tsx` | **otwarte** — bez zmian od 14.3 |
+| i18n / RTL, czcionka arabska | `MessageBubble.tsx` (`TODO(rtl #86)`), `layout.tsx` | **osobny projekt** — 15.0 |
+
+### 15.5 Definicja ukończenia Kroku 7
+
+- [x] Każda pozycja z 11.5, 12.5, 13.5 i 14.3 przypisana Krokowi 7 jest albo
+      wykonana (15.2), albo zapisana z decyzją (15.3, 15.4)
+- [x] `/stomp` usunięty bez naruszenia klienta STOMP czatu (15.1)
+- [x] Każda nowa rola ma wartość w `:root` i nadpisanie dla Mocha i Latte
+- [x] Lint i build przechodzą po każdej jednostce
+- [ ] Sondy 13.6.1 i 13.6.2 we wszystkich trzech odmianach, 360 i 1280px
+      → **do wykonania w przeglądarce**; potwierdzają szacunki z 15.3
+- [ ] Test działania: czat wysyła i odbiera przez STOMP po usunięciu `/stomp`
+      → **do wykonania w przeglądarce**
+
+---
+
+## 16. Krok 8 — usunięcie scaffoldingu
+
+*Wykonany 2026-10-19, commit `1e1856c` (+ poprawka komentarza w nagłówku
+`globals.css`). Refaktoryzacja: **zero zmian wartości tokenów**.*
+
+### 16.0 Cel
+
+Do Kroku 8 aplikacja miała dwie rodziny nazw: oryginalną paletę marki
+i równoległą paletę czatu z przedrostkiem `hub-`. Po Kroku 5 obie rozwiązywały
+się przez ten sam mechanizm odmian, więc nie były już dwiema **paletami** —
+ale były dwiema **rodzinami nazw**, i właśnie to blokowało S.3 (14.6).
+Krok 8 zostawia jedną.
+
+### 16.1 Usunięte
+
+| Co | Dlaczego bezpieczne |
+|---|---|
+| Sześć tokenów `--color-brand-*` | zero użyć od Kroku 4 (14.3) |
+| `--color-hub-ink-deep` i jego nadpisania | zero użyć (14.3) |
+| `--color-hub-surface` / `--theme-hub-surface` | zero użyć |
+| `TODO(design-migration)` w `Sidebar.tsx` wraz z odwołaniem do `PLAN-static-chat-page.md` | nieaktualny — link do `/chat` istnieje od Kroku 4; plik, na który wskazywał, nie istnieje (ryzyko R6) |
+
+### 16.2 Scalone — dowód tożsamości roli i wartości
+
+Reguła z §7.6 planu: **ta sama wartość ≠ ta sama rola.** Token wolno scalić
+tylko wtedy, gdy rola jest ta sama **i** wartość jest identyczna we wszystkich
+trzech odmianach. Cztery nazwy spełniły oba warunki:
+
+| Stara nazwa | Nowa nazwa | 42Hub | Mocha | Latte | Rola |
+|---|---|---|---|---|---|
+| `hub-panel` | `elevated-surface` | `#ffffff` | `ctp-surface0` | `ctp-surface0` | panel nad stroną |
+| `hub-border` | `elevated-border` | `#eef2ef` | `ctp-surface1` | `ctp-surface1` | linia podziału w panelu |
+| `hub-on-surface` | `on-elevated-surface` | `#0d2b47` | `ctp-text` | `ctp-text` | tekst na panelu |
+| `hub-ink` | `on-primary` | `#0d2b47` | `ctp-crust` | `ctp-text` | tekst na wypełnieniu CTA |
+
+**Przykład pary, która NIE została scalona, mimo zgodności wartości:**
+`online` i `success` mają dziś tę samą wartość we wszystkich odmianach, ale
+jedno to obecność użytkownika, a drugie wynik operacji. Scalenie sprawiłoby, że
+zmiana koloru „sukcesu" przemalowałaby kropki obecności.
+
+### 16.3 Przemianowane — przedrostek `hub-` zdjęty
+
+Wartości bez zmian; zmienia się tylko nazwa, w `@theme`, w `--theme-*` i we
+wszystkich miejscach użycia.
+
+| Stara nazwa | Nowa nazwa |
+|---|---|
+| `hub-teal`, `hub-blue`, `hub-mint`, `hub-lime` | `accent-teal`, `accent-blue`, `accent-mint`, `accent-lime` (`accent-`, bo gołe `teal` czytałoby się jak skala Tailwinda) |
+| `hub-panel-sunken` | `sunken-surface` |
+| `hub-field` | `field` |
+| `hub-muted` | `muted` |
+| `hub-time` | `timestamp` |
+| `hub-row-active` | `row-active` |
+| `hub-online`, `hub-status` | `online`, `online-text` |
+| `hub-offline`, `hub-on-offline` | `offline`, `offline-text` |
+| `hub-shell-start/mid/end`, `hub-on-shell`, `hub-on-shell-muted`, `hub-shell-hover` | `shell-start/mid/end`, `on-shell`, `on-shell-muted`, `shell-hover` |
+| `hub-card-start/end`, `hub-on-card`, `hub-card-border`, `hub-card-field`, `hub-card-field-border` | `card-start/end`, `on-card`, `card-border`, `card-field`, `card-field-border` |
+| `hub-danger-start/end` | `danger-start/end` |
+| `hub-row-action-start/end`, `hub-on-row-action` | `row-action-start/end`, `on-row-action` |
+| `hub-on-accent` | `on-accent` |
+
+**Utility gradientów** straciły przedrostek tak samo: `bg-shell`, `bg-bubble`,
+`bg-cta`, `bg-hero`, `bg-card`, `bg-danger-cta`, `bg-row-action`
+(`bg-gradient-start-page` bez zmian). Dokładne stare nazwy: diff commita
+`1e1856c`.
+
+### 16.4 Poprawki przy okazji
+
+| Co | Gdzie | Zmiana widoczna? |
+|---|---|---|
+| Prop `color` komponentu `Avatar` dostawał **nazwę klasy** `'bg-hub-panel'` (14.3) | `chat/page.tsx` ×3, `ChatSidebar.tsx` ×1 | **tak, teoretycznie** — `ChatUser.color` jest teraz opcjonalny i nieustawiany, więc awatar zastępczy w czacie bierze parę `primary`/`on-primary` z 7.3. Osiągalne tylko przez nieudany fetch obrazka (14.2, 6.10) |
+| `text-red-500` w komunikacie błędu | `Composer.tsx` | **tak — jedyna zamierzona różnica** — ostatni surowy kolor w `.tsx`, przypisany Krokowi 8 w 12.5; teraz `text-danger` |
+| `TODO` o RTL | `MessageBubble.tsx` | nie — przetagowany na `TODO(rtl #86)`, bo praca jest nadal otwarta (15.0) |
+| Nagłówek `globals.css` wymieniał stare przedrostki dosłownie | `globals.css` | nie — przeredagowany, żeby grep z 16.5 był pusty |
+
+### 16.5 Definicja ukończenia Kroku 8
+
+- [x] `grep -rnE 'hub-|brand-|TODO\(design-migration\)|PLAN-static-chat-page'`
+      po `frontend/app` (`.ts`, `.tsx`, `.css`) **zwraca pusty wynik**
+      (2026-10-19). Uwaga: wartość `'brand'` w `lib/theme.ts` to nazwa motywu
+      42Hub w `localStorage`, nie token — wzorzec `brand-` jej nie dotyczy
+- [x] Lint i build przechodzą
+- [x] **S.3 (14.6) spełnione** — `TextField` nazywa jedną rodzinę tokenów
+      (`elevated-*`, `card-*`, `field`, `accent-blue`, `timestamp`); żaden
+      komponent nie nazywa już dwóch
+- [ ] Sonda 13.6.1 przed (`b4585d6`) i po (`1e1856c`) **identyczna wiersz po
+      wierszu** we wszystkich trzech odmianach, poza dwiema różnicami z 16.4
+      → **do wykonania w przeglądarce**. Klasa przemianowana na nieistniejący
+      token nie psuje buildu — element po cichu traci kolor; tylko ta sonda to
+      wyłapie
 
 ### Materiał odniesienia
 

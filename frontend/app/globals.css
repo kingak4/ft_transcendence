@@ -11,10 +11,10 @@
 @custom-variant dark (&:where(.mocha, .mocha *));
 
 /*
- * One palette. Until Krok 8 there were two: the original `brand-*` colours and
- * the chat's parallel `hub-*` set, kept apart so the redesign could proceed one
+ * One palette. Until Krok 8 there were two: the original brand palette and the
+ * chat's parallel hub palette, kept apart so the redesign could proceed one
  * route at a time. Krok 8 retired the first and folded the second in - four
- * `hub-*` names that matched a semantic token in role AND in value under every
+ * hub names that matched a semantic token in role AND in value under every
  * flavour collapsed onto it, the rest lost their prefix. The mapping is in
  * MIGRATION-INVENTORY.md section 16.
  *
