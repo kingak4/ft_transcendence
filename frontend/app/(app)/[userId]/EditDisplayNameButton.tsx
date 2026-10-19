@@ -1,9 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 
 import { useAsyncAction } from '../../hooks/useAsyncAction';
+import {
+  displayNameSchema,
+  type DisplayNameValues,
+} from '../../lib/validation/profile';
 
 import { updateDisplayNameAction } from './actions';
 
@@ -14,11 +20,24 @@ interface Props {
 export default function EditDisplayNameButton({ displayName }: Props) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState('');
   const { isLoading, error, setError, run } = useAsyncAction();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(displayNameSchema),
+    mode: 'onTouched',
+    defaultValues: { displayName },
+  });
+
+  // The schema's message wins over the server's: if the field is invalid, no
+  // request was sent, so any server error on screen is stale.
+  const shownError = errors.displayName?.message ?? error;
 
   function handleEdit() {
-    setValue(displayName);
+    reset({ displayName });
     setError(null);
     setIsEditing(true);
   }
@@ -28,15 +47,10 @@ export default function EditDisplayNameButton({ displayName }: Props) {
     setError(null);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = value.trim();
-    if (!trimmed) {
-      setError('Display name cannot be empty.');
-      return;
-    }
+  // The value arrives already trimmed and validated by `displayNameSchema`.
+  async function saveDisplayName({ displayName: newName }: DisplayNameValues) {
     await run(
-      () => updateDisplayNameAction(trimmed),
+      () => updateDisplayNameAction(newName),
       () => {
         setIsEditing(false);
         router.refresh();
@@ -54,16 +68,23 @@ export default function EditDisplayNameButton({ displayName }: Props) {
       // with the fill instead of assuming it. Every alpha below is unchanged;
       // only what the alpha is taken off has moved.
       // The sizing matches the display name beside it: 26px at 800, not 30px at 700.
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <form
+        onSubmit={handleSubmit(saveDisplayName)}
+        className="flex flex-col gap-2"
+      >
         <input
           type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          maxLength={32}
+          {...register('displayName')}
+          aria-invalid={errors.displayName ? true : undefined}
+          aria-describedby={shownError ? 'display-name-error' : undefined}
           autoFocus
           className="bg-on-accent/10 text-on-accent placeholder:text-on-accent/40 focus:ring-on-accent w-full rounded-xl px-3 py-1 text-2xl font-extrabold outline-none focus:ring-1"
         />
-        {error && <p className="text-danger text-sm">{error}</p>}
+        {shownError && (
+          <p id="display-name-error" className="text-danger text-sm">
+            {shownError}
+          </p>
+        )}
         {/* Same geometry as the trigger they replace - 10x20px at 12px radius,
             14px/700 - so the row does not change shape when editing starts.
             Only the colour roles differ: Cancel keeps the trigger's translucent

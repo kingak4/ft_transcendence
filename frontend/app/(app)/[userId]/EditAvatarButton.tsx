@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Avatar from '../../components/Avatar';
 import Button from '../../components/Button';
+import { avatarFileSchema } from '../../lib/validation/profile';
 import { uploadAvatarAction } from './actions';
 import { AVATAR_RING_CLASSES } from './avatarRing';
 
@@ -39,6 +40,16 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    // An invalid pick also drops any earlier valid one, so Save cannot upload
+    // a file other than the one the error is about.
+    const result = avatarFileSchema.safeParse(file);
+    if (!result.success) {
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      setError(result.error.issues[0].message);
+      return;
+    }
+    setError(null);
     if (avatarPreviewRef.current) URL.revokeObjectURL(avatarPreviewRef.current);
     const url = URL.createObjectURL(file);
     avatarPreviewRef.current = url;
