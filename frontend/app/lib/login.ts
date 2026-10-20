@@ -1,7 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-// import { postData } from './post';
 import type { ActionResponse } from './action-response';
 import { client } from './api-clients';
 

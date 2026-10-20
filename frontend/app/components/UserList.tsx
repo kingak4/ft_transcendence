@@ -13,23 +13,9 @@ interface Props {
   users: UserListItem[];
   emptyMessage: string;
   renderAction: (user: UserListItem) => ReactNode;
-  /**
-   * Opt-in: when given, the avatar and name become a link to this URL. Only
-   * that block links, never the whole row - the row also holds the action
-   * controls, and an <a> may not contain other links or buttons.
-   */
   getHref?: (user: UserListItem) => string;
 }
 
-// The export's result row (isSearch, line 315) lifts itself with a shadow and
-// carries no border at all - we did the opposite, a 1px border and no shadow.
-// Swapping them is the substantive change here; the rest is the dictionary's
-// "wiersz listy" rows: 16px radius, 14x18px padding, 16px between children.
-//
-// The 44px avatar closes a 12.5 entry that has been assigned to this position
-// since the inventory was written. `size` is a number passed by the caller, so
-// it could only ever be fixed at a call site - and this is the call site both
-// friends and search results go through.
 export default function UserList({
   users,
   emptyMessage,
@@ -49,12 +35,6 @@ export default function UserList({
           ? `/api/users/avatar/${user.avatarId}`
           : null;
 
-        // group-hover only fires under the Link's `group`, so the unlinked
-        // rows (search results) keep a name that never underlines.
-        //
-        // Inside the link the image is decorative: an empty alt keeps the
-        // link's accessible name to just the display name, rather than
-        // "Ana's avatar Ana".
         const identity = (
           <>
             <Avatar

@@ -3,12 +3,6 @@ import LegalSection from '../../components/LegalSection';
 
 export default function PrivacyPolicy() {
   return (
-    // Same card as terms-of-service, and the same reasons - see the comment
-    // there. The two pages are one decision applied twice, not two decisions.
-    //
-    // One difference worth noticing rather than fixing: this page has no
-    // "Last updated" line, while terms-of-service does and the export gives one
-    // to both. That is missing content, not missing styling (12.5).
     <div className="bg-elevated-surface text-on-elevated-surface-body mx-auto flex max-w-[720px] flex-col gap-1.5 rounded-3xl p-6 text-base font-medium leading-relaxed shadow-[0_8px_24px_var(--color-shadow-card)] lg:px-14 lg:py-12">
       <h1 className="text-on-elevated-surface text-2xl font-extrabold tracking-tight lg:text-3xl">
         Privacy Policy

@@ -11,21 +11,6 @@ interface Props {
   onRemoved: () => void;
 }
 
-// This wears the export's row-button treatment (isSearch, line 318): 9x18px,
-// 10px radius, 13.5px at 700, a pale #eaf6fb -> #e9f9f0 gradient and #146b7a
-// text. In the export that styling belongs to its "Open chat" action; here it
-// marks the secondary one, with the accent going to OpenChatLink beside it.
-//
-// Step 5 unit 5.5 made the gradient `bg-row-action` and moved the label off
-// the teal accent onto `on-row-action`. The second half is the less obvious
-// one: `accent-teal` is a FILL hue - it is one stop of the message bubble - and this
-// label sits on top of a fill built from the same family. Sharing one token
-// meant that under Mocha the pale gradient stayed pale while the text followed
-// the flavour, so the two halves of one button themed at different rates. A
-// label on a fill needs its own role. Its default value is the same #146b7a.
-//
-// The export's hover is a flat #d2e9f6, which a gradient cannot transition to;
-// `brightness-95` moves in the same direction. Recorded in 12.5.
 export default function RemoveFriendButton({ friendId, onRemoved }: Props) {
   const router = useRouter();
   const { isLoading, error, run } = useAsyncAction();

@@ -63,7 +63,6 @@ export default function ChatInterface({
       try {
         let currentChatId = initialChatId;
 
-        // If we don't know the chat ID yet, create it.
         if (!currentChatId) {
           if (creationPromiseRef.current?.friendId !== userId) {
             const promise = client.POST('/chats/{recipientId}', {
@@ -105,7 +104,7 @@ export default function ChatInterface({
               messageId: msg.messageId || '',
               senderId: msg.senderId || '',
               content: msg.content || '',
-              time: msg.createdAt || '', // Optional format later
+              time: msg.createdAt || '',
             }))
             .reverse();
           setMessages(historyMessages);
@@ -130,7 +129,6 @@ export default function ChatInterface({
         );
       }
 
-      // Basic deduplication
       if (prev.find((m) => m.messageId === newMessage.messageId)) return prev;
       return [
         ...prev,
@@ -168,7 +166,6 @@ export default function ChatInterface({
 
   return (
     <>
-      {/* Messages List */}
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
         {messages.map((message) => (
           <MessageBubble
@@ -182,7 +179,6 @@ export default function ChatInterface({
                   return;
                 }
                 setErrorMsg(null);
-                // Optimistic UI update
                 setMessages((prev) =>
                   prev.map((m) =>
                     m.messageId === message.messageId
@@ -197,7 +193,6 @@ export default function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Composer */}
       <Composer
         ref={inputRef}
         inputValue={inputValue}

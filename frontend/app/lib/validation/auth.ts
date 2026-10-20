@@ -6,25 +6,12 @@ import { NO_WHITESPACE_PATTERN, PASSWORD_MAX, PASSWORD_MIN } from './rules';
 
 type Schemas = components['schemas'];
 
-// Messages are the backend's own (RegisterUseCase.java:15-17), so a user sees
-// the same words whichever side catches the mistake.
-//
-// `.pipe` runs the email format check only once the first two pass, so an
-// empty field says "blank" rather than "not valid". z.email() is stricter than
-// Hibernate's @Email, which accepts `user@localhost` - the safe direction, as
-// the browser never sends what the server would refuse.
 const emailField = z
   .string()
   .min(1, 'Email cannot be blank')
   .regex(NO_WHITESPACE_PATTERN, 'Email cannot contain spaces')
   .pipe(z.email('Email should be valid'));
 
-// Login checks presence only. Applying the registration rules here would lock
-// out any account whose password predates them - and the same goes for the
-// email: Hibernate's @Email accepted addresses like `user@localhost` that
-// z.email() rejects, so a format check here would block existing accounts
-// before any request is sent. Registration creates data and may be stricter
-// than the server; login looks data up and must not be.
 export const loginSchema = z.object({
   email: z.string().min(1, 'Email cannot be blank'),
   password: z.string().min(1, 'Password cannot be blank'),
@@ -46,8 +33,6 @@ export const registerSchema = z
       )
       .regex(NO_WHITESPACE_PATTERN, 'Password cannot contain whitespace'),
     confirmPassword: z.string(),
-    // A boolean refined to true rather than z.literal(true), so the form can
-    // start unticked with a `false` default.
     agreedToTerms: z
       .boolean()
       .refine(Boolean, 'Please agree to the Terms & Privacy Policy.'),

@@ -25,11 +25,6 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
   return (
     <section className="bg-sunken-surface flex min-h-0 flex-1 flex-col">
       <header className="bg-elevated-surface border-elevated-border flex shrink-0 items-center gap-3 border-b px-5 py-4">
-        {/* Unit 2b. Below `lg:` this conversation is the whole screen, so the
-            list it came from needs a way back - `/chat` with no parameter is
-            exactly that state, which is why a plain link does the job and no
-            history handling is needed. Hidden from `lg:` up, where the list is
-            still on screen and going "back" to it would mean nothing. */}
         <Link
           href="/chat"
           aria-label="Back to conversations"
