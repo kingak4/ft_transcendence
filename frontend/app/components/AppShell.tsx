@@ -17,7 +17,11 @@ export default function AppShell({
         <div className="flex flex-1 min-h-0">
           <Sidebar userId={userId} />
           <div className="flex flex-1 flex-col min-h-0">
-            <main className="flex flex-1 flex-col min-h-0 overflow-y-auto px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12">
+            <main
+              id="main"
+              tabIndex={0}
+              className="flex flex-1 flex-col min-h-0 overflow-y-auto px-4 pb-6 pt-20 lg:px-14 lg:pb-12 lg:pt-12 focus-visible:-outline-offset-2"
+            >
               {children}
             </main>
             <Footer />

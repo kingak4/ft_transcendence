@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist_Mono, Manrope } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import SkipLink from './components/SkipLink';
 import { THEME_CLASSES, THEME_STORAGE_KEY } from './lib/theme';
 
 const themeInitScript = `
@@ -29,7 +30,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: '42Hub',
+  title: {
+    default: '42Hub',
+    template: '%s · 42Hub',
+  },
   description: 'Every skill has a story — start yours.',
 };
 
@@ -50,6 +54,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="flex h-full flex-col">
+        <SkipLink />
         {children}
       </body>
     </html>

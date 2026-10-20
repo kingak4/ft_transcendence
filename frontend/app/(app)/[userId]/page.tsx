@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import { cache } from 'react';
 
 import Avatar from '../../components/Avatar';
 import { client } from '../../lib/api-clients';
@@ -10,6 +12,27 @@ import EditDisplayNameButton from './EditDisplayNameButton';
 
 interface Props {
   params: Promise<{ userId: string }>;
+}
+
+// cache(): generateMetadata and the page share one request per render.
+const loadUserDetails = cache((userId: string) =>
+  client.GET('/users/{userId}/details', {
+    params: { path: { userId } },
+  }),
+);
+
+function profileTitle(isOwnProfile: boolean, displayName: string) {
+  return isOwnProfile ? 'My Profile' : `${displayName}'s profile`;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { userId } = await params;
+  const cookieStore = await cookies();
+  const isOwnProfile = cookieStore.get('user_id')?.value === userId;
+  const { data } = await loadUserDetails(userId);
+  return {
+    title: profileTitle(isOwnProfile, data?.displayName ?? 'Unknown User'),
+  };
 }
 
 async function loadFriendsCount(): Promise<number | null> {
@@ -37,9 +60,7 @@ export default async function UserProfilePage({ params }: Props) {
   const signedInUserId = cookieStore.get('user_id')?.value ?? null;
   const isOwnProfile = signedInUserId !== null && signedInUserId === userId;
 
-  const { data, response } = await client.GET('/users/{userId}/details', {
-    params: { path: { userId } },
-  });
+  const { data, response } = await loadUserDetails(userId);
 
   if (response.status === 401 || response.status === 403) {
     redirect('/auth/logout');
@@ -57,7 +78,7 @@ export default async function UserProfilePage({ params }: Props) {
   return (
     <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
-        {isOwnProfile ? 'My Profile' : `${displayName}'s profile`}
+        {profileTitle(isOwnProfile, displayName)}
       </h1>
 
       <div className="bg-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_var(--color-shadow-hero)] lg:p-9">

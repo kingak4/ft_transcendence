@@ -15,7 +15,7 @@ const SIZE_CLASSES: Record<TextFieldSize, string> = {
   md: 'px-4 py-3',
 };
 
-const BASE_CLASSES = 'w-full text-sm outline-none focus:ring-1';
+const BASE_CLASSES = 'w-full text-sm focus:ring-1';
 
 type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   tone?: TextFieldTone;

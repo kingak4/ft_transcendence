@@ -26,10 +26,10 @@ export default function ThemeToggle() {
             type="button"
             onClick={() => setTheme(option)}
             aria-pressed={isActive}
-            className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition-opacity ${
+            className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors ${
               isActive
                 ? 'bg-cta text-on-primary'
-                : 'opacity-60 hover:opacity-100'
+                : 'text-muted hover:text-on-surface'
             }`}
           >
             {THEME_LABEL[option]}

@@ -1,5 +1,11 @@
+import type { Metadata } from 'next';
+
 import ContactBlock from '../../components/ContactBlock';
 import LegalSection from '../../components/LegalSection';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+};
 
 export default function TermsOfService() {
   return (
@@ -8,7 +14,7 @@ export default function TermsOfService() {
         Terms of Service
       </h1>
 
-      <p className="text-on-elevated-surface/60 mb-5 text-sm font-semibold">
+      <p className="text-muted mb-5 text-sm font-semibold">
         Last updated: May 2026
       </p>
 

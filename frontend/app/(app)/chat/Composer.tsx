@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useId, useState } from 'react';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import TextField from '../../components/TextField';
@@ -27,6 +27,7 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
 ) {
   const [validationError, setValidationError] = useState<string | null>(null);
   const shownError = validationError ?? errorMsg;
+  const errorId = useId();
 
   function handleSubmit(e: React.FormEvent) {
     const result = chatMessageSchema.safeParse(inputValue);
@@ -42,7 +43,7 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
   return (
     <div className="bg-elevated-surface border-elevated-border flex shrink-0 flex-col border-t p-4">
       {shownError && (
-        <div className="text-danger mb-2 text-sm">
+        <div id={errorId} role="alert" className="text-danger mb-2 text-sm">
           {shownError}
         </div>
       )}
@@ -55,6 +56,8 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
         tone="chat"
         placeholder={CHAT_DICT.composer.placeholder}
         aria-label={CHAT_DICT.composer.ariaLabel}
+        aria-invalid={!!validationError}
+        aria-describedby={shownError ? errorId : undefined}
         className="flex-1"
         value={inputValue}
         onChange={(e) => {

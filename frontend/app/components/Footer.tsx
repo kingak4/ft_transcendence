@@ -24,7 +24,7 @@ export default function Footer() {
               href={link.href}
               target="_blank"
               rel="noreferrer"
-              className="font-semibold opacity-60 transition-opacity hover:opacity-100"
+              className="font-semibold text-muted transition-colors hover:text-on-surface"
             >
               {link.label}
             </a>
@@ -32,7 +32,7 @@ export default function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="font-semibold opacity-60 transition-opacity hover:opacity-100"
+              className="font-semibold text-muted transition-colors hover:text-on-surface"
             >
               {link.label}
             </Link>
