@@ -1,3 +1,5 @@
+import Icon from '../../components/Icon';
+import MessageStatus from './MessageStatus';
 import type { ChatMessage } from './types';
 
 interface Props {
@@ -5,8 +7,9 @@ interface Props {
   isMine: boolean;
   onDelete?: () => void;
   /*
-   * TODO(stomp): Real messages need delivery state (sending / sent / failed).
-   * This requires the backend to accept and echo a `clientMessageId` (correlation ID)
+   * TODO(stomp): Only 'sent' is shown today - every message of mine that renders
+   * was echoed back by the server. MessageStatus already draws 'sending' / 'failed',
+   * but they need the backend to accept and echo a `clientMessageId` (correlation ID)
    * so the frontend can reconcile optimistic messages reliably.
    */
 }
@@ -71,30 +74,18 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
             aria-label="Delete message"
             className="text-muted hover:text-danger p-1 opacity-0 transition-opacity group-hover:opacity-100"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-            </svg>
+            <Icon name="trash" size="sm" />
           </button>
         )}
       </div>
-      <time
-        dateTime={message.time}
-        className={`text-timestamp mt-1 text-[11px] font-semibold ${isMine ? 'text-end' : 'text-start'}`}
+      <div
+        className={`text-timestamp mt-1 flex items-center gap-1 ${isMine ? 'justify-end' : 'justify-start'}`}
       >
-        {formatTime(message.time)}
-      </time>
+        <time dateTime={message.time} className="text-[11px] font-semibold">
+          {formatTime(message.time)}
+        </time>
+        {isMine && !message.isDeleted && <MessageStatus status="sent" />}
+      </div>
     </div>
   );
 }

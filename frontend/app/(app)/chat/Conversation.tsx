@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import Avatar from '../../components/Avatar';
+import Icon from '../../components/Icon';
 import ChatInterface from './ChatInterface';
 import type { ChatUser } from './types';
 import { usePresence } from '../../hooks/usePresence';
@@ -30,16 +31,7 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
           aria-label="Back to conversations"
           className="text-muted hover:bg-row-active hover:text-on-elevated-surface -ml-2 rounded-lg p-2 transition-colors lg:hidden"
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-            <path
-              d="M12.5 4 6.5 10l6 6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon name="chevron-left" size="md" />
         </Link>
         <Avatar
           src={avatarSrc}

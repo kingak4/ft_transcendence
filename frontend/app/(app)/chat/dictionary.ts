@@ -24,4 +24,9 @@ export const CHAT_DICT = {
     ariaLabel: 'Message',
     send: 'Send',
   },
+  status: {
+    sending: 'Sending',
+    sent: 'Sent',
+    failed: 'Failed to send',
+  },
 };
