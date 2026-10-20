@@ -32,7 +32,10 @@ export type ChatUser = {
   id: string;
   name: string;
   initial: string;
-  color: string;
+  // Optional since Krok 8. Every loader used to fill it with a Tailwind class
+  // name, which Avatar's inline `backgroundColor` silently ignored (14.3).
+  // Leaving it unset lets Avatar fall back to its own primary/on-primary pair.
+  color?: string;
   avatarId?: string | null;
   online: boolean;
   status: string;

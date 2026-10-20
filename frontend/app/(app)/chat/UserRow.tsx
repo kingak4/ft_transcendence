@@ -28,7 +28,7 @@ export default function UserRow({ user, isActive, onClick }: Props) {
       // `page` is the right token here: this link points at the current view.
       aria-current={isActive ? 'page' : undefined}
       className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${
-        isActive ? 'bg-hub-row-active' : 'hover:bg-hub-row-active/60'
+        isActive ? 'bg-row-active' : 'hover:bg-row-active/60'
       }`}
     >
       <PresenceAvatar
@@ -41,7 +41,7 @@ export default function UserRow({ user, isActive, onClick }: Props) {
       />
       {/* min-w-0 is required for `truncate`: a flex item defaults to
           min-width:auto and will not shrink below its text otherwise. */}
-      <span className="text-hub-on-surface min-w-0 flex-1 truncate text-sm font-semibold">
+      <span className="text-on-elevated-surface min-w-0 flex-1 truncate text-sm font-semibold">
         {user.name}
       </span>
     </Link>

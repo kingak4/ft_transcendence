@@ -1,20 +1,28 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import AccentLink from '../../components/AccentLink';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import TextField from '../../components/TextField';
+import FormField from '../../components/FormField';
 import { login } from '../../lib/login';
+import { loginSchema, type LoginValues } from '../../lib/validation/auth';
 
 export default function LoginPage() {
-  const [loginValue, setLogin] = useState('');
-  const [passwordValue, setPassword] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    mode: 'onTouched',
+    defaultValues: { email: '', password: '' },
+  });
 
-  async function handleLogin(e: FormEvent) {
-    e.preventDefault();
-    const response = await login(loginValue, passwordValue);
+  async function handleLogin({ email, password }: LoginValues) {
+    const response = await login(email, password);
     if (!response.success) {
       if (response.status === 500) {
         alert('Server error. Please try again later.');
@@ -23,7 +31,10 @@ export default function LoginPage() {
       }
       return;
     }
-    window.location.href = `/${response.message}`;
+    // `assign`, not an `href` write: this handler now goes through
+    // `handleSubmit`, which is called during render, so the compiler cannot
+    // prove it is event-only and rejects writes to globals in it.
+    window.location.assign(`/${response.message}`);
   }
 
   return (
@@ -39,22 +50,22 @@ export default function LoginPage() {
             `text-white/60` would be white on white. */}
         <p className="mb-6 text-sm font-medium opacity-60">Welcome back!</p>
 
-        <form onSubmit={handleLogin}>
-          <TextField
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <FormField
             id="user-name"
             type="text"
-            value={loginValue}
-            onChange={(e) => setLogin(e.target.value)}
+            {...register('email')}
+            error={errors.email?.message}
             placeholder="Email"
             tone="card"
             className="mb-3"
           />
 
-          <TextField
+          <FormField
             id="user-password"
             type="password"
-            value={passwordValue}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register('password')}
+            error={errors.password?.message}
             placeholder="Password"
             tone="card"
             className="mb-2"
@@ -77,9 +88,9 @@ export default function LoginPage() {
             whole subtree and would fade the accent to half. Same reason the
             terms checkbox in register/page.tsx keeps its named colours (12.5).
             Step 5 kept the technique and only changed what is named: the alpha
-            is now taken off `hub-on-card`, since `white` was an assumption
+            is now taken off `on-card`, since `white` was an assumption
             about the card rather than a fact about it. */}
-        <p className="text-hub-on-card/50 mt-4 text-center text-xs">
+        <p className="text-on-card/50 mt-4 text-center text-xs">
           Don&apos;t have an account?{' '}
           <AccentLink href="/register">Register</AccentLink>
         </p>

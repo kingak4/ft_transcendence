@@ -7,7 +7,7 @@ type ButtonVariant = 'primary' | 'outline' | 'neutral';
 // TextField: the export gives each treatment its own radius.
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   // The export's CTA is a mint-to-lime gradient, which a single --theme-primary
-  // cannot express - hence the bg-hub-cta utility rather than bg-primary.
+  // cannot express - hence the bg-cta utility rather than bg-primary.
   // `text-on-primary` is already the colour the export puts on it.
   //
   // Krok 6 unit 6.4 folded `send` into this variant. The export does draw two
@@ -19,12 +19,12 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   // Logged in 14.5 as an intended difference rather than a failed probe, and it
   // is why this unit ships on its own commit.
   //
-  // `bg-hub-bubble` survives, still drawing the outgoing message bubble it was
+  // `bg-bubble` survives, still drawing the outgoing message bubble it was
   // named for. Only the button that used it is gone.
   //
   // `brightness` is a filter, so it lightens the rendered gradient; a hover:bg-*
   // utility would flatten it to one colour.
-  primary: 'rounded-xl bg-hub-cta text-on-primary hover:brightness-125',
+  primary: 'rounded-xl bg-cta text-on-primary hover:brightness-125',
   // No export reference: the design has no outline button on any route that
   // renders this component. Colours are therefore left as they were and only
   // the radius follows the component. See MIGRATION-INVENTORY.md 12.4.
@@ -53,8 +53,14 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 // 15 falls exactly between `text-sm` and `text-base`, so 12.0's tie-break sends
 // it to 16px, and a jump from 14 to 16 on every button in the app is a design
 // call rather than the mechanical unfreezing this is. Left open in 14.2.
+//
+// `transition`, not `transition-colors` (Krok 7 unit 7.7). `primary` hovers by
+// `brightness`, which is a `filter`, and `transition-colors` lists colour
+// properties only - so the hover snapped instead of easing. The plain utility
+// covers colours and `filter` both, which is what a base shared by a
+// colour-hovering variant (`outline`) and a filter-hovering one needs.
 const BASE_CLASSES =
-  'inline-block py-3.5 text-center text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-block py-3.5 text-center text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-50';
 
 function buttonClasses(
   variant: ButtonVariant,

@@ -62,6 +62,7 @@ export default function FriendsPanel({
       <UserList
         users={friendCards}
         emptyMessage="No friends yet."
+        getHref={(user) => `/${user.id}`}
         renderAction={(user) => (
           <div className="flex items-center gap-3">
             <OpenChatLink friendId={user.id} />

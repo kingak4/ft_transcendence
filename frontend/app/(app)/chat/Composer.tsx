@@ -1,6 +1,7 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
+import { chatMessageSchema } from '../../lib/validation/chat';
 import { CHAT_DICT } from './dictionary';
 
 interface Props {
@@ -23,15 +24,33 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
   },
   ref,
 ) {
+  // The parent owns the value, so validation stays a local check in front of
+  // `handleSend` rather than a form library taking the value over. The
+  // schema's message wins over the parent's: if the input is invalid, no send
+  // happened, so any parent error on screen is stale.
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const shownError = validationError ?? errorMsg;
+
+  function handleSubmit(e: React.FormEvent) {
+    const result = chatMessageSchema.safeParse(inputValue);
+    if (!result.success) {
+      e.preventDefault();
+      setValidationError(result.error.issues[0].message);
+      return;
+    }
+    setValidationError(null);
+    handleSend(e);
+  }
+
   return (
-    <div className="bg-hub-panel border-hub-border flex shrink-0 flex-col border-t p-4">
-      {errorMsg && (
-        <div className="mb-2 text-sm text-red-500">
-          {errorMsg}
+    <div className="bg-elevated-surface border-elevated-border flex shrink-0 flex-col border-t p-4">
+      {shownError && (
+        <div className="text-danger mb-2 text-sm">
+          {shownError}
         </div>
       )}
-      <form 
-        onSubmit={handleSend}
+      <form
+        onSubmit={handleSubmit}
         className="flex items-center gap-3"
       >
       <TextField
@@ -41,12 +60,13 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
         aria-label={CHAT_DICT.composer.ariaLabel}
         className="flex-1"
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={(e) => {
+          setInputValue(e.target.value);
+          setValidationError(null);
+        }}
         disabled={!!isInputDisabled}
         suppressHydrationWarning
       />
-      {/* Krok 6 unit 6.4: `send` was merged into `primary`, which is the
-          default, so the variant prop goes rather than changing value. */}
       <Button disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
         {CHAT_DICT.composer.send}
       </Button>

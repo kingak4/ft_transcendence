@@ -17,13 +17,15 @@ export default function LegalSection({
   // border plus symmetric padding does the same job with a visible boundary.
   //
   // The heading takes its dictionary row (12.0, "nagłówek sekcji w treści"):
-  // 18px at 800, down from 24px at 600. Its colour does NOT follow the export.
-  // #155e8f is not any token we have - not hub-blue (#2f9bcf), not hub-teal
-  // (#146b7a) - and Step 4 may not add one (§8.7 reguła 2), so the heading
-  // inherits the card's on-elevated-surface instead. Recorded in 12.4.
+  // 18px at 800, down from 24px at 600. Its colour is the export's #155e8f
+  // (neither the blue nor the teal accent - a third hue),
+  // which Step 4 could not reproduce - no token had it and §8.7 reguła 2
+  // forbade adding one (12.4). Krok 7 unit 7.6 added the role.
   return (
     <section className="border-elevated-border py-5.5 flex flex-col gap-2.5 border-t">
-      <h2 className="text-lg font-extrabold">{title}</h2>
+      <h2 className="text-on-elevated-surface-accent text-lg font-extrabold">
+        {title}
+      </h2>
       {children}
     </section>
   );

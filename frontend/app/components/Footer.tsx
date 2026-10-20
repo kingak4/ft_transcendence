@@ -34,11 +34,11 @@ const FOOTER_LINKS = [
 // light one, close to its #e3ebe6. The alternative was a variant prop, which is
 // an API change (§8.7 reguła 3) and Step 6's business.
 //
-// Not `hub-time` either, even though --theme-hub-time is #9aa5a0, the export's
+// Not `timestamp` either, even though its 42Hub value is #9aa5a0, the export's
 // exact value. The original reason - a fixed light-mode grey with no
 // .mocha/.latte override, which would ignore ThemeToggle and fail §8.9 pkt 5 -
 // expired at Krok 5, which gave it one. The conclusion survives on the other
-// half of the argument: `hub-time` is the chat's TIMESTAMP role, and this footer
+// half of the argument: `timestamp` is the chat's TIMESTAMP role, and this footer
 // renders on `(marketing)`, `(auth)` and every `(app)` route. Borrowing a role
 // from one surface to paint another is how a token layer stops meaning
 // anything, whether or not the value happens to fit.
@@ -52,7 +52,7 @@ const FOOTER_LINKS = [
 export default function Footer() {
   return (
     <footer className="border-current/10 mt-auto flex flex-wrap items-center justify-between gap-4 border-t px-4 py-4 text-xs lg:px-14">
-      <nav className="flex flex-wrap gap-5">
+      <nav className="flex flex-wrap gap-5" aria-label="Footer">
         {FOOTER_LINKS.map((link) =>
           link.external ? (
             <a

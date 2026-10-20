@@ -5,11 +5,11 @@ type TextFieldSize = 'sm' | 'md';
 
 // Which surface the field sits on. Mirrors the design tokens rather than
 // inventing a parallel naming scheme, so the set of tones can only grow when
-// the token set does. `chat` became expressible once the hub-* tokens landed.
+// the token set does. `chat` became expressible once the chat's tokens landed.
 //
 // Krok 6 resolved the two questions this block used to defer.
 //
-// 6.1 - the TODO here predicted that once hub-* became *the* palette, `surface`
+// 6.1 - the TODO here predicted that once the chat palette became *the* one, `surface`
 // and `chat` would describe the same thing and could collapse. Krok 5 made the
 // palette single and they did NOT converge, because they were never one
 // appearance described twice: `surface` sits ON the page and lifts to
@@ -20,12 +20,12 @@ type TextFieldSize = 'sm' | 'md';
 //
 // 6.3 - the third tone WAS misnamed, though. It was `elevated`, taken from
 // --theme-elevated-surface, which is white - while the tone it named is the
-// dark auth card. Krok 5 pointed it at the hub-card-* tokens and made the
+// dark auth card. Krok 5 pointed it at the card-* tokens and made the
 // contradiction worse, so this is the rename: it is `card`, after the surface
 // it actually sits on. Appearance is untouched.
 //
 // The focus ring lives here rather than in BASE_CLASSES because it varies by
-// tone: `focus:ring-primary` and `focus:ring-hub-blue` carry equal specificity,
+// tone: `focus:ring-primary` and `focus:ring-accent-blue` carry equal specificity,
 // so a tone could not have overridden a base ring reliably - the cascade would
 // have resolved it by stylesheet order. Both pre-existing tones keep the ring
 // they always had, so their rendered class set is unchanged.
@@ -37,9 +37,14 @@ type TextFieldSize = 'sm' | 'md';
 // out of scope for this step. One shared base radius could not satisfy both.
 // Padding is still shared via SIZE_CLASSES and so is still frozen by /chat;
 // see MIGRATION-INVENTORY.md 12.5.
+//
+// `surface` takes `elevated-edge`, not `elevated-border` (Krok 7 unit 7.1): it
+// is a white field on a near-white page, so its border is the only thing that
+// shows where the control is - a boundary WCAG 1.4.11 holds to 3:1, which the
+// divider role (~1.1:1) never met.
 const TONE_CLASSES: Record<TextFieldTone, string> = {
   surface:
-    'rounded-[14px] border border-elevated-border text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_rgba(10,42,77,0.06)] focus:ring-primary',
+    'rounded-[14px] border border-elevated-edge text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_var(--color-shadow-subtle)] focus:ring-primary',
   // Position 22 gave this tone the export's `inputStyle`: white text on
   // `white/8`, a `white/15` hairline, 14.5px at 500. It had to change in the
   // same commit as `Card` - it sits only on the auth card, and the dark text it
@@ -57,9 +62,9 @@ const TONE_CLASSES: Record<TextFieldTone, string> = {
   // against a role instead of against a colour. Krok 6 unit 6.3 then renamed it
   // from `elevated` to `card`: it took its name from --theme-elevated-surface,
   // which is white, while describing the dark auth card, and pointing it at the
-  // hub-card-* tokens made that mismatch worse rather than better.
-  card: 'rounded-xl border border-hub-card-field-border text-hub-on-card placeholder:text-hub-on-card/40 bg-hub-card-field font-medium focus:ring-primary',
-  chat: 'rounded-lg text-hub-on-surface placeholder:text-hub-time bg-hub-field focus:ring-hub-blue',
+  // card-* tokens made that mismatch worse rather than better.
+  card: 'rounded-xl border border-card-field-border text-on-card placeholder:text-on-card/40 bg-card-field font-medium focus:ring-primary',
+  chat: 'rounded-lg text-on-elevated-surface placeholder:text-timestamp bg-field focus:ring-accent-blue',
 };
 
 // 6.2 - the export draws FOUR field appearances against these three tones: its

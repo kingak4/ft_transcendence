@@ -8,7 +8,7 @@
 // became `on-start-page`. They were only ever shorthand for "the landing is
 // dark", which stopped being true under Latte.
 //
-// The accents still follow `primary` rather than `hub-lime`, and that reasoning
+// The accents still follow `primary` rather than `accent-lime`, and that reasoning
 // survives unchanged: `Tag` renders inside this column and took `bg-primary` at
 // position 6, so if the two disagreed the pills and the highlighted words would
 // drift apart. What HAS changed is that they no longer drift apart from the
@@ -18,9 +18,10 @@
 // and `opacity` would compound down onto that accent while colour alpha leaves
 // it alone. Same rule as login/page.tsx.
 //
-// This file held the last four `brand-*` references in the component layer, so
-// clearing them completes criterion 5 of §8.13 and unblocks Step 8's retirement
-// of that palette. `Tag` cleared the other half at position 6.
+// This file held the last four references to the original palette in the
+// component layer, so clearing them completed criterion 5 of §8.13 and
+// unblocked Step 8's retirement of it. `Tag` cleared the other half at
+// position 6.
 //
 // Typography now follows the dictionary's hero rows (12.0): headline 48px at
 // 800 with -1px tracking, dropping to 30px narrow because 48px at 360 breaks

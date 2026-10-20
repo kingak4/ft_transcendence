@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Avatar from '../../components/Avatar';
 import Button from '../../components/Button';
+import { avatarFileSchema } from '../../lib/validation/profile';
 import { uploadAvatarAction } from './actions';
 import { AVATAR_RING_CLASSES } from './avatarRing';
 
@@ -39,6 +40,16 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    // An invalid pick also drops any earlier valid one, so Save cannot upload
+    // a file other than the one the error is about.
+    const result = avatarFileSchema.safeParse(file);
+    if (!result.success) {
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      setError(result.error.issues[0].message);
+      return;
+    }
+    setError(null);
     if (avatarPreviewRef.current) URL.revokeObjectURL(avatarPreviewRef.current);
     const url = URL.createObjectURL(file);
     avatarPreviewRef.current = url;
@@ -105,7 +116,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
             from the small-label and subtle-shadow rows of 12.0. */}
         <button
           onClick={handleOpen}
-          className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_rgba(10,42,77,0.06)] transition-colors hover:brightness-90"
+          className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_var(--color-shadow-subtle)] transition hover:brightness-90"
         >
           Edit
         </button>
@@ -182,7 +193,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                   Nothing changes visually: `Button` carries the same 12px
                   radius, the same 14px vertical padding (unfrozen by 6.4, which
                   moved BASE_CLASSES from py-3 to py-3.5) and the same 14px/700,
-                  and its `primary` is the same `bg-hub-cta` Save drew by hand.
+                  and its `primary` is the same `bg-cta` Save drew by hand.
                   `flex-1` goes through `className`, which is the layout escape
                   hatch and precisely what it is for. */}
               <div className="flex gap-3">

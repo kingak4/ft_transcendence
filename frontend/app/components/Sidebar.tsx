@@ -14,33 +14,26 @@ const NAV_BASE_CLASSES =
   'rounded-xl px-3.5 py-3.25 text-sm font-bold transition-colors';
 
 /**
- * TODO(design-migration): this rail already renders in the new design on every
- * (app) page, so /[userId], /terms-of-service, /privacy-policy and /stomp show
- * a dark sidebar beside old-palette content. That drift is deliberate and
- * temporary (PLAN-static-chat-page.md section 2.7) - closing it means
- * restyling those pages, not reverting this.
+ * The three on-rail tokens were confirmed against the export at Step 4
+ * (MIGRATION-INVENTORY.md 12.4, 2026-08-09): on-shell is #ffffff exactly;
+ * on-shell-muted stays at 0.7 where the export says 0.75, because 0.05 of alpha
+ * is below the threshold of visibility and churning the token layer costs more
+ * than it buys; shell-hover has no counterpart at all, since the export is
+ * static and draws no hover state.
  *
- * The three on-rail tokens are no longer placeholders. Step 4 confirmed all
- * three against the export (MIGRATION-INVENTORY.md 12.4, 2026-08-09):
- * hub-on-shell is #ffffff exactly; hub-on-shell-muted stays at 0.7 where the
- * export says 0.75, because 0.05 of alpha is below the threshold of visibility
- * and churning the token layer costs more than it buys; hub-shell-hover has no
- * counterpart at all, since the export is static and draws no hover state.
- *
- * Step 5 closed the last open item here: the three on-rail tokens now carry
- * .mocha/.latte overrides, so the rail follows ThemeToggle instead of staying
- * a fixed dark column. Under Latte it becomes a light column, which is why the
- * two `text-white` literals below had to become `text-hub-on-shell` in the same
- * unit - they were correct only while "the rail is dark" was guaranteed, and it
- * no longer is. See MIGRATION-INVENTORY.md 13.4.
+ * Step 5 gave them .mocha/.latte overrides, so the rail follows ThemeToggle
+ * instead of staying a fixed dark column. Under Latte it becomes a light
+ * column, which is why the two `text-white` literals below had to become
+ * `text-on-shell` in the same unit - they were correct only while "the rail is
+ * dark" was guaranteed, and it no longer is. See MIGRATION-INVENTORY.md 13.4.
  *
  * `navLinkClasses` is extracted because both the profile link and the nav items
  * need the identical pair, mirroring `buttonClasses()` in Button.tsx.
  */
 function navLinkClasses(isActive: boolean) {
   const state = isActive
-    ? 'bg-hub-cta text-hub-ink'
-    : 'text-hub-on-shell-muted hover:bg-hub-shell-hover hover:text-hub-on-shell';
+    ? 'bg-cta text-on-primary'
+    : 'text-on-shell-muted hover:bg-shell-hover hover:text-on-shell';
   return `${NAV_BASE_CLASSES} ${state}`;
 }
 
@@ -120,7 +113,7 @@ export default function Sidebar({ userId }: Props) {
         aria-label="Open navigation"
         aria-expanded={isOpen}
         aria-controls="app-nav"
-        className={`bg-hub-shell text-hub-on-shell fixed left-4 top-4 z-50 rounded-xl p-2.5 lg:hidden ${isOpen ? 'hidden' : ''}`}
+        className={`bg-shell text-on-shell fixed left-4 top-4 z-50 rounded-xl p-2.5 lg:hidden ${isOpen ? 'hidden' : ''}`}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
           <path
@@ -165,16 +158,16 @@ export default function Sidebar({ userId }: Props) {
           media-query form) would have needed matchMedia to say the same thing. */}
       <aside
         id="app-nav"
-        className={`bg-hub-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:visible lg:static lg:translate-x-0 ${isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'}`}
+        className={`bg-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:visible lg:static lg:translate-x-0 ${isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'}`}
       >
-        <BrandLink className="text-hub-on-shell mb-5 px-2.5" />
+        <BrandLink className="text-on-shell mb-5 px-2.5" />
 
         {/* Three links left the rail on 2026-08-10: Terms of Service, Privacy
             Policy and the STOMP dev page. Nothing became unreachable - `Footer`
             renders on every route and carries both legal links - and the rail
             now holds three items, the same count the export's does.
-            /stomp keeps its route and loses only its link, which is what
-            decision (4) means by "not styled and not removed" in Step 4. */}
+            /stomp lost its link here and its route at Krok 7, as decision (4)
+            planned: "out of scope, to be deleted before final assessment". */}
 
         {/* `onClick={close}` on every link covers the one case deriving cannot:
           tapping the link for the route you are already on leaves `pathname`

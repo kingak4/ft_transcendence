@@ -3,17 +3,24 @@ import LegalSection from '../../components/LegalSection';
 
 export default function TermsOfService() {
   return (
-    // The nested <main> is gone: app/(app)/layout.tsx already provides one, and
-    // two main landmarks in a document is invalid. Page padding went with it -
-    // that belongs to the layout, and having both applied 40px of gutter per side
-    // at 360px instead of the dictionary's 16px.
+    // The nested <main> is gone: app/(legal)/layout.tsx already provides one
+    // (through AppShell or PublicShell), and two main landmarks in a document is
+    // invalid. Page padding went with it - that belongs to the layout, and having
+    // both applied 40px of gutter per side at 360px instead of the dictionary's
+    // 16px.
     //
     // What replaces it is the card the export actually draws (12.0): 720px wide,
     // white, 24px radius, 24px of padding narrow and 48/56px wide, on the page's
     // own surface. Children are spaced by a 6px flex gap, as in the export, which
     // is why h1 lost its mb-8 and the paragraphs below lose their mt-4.
-    <div className="bg-elevated-surface text-on-elevated-surface mx-auto flex max-w-[720px] flex-col gap-1.5 rounded-3xl p-6 text-base font-medium leading-relaxed shadow-[0_8px_24px_rgba(10,42,77,0.08)] lg:px-14 lg:py-12">
-      <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
+    //
+    // Krok 7 unit 7.6 restored the export's three text levels. The card now
+    // inherits BODY text (#3d4a44) to everything inside it - paragraphs, lists,
+    // ContactBlock - and the two exceptions name their own colour: this h1
+    // keeps the navy of on-elevated-surface, LegalSection's h2 takes the
+    // accent. "Last updated" already named its own and is untouched.
+    <div className="bg-elevated-surface text-on-elevated-surface-body mx-auto flex max-w-[720px] flex-col gap-1.5 rounded-3xl p-6 text-base font-medium leading-relaxed shadow-[0_8px_24px_var(--color-shadow-card)] lg:px-14 lg:py-12">
+      <h1 className="text-on-elevated-surface text-2xl font-extrabold tracking-tight lg:text-3xl">
         Terms of Service
       </h1>
 

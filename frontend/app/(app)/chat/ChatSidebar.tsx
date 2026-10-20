@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useId, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import TextField from '../../components/TextField';
 import UserRow from './UserRow';
@@ -28,6 +28,7 @@ export default function ChatSidebar({
   searchPlaceholder = CHAT_DICT.rail.searchPlaceholder,
   emptyStateText = CHAT_DICT.rail.noUsersFound
 }: Props) {
+  const titleId = useId();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const [searchInput, setSearchInput] = useState(initialQuery);
@@ -55,7 +56,6 @@ export default function ChatSidebar({
             id: u.id ?? '',
             name: u.displayName ?? 'Unknown User',
             initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
-            color: 'bg-hub-panel',
             avatarId: u.avatarId?.val ?? null,
             online: false,
             status: 'Offline',
@@ -95,7 +95,7 @@ export default function ChatSidebar({
   return (
     // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
     <aside
-      className={`bg-hub-panel border-hub-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
+      className={`bg-elevated-surface border-elevated-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
     >
       <div
         className="relative flex flex-col gap-3 p-4"
@@ -105,7 +105,7 @@ export default function ChatSidebar({
           }
         }}
       >
-        <h2 className="text-hub-on-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
+        <h2 id={titleId}className="text-on-elevated-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
         <TextField
           tone="chat"
           size="sm"
@@ -119,7 +119,7 @@ export default function ChatSidebar({
 
         {/* Search Results Dropdown */}
         {(debouncedQuery || isFocused) && (
-          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
+          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-elevated-border bg-elevated-surface shadow-lg">
             {searchResults.length > 0 ? (
               <div className="flex flex-col p-2 gap-1">
                 {searchResults.map((user) => (
@@ -132,7 +132,7 @@ export default function ChatSidebar({
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center text-sm text-hub-muted">{emptyStateText}</div>
+              <div className="p-4 text-center text-sm text-muted">{emptyStateText}</div>
             )}
           </div>
         )}
@@ -142,8 +142,11 @@ export default function ChatSidebar({
        * actually engage; without it the list would push the rail taller.
        * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
        * not every friend. Needs infinite scroll on this container to load subsequent pages.
+       * Labelled by the rail's own heading: the (app) shell already has a
+       * "Main" nav, and two unlabelled navigation landmarks are
+       * indistinguishable to a screen reader.
        */}
-      <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
+      <nav aria-labelledby={titleId}className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
         {sidebarUsers.map((user) => {
           return (
             <div key={user.id}>
