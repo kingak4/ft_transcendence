@@ -68,7 +68,7 @@ export default function RegisterPage() {
           <FormField
             id="user-password"
             type="password"
-            {...registerField('password')}
+            {...registerField('password', { deps: ['confirmPassword'] })}
             error={errors.password?.message}
             placeholder="Password"
             tone="card"

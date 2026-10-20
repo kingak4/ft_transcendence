@@ -20,9 +20,13 @@ const emailField = z
   .pipe(z.email('Email should be valid'));
 
 // Login checks presence only. Applying the registration rules here would lock
-// out any account whose password predates them.
+// out any account whose password predates them - and the same goes for the
+// email: Hibernate's @Email accepted addresses like `user@localhost` that
+// z.email() rejects, so a format check here would block existing accounts
+// before any request is sent. Registration creates data and may be stricter
+// than the server; login looks data up and must not be.
 export const loginSchema = z.object({
-  email: emailField,
+  email: z.string().min(1, 'Email cannot be blank'),
   password: z.string().min(1, 'Password cannot be blank'),
 });
 

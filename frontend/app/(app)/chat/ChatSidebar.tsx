@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useId, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import TextField from '../../components/TextField';
 import UserRow from './UserRow';
@@ -28,6 +28,7 @@ export default function ChatSidebar({
   searchPlaceholder = CHAT_DICT.rail.searchPlaceholder,
   emptyStateText = CHAT_DICT.rail.noUsersFound
 }: Props) {
+  const titleId = useId();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const [searchInput, setSearchInput] = useState(initialQuery);
@@ -104,7 +105,7 @@ export default function ChatSidebar({
           }
         }}
       >
-        <h2 id="chat-rail-title" className="text-on-elevated-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
+        <h2 id={titleId}className="text-on-elevated-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
         <TextField
           tone="chat"
           size="sm"
@@ -141,11 +142,11 @@ export default function ChatSidebar({
        * actually engage; without it the list would push the rail taller.
        * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
        * not every friend. Needs infinite scroll on this container to load subsequent pages.
-       * Labelled by the rail's own heading (Krok 7 unit 7.10): the (app) shell
-       * already has a "Main" nav, and two unlabelled navigation landmarks are
+       * Labelled by the rail's own heading: the (app) shell already has a
+       * "Main" nav, and two unlabelled navigation landmarks are
        * indistinguishable to a screen reader.
        */}
-      <nav aria-labelledby="chat-rail-title" className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
+      <nav aria-labelledby={titleId}className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
         {sidebarUsers.map((user) => {
           return (
             <div key={user.id}>

@@ -10,6 +10,7 @@ import {
   displayNameSchema,
   type DisplayNameValues,
 } from '../../lib/validation/profile';
+import { DISPLAY_NAME_MAX } from '../../lib/validation/rules';
 
 import { updateDisplayNameAction } from './actions';
 
@@ -75,6 +76,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
         <input
           type="text"
           {...register('displayName')}
+          maxLength={DISPLAY_NAME_MAX}
           aria-invalid={errors.displayName ? true : undefined}
           aria-describedby={shownError ? 'display-name-error' : undefined}
           autoFocus

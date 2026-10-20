@@ -26,9 +26,10 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
 ) {
   // The parent owns the value, so validation stays a local check in front of
   // `handleSend` rather than a form library taking the value over. The
-  // parent's error wins, since it describes a send that actually happened.
+  // schema's message wins over the parent's: if the input is invalid, no send
+  // happened, so any parent error on screen is stale.
   const [validationError, setValidationError] = useState<string | null>(null);
-  const shownError = errorMsg || validationError;
+  const shownError = validationError ?? errorMsg;
 
   function handleSubmit(e: React.FormEvent) {
     const result = chatMessageSchema.safeParse(inputValue);
@@ -66,8 +67,6 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
         disabled={!!isInputDisabled}
         suppressHydrationWarning
       />
-      {/* Krok 6 unit 6.4: `send` was merged into `primary`, which is the
-          default, so the variant prop goes rather than changing value. */}
       <Button disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
         {CHAT_DICT.composer.send}
       </Button>
