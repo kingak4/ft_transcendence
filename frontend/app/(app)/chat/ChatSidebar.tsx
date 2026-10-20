@@ -93,7 +93,6 @@ export default function ChatSidebar({
   }, [searchInput]);
 
   return (
-    // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
     <aside
       className={`bg-elevated-surface border-elevated-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
     >
@@ -117,7 +116,6 @@ export default function ChatSidebar({
           onFocus={() => setIsFocused(true)}
         />
 
-        {/* Search Results Dropdown */}
         {(debouncedQuery || isFocused) && (
           <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-elevated-border bg-elevated-surface shadow-lg">
             {searchResults.length > 0 ? (
@@ -126,7 +124,7 @@ export default function ChatSidebar({
                   <UserRow
                     key={user.id}
                     user={{ ...user, online: onlineStatus[user.id] ?? false }}
-                    isActive={false} // Never active in the search dropdown
+                    isActive={false}
                     onClick={() => setSearchInput('')}
                   />
                 ))}
@@ -138,13 +136,9 @@ export default function ChatSidebar({
         )}
       </div>
 
-      {/* min-h-0 lets this shrink below its content so overflow-y-auto can
-       * actually engage; without it the list would push the rail taller.
+      {/*
        * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
        * not every friend. Needs infinite scroll on this container to load subsequent pages.
-       * Labelled by the rail's own heading: the (app) shell already has a
-       * "Main" nav, and two unlabelled navigation landmarks are
-       * indistinguishable to a screen reader.
        */}
       <nav aria-labelledby={titleId}className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
         {sidebarUsers.map((user) => {

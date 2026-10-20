@@ -24,10 +24,6 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
   },
   ref,
 ) {
-  // The parent owns the value, so validation stays a local check in front of
-  // `handleSend` rather than a form library taking the value over. The
-  // schema's message wins over the parent's: if the input is invalid, no send
-  // happened, so any parent error on screen is stale.
   const [validationError, setValidationError] = useState<string | null>(null);
   const shownError = validationError ?? errorMsg;
 

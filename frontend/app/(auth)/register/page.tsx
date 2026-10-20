@@ -12,8 +12,6 @@ import { register } from '../../lib/register';
 import { registerSchema, type RegisterValues } from '../../lib/validation/auth';
 
 export default function RegisterPage() {
-  // `registerField`, not react-hook-form's usual `register`: that name is
-  // already the API call imported above.
   const {
     register: registerField,
     handleSubmit,
@@ -40,7 +38,6 @@ export default function RegisterPage() {
       return;
     }
     alert(`Successfully registered!\n${response.message}`);
-    // `assign` rather than an `href` write - see login/page.tsx.
     window.location.assign('/login');
   }
 
@@ -48,10 +45,6 @@ export default function RegisterPage() {
     <div className="flex flex-1 items-center justify-center">
       <Card>
         <h1 className="mb-1 text-xl font-extrabold">Register</h1>
-        {/* Inherited and modulated rather than named - see login/page.tsx. Only
-            the leaf text nodes convert: `opacity` compounds down the tree and
-            colour alpha does not, so the two blocks below that wrap coloured
-            children keep their named colours (12.5). */}
         <p className="mb-6 text-sm font-medium opacity-60">Nice to meet you!</p>
 
         <form onSubmit={handleSubmit(handleRegister)}>
@@ -85,8 +78,6 @@ export default function RegisterPage() {
             className="mb-5"
           />
 
-          {/* The margin moved from the label to this wrapper so the error sits
-              directly under the checkbox row, inside the same 24px gap. */}
           <div className="mb-6">
             <label className="flex cursor-pointer items-start gap-2">
               <input
@@ -98,10 +89,6 @@ export default function RegisterPage() {
                 }
                 className="accent-primary mt-0.5"
               />
-              {/* Named alpha, deliberately. `opacity-60` here plus `opacity-80` on
-                the links would multiply to 0.48 and render the links DIMMER
-                than the sentence they sit in, inverting the emphasis - alpha is
-                absolute, opacity compounds. Recorded in 12.5. */}
               <span className="text-on-card/60 text-xs">
                 I agree to the{' '}
                 <Link
@@ -134,9 +121,6 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        {/* Named alpha for the same reason as the block above: this wraps an
-            `AccentLink` with its own `text-primary`, which opacity would fade
-            along with the sentence. */}
         <p className="text-on-card/50 mt-4 text-center text-xs">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>

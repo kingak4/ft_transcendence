@@ -12,9 +12,6 @@ import {
 
 type Schemas = components['schemas'];
 
-// Messages are the backend's own (UpdateDisplayNameUseCase.java:17-21). The
-// trim was already done by hand before this schema existed; it now happens
-// here, and the trimmed value is what gets submitted.
 export const displayNameSchema = z.object({
   displayName: z
     .string()

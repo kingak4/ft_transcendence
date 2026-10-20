@@ -4,9 +4,6 @@ import Script from 'next/script';
 import './globals.css';
 import { THEME_CLASSES, THEME_STORAGE_KEY } from './lib/theme';
 
-// Runs before paint to apply the stored flavour, avoiding a flash of the default
-// theme. The body is never compiled or type-checked, so keep it plain ES5 and
-// inject every theme-specific value from ./lib/theme.
 const themeInitScript = `
   (function () {
     try {
@@ -19,12 +16,6 @@ const themeInitScript = `
   })();
 `;
 
-// The export's typeface. Replaces Geist Sans rather than sitting beside it -
-// nothing would use both. `latin-ext` because chat messages and legal text can
-// carry Polish letters (ś, ł, ż), which plain `latin` does not include; the
-// browser would otherwise swap fonts mid-word. Display names are limited to
-// ASCII, so they are not the reason. Noto Sans Arabic is deferred with RTL
-// (#86).
 const manrope = Manrope({
   variable: '--font-manrope',
   subsets: ['latin', 'latin-ext'],

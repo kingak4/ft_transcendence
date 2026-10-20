@@ -2,18 +2,6 @@
 
 import { client } from '../../lib/api-clients';
 
-// Declared here rather than shared with the profile's actions file. A grep at
-// unit 2a showed nothing imports `ActionResult` across a module boundary -
-// `useAsyncAction` declares its own structurally identical `AsyncActionResult`
-// - so this is file vocabulary, not a contract two routes have to agree on.
-// TypeScript is structurally typed, so the buttons accept either.
-//
-// Krok 6 unit 6.11 listed this as duplication to collapse and CLOSED IT AS
-// INTENTIONAL instead. The step's subject is components that describe the same
-// appearance twice; two files each naming their own local result shape is not
-// that. Extracting it would create the cross-module dependency the note above
-// says does not exist, and the third copy in `useAsyncAction` shows the shape is
-// a convention rather than a type anyone shares. Recorded in 14.2.
 export type ActionResult =
   | { success: true }
   | { success: false; message: string };

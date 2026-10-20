@@ -6,12 +6,6 @@ type FormFieldProps = ComponentPropsWithoutRef<typeof TextField> & {
   error?: string;
 };
 
-// A TextField plus the message explaining why it is invalid. TextField keeps
-// styling as its only job; this owns the link between a field and its error,
-// so a screen reader announces the message when the input is focused.
-//
-// `className` moves to the wrapper, so a layout margin passed by the call site
-// sits below the error rather than between the input and it.
 const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
   function FormField({ error, id, className = '', ...fieldProps }, ref) {
     const fallbackId = useId();

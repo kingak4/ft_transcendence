@@ -22,15 +22,12 @@ async function loadUsers(): Promise<ChatUser[]> {
     return [];
   }
 
-  // Map the response based on the backend structure.
-  // Assuming data is a Page<FriendResult> with content array.
-  // FriendResult contains id and details (displayName, avatarId).
   return (data?.content ?? []).map((friend: FriendResult) => ({
     id: friend.id ?? '',
     name: friend.details?.displayName ?? 'Unknown User',
     initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
     avatarId: friend.details?.avatarId?.val ?? null,
-    online: false, // We'll handle this in ChatInterface
+    online: false,
     status: 'Offline',
   }));
 }
@@ -82,7 +79,6 @@ export default async function ChatPage({
   const allUsers = await loadUsers();
   const activeChats = await loadChats(allUsers);
 
-  // Find the active user either by userId or by looking up the chatId
   let activeUser = allUsers.find((f) => f.id === userId) || null;
   let activeChatId = urlChatId || null;
 
@@ -92,13 +88,11 @@ export default async function ChatPage({
   }
 
   if (!activeUser && userId) {
-    // Handle the case where userId in URL is actually a chatId from the mock
     const chatSession = activeChats.find((c) => c.chatId === userId || c.user.id === userId);
     if (chatSession) {
       activeUser = chatSession.user;
       activeChatId = chatSession.chatId;
     } else {
-      // Global search fallback
       const { data: userDetails, response } = await client.GET('/users/{userId}/details', {
         params: { path: { userId: userId } }
       });
@@ -122,23 +116,8 @@ export default async function ChatPage({
 
   const isFriend = activeUser ? allUsers.some(f => f.id === activeUser?.id) : false;
 
-  // Unit 2b - one pane at a time below `lg:`, both above it.
-  //
-  // Which pane shows is decided by `?friend=`, which this route already read
-  // before 2b existed: no chat selected means the list, a chat selected means
-  // the conversation. So the narrow layout needed no new state, no new client
-  // component and no new prop threading - only three display utilities.
-  //
-  // The placeholder is the piece that simply has no narrow equivalent: "select a
-  // chat" is what you say beside a list, and below `lg:` the list IS the screen.
   return (
-    // `flex-1 min-h-0` instead of `h-full`: the height now comes from the
-    // layout rather than from an assumption about it. `min-h-0` is what lets
-    // this shrink below its content so the panes' own `overflow-y-auto` engages.
     <div className="border-elevated-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
-      {/* Krok 7 unit 7.10: every other route names itself with an h1; this one
-          had none. The export draws no visible heading here and §8.11 keeps the
-          look of /chat, so it is `sr-only` - in the outline, not on screen. */}
       <h1 className="sr-only">Chat</h1>
       <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} hiddenOnNarrow={!!activeUser} />
       {activeUser ? (

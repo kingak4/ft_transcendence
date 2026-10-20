@@ -2,10 +2,6 @@ import type { ChatMessage } from './types';
 
 interface Props {
   message: ChatMessage;
-  /**
-   * Derived by the caller from `senderId`, never read off the message itself -
-   * the wire format carries no direction flag.
-   */
   isMine: boolean;
   onDelete?: () => void;
   /*
@@ -39,8 +35,6 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
   };
 
   return (
-    // `self-end` / `self-start` are flex *logical* alignments, so they already
-    // follow writing direction and cost nothing extra in RTL.
     <div
       className={`group flex max-w-[420px] flex-col ${isMine ? 'self-end' : 'self-start'}`}
     >
@@ -48,33 +42,11 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
         className={`flex items-center gap-2 ${isMine ? 'flex-row-reverse' : 'flex-row'}`}
       >
         {/*
-         * The asymmetric radius encodes direction: the 4px corner is the tail,
-         * pointing back at whoever sent it. These four corners are the one
-         * physical (non-logical) value on this page; the design export mirrors
-         * them for RTL, which is deferred with the rest of i18n.
-         *
          * TODO(rtl #86): mirror these four corners. Re-tagged from
          * design-migration at Krok 8 - RTL was deferred, so the work is still
          * open, but it no longer belongs to the migration that closed.
          * Everything else here is already direction-agnostic (self-start/end,
          * text-start/end), so this is the only bit that needs an `rtl:` variant.
-         */}
-        {/*
-         * Two Step 5 corrections, both of the same kind - a colour that was
-         * only ever correct while the chat was a fixed-light island:
-         *
-         * - the outgoing bubble was `text-white` on the teal-to-blue fill.
-         *   That fill now themes, so the label takes `on-accent`, the role
-         *   that means "legible on an accent fill" and inverts with it.
-         * - the incoming bubble was dark CTA text (today's `on-primary`) on the
-         *   panel. This one was a genuine bug rather than a tightening: that
-         *   role is the CONTRAST PARTNER OF A LIGHT ACCENT FILL, and under
-         *   Mocha it resolves to crust while the panel resolves to surface0 -
-         *   dark on dark, unreadable. Text sitting on a panel wants the
-         *   panel's own foreground, which is `on-elevated-surface`.
-         *
-         * The second is why 13.6.2 exists: the role name read plausibly at the
-         * call site and only the resolved pair showed the problem.
          */}
         <div
           className={

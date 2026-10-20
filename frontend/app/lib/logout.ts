@@ -14,8 +14,6 @@ export async function logout() {
   redirect('/login');
 }
 
-// Clears the session without navigating away — use when the current page
-// should re-render in-place rather than redirect to login.
 export async function clearSession() {
   await clearAuthCookies();
 }
