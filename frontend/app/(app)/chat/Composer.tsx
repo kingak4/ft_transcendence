@@ -1,5 +1,6 @@
 import { forwardRef, useState } from 'react';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import TextField from '../../components/TextField';
 import { chatMessageSchema } from '../../lib/validation/chat';
 import { CHAT_DICT } from './dictionary';
@@ -63,8 +64,13 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
         disabled={!!isInputDisabled}
         suppressHydrationWarning
       />
-      <Button disabled={!!isButtonDisabled} type="submit" suppressHydrationWarning>
-        {CHAT_DICT.composer.send}
+      <Button
+        disabled={!!isButtonDisabled}
+        type="submit"
+        aria-label={CHAT_DICT.composer.send}
+        suppressHydrationWarning
+      >
+        <Icon name="send" size="md" />
       </Button>
     </form>
     </div>
