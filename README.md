@@ -13,9 +13,9 @@ LICENSE.md)]
 
 
 
-## 📌 LetsPlay42 Project Description
+## 📌 JustPlay42 Project Description
 
-LetsPlay42 is a team-based web application developed at **42 Warsaw** as part of the `ft_transcendence` project. The platform combines real-time communication with the classic 2048 puzzle game, allowing users to connect, chat, and compete with friends.
+JustPlay42 is a team-based web application developed at **42 Warsaw** as part of the `ft_transcendence` project. The platform combines real-time communication with the classic 2048 puzzle game, allowing users to connect, chat, and compete with friends.
 
 The platform provides the following functionalities:
 
@@ -29,7 +29,7 @@ The platform provides the following functionalities:
 
 - **User Profiles:** Individual profiles that allow users to have their own identity within the platform.
 
-The goal of LetsPlay42 is to bring gaming and social interaction together in one place, creating an engaging environment where users can communicate, challenge their friends, and enjoy playing together 
+The goal of JustPlay42 is to bring gaming and social interaction together in one place, creating an engaging environment where users can communicate, challenge their friends, and enjoy playing together 
 
 
 ## ⚙️ Setup
