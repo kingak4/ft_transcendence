@@ -11,13 +11,26 @@ This project is licensed under the GNU GPL v3 License.
 
 LICENSE.md)]
 
-## 📌 42hub.tech Project Description
 
-The goal is to enable user interaction through real-time communication.
+
+## 📌 LetsPlay42 Project Description
+
+LetsPlay42 is a team-based web application developed at **42 Warsaw** as part of the `ft_transcendence` project. The platform combines real-time communication with the classic 2048 puzzle game, allowing users to connect, chat, and compete with friends.
 
 The platform provides the following functionalities:
-*   **Authentication:** A user management system supporting registration, login, and session handling.
-*   **Chat:** A messaging system that allows users to connect and exchange messages.
+
+- **Authentication:** A user management system supporting registration, login, and session handling.
+
+- **Interactive Chat:** A real-time messaging system that allows users to communicate, connect with friends, and interact directly through the platform.
+
+- **2048 Game:** A classic puzzle game where players combine tiles with the same number to create larger values, aiming to reach the 2048 tile.
+
+- **Challenges and Competition:** Users can challenge their friends through the chat, adding a competitive element to the gaming experience.
+
+- **User Profiles:** Individual profiles that allow users to have their own identity within the platform.
+
+The goal of LetsPlay42 is to bring gaming and social interaction together in one place, creating an engaging environment where users can communicate, challenge their friends, and enjoy playing together 
+
 
 ## ⚙️ Setup
 
@@ -104,6 +117,7 @@ Designed and maintained the project's infrastructure and database layer
 Led the initial frontend setup and established core integrations for REST API and WebSocket communication.
 
 *   **Frontend Architecture:** Bootstrapped the Next.js application and development environment, including linters, formatters, and initial HTTPS configuration.
+*   **2048 Game Development:** Designed and implemented the 2048 game, integrating its core gameplay mechanics into the platform to enable users to play and compete with friends.
 *   **API Integration:** Developed the integration layer between the Next.js frontend and the Spring Boot backend. Implemented the BFF (Backend-for-Frontend) pattern, API web clients, and robust error handling for authentication flows (login/register).
 *   **Real-Time Communication:** Integrated WebSocket (STOMP) connections on the client side, enabling real-time chat functionality and live user presence (online/offline) updates.
 *   **UI/UX Design:** Designed and developed the foundational layout and aesthetics for the platform's landing page and user profile views.
