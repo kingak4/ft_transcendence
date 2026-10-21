@@ -62,7 +62,8 @@ Application will be available via nginx proxy on port 8443.
 
 Lead the project through the full development lifecycle while contributing as a developer.
 
-* **Team Organization:** Structured task distribution and hybrid meetings, establishing the shared workspace and cross-functional coordination.
+
+* **Project Management & Team Coordination:** Coordinated team communication, facilitated discussions and negotiations, and helped resolve conflicts to maintain effective collaboration. Organized meetings, aligned team members on decisions and next steps, tracked task progress, and supported task distribution and ongoing project planning.
 * **Documentation:** Created Confluence articles, architecture diagrams, feature specifications, and visual guides for the project knowledge base. Coordinated documentation and knowledge sharing across the entire team.
 * **UI/UX Design:** Designed the application's visual identity and user interface, creating high-fidelity mockups and feature visualizations in Canva. Planned the layout, user flows, and overall user experience to ensure a consistent design across all modules.
 * **Design Documentation:** Documented UI concepts, workflows, and feature specifications in Confluence, providing implementation guidelines and maintaining design consistency throughout development.
