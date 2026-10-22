@@ -368,8 +368,7 @@ As DevOps and Database Engineer, Alina designed and maintained the project's inf
 
 ### Kacper
 
-As Frontend Developer and API Integration Engineer, Kacper led the initial frontend setup, bootstrapping the Next.js application along with its linters, formatters, and initial HTTPS configuration. He developed the integration layer between the Next.js frontend and the Spring Boot backend, implementing the Backend-for-Frontend (BFF) pattern, API web clients, and error handling for the authentication flows. He integrated WebSocket (STOMP) connections on the client side to enable real-time chat and live presence updates, designed the foundational layout for the landing page and profile views, and implemented the chat logic for sending and removing messages, creating conversations with friends, and handling backend connection failures.
-
+As Frontend Developer and API Integration Engineer, Kacper led the initial frontend setup, bootstrapping the Next.js application along with its linters, formatters, and initial HTTPS configuration. He developed the integration layer between the Next.js frontend and the Spring Boot backend, implementing the Backend-for-Frontend (BFF) pattern, API web clients, and error handling for the authentication flows. He integrated WebSocket (STOMP) connections on the client side to enable real-time chat and live presence updates, designed the foundational layout for the landing page and profile views, and implemented the chat logic for sending and removing messages, creating conversations with friends, and handling backend connection failures. Additionally implemented the core game logic and UI for a 2048 game (TypeScript, React, Tailwind CSS), including tile movement algorithm, board state management, and component architecture.
 ## 📚 Resources
 
 This section contains the official documentation, articles, and video tutorials used during the development of this project, combining standard references with AI-assisted research.
