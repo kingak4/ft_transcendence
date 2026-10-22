@@ -48,6 +48,7 @@ export default function LoginPage() {
             error={errors.email?.message}
             label="Email"
             autoComplete="email"
+            inputMode="email"
             tone="card"
             className="mb-3"
           />
@@ -60,14 +61,8 @@ export default function LoginPage() {
             label="Password"
             autoComplete="current-password"
             tone="card"
-            className="mb-2"
+            className="mb-6"
           />
-
-          <div className="mb-6 text-right">
-            <span className="cursor-not-allowed text-xs">
-              Forgot password?
-            </span>
-          </div>
 
           <Button type="submit" fullWidth>
             Login

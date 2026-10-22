@@ -25,13 +25,21 @@ function profileTitle(isOwnProfile: boolean, displayName: string) {
   return isOwnProfile ? 'My Profile' : `${displayName}'s profile`;
 }
 
+function isSignedInUser(
+  cookieStore: Awaited<ReturnType<typeof cookies>>,
+  userId: string,
+) {
+  return cookieStore.get('user_id')?.value === userId;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { userId } = await params;
-  const cookieStore = await cookies();
-  const isOwnProfile = cookieStore.get('user_id')?.value === userId;
   const { data } = await loadUserDetails(userId);
+  if (!data) return { title: 'Profile not found' };
+
+  const isOwnProfile = isSignedInUser(await cookies(), userId);
   return {
-    title: profileTitle(isOwnProfile, data?.displayName ?? 'Unknown User'),
+    title: profileTitle(isOwnProfile, data.displayName ?? 'Unknown User'),
   };
 }
 
@@ -56,9 +64,7 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 export default async function UserProfilePage({ params }: Props) {
   const { userId } = await params;
 
-  const cookieStore = await cookies();
-  const signedInUserId = cookieStore.get('user_id')?.value ?? null;
-  const isOwnProfile = signedInUserId !== null && signedInUserId === userId;
+  const isOwnProfile = isSignedInUser(await cookies(), userId);
 
   const { data, response } = await loadUserDetails(userId);
 

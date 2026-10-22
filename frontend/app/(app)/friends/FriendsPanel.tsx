@@ -43,6 +43,7 @@ export default function FriendsPanel({
         renderAction={(user, dismiss) => (
           <AddFriendButton friendId={user.id} onAdded={dismiss} />
         )}
+        label="Search users"
       />
       <UserList
         users={friendCards}

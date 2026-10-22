@@ -13,6 +13,7 @@ export default function BareLayout({ children }: Props) {
       <header>
         <BrandLink className="absolute left-6 top-6" />
       </header>
+      {/* Not scrollable: skip-link target only, so no Tab stop and no ring. */}
       <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
         {children}
       </main>

@@ -40,6 +40,7 @@ export default function ChatInterface({
   const { sendMessage, deleteMessage } = useChat();
 
   const userId = user?.id;
+  const userName = user?.name ?? '';
 
   const monitoredUserIds = useMemo(() => {
     return userId ? [userId] : [];
@@ -125,7 +126,7 @@ export default function ChatInterface({
     if (newMessage.content !== undefined && newMessage.senderId !== myUserId) {
       setAnnouncement({
         id: newMessage.messageId,
-        text: `${CHAT_DICT.chat.newMessageFrom} ${user?.name}: ${newMessage.content}`,
+        text: `${CHAT_DICT.chat.newMessageFrom} ${userName}: ${newMessage.content}`,
       });
     }
     setMessages((prev) => {
@@ -189,7 +190,7 @@ export default function ChatInterface({
             senderName={
               message.senderId === myUserId
                 ? CHAT_DICT.chat.you
-                : (user?.name ?? '')
+                : userName
             }
             onDelete={() => {
               if (chatId) {

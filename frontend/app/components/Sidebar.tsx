@@ -34,7 +34,7 @@ export default function Sidebar({ userId }: Props) {
   const close = () => setOpenedOn(null);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const shouldRestoreFocus = useRef(false);
 
   const closeAndRestoreFocus = () => {
@@ -51,7 +51,7 @@ export default function Sidebar({ userId }: Props) {
   // The trigger hides itself on open; move focus into the panel so it isn't lost.
   useEffect(() => {
     if (!isOpen) return;
-    panelRef.current?.querySelector<HTMLElement>('a[href]')?.focus();
+    panelRef.current?.querySelector<HTMLElement>('nav a[href]')?.focus();
   }, [isOpen]);
 
   useEffect(() => {
@@ -96,10 +96,9 @@ export default function Sidebar({ userId }: Props) {
         />
       )}
 
-      <aside
+      <div
         id="app-nav"
         ref={panelRef}
-        aria-label="Sidebar"
         className={`bg-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:visible lg:static lg:translate-x-0 ${isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'}`}
       >
         <BrandLink className="text-on-shell mb-5 px-2.5" />
@@ -129,7 +128,7 @@ export default function Sidebar({ userId }: Props) {
             </Link>
           </nav>
         )}
-      </aside>
+      </div>
     </>
   );
 }

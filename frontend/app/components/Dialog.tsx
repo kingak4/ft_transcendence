@@ -7,6 +7,7 @@ interface Props {
   onClose: () => void;
   title: string;
   description?: string;
+  dismissible?: boolean;
   children: ReactNode;
 }
 
@@ -15,6 +16,7 @@ export default function Dialog({
   onClose,
   title,
   description,
+  dismissible = true,
   children,
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -32,6 +34,10 @@ export default function Dialog({
   return (
     <dialog
       ref={dialogRef}
+      // Best-effort: Chromium ignores preventDefault on a repeated Esc without fresh user activation.
+      onCancel={(e) => {
+        if (!dismissible) e.preventDefault();
+      }}
       onClose={onClose}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}

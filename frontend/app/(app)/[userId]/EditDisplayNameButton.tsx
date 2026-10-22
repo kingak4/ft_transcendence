@@ -90,7 +90,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           aria-label="Display name"
           aria-invalid={errors.displayName ? true : undefined}
           aria-describedby={shownError ? 'display-name-error' : undefined}
-          className="bg-on-accent/10 text-on-accent placeholder:text-on-accent/40 focus:ring-on-accent w-full rounded-xl px-3 py-1 text-2xl font-extrabold focus:ring-1"
+          className="bg-on-accent/10 text-on-accent placeholder:text-on-accent/40 w-full rounded-xl px-3 py-1 text-2xl font-extrabold"
         />
         {shownError && (
           <p id="display-name-error" role="alert" className="text-danger text-sm">

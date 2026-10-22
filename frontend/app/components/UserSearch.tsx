@@ -18,6 +18,7 @@ interface Props {
     size: number,
   ) => Promise<UserSearchPage>;
   renderAction: (user: UserListItem, dismiss: () => void) => ReactNode;
+  label: string;
   placeholder?: string;
   emptyMessage?: string;
 }
@@ -30,6 +31,7 @@ export default function UserSearch({
   excludedIds,
   searchAction,
   renderAction,
+  label,
   placeholder = 'Search users by name…',
   emptyMessage = 'No users found.',
 }: Props) {
@@ -184,7 +186,7 @@ export default function UserSearch({
     <div className="mb-4 flex flex-col gap-5 lg:gap-7">
       <TextField
         type="search"
-        aria-label="Search users"
+        aria-label={label}
         value={query}
         onChange={handleQueryChange}
         placeholder={placeholder}

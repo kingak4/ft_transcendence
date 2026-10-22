@@ -112,6 +112,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
         onClose={handleClose}
         title="Change avatar"
         description="Pick a new photo for your profile."
+        dismissible={!isSubmitting}
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col items-center gap-2">
@@ -162,7 +163,12 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
           )}
 
           <div className="flex gap-3">
-            <Button variant="neutral" onClick={handleClose} className="flex-1">
+            <Button
+              variant="neutral"
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="flex-1"
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting} className="flex-1">

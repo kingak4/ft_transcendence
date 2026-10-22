@@ -372,7 +372,7 @@ A step **fails** if NVDA:
 | Action | Expect |
 |---|---|
 | Load the page | "My Profile · 42Hub" |
-| `Insert+F7` → Landmarks | "Sidebar" complementary, "Main" navigation, main, content info |
+| `Insert+F7` → Landmarks | "Main" navigation, main, content info |
 | `Insert+F7` → Links | "My Profile, link, current page" |
 | Browse past the details card | "Username" and the name read as **separate** items, not "UsernameZyta" |
 | `Tab` to the avatar "Edit" | "Edit avatar, button" |
@@ -434,7 +434,7 @@ Make the Chrome window narrow (< 1024 px) until the hamburger appears.
 | Action | Expect |
 |---|---|
 | `Tab` to it | "Open navigation, button, collapsed" |
-| `Enter` | Focus moves to the first link in the drawer |
+| `Enter` | Focus moves to the first nav link ("My Profile") |
 | `Esc` | Drawer closes; "Open navigation, button, collapsed" |
 
 > [!NOTE]
@@ -465,6 +465,7 @@ Patterns established during the WCAG work — follow them in new code:
 | **Dialogs use `components/Dialog`** (native `<dialog>` + `showModal()`) | Focus trap, `Esc`, focus return and the dialog role come from the browser |
 | **Form fields use `FormField` with `label`** (required by its type) and `autoComplete` for personal data | WCAG 3.3.2 labels; 1.3.5 input purpose |
 | **Status updates go through `components/Announcer`** (`aria-live="polite"`) | Live regions must already exist in the DOM before their content changes |
+| **Errors use `role="alert"`**, which may be rendered conditionally | Exception to the rule above: screen readers announce an `alert` when it is inserted |
 | **Every page sets `metadata.title`** (template `%s · 42Hub` in the root layout) | WCAG 2.4.2 — tab titles identify the page |
 | **Every shell renders `<main id="main">`** | Target of the skip link; landmark for `D` in NVDA |
 | **Decorative images get `alt=""`** — e.g. an avatar next to the visible name | Otherwise the name is read twice |
