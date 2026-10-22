@@ -29,7 +29,7 @@ export default function ChatInterface({
   const [inputValue, setInputValue] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesListRef = useRef<HTMLDivElement>(null);
   const creationPromiseRef = useRef<{
     friendId: string;
     promise: Promise<string>;
@@ -152,13 +152,15 @@ export default function ChatInterface({
   });
 
   useEffect(() => {
+    const list = messagesListRef.current;
+    if (!list) return;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    messagesEndRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    list.scrollTo({ top: list.scrollHeight, behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [messages]);
 
   useEffect(() => {
     if (chatId) {
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     }
   }, [chatId]);
 
@@ -177,6 +179,7 @@ export default function ChatInterface({
   return (
     <>
       <div
+        ref={messagesListRef}
         tabIndex={0}
         role="region"
         aria-label={CHAT_DICT.chat.messagesLabel}
@@ -210,7 +213,6 @@ export default function ChatInterface({
             }}
           />
         ))}
-        <div ref={messagesEndRef} />
       </div>
 
       <Composer
