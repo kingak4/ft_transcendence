@@ -28,7 +28,7 @@ export default function ThemeToggle() {
             aria-pressed={isActive}
             className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors ${
               isActive
-                ? 'bg-cta text-on-primary'
+                ? 'bg-cta text-on-cta'
                 : 'text-muted hover:text-on-surface'
             }`}
           >

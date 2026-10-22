@@ -35,7 +35,7 @@ export default function Conversation({ user, initialChatId, myUserId, isFriend }
         </Link>
         <Avatar
           src={avatarSrc}
-          alt={user.name}
+          alt=""
           size={40}
           initial={user.initial}
           color={user.color}

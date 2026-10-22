@@ -11,7 +11,7 @@ const NAV_BASE_CLASSES =
 
 function navLinkClasses(isActive: boolean) {
   const state = isActive
-    ? 'bg-cta text-on-primary'
+    ? 'bg-cta text-on-cta'
     : 'text-on-shell-muted hover:bg-shell-hover hover:text-on-shell';
   return `${NAV_BASE_CLASSES} ${state}`;
 }

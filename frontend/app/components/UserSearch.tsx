@@ -183,14 +183,19 @@ export default function UserSearch({
   return (
     <div className="mb-4 flex flex-col gap-5 lg:gap-7">
       <TextField
-        type="text"
+        type="search"
+        aria-label="Search users"
         value={query}
         onChange={handleQueryChange}
         placeholder={placeholder}
         size="md"
       />
 
-      {error && <p className="text-danger text-xs">{error}</p>}
+      {error && (
+        <p role="alert" className="text-danger text-xs">
+          {error}
+        </p>
+      )}
 
       {query.trim() && !isSearching && !error && (
         <>
@@ -207,7 +212,7 @@ export default function UserSearch({
             <button
               onClick={handleLoadMore}
               disabled={isLoadingMore}
-              className="text-on-surface/60 bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+              className="text-on-surface bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoadingMore ? 'Loading…' : 'Load more'}
             </button>

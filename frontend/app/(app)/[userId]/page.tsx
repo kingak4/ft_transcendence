@@ -47,8 +47,8 @@ async function loadFriendsCount(): Promise<number | null> {
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b last:border-b-0">
-      <span className="text-muted text-sm font-semibold">{label}</span>
-      <span className="text-sm font-bold">{value}</span>
+      <dt className="text-muted text-sm font-semibold">{label}</dt>
+      <dd className="text-sm font-bold">{value}</dd>
     </div>
   );
 }
@@ -104,12 +104,12 @@ export default async function UserProfilePage({ params }: Props) {
         </div>
       </div>
 
-      <div className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_var(--color-shadow-card)]">
+      <dl className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_var(--color-shadow-card)]">
         <InfoRow label="Username" value={displayName} />
         {friendsCount !== null && (
           <InfoRow label="Friends" value={String(friendsCount)} />
         )}
-      </div>
+      </dl>
 
       {isOwnProfile && (
         <form action={logout} className="flex justify-end">

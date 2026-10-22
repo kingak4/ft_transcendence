@@ -16,7 +16,7 @@ export default function BareLayout({ children }: Props) {
       <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
         {children}
       </main>
-      <Footer />
+      <Footer tone="start-page" />
     </div>
   );
 }

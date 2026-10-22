@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from 'react';
 type ButtonVariant = 'primary' | 'outline' | 'neutral';
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'rounded-xl bg-cta text-on-primary hover:brightness-125',
+  primary: 'rounded-xl bg-cta text-on-cta hover:brightness-125',
   outline:
     'rounded-xl border border-primary text-primary hover:bg-primary hover:text-on-primary',
   neutral:
