@@ -45,7 +45,7 @@ export default function RegisterPage() {
     <div className="flex flex-1 items-center justify-center">
       <Card>
         <h1 className="mb-1 text-xl font-extrabold">Register</h1>
-        <p className="mb-6 text-sm font-medium opacity-60">Nice to meet you!</p>
+        <p className="mb-6 text-sm font-medium">Nice to meet you!</p>
 
         <form onSubmit={handleSubmit(handleRegister)}>
           <FormField
@@ -53,7 +53,8 @@ export default function RegisterPage() {
             type="text"
             {...registerField('email')}
             error={errors.email?.message}
-            placeholder="Email"
+            label="Email"
+            autoComplete="email"
             tone="card"
             className="mb-3"
           />
@@ -63,7 +64,8 @@ export default function RegisterPage() {
             type="password"
             {...registerField('password', { deps: ['confirmPassword'] })}
             error={errors.password?.message}
-            placeholder="Password"
+            label="Password"
+            autoComplete="new-password"
             tone="card"
             className="mb-3"
           />
@@ -73,7 +75,8 @@ export default function RegisterPage() {
             type="password"
             {...registerField('confirmPassword')}
             error={errors.confirmPassword?.message}
-            placeholder="Confirm password"
+            label="Confirm password"
+            autoComplete="new-password"
             tone="card"
             className="mb-5"
           />
@@ -89,18 +92,18 @@ export default function RegisterPage() {
                 }
                 className="accent-primary mt-0.5"
               />
-              <span className="text-on-card/60 text-xs">
+              <span className="text-on-card text-xs">
                 I agree to the{' '}
                 <Link
                   href="/terms-of-service"
-                  className="text-on-card/80 hover:text-on-card underline transition-colors"
+                  className="text-on-card hover:no-underline underline transition-colors"
                 >
                   Terms of Service
                 </Link>{' '}
                 and{' '}
                 <Link
                   href="/privacy-policy"
-                  className="text-on-card/80 hover:text-on-card underline transition-colors"
+                  className="text-on-card hover:no-underline underline transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -121,7 +124,7 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="text-on-card/50 mt-4 text-center text-xs">
+        <p className="text-on-card mt-4 text-center text-xs">
           Already have an account? <AccentLink href="/login">Login</AccentLink>
         </p>
       </Card>

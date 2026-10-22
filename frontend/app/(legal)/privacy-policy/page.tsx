@@ -1,5 +1,11 @@
+import type { Metadata } from 'next';
+
 import ContactBlock from '../../components/ContactBlock';
 import LegalSection from '../../components/LegalSection';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+};
 
 export default function PrivacyPolicy() {
   return (

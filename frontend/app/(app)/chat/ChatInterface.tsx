@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useChat, useChatSubscription } from '@/app/hooks/useChat';
 import { usePresence } from '@/app/hooks/usePresence';
 import { client } from '@/app/lib/api-clients';
+import Announcer, { type Announcement } from '@/app/components/Announcer';
 import MessageBubble from './MessageBubble';
 import Composer from './Composer';
 import { ChatMessage, ChatUser, BackendChatMessage } from './types';
@@ -27,7 +28,8 @@ export default function ChatInterface({
   const [chatId, setChatId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+  const messagesListRef = useRef<HTMLDivElement>(null);
   const creationPromiseRef = useRef<{
     friendId: string;
     promise: Promise<string>;
@@ -38,6 +40,7 @@ export default function ChatInterface({
   const { sendMessage, deleteMessage } = useChat();
 
   const userId = user?.id;
+  const userName = user?.name ?? '';
 
   const monitoredUserIds = useMemo(() => {
     return userId ? [userId] : [];
@@ -120,6 +123,12 @@ export default function ChatInterface({
 
   useChatSubscription(chatId || '', (newMessage) => {
     if (!chatId) return;
+    if (newMessage.content !== undefined && newMessage.senderId !== myUserId) {
+      setAnnouncement({
+        id: newMessage.messageId,
+        text: `${CHAT_DICT.chat.newMessageFrom} ${userName}: ${newMessage.content}`,
+      });
+    }
     setMessages((prev) => {
       if (newMessage.content === undefined && newMessage.time === undefined) {
         return prev.map((m) =>
@@ -143,12 +152,15 @@ export default function ChatInterface({
   });
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const list = messagesListRef.current;
+    if (!list) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    list.scrollTo({ top: list.scrollHeight, behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [messages]);
 
   useEffect(() => {
     if (chatId) {
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     }
   }, [chatId]);
 
@@ -166,12 +178,23 @@ export default function ChatInterface({
 
   return (
     <>
-      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
+      <div
+        ref={messagesListRef}
+        tabIndex={0}
+        role="region"
+        aria-label={CHAT_DICT.chat.messagesLabel}
+        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6 focus-visible:-outline-offset-2"
+      >
         {messages.map((message) => (
           <MessageBubble
             key={message.messageId}
             message={message}
             isMine={message.senderId === myUserId}
+            senderName={
+              message.senderId === myUserId
+                ? CHAT_DICT.chat.you
+                : userName
+            }
             onDelete={() => {
               if (chatId) {
                 if (!deleteMessage(chatId, message.messageId)) {
@@ -190,7 +213,6 @@ export default function ChatInterface({
             }}
           />
         ))}
-        <div ref={messagesEndRef} />
       </div>
 
       <Composer
@@ -202,6 +224,7 @@ export default function ChatInterface({
         isButtonDisabled={!chatId || inputValue.trim() === ''}
         errorMsg={errorMsg}
       />
+      <Announcer announcement={announcement} />
     </>
   );
 }

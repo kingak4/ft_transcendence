@@ -11,9 +11,16 @@ const NAV_BASE_CLASSES =
 
 function navLinkClasses(isActive: boolean) {
   const state = isActive
-    ? 'bg-cta text-on-primary'
+    ? 'bg-cta text-on-cta'
     : 'text-on-shell-muted hover:bg-shell-hover hover:text-on-shell';
   return `${NAV_BASE_CLASSES} ${state}`;
+}
+
+function navLinkProps(isActive: boolean) {
+  return {
+    className: navLinkClasses(isActive),
+    'aria-current': isActive ? ('page' as const) : undefined,
+  };
 }
 
 interface Props {
@@ -27,6 +34,7 @@ export default function Sidebar({ userId }: Props) {
   const close = () => setOpenedOn(null);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const shouldRestoreFocus = useRef(false);
 
   const closeAndRestoreFocus = () => {
@@ -38,6 +46,12 @@ export default function Sidebar({ userId }: Props) {
     if (isOpen || !shouldRestoreFocus.current) return;
     shouldRestoreFocus.current = false;
     triggerRef.current?.focus();
+  }, [isOpen]);
+
+  // The trigger hides itself on open; move focus into the panel so it isn't lost.
+  useEffect(() => {
+    if (!isOpen) return;
+    panelRef.current?.querySelector<HTMLElement>('nav a[href]')?.focus();
   }, [isOpen]);
 
   useEffect(() => {
@@ -82,8 +96,9 @@ export default function Sidebar({ userId }: Props) {
         />
       )}
 
-      <aside
+      <div
         id="app-nav"
+        ref={panelRef}
         className={`bg-shell fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-y-auto overscroll-contain px-5 py-7 transition-transform lg:visible lg:static lg:translate-x-0 ${isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'}`}
       >
         <BrandLink className="text-on-shell mb-5 px-2.5" />
@@ -93,27 +108,27 @@ export default function Sidebar({ userId }: Props) {
             <Link
               href={`/${userId}`}
               onClick={close}
-              className={navLinkClasses(pathname === `/${userId}`)}
+              {...navLinkProps(pathname === `/${userId}`)}
             >
               My Profile
             </Link>
             <Link
               href={`/chat`}
               onClick={close}
-              className={navLinkClasses(pathname === `/chat`)}
+              {...navLinkProps(pathname === `/chat`)}
             >
               Chat
             </Link>
             <Link
               href="/friends"
               onClick={close}
-              className={navLinkClasses(pathname === '/friends')}
+              {...navLinkProps(pathname === '/friends')}
             >
               Friends
             </Link>
           </nav>
         )}
-      </aside>
+      </div>
     </>
   );
 }

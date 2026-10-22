@@ -26,6 +26,7 @@
 
   --color-primary: var(--theme-primary);
   --color-on-primary: var(--theme-on-primary);
+  --color-on-cta: var(--theme-on-cta);
   --color-success: var(--theme-success);
   --color-danger: var(--theme-danger);
 
@@ -95,17 +96,18 @@
 
   --theme-primary: #a3e635;
   --theme-on-primary: #0d2b47;
+  --theme-on-cta: #0d2b47;
 
   --theme-success: #49b47a;
 
   --theme-danger: #c0453f;
 
-  --theme-muted: #7c8a92;
-  --theme-timestamp: #9aa5a0;
+  --theme-muted: #5b6a72;
+  --theme-timestamp: #5f6b66;
   --theme-row-active: #eaf4fa;
 
   --theme-online: #49b47a;
-  --theme-online-text: #1a8a7a;
+  --theme-online-text: #14786a;
   --theme-offline: oklch(70.7% 0.022 261.325);
   --theme-offline-text: oklch(55.1% 0.027 264.364);
 
@@ -155,7 +157,7 @@
   --theme-sunken-surface: var(--color-ctp-mantle);
   --theme-field: var(--color-ctp-base);
   --theme-muted: var(--color-ctp-subtext0);
-  --theme-timestamp: var(--color-ctp-overlay1);
+  --theme-timestamp: var(--color-ctp-subtext0);
   --theme-row-active: var(--color-ctp-surface2);
   --theme-offline: var(--color-ctp-overlay1);
 
@@ -251,18 +253,27 @@
   --theme-on-elevated-surface-body: var(--color-ctp-subtext1);
 
   --theme-on-primary: var(--color-ctp-crust);
+  --theme-on-cta: var(--color-ctp-crust);
   --theme-on-accent: var(--color-ctp-crust);
 }
 
 .latte {
+  --theme-surface: var(--color-ctp-mantle);
+  --theme-elevated-surface: var(--color-ctp-base);
+  --theme-sunken-surface: var(--color-ctp-crust);
+  --theme-field: var(--color-ctp-mantle);
+  --theme-row-active: var(--color-ctp-surface0);
+  --theme-primary: var(--color-ctp-mauve-700);
+
   --theme-success: var(--color-ctp-green-700);
   --theme-danger: var(--color-ctp-red-700);
 
   --theme-online: var(--color-ctp-green-700);
-  --theme-online-text: var(--color-ctp-teal-700);
+  --theme-online-text: var(--color-ctp-teal-800);
   --theme-on-row-action: var(--color-ctp-teal-700);
   --theme-offline-text: var(--color-ctp-text);
   --theme-muted: var(--color-ctp-subtext1);
+  --theme-timestamp: var(--color-ctp-subtext1);
   --theme-elevated-edge: var(--color-ctp-subtext0);
   --theme-shadow-subtle: color-mix(in srgb, var(--color-ctp-text) 6%, transparent);
   --theme-shadow-row: color-mix(in srgb, var(--color-ctp-text) 7%, transparent);
@@ -275,7 +286,8 @@
   );
   --theme-on-elevated-surface-body: var(--color-ctp-text);
 
-  --theme-on-primary: var(--color-ctp-text);
+  --theme-on-primary: var(--color-ctp-base);
+  --theme-on-cta: var(--color-ctp-text);
   --theme-on-accent: var(--color-ctp-text);
 }
 
@@ -351,6 +363,28 @@ body {
   font-family: var(--font-manrope), Arial, sans-serif;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
+}
+
+/*
+ * Footer on the start-page gradient: text can't reach 4.5:1 on the light end
+ * of the gradient, so the footer gets a solid band in the gradient's darkest
+ * stop. Re-pointing the tokens lets Footer and ThemeToggle keep using
+ * text-muted / text-on-surface unchanged.
+ */
+.footer-on-start-page {
+  --theme-muted: var(--theme-on-start-page);
+  --theme-on-surface: var(--theme-on-start-page);
+  background-color: var(--theme-start-page-gradient-start);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 input:-webkit-autofill,

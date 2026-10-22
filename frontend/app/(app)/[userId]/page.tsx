@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import { cache } from 'react';
 
 import Avatar from '../../components/Avatar';
 import { client } from '../../lib/api-clients';
@@ -10,6 +12,35 @@ import EditDisplayNameButton from './EditDisplayNameButton';
 
 interface Props {
   params: Promise<{ userId: string }>;
+}
+
+// cache(): generateMetadata and the page share one request per render.
+const loadUserDetails = cache((userId: string) =>
+  client.GET('/users/{userId}/details', {
+    params: { path: { userId } },
+  }),
+);
+
+function profileTitle(isOwnProfile: boolean, displayName: string) {
+  return isOwnProfile ? 'My Profile' : `${displayName}'s profile`;
+}
+
+function isSignedInUser(
+  cookieStore: Awaited<ReturnType<typeof cookies>>,
+  userId: string,
+) {
+  return cookieStore.get('user_id')?.value === userId;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { userId } = await params;
+  const { data } = await loadUserDetails(userId);
+  if (!data) return { title: 'Profile not found' };
+
+  const isOwnProfile = isSignedInUser(await cookies(), userId);
+  return {
+    title: profileTitle(isOwnProfile, data.displayName ?? 'Unknown User'),
+  };
 }
 
 async function loadFriendsCount(): Promise<number | null> {
@@ -24,8 +55,8 @@ async function loadFriendsCount(): Promise<number | null> {
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b last:border-b-0">
-      <span className="text-muted text-sm font-semibold">{label}</span>
-      <span className="text-sm font-bold">{value}</span>
+      <dt className="text-muted text-sm font-semibold">{label}</dt>
+      <dd className="text-sm font-bold">{value}</dd>
     </div>
   );
 }
@@ -33,13 +64,9 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 export default async function UserProfilePage({ params }: Props) {
   const { userId } = await params;
 
-  const cookieStore = await cookies();
-  const signedInUserId = cookieStore.get('user_id')?.value ?? null;
-  const isOwnProfile = signedInUserId !== null && signedInUserId === userId;
+  const isOwnProfile = isSignedInUser(await cookies(), userId);
 
-  const { data, response } = await client.GET('/users/{userId}/details', {
-    params: { path: { userId } },
-  });
+  const { data, response } = await loadUserDetails(userId);
 
   if (response.status === 401 || response.status === 403) {
     redirect('/auth/logout');
@@ -57,7 +84,7 @@ export default async function UserProfilePage({ params }: Props) {
   return (
     <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
-        {isOwnProfile ? 'My Profile' : `${displayName}'s profile`}
+        {profileTitle(isOwnProfile, displayName)}
       </h1>
 
       <div className="bg-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_var(--color-shadow-hero)] lg:p-9">
@@ -83,12 +110,12 @@ export default async function UserProfilePage({ params }: Props) {
         </div>
       </div>
 
-      <div className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_var(--color-shadow-card)]">
+      <dl className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_var(--color-shadow-card)]">
         <InfoRow label="Username" value={displayName} />
         {friendsCount !== null && (
           <InfoRow label="Friends" value={String(friendsCount)} />
         )}
-      </div>
+      </dl>
 
       {isOwnProfile && (
         <form action={logout} className="flex justify-end">

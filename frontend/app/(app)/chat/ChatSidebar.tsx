@@ -94,8 +94,10 @@ export default function ChatSidebar({
 
   return (
     <aside
+      aria-labelledby={titleId}
       className={`bg-elevated-surface border-elevated-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
     >
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- delegation: tracks focus leaving the search field + results group */}
       <div
         className="relative flex flex-col gap-3 p-4"
         onBlur={(e) => {

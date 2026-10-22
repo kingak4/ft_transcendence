@@ -3,17 +3,21 @@ import { type ComponentPropsWithoutRef, forwardRef, useId } from 'react';
 import TextField from './TextField';
 
 type FormFieldProps = ComponentPropsWithoutRef<typeof TextField> & {
+  label: string;
   error?: string;
 };
 
 const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
-  function FormField({ error, id, className = '', ...fieldProps }, ref) {
+  function FormField({ label, error, id, className = '', ...fieldProps }, ref) {
     const fallbackId = useId();
     const inputId = id ?? fallbackId;
     const errorId = `${inputId}-error`;
 
     return (
       <div className={className}>
+        <label htmlFor={inputId} className="mb-1.5 block text-xs font-semibold">
+          {label}
+        </label>
         <TextField
           ref={ref}
           id={inputId}

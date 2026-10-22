@@ -13,6 +13,9 @@ export const CHAT_DICT = {
     notFriendBanner: 'This user is not on your friend list.',
   },
   chat: {
+    messagesLabel: 'Messages',
+    you: 'You',
+    newMessageFrom: 'New message from',
     messageDeleted: '(message deleted)',
     errorCreateChat: 'Failed to create/get chat',
     errorInitChat: 'Failed to initialize chat',

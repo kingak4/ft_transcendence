@@ -5,6 +5,7 @@ import type { ChatMessage } from './types';
 interface Props {
   message: ChatMessage;
   isMine: boolean;
+  senderName: string;
   onDelete?: () => void;
   /*
    * TODO(stomp): Only 'sent' is shown today - every message of mine that renders
@@ -14,7 +15,12 @@ interface Props {
    */
 }
 
-export default function MessageBubble({ message, isMine, onDelete }: Props) {
+export default function MessageBubble({
+  message,
+  isMine,
+  senderName,
+  onDelete,
+}: Props) {
   const formatTime = (timeStr?: string) => {
     if (!timeStr) return '';
     const date = new Date(timeStr);
@@ -66,13 +72,14 @@ export default function MessageBubble({ message, isMine, onDelete }: Props) {
                 }`
           }
         >
+          <span className="sr-only">{senderName}: </span>
           {message.content}
         </div>
         {isMine && onDelete && !message.isDeleted && (
           <button
             onClick={onDelete}
             aria-label="Delete message"
-            className="text-muted hover:text-danger p-1 opacity-0 transition-opacity group-hover:opacity-100"
+            className="text-muted hover:text-danger p-1 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
           >
             <Icon name="trash" size="sm" />
           </button>

@@ -5,9 +5,9 @@ type TextFieldSize = 'sm' | 'md';
 
 const TONE_CLASSES: Record<TextFieldTone, string> = {
   surface:
-    'rounded-[14px] border border-elevated-edge text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_var(--color-shadow-subtle)] focus:ring-primary',
-  card: 'rounded-xl border border-card-field-border text-on-card placeholder:text-on-card/40 bg-card-field font-medium focus:ring-primary',
-  chat: 'rounded-lg text-on-elevated-surface placeholder:text-timestamp bg-field focus:ring-accent-blue',
+    'rounded-[14px] border border-elevated-edge text-on-elevated-surface placeholder:text-on-elevated-surface/40 bg-elevated-surface font-medium shadow-[0_4px_14px_var(--color-shadow-subtle)]',
+  card: 'rounded-xl border border-card-field-border text-on-card placeholder:text-on-card/40 bg-card-field font-medium',
+  chat: 'rounded-lg text-on-elevated-surface placeholder:text-timestamp bg-field',
 };
 
 const SIZE_CLASSES: Record<TextFieldSize, string> = {
@@ -15,7 +15,7 @@ const SIZE_CLASSES: Record<TextFieldSize, string> = {
   md: 'px-4 py-3',
 };
 
-const BASE_CLASSES = 'w-full text-sm outline-none focus:ring-1';
+const BASE_CLASSES = 'w-full text-sm';
 
 type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   tone?: TextFieldTone;

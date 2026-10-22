@@ -28,7 +28,7 @@ export default function UserRow({ user, isActive, onClick }: Props) {
     >
       <PresenceAvatar
         src={avatarSrc}
-        alt={user.name}
+        alt=""
         size={40}
         initial={user.initial}
         color={user.color}

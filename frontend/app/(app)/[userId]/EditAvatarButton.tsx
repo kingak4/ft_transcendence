@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Avatar from '../../components/Avatar';
 import Button from '../../components/Button';
+import Dialog from '../../components/Dialog';
 import { avatarFileSchema } from '../../lib/validation/profile';
 import { uploadAvatarAction } from './actions';
 import { AVATAR_RING_CLASSES } from './avatarRing';
@@ -30,6 +31,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
     setAvatarFile(null);
     setAvatarPreview(null);
     setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
     setIsOpen(true);
   }
 
@@ -96,83 +98,85 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
       <div className={`relative shrink-0 ${AVATAR_RING_CLASSES}`}>
         <Avatar src={currentSrc} alt={`${displayName}'s avatar`} size={96} />
         <button
+          type="button"
           onClick={handleOpen}
+          aria-label="Edit avatar"
           className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_var(--color-shadow-subtle)] transition hover:brightness-90"
         >
           Edit
         </button>
       </div>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="bg-elevated-surface text-on-elevated-surface w-full max-w-[440px] rounded-3xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.35)] lg:p-9">
-            <h2 className="mb-1 text-xl font-extrabold">Change avatar</h2>
-            <p className="text-on-elevated-surface/60 mb-6 text-sm font-medium">
-              Pick a new photo for your profile.
-            </p>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-              <div className="flex flex-col items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="bg-on-elevated-surface/10 relative h-24 w-24 overflow-hidden rounded-full transition-opacity hover:opacity-75"
-                  title="Click to choose a photo"
-                >
-                  {avatarPreview ? (
-                    <Image
-                      src={avatarPreview}
-                      alt="Preview"
-                      width={96}
-                      height={96}
-                      unoptimized
-                      className="h-full w-full object-cover"
-                    />
-                  ) : currentSrc ? (
-                    <Image
-                      src={currentSrc}
-                      alt="Current avatar"
-                      width={96}
-                      height={96}
-                      unoptimized
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-on-elevated-surface/40 flex h-full w-full items-center justify-center text-xs">
-                      Add photo
-                    </span>
-                  )}
-                </button>
-                <p className="text-on-elevated-surface/40 text-xs">
-                  Click to choose a photo
-                </p>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
+      <Dialog
+        open={isOpen}
+        onClose={handleClose}
+        title="Change avatar"
+        description="Pick a new photo for your profile."
+        dismissible={!isSubmitting}
+      >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div className="flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-on-elevated-surface/10 relative h-24 w-24 overflow-hidden rounded-full transition-opacity hover:opacity-75"
+              title="Click to choose a photo"
+            >
+              {avatarPreview ? (
+                <Image
+                  src={avatarPreview}
+                  alt="Preview"
+                  width={96}
+                  height={96}
+                  unoptimized
+                  className="h-full w-full object-cover"
                 />
-              </div>
-
-              {error && <p className="text-danger text-sm">{error}</p>}
-
-              <div className="flex gap-3">
-                <Button
-                  variant="neutral"
-                  onClick={handleClose}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmitting} className="flex-1">
-                  {isSubmitting ? 'Saving…' : 'Save'}
-                </Button>
-              </div>
-            </form>
+              ) : currentSrc ? (
+                <Image
+                  src={currentSrc}
+                  alt="Current avatar"
+                  width={96}
+                  height={96}
+                  unoptimized
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-muted flex h-full w-full items-center justify-center text-xs">
+                  Add photo
+                </span>
+              )}
+            </button>
+            <p className="text-muted text-xs">Click to choose a photo</p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </div>
-        </div>
-      )}
+
+          {error && (
+            <p role="alert" className="text-danger text-sm">
+              {error}
+            </p>
+          )}
+
+          <div className="flex gap-3">
+            <Button
+              variant="neutral"
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1">
+              {isSubmitting ? 'Saving…' : 'Save'}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
     </>
   );
 }

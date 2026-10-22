@@ -1,8 +1,13 @@
+import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { client } from '../../lib/api-clients';
 import FriendsPanel, { type FriendCard } from './FriendsPanel';
+
+export const metadata: Metadata = {
+  title: 'Friends',
+};
 
 const FRIENDS_PAGE_SIZE = 10;
 

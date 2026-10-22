@@ -43,6 +43,7 @@ export default function FriendsPanel({
         renderAction={(user, dismiss) => (
           <AddFriendButton friendId={user.id} onAdded={dismiss} />
         )}
+        label="Search users"
       />
       <UserList
         users={friendCards}
@@ -68,7 +69,7 @@ export default function FriendsPanel({
           <PagerLink href={`/friends?page=${page - 1}`} disabled={page === 0}>
             ‹ Prev
           </PagerLink>
-          <span className="text-on-surface/60 text-xs">
+          <span className="text-muted text-xs">
             Page {page + 1} of {totalPages}
           </span>
           <PagerLink
@@ -110,7 +111,7 @@ function PagerLink({
     <Link
       href={href}
       scroll={false}
-      className={`${base} text-on-elevated-surface/60 bg-on-elevated-surface/10 hover:bg-on-elevated-surface/20`}
+      className={`${base} text-on-elevated-surface bg-on-elevated-surface/10 hover:bg-on-elevated-surface/20`}
     >
       {children}
     </Link>
