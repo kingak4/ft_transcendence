@@ -11,13 +11,26 @@ This project is licensed under the GNU GPL v3 License.
 
 LICENSE.md)]
 
-## 📌 42hub.tech Project Description
 
-The goal is to enable user interaction through real-time communication.
+
+## 📌 JustPlay42 Project Description
+
+JustPlay42 is a team-based web application developed at **42 Warsaw** as part of the `ft_transcendence` project. The platform combines real-time communication with the classic 2048 puzzle game, allowing users to connect, chat, and compete with friends.
 
 The platform provides the following functionalities:
-*   **Authentication:** A user management system supporting registration, login, and session handling.
-*   **Chat:** A messaging system that allows users to connect and exchange messages.
+
+- **Authentication:** A user management system supporting registration, login, and session handling.
+
+- **Interactive Chat:** A real-time messaging system that allows users to communicate, connect with friends, and interact directly through the platform.
+
+- **2048 Game:** A classic puzzle game where players combine tiles with the same number to create larger values, aiming to reach the 2048 tile.
+
+- **Challenges and Competition:** Users can challenge their friends through the chat, adding a competitive element to the gaming experience.
+
+- **User Profiles:** Individual profiles that allow users to have their own identity within the platform.
+
+The goal of JustPlay42 is to bring gaming and social interaction together in one place, creating an engaging environment where users can communicate, challenge their friends, and enjoy playing together 
+
 
 ## ⚙️ Setup
 
@@ -49,7 +62,8 @@ Application will be available via nginx proxy on port 8443.
 
 Lead the project through the full development lifecycle while contributing as a developer.
 
-* **Team Organization:** Structured task distribution and hybrid meetings, establishing the shared workspace and cross-functional coordination.
+
+* **Project Management & Team Coordination:** Coordinated team communication, facilitated discussions and negotiations, and helped resolve conflicts to maintain effective collaboration. Organized meetings, aligned team members on decisions and next steps, tracked task progress, and supported task distribution and ongoing project planning.
 * **Documentation:** Created Confluence articles, architecture diagrams, feature specifications, and visual guides for the project knowledge base. Coordinated documentation and knowledge sharing across the entire team.
 * **UI/UX Design:** Designed the application's visual identity and user interface, creating high-fidelity mockups and feature visualizations in Canva. Planned the layout, user flows, and overall user experience to ensure a consistent design across all modules.
 * **Design Documentation:** Documented UI concepts, workflows, and feature specifications in Confluence, providing implementation guidelines and maintaining design consistency throughout development.
@@ -104,6 +118,7 @@ Designed and maintained the project's infrastructure and database layer
 Led the initial frontend setup and established core integrations for REST API and WebSocket communication.
 
 *   **Frontend Architecture:** Bootstrapped the Next.js application and development environment, including linters, formatters, and initial HTTPS configuration.
+*   **2048 Game Development:** Designed and implemented the 2048 game, integrating its core gameplay mechanics into the platform to enable users to play and compete with friends.
 *   **API Integration:** Developed the integration layer between the Next.js frontend and the Spring Boot backend. Implemented the BFF (Backend-for-Frontend) pattern, API web clients, and robust error handling for authentication flows (login/register).
 *   **Real-Time Communication:** Integrated WebSocket (STOMP) connections on the client side, enabling real-time chat functionality and live user presence (online/offline) updates.
 *   **UI/UX Design:** Designed and developed the foundational layout and aesthetics for the platform's landing page and user profile views.
@@ -353,8 +368,7 @@ As DevOps and Database Engineer, Alina designed and maintained the project's inf
 
 ### Kacper
 
-As Frontend Developer and API Integration Engineer, Kacper led the initial frontend setup, bootstrapping the Next.js application along with its linters, formatters, and initial HTTPS configuration. He developed the integration layer between the Next.js frontend and the Spring Boot backend, implementing the Backend-for-Frontend (BFF) pattern, API web clients, and error handling for the authentication flows. He integrated WebSocket (STOMP) connections on the client side to enable real-time chat and live presence updates, designed the foundational layout for the landing page and profile views, and implemented the chat logic for sending and removing messages, creating conversations with friends, and handling backend connection failures.
-
+As Frontend Developer and API Integration Engineer, Kacper led the initial frontend setup, bootstrapping the Next.js application along with its linters, formatters, and initial HTTPS configuration. He developed the integration layer between the Next.js frontend and the Spring Boot backend, implementing the Backend-for-Frontend (BFF) pattern, API web clients, and error handling for the authentication flows. He integrated WebSocket (STOMP) connections on the client side to enable real-time chat and live presence updates, designed the foundational layout for the landing page and profile views, and implemented the chat logic for sending and removing messages, creating conversations with friends, and handling backend connection failures. Additionally implemented the core game logic and UI for a 2048 game (TypeScript, React, Tailwind CSS), including tile movement algorithm, board state management, and component architecture.
 ## 📚 Resources
 
 This section contains the official documentation, articles, and video tutorials used during the development of this project, combining standard references with AI-assisted research.
