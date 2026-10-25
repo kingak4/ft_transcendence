@@ -1,6 +1,7 @@
+import { useTranslations } from 'next-intl';
+
 import Icon from '../../components/Icon';
 import type { IconName } from '../../components/icons';
-import { CHAT_DICT } from './dictionary';
 
 export type DeliveryStatus = 'sending' | 'sent' | 'failed';
 
@@ -15,11 +16,13 @@ interface Props {
 }
 
 export default function MessageStatus({ status }: Props) {
+  const t = useTranslations('chat.status');
+
   return (
     <Icon
       name={STATUS_ICON[status]}
       size="xs"
-      label={CHAT_DICT.status[status]}
+      label={t(status)}
       className={status === 'failed' ? 'text-danger' : undefined}
     />
   );

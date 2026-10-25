@@ -1,17 +1,22 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
+import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
 
-const FOOTER_LINKS = [
-  {
-    href: 'https://github.com/kingak4/ft_transcendence',
-    label: 'GitHub',
-    external: true,
-  },
-  { href: '/privacy-policy', label: 'Privacy Policy' },
-  { href: '/terms-of-service', label: 'Terms of Service' },
-  { href: '/api/docs', label: 'API' },
-];
+type FooterLabel = 'github' | 'privacyPolicy' | 'termsOfService' | 'api';
+
+const FOOTER_LINKS: { href: string; label: FooterLabel; external?: boolean }[] =
+  [
+    {
+      href: 'https://github.com/kingak4/ft_transcendence',
+      label: 'github',
+      external: true,
+    },
+    { href: '/privacy-policy', label: 'privacyPolicy' },
+    { href: '/terms-of-service', label: 'termsOfService' },
+    { href: '/api/docs', label: 'api' },
+  ];
 
 type FooterTone = 'surface' | 'start-page';
 
@@ -21,11 +26,13 @@ const TONE_CLASSES: Record<FooterTone, string> = {
 };
 
 export default function Footer({ tone = 'surface' }: { tone?: FooterTone }) {
+  const t = useTranslations('footer');
+
   return (
     <footer
       className={`border-current/10 mt-auto flex flex-wrap items-center justify-between gap-4 border-t px-4 py-4 text-xs lg:px-14 ${TONE_CLASSES[tone]}`}
     >
-      <nav className="flex flex-wrap gap-5" aria-label="Footer">
+      <nav className="flex flex-wrap gap-5" aria-label={t('label')}>
         {FOOTER_LINKS.map((link) =>
           link.external ? (
             <a
@@ -35,7 +42,7 @@ export default function Footer({ tone = 'surface' }: { tone?: FooterTone }) {
               rel="noreferrer"
               className="font-semibold text-muted transition-colors hover:text-on-surface"
             >
-              {link.label}
+              {t(link.label)}
             </a>
           ) : (
             <Link
@@ -43,12 +50,16 @@ export default function Footer({ tone = 'surface' }: { tone?: FooterTone }) {
               href={link.href}
               className="font-semibold text-muted transition-colors hover:text-on-surface"
             >
-              {link.label}
+              {t(link.label)}
             </Link>
           ),
         )}
       </nav>
-      <ThemeToggle />
+      {/* Pinned LTR so the buttons keep their order on EN↔AR; the group itself mirrors with the footer. */}
+      <div dir="ltr" className="flex flex-wrap items-center gap-3">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
     </footer>
   );
 }

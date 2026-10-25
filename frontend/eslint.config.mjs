@@ -20,6 +20,12 @@ export default defineConfig([
         { tags: ['main'], roles: ['region'] },
       ],
 
+      // All user-facing text goes through next-intl; a bare JSX string is untranslatable.
+      'react/jsx-no-literals': [
+        'error',
+        { noStrings: true, ignoreProps: true, allowedStrings: ['42Hub', '·'] },
+      ],
+
       'react-compiler/react-compiler': 'error',
 
       '@typescript-eslint/no-unused-vars': 'warn',

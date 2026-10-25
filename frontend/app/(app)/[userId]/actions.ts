@@ -1,5 +1,7 @@
 'use server';
 
+import { getTranslations } from 'next-intl/server';
+
 import { client } from '../../lib/api-clients';
 import type { operations } from '../../types/api';
 
@@ -19,10 +21,8 @@ export async function updateDisplayNameAction(
   });
 
   if (response.ok) return { success: true };
-  return {
-    success: false,
-    message: 'Failed to update display name. Try a different one.',
-  };
+  const t = await getTranslations('errors');
+  return { success: false, message: t('updateDisplayName') };
 }
 
 export async function uploadAvatarAction(
@@ -37,5 +37,6 @@ export async function uploadAvatarAction(
   });
 
   if (response.ok) return { success: true };
-  return { success: false, message: 'Failed to upload avatar.' };
+  const t = await getTranslations('errors');
+  return { success: false, message: t('uploadAvatar') };
 }

@@ -2,19 +2,20 @@ import { z } from 'zod';
 
 import type { components } from '../../types/api';
 import type { Satisfies } from './contract';
+import { messageKey } from './messages';
 import { NO_WHITESPACE_PATTERN, PASSWORD_MAX, PASSWORD_MIN } from './rules';
 
 type Schemas = components['schemas'];
 
 const emailField = z
   .string()
-  .min(1, 'Email cannot be blank')
-  .regex(NO_WHITESPACE_PATTERN, 'Email cannot contain spaces')
-  .pipe(z.email('Email should be valid'));
+  .min(1, messageKey('emailBlank'))
+  .regex(NO_WHITESPACE_PATTERN, messageKey('emailSpaces'))
+  .pipe(z.email(messageKey('emailInvalid')));
 
 export const loginSchema = z.object({
-  email: z.string().min(1, 'Email cannot be blank'),
-  password: z.string().min(1, 'Password cannot be blank'),
+  email: z.string().min(1, messageKey('emailBlank')),
+  password: z.string().min(1, messageKey('passwordBlank')),
 });
 
 export const registerSchema = z
@@ -22,23 +23,15 @@ export const registerSchema = z
     email: emailField,
     password: z
       .string()
-      .min(1, 'Password cannot be blank')
-      .min(
-        PASSWORD_MIN,
-        `Password must be between ${PASSWORD_MIN} and ${PASSWORD_MAX} characters`,
-      )
-      .max(
-        PASSWORD_MAX,
-        `Password must be between ${PASSWORD_MIN} and ${PASSWORD_MAX} characters`,
-      )
-      .regex(NO_WHITESPACE_PATTERN, 'Password cannot contain whitespace'),
+      .min(1, messageKey('passwordBlank'))
+      .min(PASSWORD_MIN, messageKey('passwordLength'))
+      .max(PASSWORD_MAX, messageKey('passwordLength'))
+      .regex(NO_WHITESPACE_PATTERN, messageKey('passwordWhitespace')),
     confirmPassword: z.string(),
-    agreedToTerms: z
-      .boolean()
-      .refine(Boolean, 'Please agree to the Terms & Privacy Policy.'),
+    agreedToTerms: z.boolean().refine(Boolean, messageKey('termsRequired')),
   })
   .refine((values) => values.password === values.confirmPassword, {
-    message: 'Passwords do not match.',
+    message: messageKey('passwordsMismatch'),
     path: ['confirmPassword'],
   });
 

@@ -366,6 +366,24 @@ body {
 }
 
 /*
+ * Arabic: the Arabic font comes first and Manrope still covers Latin glyphs
+ * (names, "42Hub"). Unlayered rules beat Tailwind's utilities layer, so
+ * tracking-* can't space out the letters - that would break their joins -
+ * and tight headings get room for the taller Arabic letterforms.
+ */
+body:lang(ar) {
+  font-family: var(--font-noto-arabic), var(--font-manrope), Arial, sans-serif;
+}
+
+:lang(ar) {
+  letter-spacing: normal;
+}
+
+:lang(ar) :is(h1, h2) {
+  line-height: 1.4;
+}
+
+/*
  * Footer on the start-page gradient: text can't reach 4.5:1 on the light end
  * of the gradient, so the footer gets a solid band in the gradient's darkest
  * stop. Re-pointing the tokens lets Footer and ThemeToggle keep using

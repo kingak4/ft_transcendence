@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
@@ -8,10 +9,14 @@ import AccentLink from '../../components/AccentLink';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import FormField from '../../components/FormField';
+import { useValidationMessage } from '../../hooks/useValidationMessage';
 import { register } from '../../lib/register';
 import { registerSchema, type RegisterValues } from '../../lib/validation/auth';
 
 export default function RegisterPage() {
+  const t = useTranslations('auth');
+  const tErrors = useTranslations('errors');
+  const validationMessage = useValidationMessage();
   const {
     register: registerField,
     handleSubmit,
@@ -30,31 +35,28 @@ export default function RegisterPage() {
   async function handleRegister({ email, password }: RegisterValues) {
     const response = await register(email, password);
     if (!response.success) {
-      if (response.status === 500) {
-        alert('Server error. Please try again later.');
-      } else {
-        alert(response.message || 'An unknown error occurred.');
-      }
+      alert(response.message || tErrors('unknown'));
       return;
     }
-    alert(`Successfully registered!\n${response.message}`);
+    alert(t('register.success'));
     window.location.assign('/login');
   }
 
   return (
     <div className="flex flex-1 items-center justify-center">
       <Card>
-        <h1 className="mb-1 text-xl font-extrabold">Register</h1>
-        <p className="mb-6 text-sm font-medium">Nice to meet you!</p>
+        <h1 className="mb-1 text-xl font-extrabold">{t('register.title')}</h1>
+        <p className="mb-6 text-sm font-medium">{t('register.subtitle')}</p>
 
         <form onSubmit={handleSubmit(handleRegister)}>
           <FormField
             id="user-name"
             type="text"
             {...registerField('email')}
-            error={errors.email?.message}
-            label="Email"
+            error={validationMessage(errors.email?.message)}
+            label={t('email')}
             autoComplete="email"
+            dir="ltr"
             tone="card"
             className="mb-3"
           />
@@ -63,8 +65,8 @@ export default function RegisterPage() {
             id="user-password"
             type="password"
             {...registerField('password', { deps: ['confirmPassword'] })}
-            error={errors.password?.message}
-            label="Password"
+            error={validationMessage(errors.password?.message)}
+            label={t('password')}
             autoComplete="new-password"
             tone="card"
             className="mb-3"
@@ -74,8 +76,8 @@ export default function RegisterPage() {
             id="user-confirm-password"
             type="password"
             {...registerField('confirmPassword')}
-            error={errors.confirmPassword?.message}
-            label="Confirm password"
+            error={validationMessage(errors.confirmPassword?.message)}
+            label={t('confirmPassword')}
             autoComplete="new-password"
             tone="card"
             className="mb-5"
@@ -93,20 +95,24 @@ export default function RegisterPage() {
                 className="accent-primary mt-0.5"
               />
               <span className="text-on-card text-xs">
-                I agree to the{' '}
-                <Link
-                  href="/terms-of-service"
-                  className="text-on-card hover:no-underline underline transition-colors"
-                >
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link
-                  href="/privacy-policy"
-                  className="text-on-card hover:no-underline underline transition-colors"
-                >
-                  Privacy Policy
-                </Link>
+                {t.rich('register.agreeToTerms', {
+                  terms: (chunks) => (
+                    <Link
+                      href="/terms-of-service"
+                      className="text-on-card hover:no-underline underline transition-colors"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                  privacy: (chunks) => (
+                    <Link
+                      href="/privacy-policy"
+                      className="text-on-card hover:no-underline underline transition-colors"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })}
               </span>
             </label>
             {errors.agreedToTerms && (
@@ -114,18 +120,20 @@ export default function RegisterPage() {
                 id="agreed-to-terms-error"
                 className="text-danger mt-1 text-sm"
               >
-                {errors.agreedToTerms.message}
+                {validationMessage(errors.agreedToTerms.message)}
               </p>
             )}
           </div>
 
           <Button type="submit" fullWidth>
-            Register
+            {t('register.submit')}
           </Button>
         </form>
 
         <p className="text-on-card mt-4 text-center text-xs">
-          Already have an account? <AccentLink href="/login">Login</AccentLink>
+          {t.rich('register.haveAccount', {
+            link: (chunks) => <AccentLink href="/login">{chunks}</AccentLink>,
+          })}
         </p>
       </Card>
     </div>

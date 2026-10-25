@@ -1,9 +1,10 @@
+import { useTranslations } from 'next-intl';
 import { forwardRef, useId, useState } from 'react';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import TextField from '../../components/TextField';
+import { useValidationMessage } from '../../hooks/useValidationMessage';
 import { chatMessageSchema } from '../../lib/validation/chat';
-import { CHAT_DICT } from './dictionary';
 
 interface Props {
   inputValue: string;
@@ -25,6 +26,8 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
   },
   ref,
 ) {
+  const t = useTranslations('chat.composer');
+  const validationMessage = useValidationMessage();
   const [validationError, setValidationError] = useState<string | null>(null);
   const shownError = validationError ?? errorMsg;
   const errorId = useId();
@@ -33,7 +36,9 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
     const result = chatMessageSchema.safeParse(inputValue);
     if (!result.success) {
       e.preventDefault();
-      setValidationError(result.error.issues[0].message);
+      setValidationError(
+        validationMessage(result.error.issues[0].message) ?? null,
+      );
       return;
     }
     setValidationError(null);
@@ -54,8 +59,9 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
       <TextField
         ref={ref}
         tone="chat"
-        placeholder={CHAT_DICT.composer.placeholder}
-        aria-label={CHAT_DICT.composer.ariaLabel}
+        dir="auto"
+        placeholder={t('placeholder')}
+        aria-label={t('ariaLabel')}
         aria-invalid={!!validationError}
         aria-describedby={shownError ? errorId : undefined}
         className="flex-1"
@@ -70,10 +76,10 @@ const Composer = forwardRef<HTMLInputElement, Props>(function Composer(
       <Button
         disabled={!!isButtonDisabled}
         type="submit"
-        aria-label={CHAT_DICT.composer.send}
+        aria-label={t('send')}
         suppressHydrationWarning
       >
-        <Icon name="send" size="md" />
+        <Icon name="send" size="md" mirrorInRtl />
       </Button>
     </form>
     </div>

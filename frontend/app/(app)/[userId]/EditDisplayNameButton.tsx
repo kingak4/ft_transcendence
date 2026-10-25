@@ -1,11 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
 import { useAsyncAction } from '../../hooks/useAsyncAction';
+import { useValidationMessage } from '../../hooks/useValidationMessage';
 import {
   displayNameSchema,
   type DisplayNameValues,
@@ -19,6 +21,9 @@ interface Props {
 }
 
 export default function EditDisplayNameButton({ displayName }: Props) {
+  const t = useTranslations('profile');
+  const tCommon = useTranslations('common');
+  const validationMessage = useValidationMessage();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const { isLoading, error, setError, run } = useAsyncAction();
@@ -34,7 +39,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
     defaultValues: { displayName },
   });
 
-  const shownError = errors.displayName?.message ?? error;
+  const shownError = validationMessage(errors.displayName?.message) ?? error;
   const changeButtonRef = useRef<HTMLButtonElement>(null);
   const shouldReturnFocusRef = useRef(false);
 
@@ -87,7 +92,8 @@ export default function EditDisplayNameButton({ displayName }: Props) {
           type="text"
           {...register('displayName')}
           maxLength={DISPLAY_NAME_MAX}
-          aria-label="Display name"
+          dir="auto"
+          aria-label={t('displayName')}
           aria-invalid={errors.displayName ? true : undefined}
           aria-describedby={shownError ? 'display-name-error' : undefined}
           className="bg-on-accent/10 text-on-accent placeholder:text-on-accent/40 w-full rounded-xl px-3 py-1 text-2xl font-extrabold"
@@ -103,14 +109,14 @@ export default function EditDisplayNameButton({ displayName }: Props) {
             onClick={handleCancel}
             className="border-on-accent/60 bg-on-accent/15 text-on-accent hover:bg-on-accent/25 rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
           >
-            Cancel
+            {tCommon('cancel')}
           </button>
           <button
             type="submit"
             disabled={isLoading}
             className="bg-elevated-surface text-on-elevated-surface rounded-xl px-5 py-2.5 text-sm font-bold transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isLoading ? 'Saving…' : 'Save'}
+            {isLoading ? tCommon('saving') : tCommon('save')}
           </button>
         </div>
       </form>
@@ -120,7 +126,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
   return (
     <>
       <p className="text-on-accent truncate text-2xl font-extrabold">
-        {displayName}
+        <bdi>{displayName}</bdi>
       </p>
       <button
         ref={changeButtonRef}
@@ -128,7 +134,7 @@ export default function EditDisplayNameButton({ displayName }: Props) {
         onClick={handleEdit}
         className="border-on-accent/60 bg-on-accent/15 text-on-accent hover:bg-on-accent/25 self-start rounded-xl border px-5 py-2.5 text-sm font-bold transition-colors"
       >
-        Change name
+        {t('changeName')}
       </button>
     </>
   );

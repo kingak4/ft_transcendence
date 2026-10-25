@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { client } from '../../lib/api-clients';
 import FriendsPanel, { type FriendCard } from './FriendsPanel';
 
-export const metadata: Metadata = {
-  title: 'Friends',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('friends');
+  return { title: t('title') };
+}
 
 const FRIENDS_PAGE_SIZE = 10;
 
@@ -23,7 +25,10 @@ function parsePageParam(raw: string | undefined): number {
   return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
 }
 
-async function loadFriendsPage(page: number): Promise<FriendsPage> {
+async function loadFriendsPage(
+  page: number,
+  unknownUser: string,
+): Promise<FriendsPage> {
   const { data, response } = await client.GET('/friends', {
     params: { query: { page, size: FRIENDS_PAGE_SIZE } },
   });
@@ -35,7 +40,7 @@ async function loadFriendsPage(page: number): Promise<FriendsPage> {
   return {
     cards: (data?.content ?? []).map((friend) => ({
       id: friend.id ?? '',
-      displayName: friend.details?.displayName ?? 'Unknown User',
+      displayName: friend.details?.displayName ?? unknownUser,
       avatarId: friend.details?.avatarId?.val,
     })),
     page: data?.number ?? page,
@@ -58,7 +63,12 @@ export default async function FriendsRoute({ searchParams }: Props) {
     redirect('/login');
   }
 
-  const friendsPage = await loadFriendsPage(requestedPage);
+  const t = await getTranslations('friends');
+  const tCommon = await getTranslations('common');
+  const friendsPage = await loadFriendsPage(
+    requestedPage,
+    tCommon('unknownUser'),
+  );
 
   if (
     !friendsPage.loadError &&
@@ -71,12 +81,12 @@ export default async function FriendsRoute({ searchParams }: Props) {
   return (
     <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
-        Friends
+        {t('title')}
       </h1>
 
       {friendsPage.loadError ? (
         <p className="text-on-surface/40 text-sm font-medium">
-          Couldn&apos;t load friends. Please try again later.
+          {t('loadError')}
         </p>
       ) : (
         <FriendsPanel

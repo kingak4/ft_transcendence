@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import TextField from './TextField';
@@ -32,9 +33,10 @@ export default function UserSearch({
   searchAction,
   renderAction,
   label,
-  placeholder = 'Search users by name…',
-  emptyMessage = 'No users found.',
+  placeholder,
+  emptyMessage,
 }: Props) {
+  const t = useTranslations('userSearch');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<UserListItem[]>([]);
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
@@ -189,7 +191,8 @@ export default function UserSearch({
         aria-label={label}
         value={query}
         onChange={handleQueryChange}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('placeholder')}
+        dir="auto"
         size="md"
       />
 
@@ -203,7 +206,7 @@ export default function UserSearch({
         <>
           <UserList
             users={visibleResults}
-            emptyMessage={emptyMessage}
+            emptyMessage={emptyMessage ?? t('empty')}
             renderAction={(user) =>
               renderAction(user, () =>
                 setDismissedIds((prev) => new Set(prev).add(user.id)),
@@ -216,7 +219,7 @@ export default function UserSearch({
               disabled={isLoadingMore}
               className="text-on-surface bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoadingMore ? 'Loading…' : 'Load more'}
+              {isLoadingMore ? t('loading') : t('loadMore')}
             </button>
           )}
         </>

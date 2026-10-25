@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -21,8 +22,11 @@ const loadUserDetails = cache((userId: string) =>
   }),
 );
 
-function profileTitle(isOwnProfile: boolean, displayName: string) {
-  return isOwnProfile ? 'My Profile' : `${displayName}'s profile`;
+async function profileTitle(isOwnProfile: boolean, displayName: string) {
+  const t = await getTranslations('profile');
+  return isOwnProfile
+    ? t('myProfile')
+    : t('userProfile', { name: displayName });
 }
 
 function isSignedInUser(
@@ -35,11 +39,16 @@ function isSignedInUser(
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { userId } = await params;
   const { data } = await loadUserDetails(userId);
-  if (!data) return { title: 'Profile not found' };
+  const t = await getTranslations('profile');
+  if (!data) return { title: t('notFound') };
 
+  const tCommon = await getTranslations('common');
   const isOwnProfile = isSignedInUser(await cookies(), userId);
   return {
-    title: profileTitle(isOwnProfile, data.displayName ?? 'Unknown User'),
+    title: await profileTitle(
+      isOwnProfile,
+      data.displayName ?? tCommon('unknownUser'),
+    ),
   };
 }
 
@@ -56,13 +65,17 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b last:border-b-0">
       <dt className="text-muted text-sm font-semibold">{label}</dt>
-      <dd className="text-sm font-bold">{value}</dd>
+      <dd className="text-sm font-bold">
+        <bdi>{value}</bdi>
+      </dd>
     </div>
   );
 }
 
 export default async function UserProfilePage({ params }: Props) {
   const { userId } = await params;
+  const t = await getTranslations('profile');
+  const tCommon = await getTranslations('common');
 
   const isOwnProfile = isSignedInUser(await cookies(), userId);
 
@@ -76,7 +89,7 @@ export default async function UserProfilePage({ params }: Props) {
     notFound();
   }
 
-  const displayName = data.displayName ?? 'Unknown User';
+  const displayName = data.displayName ?? tCommon('unknownUser');
   const avatarSrc = data.avatarId ? `/api/users/avatar/${data.avatarId}` : null;
 
   const friendsCount = isOwnProfile ? await loadFriendsCount() : null;
@@ -84,7 +97,7 @@ export default async function UserProfilePage({ params }: Props) {
   return (
     <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
-        {profileTitle(isOwnProfile, displayName)}
+        {await profileTitle(isOwnProfile, displayName)}
       </h1>
 
       <div className="bg-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_var(--color-shadow-hero)] lg:p-9">
@@ -95,7 +108,11 @@ export default async function UserProfilePage({ params }: Props) {
           />
         ) : (
           <div className={`shrink-0 ${AVATAR_RING_CLASSES}`}>
-            <Avatar src={avatarSrc} alt={`${displayName}'s avatar`} size={96} />
+            <Avatar
+              src={avatarSrc}
+              alt={tCommon('avatarAlt', { name: displayName })}
+              size={96}
+            />
           </div>
         )}
 
@@ -104,16 +121,16 @@ export default async function UserProfilePage({ params }: Props) {
             <EditDisplayNameButton displayName={displayName} />
           ) : (
             <p className="text-on-accent truncate text-2xl font-extrabold">
-              {displayName}
+              <bdi>{displayName}</bdi>
             </p>
           )}
         </div>
       </div>
 
       <dl className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_var(--color-shadow-card)]">
-        <InfoRow label="Username" value={displayName} />
+        <InfoRow label={t('username')} value={displayName} />
         {friendsCount !== null && (
-          <InfoRow label="Friends" value={String(friendsCount)} />
+          <InfoRow label={t('friends')} value={String(friendsCount)} />
         )}
       </dl>
 
@@ -123,7 +140,7 @@ export default async function UserProfilePage({ params }: Props) {
             type="submit"
             className="bg-danger-cta text-on-accent px-7.5 py-3.25 rounded-[14px] text-sm font-bold shadow-[0_8px_20px_color-mix(in_srgb,var(--color-danger-end)_28%,transparent)] transition-[filter] hover:brightness-110"
           >
-            Logout
+            {t('logout')}
           </button>
         </form>
       )}

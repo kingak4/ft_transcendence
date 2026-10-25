@@ -1,5 +1,7 @@
 'use server';
 
+import { getTranslations } from 'next-intl/server';
+
 import { client } from '../../lib/api-clients';
 
 export type ActionResult =
@@ -14,7 +16,8 @@ export async function removeFriendAction(
   });
 
   if (response.ok) return { success: true };
-  return { success: false, message: 'Failed to remove friend.' };
+  const t = await getTranslations('errors');
+  return { success: false, message: t('removeFriend') };
 }
 
 export async function addFriendAction(friendId: string): Promise<ActionResult> {
@@ -23,7 +26,8 @@ export async function addFriendAction(friendId: string): Promise<ActionResult> {
   });
 
   if (response.ok) return { success: true };
-  return { success: false, message: 'Failed to add friend.' };
+  const t = await getTranslations('errors');
+  return { success: false, message: t('addFriend') };
 }
 
 export type SearchUserResult = {
@@ -46,12 +50,14 @@ export async function searchUsersAction(
   });
 
   if (!response.ok || !data) {
-    return { success: false, message: 'Failed to search users.' };
+    const t = await getTranslations('errors');
+    return { success: false, message: t('searchUsers') };
   }
 
+  const tCommon = await getTranslations('common');
   const results = (data.content ?? []).map((user) => ({
     id: user.id ?? '',
-    displayName: user.displayName ?? 'Unknown User',
+    displayName: user.displayName ?? tCommon('unknownUser'),
     avatarId: user.avatarId?.val,
   }));
 

@@ -1,20 +1,22 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { usePresence } from '../hooks/usePresence';
 
-const RECONNECTING_MSG = 'Reconnecting to the server...';
-const UNREACHABLE_MSG = 'Cannot reach the server. Retrying...';
+type BannerMessage = 'reconnecting' | 'unreachable';
 
 const RECONNECT_GRACE_MS = 5000;
 const INITIAL_GRACE_MS = 8000;
 
 export default function ConnectionBanner() {
+  const t = useTranslations('connection');
   const { isConnected } = usePresence();
 
+  // Holds a message key, so a language switch re-translates a visible banner.
   const [state, setState] = useState({
     wasConnected: false,
-    message: null as string | null,
+    message: null as BannerMessage | null,
     prevIsConnected: isConnected,
   });
 
@@ -30,10 +32,12 @@ export default function ConnectionBanner() {
     if (isConnected) return;
 
     const delay = state.wasConnected ? RECONNECT_GRACE_MS : INITIAL_GRACE_MS;
-    const text = state.wasConnected ? RECONNECTING_MSG : UNREACHABLE_MSG;
+    const message: BannerMessage = state.wasConnected
+      ? 'reconnecting'
+      : 'unreachable';
 
     const timer = setTimeout(() => {
-      setState((prev) => ({ ...prev, message: text }));
+      setState((prev) => ({ ...prev, message }));
     }, delay);
 
     return () => clearTimeout(timer);
@@ -47,7 +51,7 @@ export default function ConnectionBanner() {
       aria-live="polite"
       className="bg-danger/10 border-danger/20 text-danger sticky top-0 z-50 shrink-0 border-b p-2 text-center text-xs font-medium"
     >
-      {state.message}
+      {t(state.message)}
     </div>
   );
 }

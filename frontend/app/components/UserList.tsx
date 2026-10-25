@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import Avatar from './Avatar';
@@ -22,6 +23,8 @@ export default function UserList({
   renderAction,
   getHref,
 }: Props) {
+  const t = useTranslations('common');
+
   if (users.length === 0) {
     return (
       <p className="text-on-surface/40 text-sm font-medium">{emptyMessage}</p>
@@ -39,11 +42,11 @@ export default function UserList({
           <>
             <Avatar
               src={avatarSrc}
-              alt={getHref ? '' : `${user.displayName}'s avatar`}
+              alt={getHref ? '' : t('avatarAlt', { name: user.displayName })}
               size={44}
             />
             <p className="text-sm font-bold group-hover:underline">
-              {user.displayName}
+              <bdi>{user.displayName}</bdi>
             </p>
           </>
         );

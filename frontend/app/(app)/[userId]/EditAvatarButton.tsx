@@ -1,12 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Avatar from '../../components/Avatar';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
+import { useValidationMessage } from '../../hooks/useValidationMessage';
 import { avatarFileSchema } from '../../lib/validation/profile';
 import { uploadAvatarAction } from './actions';
 import { AVATAR_RING_CLASSES } from './avatarRing';
@@ -17,6 +19,9 @@ interface Props {
 }
 
 export default function EditAvatarButton({ avatarId, displayName }: Props) {
+  const t = useTranslations('profile');
+  const tCommon = useTranslations('common');
+  const validationMessage = useValidationMessage();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const avatarPreviewRef = useRef<string | null>(null);
@@ -46,7 +51,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
     if (!result.success) {
       setAvatarFile(null);
       setAvatarPreview(null);
-      setError(result.error.issues[0].message);
+      setError(validationMessage(result.error.issues[0].message) ?? null);
       return;
     }
     setError(null);
@@ -60,7 +65,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!avatarFile) {
-      setError('Please select a photo first.');
+      setError(t('selectPhotoFirst'));
       return;
     }
 
@@ -96,22 +101,26 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
   return (
     <>
       <div className={`relative shrink-0 ${AVATAR_RING_CLASSES}`}>
-        <Avatar src={currentSrc} alt={`${displayName}'s avatar`} size={96} />
+        <Avatar
+          src={currentSrc}
+          alt={tCommon('avatarAlt', { name: displayName })}
+          size={96}
+        />
         <button
           type="button"
           onClick={handleOpen}
-          aria-label="Edit avatar"
-          className="bg-surface text-on-surface absolute bottom-0 right-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_var(--color-shadow-subtle)] transition hover:brightness-90"
+          aria-label={t('editAvatar')}
+          className="bg-surface text-on-surface absolute bottom-0 end-0 rounded-full p-1.5 text-xs font-semibold shadow-[0_4px_14px_var(--color-shadow-subtle)] transition hover:brightness-90"
         >
-          Edit
+          {t('edit')}
         </button>
       </div>
 
       <Dialog
         open={isOpen}
         onClose={handleClose}
-        title="Change avatar"
-        description="Pick a new photo for your profile."
+        title={t('changeAvatar')}
+        description={t('changeAvatarDescription')}
         dismissible={!isSubmitting}
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -120,12 +129,12 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="bg-on-elevated-surface/10 relative h-24 w-24 overflow-hidden rounded-full transition-opacity hover:opacity-75"
-              title="Click to choose a photo"
+              title={t('choosePhoto')}
             >
               {avatarPreview ? (
                 <Image
                   src={avatarPreview}
-                  alt="Preview"
+                  alt={t('preview')}
                   width={96}
                   height={96}
                   unoptimized
@@ -134,7 +143,7 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
               ) : currentSrc ? (
                 <Image
                   src={currentSrc}
-                  alt="Current avatar"
+                  alt={t('currentAvatar')}
                   width={96}
                   height={96}
                   unoptimized
@@ -142,11 +151,11 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
                 />
               ) : (
                 <span className="text-muted flex h-full w-full items-center justify-center text-xs">
-                  Add photo
+                  {t('addPhoto')}
                 </span>
               )}
             </button>
-            <p className="text-muted text-xs">Click to choose a photo</p>
+            <p className="text-muted text-xs">{t('choosePhoto')}</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -169,10 +178,10 @@ export default function EditAvatarButton({ avatarId, displayName }: Props) {
               disabled={isSubmitting}
               className="flex-1"
             >
-              Cancel
+              {tCommon('cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting} className="flex-1">
-              {isSubmitting ? 'Saving…' : 'Save'}
+              {isSubmitting ? tCommon('saving') : tCommon('save')}
             </Button>
           </div>
         </form>

@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -11,6 +12,8 @@ import { clearSession } from '../lib/logout';
 import { assertValidSession } from '../lib/session';
 
 export default async function LandingPage() {
+  const t = await getTranslations('home');
+  const tSession = await getTranslations('session');
   const cookieStore = await cookies();
   const userId = cookieStore.get('user_id')?.value ?? null;
 
@@ -28,23 +31,24 @@ export default async function LandingPage() {
 
       {userId ? (
         <SessionCard
-          title="Welcome back!"
-          subtitle="Continue your journey."
+          title={tSession('welcomeBack')}
+          subtitle={tSession('continueJourney')}
           userId={userId}
           logoutAction={clearSession}
         />
       ) : (
         <Card>
-          <h2 className="mb-1 text-xl font-extrabold">Hello!</h2>
-          <p className="mb-6 text-sm font-medium">
-            Do your thing. Grind.
-          </p>
+          <h2 className="mb-1 text-xl font-extrabold">{t('hello')}</h2>
+          <p className="mb-6 text-sm font-medium">{t('tagline')}</p>
           <Button href="/login" fullWidth>
-            Login
+            {t('login')}
           </Button>
           <p className="mt-4 text-center text-xs">
-            Don&apos;t have an account yet?{' '}
-            <AccentLink href="/register">Register</AccentLink>
+            {t.rich('noAccount', {
+              link: (chunks) => (
+                <AccentLink href="/register">{chunks}</AccentLink>
+              ),
+            })}
           </p>
         </Card>
       )}

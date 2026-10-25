@@ -1,19 +1,21 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
 import ChatSidebar from './ChatSidebar';
 import type { ChatUser } from './types';
 import type { components } from '../../types/api';
-import { CHAT_DICT } from './dictionary';
 
 type FriendResult = components['schemas']['FriendResult'];
 type ChatResponse = components['schemas']['ChatResponse'];
 
-export const metadata = {
-  title: 'Chat',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('chat');
+  return { title: t('title') };
+}
 
-async function loadUsers(): Promise<ChatUser[]> {
+async function loadUsers(unknownUser: string): Promise<ChatUser[]> {
   const { data, response } = await client.GET('/friends', {
     params: { query: { page: 0, size: 20 } },
   });
@@ -24,7 +26,7 @@ async function loadUsers(): Promise<ChatUser[]> {
 
   return (data?.content ?? []).map((friend: FriendResult) => ({
     id: friend.id ?? '',
-    name: friend.details?.displayName ?? 'Unknown User',
+    name: friend.details?.displayName ?? unknownUser,
     initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
     avatarId: friend.details?.avatarId?.val ?? null,
     online: false,
@@ -32,7 +34,7 @@ async function loadUsers(): Promise<ChatUser[]> {
   }));
 }
 
-async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: ChatUser }[]> {
+async function loadChats(allUsers: ChatUser[], unknownUser: string): Promise<{ chatId: string; user: ChatUser }[]> {
   const { data, response } = await client.GET('/chats', {
     params: { query: { page: 0, size: 20 } },
   });
@@ -46,7 +48,7 @@ async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: 
 
     if (!user) {
       const fallbackId = userId ?? chat.chatId ?? '';
-      const fallbackName = chat.displayName ?? chat.chatId ?? 'Unknown';
+      const fallbackName = chat.displayName ?? chat.chatId ?? unknownUser;
       user = {
         id: fallbackId,
         name: fallbackName,
@@ -76,8 +78,12 @@ export default async function ChatPage({
   const cookieStore = await cookies();
   const myUserId = cookieStore.get('user_id')?.value ?? null;
 
-  const allUsers = await loadUsers();
-  const activeChats = await loadChats(allUsers);
+  const t = await getTranslations('chat');
+  const tCommon = await getTranslations('common');
+  const unknownUser = tCommon('unknownUser');
+
+  const allUsers = await loadUsers(unknownUser);
+  const activeChats = await loadChats(allUsers, unknownUser);
 
   let activeUser = allUsers.find((f) => f.id === userId) || null;
   let activeChatId = urlChatId || null;
@@ -99,7 +105,7 @@ export default async function ChatPage({
       if (response.ok && userDetails) {
         activeUser = {
           id: userId,
-          name: userDetails.displayName ?? 'Unknown User',
+          name: userDetails.displayName ?? unknownUser,
           initial: (userDetails.displayName ?? 'U').charAt(0).toUpperCase(),
           avatarId: userDetails.avatarId ?? null,
           online: false,
@@ -118,13 +124,13 @@ export default async function ChatPage({
 
   return (
     <div className="border-elevated-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
-      <h1 className="sr-only">Chat</h1>
+      <h1 className="sr-only">{t('title')}</h1>
       <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} hiddenOnNarrow={!!activeUser} />
       {activeUser ? (
         <Conversation user={activeUser} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
       ) : (
         <div className="bg-sunken-surface hidden flex-1 items-center justify-center text-sm text-muted lg:flex">
-          {CHAT_DICT.page.selectChatToStart}
+          {t('selectChatToStart')}
         </div>
       )}
     </div>
