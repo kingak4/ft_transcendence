@@ -30,6 +30,7 @@ export default function Footer({ tone = 'surface' }: { tone?: FooterTone }) {
 
   return (
     <footer
+      dir="ltr"
       className={`border-current/10 mt-auto flex flex-wrap items-center justify-between gap-4 border-t px-4 py-4 text-xs lg:px-14 ${TONE_CLASSES[tone]}`}
     >
       <nav className="flex flex-wrap gap-5" aria-label={t('label')}>
