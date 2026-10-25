@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useId, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import TextField from '../../components/TextField';
 import UserRow from './UserRow';
 import type { ChatUser } from './types';
 import { usePresence } from '../../hooks/usePresence';
 import { client } from '../../lib/api-clients';
-import { CHAT_DICT } from './dictionary';
 
 interface Props {
   activeChats: { chatId: string; user: ChatUser }[];
@@ -25,9 +25,14 @@ export default function ChatSidebar({
   activeUserId,
   myUserId,
   hiddenOnNarrow = false,
-  searchPlaceholder = CHAT_DICT.rail.searchPlaceholder,
-  emptyStateText = CHAT_DICT.rail.noUsersFound
+  searchPlaceholder,
+  emptyStateText
 }: Props) {
+  const t = useTranslations('chat.rail');
+  const tCommon = useTranslations('common');
+  const unknownUser = tCommon('unknownUser');
+  const shownPlaceholder = searchPlaceholder ?? t('searchPlaceholder');
+  const titleId = useId();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const [searchInput, setSearchInput] = useState(initialQuery);
@@ -53,9 +58,8 @@ export default function ChatSidebar({
           .filter(u => u.id !== myUserId)
           .map(u => ({
             id: u.id ?? '',
-            name: u.displayName ?? 'Unknown User',
+            name: u.displayName ?? unknownUser,
             initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
-            color: 'bg-hub-panel',
             avatarId: u.avatarId?.val ?? null,
             online: false,
             status: 'Offline',
@@ -65,7 +69,7 @@ export default function ChatSidebar({
     }
     performSearch();
     return () => { active = false; };
-  }, [debouncedQuery, myUserId]);
+  }, [debouncedQuery, myUserId, unknownUser]);
 
   const searchResults = useMemo(() => {
     return globalSearchResults;
@@ -93,10 +97,11 @@ export default function ChatSidebar({
   }, [searchInput]);
 
   return (
-    // `border-e` is border-inline-end: the right edge in LTR, the left in RTL.
     <aside
-      className={`bg-hub-panel border-hub-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
+      aria-labelledby={titleId}
+      className={`bg-elevated-surface border-elevated-border ${hiddenOnNarrow ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col border-e lg:w-[290px]`}
     >
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- delegation: tracks focus leaving the search field + results group */}
       <div
         className="relative flex flex-col gap-3 p-4"
         onBlur={(e) => {
@@ -105,45 +110,44 @@ export default function ChatSidebar({
           }
         }}
       >
-        <h2 className="text-hub-on-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
+        <h2 id={titleId}className="text-on-elevated-surface text-base font-bold">{t('title')}</h2>
         <TextField
           tone="chat"
           size="sm"
           type="search"
-          placeholder={searchPlaceholder}
-          aria-label={searchPlaceholder}
+          dir="auto"
+          placeholder={shownPlaceholder}
+          aria-label={shownPlaceholder}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onFocus={() => setIsFocused(true)}
         />
 
-        {/* Search Results Dropdown */}
         {(debouncedQuery || isFocused) && (
-          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-hub-border bg-hub-panel shadow-lg">
+          <div className="absolute top-[100%] start-4 end-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-elevated-border bg-elevated-surface shadow-lg">
             {searchResults.length > 0 ? (
               <div className="flex flex-col p-2 gap-1">
                 {searchResults.map((user) => (
                   <UserRow
                     key={user.id}
                     user={{ ...user, online: onlineStatus[user.id] ?? false }}
-                    isActive={false} // Never active in the search dropdown
+                    isActive={false}
                     onClick={() => setSearchInput('')}
                   />
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center text-sm text-hub-muted">{emptyStateText}</div>
+              <div className="p-4 text-center text-sm text-muted">{emptyStateText ?? t('noUsersFound')}</div>
             )}
           </div>
         )}
       </div>
 
-      {/* min-h-0 lets this shrink below its content so overflow-y-auto can
-       * actually engage; without it the list would push the rail taller.
+      {/*
        * TODO(stomp): `GET /friends` is paginated so this renders one page (size: 20),
        * not every friend. Needs infinite scroll on this container to load subsequent pages.
        */}
-      <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
+      <nav aria-labelledby={titleId}className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pb-4">
         {sidebarUsers.map((user) => {
           return (
             <div key={user.id}>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { useAsyncAction } from '../../hooks/useAsyncAction';
 
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function AddFriendButton({ friendId, onAdded }: Props) {
+  const t = useTranslations('friends');
   const router = useRouter();
   const { isLoading, error, run } = useAsyncAction();
 
@@ -30,9 +32,9 @@ export default function AddFriendButton({ friendId, onAdded }: Props) {
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className="bg-primary text-on-primary px-4.5 py-2.25 rounded-[10px] text-sm font-bold transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-primary text-on-primary px-4.5 py-2.25 rounded-[10px] text-sm font-bold transition hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isLoading ? 'Adding…' : 'Add'}
+        {isLoading ? t('adding') : t('add')}
       </button>
       {error && <p className="text-danger text-xs">{error}</p>}
     </div>

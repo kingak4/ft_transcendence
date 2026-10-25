@@ -15,13 +15,17 @@
     "generate:all:dev": "npm run generate:api:dev && npm run generate:asyncapi:dev"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.2",
     "@stomp/stompjs": "^7.0.0",
     "next": "^16.2.6",
+    "next-intl": "^4.14.9",
     "openapi-fetch": "^0.17.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-hook-form": "^7.90.0",
     "react-stomp-hooks": "^3.0.0",
-    "sockjs-client": "^1.6.1"
+    "sockjs-client": "^1.6.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@asyncapi/modelina": "^3.0.0",
@@ -36,6 +40,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-tailwindcss": "^3.18.3",
     "openapi-typescript": "^7.13.0",

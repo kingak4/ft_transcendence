@@ -16,7 +16,11 @@ public class GetChatMessages implements GetChatMessagesUseCase {
 
   @Override
   public List<Message> getChatMessages(ChatId chatId, int page, int size) {
-    if (dao.getChat(chatId).isEmpty()) throw new ChatNotFoundException();
+    try {
+      if (dao.getChat(chatId).isEmpty()) throw new ChatNotFoundException();
+    } catch (Exception e) {
+      throw new ChatNotFoundException();
+    }
     return dao.getRecentMessages(chatId, page, size);
   }
 }

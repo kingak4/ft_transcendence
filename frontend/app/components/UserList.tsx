@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import Avatar from './Avatar';
@@ -12,18 +14,17 @@ interface Props {
   users: UserListItem[];
   emptyMessage: string;
   renderAction: (user: UserListItem) => ReactNode;
+  getHref?: (user: UserListItem) => string;
 }
 
-// The export's result row (isSearch, line 315) lifts itself with a shadow and
-// carries no border at all - we did the opposite, a 1px border and no shadow.
-// Swapping them is the substantive change here; the rest is the dictionary's
-// "wiersz listy" rows: 16px radius, 14x18px padding, 16px between children.
-//
-// The 44px avatar closes a 12.5 entry that has been assigned to this position
-// since the inventory was written. `size` is a number passed by the caller, so
-// it could only ever be fixed at a call site - and this is the call site both
-// friends and search results go through.
-export default function UserList({ users, emptyMessage, renderAction }: Props) {
+export default function UserList({
+  users,
+  emptyMessage,
+  renderAction,
+  getHref,
+}: Props) {
+  const t = useTranslations('common');
+
   if (users.length === 0) {
     return (
       <p className="text-on-surface/40 text-sm font-medium">{emptyMessage}</p>
@@ -37,19 +38,34 @@ export default function UserList({ users, emptyMessage, renderAction }: Props) {
           ? `/api/users/avatar/${user.avatarId}`
           : null;
 
+        const identity = (
+          <>
+            <Avatar
+              src={avatarSrc}
+              alt={getHref ? '' : t('avatarAlt', { name: user.displayName })}
+              size={44}
+            />
+            <p className="text-sm font-bold group-hover:underline">
+              <bdi>{user.displayName}</bdi>
+            </p>
+          </>
+        );
+
         return (
           <li
             key={user.id}
-            className="bg-elevated-surface text-on-elevated-surface px-4.5 flex items-center justify-between gap-4 rounded-2xl py-3.5 shadow-[0_6px_18px_rgba(10,42,77,0.07)]"
+            className="bg-elevated-surface text-on-elevated-surface px-4.5 flex items-center justify-between gap-4 rounded-2xl py-3.5 shadow-[0_6px_18px_var(--color-shadow-row)]"
           >
-            <div className="flex items-center gap-4">
-              <Avatar
-                src={avatarSrc}
-                alt={`${user.displayName}'s avatar`}
-                size={44}
-              />
-              <p className="text-sm font-bold">{user.displayName}</p>
-            </div>
+            {getHref ? (
+              <Link
+                href={getHref(user)}
+                className="group flex items-center gap-4"
+              >
+                {identity}
+              </Link>
+            ) : (
+              <div className="flex items-center gap-4">{identity}</div>
+            )}
             {renderAction(user)}
           </li>
         );

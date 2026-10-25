@@ -1,0 +1,338 @@
+{
+  "metadata": {
+    "description": "Every skill has a story — start yours."
+  },
+  "common": {
+    "unknownUser": "Unknown User",
+    "online": "Online",
+    "offline": "Offline",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "avatarAlt": "{name}'s avatar",
+    "back": "Back"
+  },
+  "shell": {
+    "skipToMain": "Skip to main content"
+  },
+  "nav": {
+    "open": "Open navigation",
+    "close": "Close navigation",
+    "main": "Main",
+    "myProfile": "My Profile",
+    "chat": "Chat",
+    "friends": "Friends"
+  },
+  "footer": {
+    "label": "Footer",
+    "github": "GitHub",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "api": "API",
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "session": {
+    "goToProfile": "Go to my profile",
+    "logOut": "Log out",
+    "alreadyLoggedIn": "Already logged in",
+    "alreadyLoggedInSubtitle": "You are currently logged in to your account.",
+    "welcomeBack": "Welcome back!",
+    "continueJourney": "Continue your journey."
+  },
+  "home": {
+    "heroTitle": "Let's chat with your friends.",
+    "heroSubtitle": "Join 42Hub to stay close to the people you care about — real conversations, made simple.",
+    "hello": "Hello!",
+    "tagline": "Do your thing. Grind.",
+    "login": "Login",
+    "noAccount": "Don't have an account yet? <link>Register</link>"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "login": {
+      "title": "Login",
+      "subtitle": "Welcome back!",
+      "submit": "Login",
+      "noAccount": "Don't have an account? <link>Register</link>"
+    },
+    "register": {
+      "title": "Register",
+      "subtitle": "Nice to meet you!",
+      "submit": "Register",
+      "agreeToTerms": "I agree to the <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>",
+      "haveAccount": "Already have an account? <link>Login</link>",
+      "success": "Successfully registered! You can now log in."
+    }
+  },
+  "validation": {
+    "emailBlank": "Email cannot be blank",
+    "emailSpaces": "Email cannot contain spaces",
+    "emailInvalid": "Email should be valid",
+    "passwordBlank": "Password cannot be blank",
+    "passwordLength": "Password must be between {passwordMin} and {passwordMax} characters",
+    "passwordWhitespace": "Password cannot contain whitespace",
+    "termsRequired": "Please agree to the Terms & Privacy Policy.",
+    "passwordsMismatch": "Passwords do not match.",
+    "displayNameBlank": "Display name cannot be blank",
+    "displayNameLength": "Display name must be between {displayNameMin} and {displayNameMax} characters",
+    "displayNamePattern": "Display name can only contain letters, numbers, underscores, or periods",
+    "avatarType": "Please choose an image file.",
+    "avatarSize": "Image must be {avatarMaxMb} MB or smaller.",
+    "messageEmpty": "Message cannot be empty.",
+    "messageTooLong": "Message must be {messageMax} characters or fewer.",
+    "invalid": "This value is invalid."
+  },
+  "errors": {
+    "unknown": "An unknown error occurred.",
+    "server": "Server error. Please try again later.",
+    "invalidCredentials": "Invalid email or password.",
+    "registrationRejected": "Registration failed. Check your email and password and try again.",
+    "emailRejected": "The server rejected this email address. Please use a different one.",
+    "passwordRejected": "This password was rejected — it may be too common. Please choose a different one.",
+    "emailTaken": "An account with this email already exists.",
+    "updateDisplayName": "Failed to update display name. Try a different one.",
+    "uploadAvatar": "Failed to upload avatar.",
+    "addFriend": "Failed to add friend.",
+    "removeFriend": "Failed to remove friend.",
+    "searchUsers": "Failed to search users."
+  },
+  "profile": {
+    "myProfile": "My Profile",
+    "userProfile": "{name}'s profile",
+    "notFound": "Profile not found",
+    "username": "Username",
+    "friends": "Friends",
+    "logout": "Logout",
+    "edit": "Edit",
+    "editAvatar": "Edit avatar",
+    "changeAvatar": "Change avatar",
+    "changeAvatarDescription": "Pick a new photo for your profile.",
+    "choosePhoto": "Click to choose a photo",
+    "addPhoto": "Add photo",
+    "preview": "Preview",
+    "currentAvatar": "Current avatar",
+    "selectPhotoFirst": "Please select a photo first.",
+    "displayName": "Display name",
+    "changeName": "Change name"
+  },
+  "friends": {
+    "title": "Friends",
+    "loadError": "Couldn't load friends. Please try again later.",
+    "searchUsers": "Search users",
+    "noFriends": "No friends yet.",
+    "pagesLabel": "Friends pages",
+    "prev": "‹ Prev",
+    "next": "Next ›",
+    "pageOf": "Page {page} of {total}",
+    "add": "Add",
+    "adding": "Adding…",
+    "remove": "Remove",
+    "removing": "Removing…",
+    "openChat": "Chat"
+  },
+  "userSearch": {
+    "placeholder": "Search users by name…",
+    "empty": "No users found.",
+    "loading": "Loading…",
+    "loadMore": "Load more"
+  },
+  "chat": {
+    "title": "Chat",
+    "selectChatToStart": "Select a chat to start messaging",
+    "rail": {
+      "title": "Chats",
+      "searchPlaceholder": "Search users",
+      "noUsersFound": "No users found"
+    },
+    "conversation": {
+      "back": "Back to conversations",
+      "notFriendBanner": "This user is not on your friend list."
+    },
+    "messages": {
+      "label": "Messages",
+      "you": "You",
+      "senderPrefix": "{name}: ",
+      "newMessageFrom": "New message from {name}: {content}",
+      "deleted": "(message deleted)",
+      "delete": "Delete message",
+      "yesterday": "Yesterday",
+      "errorInitChat": "Failed to initialize chat",
+      "errorSendNotConnected": "Failed to send message: Not connected to server",
+      "errorDeleteNotConnected": "Failed to delete message: Not connected to server",
+      "invite": {
+        "title": "Challenge: {game}",
+        "sent": "You sent a game invitation.",
+        "received": "Invited you to check out the game.",
+        "sentScore": "You challenged with a score of {score} pts!",
+        "receivedScore": "Challenged you! Score to beat: {score} pts.",
+        "play": "Play {game}"
+      }
+    },
+    "composer": {
+      "placeholder": "Type a message",
+      "ariaLabel": "Message",
+      "send": "Send"
+    },
+    "status": {
+      "sending": "Sending",
+      "sent": "Sent",
+      "failed": "Failed to send"
+    }
+  },
+  "connection": {
+    "reconnecting": "Reconnecting to the server...",
+    "unreachable": "Cannot reach the server. Retrying..."
+  },
+  "legal": {
+    "contact": {
+      "country": "Poland",
+      "email": "Email: {email}"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sections": [
+        {
+          "title": "1. Introduction",
+          "paragraphs": [
+            "This Privacy Policy explains how ft_transcendence collects, uses, and protects user information.",
+            "ft_transcendence is a student project created as part of the 42 Warsaw curriculum."
+          ]
+        },
+        {
+          "title": "2. Data We Collect",
+          "paragraphs": ["The application may collect the following information:"],
+          "items": [
+            "Username and profile information",
+            "Email address (if provided)",
+            "Authentication data",
+            "Game statistics and match history",
+            "User uploaded profile images",
+            "Technical information such as IP address and browser type",
+            "Session and cookie data required for authentication"
+          ]
+        },
+        {
+          "title": "3. How We Use Data",
+          "paragraphs": [
+            "Collected data is used only for purposes related to the functionality of the application, including:"
+          ],
+          "items": [
+            "User authentication and account management",
+            "Providing multiplayer game features",
+            "Displaying rankings and match history",
+            "Improving application stability and security",
+            "Preventing abuse and unauthorized access"
+          ]
+        },
+        {
+          "title": "4. Cookies",
+          "paragraphs": [
+            "ft_transcendence uses cookies and session storage to maintain user authentication and ensure proper functionality of the application.",
+            "A language cookie remembers the interface language chosen by the user.",
+            "Users can disable cookies in their browser settings, although some features of the application may stop working properly."
+          ]
+        },
+        {
+          "title": "5. Data Storage and Security",
+          "paragraphs": [
+            "We take reasonable technical measures to protect user data against unauthorized access, modification, disclosure, or destruction.",
+            "However, no internet transmission or electronic storage method is completely secure."
+          ]
+        },
+        {
+          "title": "6. User Rights",
+          "paragraphs": [
+            "Users may request access to their personal data, correction of inaccurate information, or deletion of their account and associated data."
+          ]
+        },
+        {
+          "title": "7. Third-Party Services",
+          "paragraphs": [
+            "ft_transcendence may use third-party authentication or hosting services required for application functionality.",
+            "These services may process data according to their own privacy policies."
+          ]
+        },
+        {
+          "title": "8. Contact",
+          "paragraphs": [
+            "If you have questions regarding this Privacy Policy, you may contact the project administrators:"
+          ],
+          "contact": true
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: May 2026",
+      "sections": [
+        {
+          "title": "1. Introduction",
+          "paragraphs": [
+            "Welcome to ft_transcendence.",
+            "By accessing or using this application, you agree to comply with these Terms of Service.",
+            "ft_transcendence is a student project created as part of the 42 Warsaw curriculum."
+          ]
+        },
+        {
+          "title": "2. User Accounts",
+          "paragraphs": [
+            "Users are responsible for maintaining the security of their accounts and authentication credentials.",
+            "You agree not to impersonate other users or attempt unauthorized access to accounts, systems, or data."
+          ]
+        },
+        {
+          "title": "3. Acceptable Use",
+          "paragraphs": ["By using the application, you agree not to:"],
+          "items": [
+            "Use the platform for illegal activities",
+            "Exploit vulnerabilities or security issues",
+            "Disrupt servers, matchmaking, or gameplay",
+            "Upload malicious or harmful content",
+            "Harass, abuse, or threaten other users",
+            "Attempt unauthorized access to the system"
+          ]
+        },
+        {
+          "title": "4. Intellectual Property",
+          "paragraphs": [
+            "All project content, source code, branding, interface elements, and application assets remain the property of their respective creators unless otherwise stated."
+          ]
+        },
+        {
+          "title": "5. Service Availability",
+          "paragraphs": [
+            "The application is provided on an “as is” and “as available” basis.",
+            "We do not guarantee uninterrupted availability, error-free operation, or permanent access to the service."
+          ]
+        },
+        {
+          "title": "6. Limitation of Liability",
+          "paragraphs": [
+            "The creators of ft_transcendence are not liable for any damages, data loss, interruptions, or issues resulting from the use of the application."
+          ]
+        },
+        {
+          "title": "7. Account Termination",
+          "paragraphs": [
+            "We reserve the right to suspend or terminate user accounts that violate these Terms of Service or compromise the security and stability of the application."
+          ]
+        },
+        {
+          "title": "8. Changes to Terms",
+          "paragraphs": [
+            "These Terms of Service may be updated or modified at any time without prior notice.",
+            "Continued use of the application after changes constitutes acceptance of the updated terms."
+          ]
+        },
+        {
+          "title": "9. Contact",
+          "paragraphs": [],
+          "contact": true
+        }
+      ]
+    }
+  }
+}

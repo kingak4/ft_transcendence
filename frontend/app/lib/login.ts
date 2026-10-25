@@ -1,14 +1,17 @@
 'use server';
 
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
-// import { postData } from './post';
 import type { ActionResponse } from './action-response';
 import { client } from './api-clients';
+import { apiErrorKey } from './i18n/apiErrors';
 
 export async function login(
   name: string,
   password: string,
 ): Promise<ActionResponse> {
+  const t = await getTranslations('errors');
+
   try {
     const { data, error, response } = await client.POST('/users/login', {
       body: {
@@ -21,8 +24,8 @@ export async function login(
       console.error('Login Error:', error);
       return {
         success: false,
-        status: error?.status,
-        message: error?.detail,
+        status: response.status,
+        message: t(apiErrorKey('login', response.status)),
       };
     }
 
@@ -30,9 +33,10 @@ export async function login(
     const id = data?.userId;
 
     if (!token) {
+      console.error('Login Error: received empty token from server.');
       return {
         success: false,
-        message: 'Recieved empty token from server.',
+        message: t('unknown'),
       };
     }
 
@@ -59,7 +63,7 @@ export async function login(
     return {
       success: false,
       status: 500,
-      message: 'Server error.',
+      message: t('server'),
     };
   }
 }

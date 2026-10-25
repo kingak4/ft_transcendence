@@ -1,5 +1,8 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import { cache } from 'react';
 
 import Avatar from '../../components/Avatar';
 import { client } from '../../lib/api-clients';
@@ -12,10 +15,43 @@ interface Props {
   params: Promise<{ userId: string }>;
 }
 
-// The friends LIST left this file at unit 2a; the friends COUNT comes back here
-// at unit 27, because the export's profile shows it as a row in the info card.
-// One record is enough - `totalElements` describes the whole collection, so the
-// page size is set to the smallest value the backend accepts rather than 10.
+// cache(): generateMetadata and the page share one request per render.
+const loadUserDetails = cache((userId: string) =>
+  client.GET('/users/{userId}/details', {
+    params: { path: { userId } },
+  }),
+);
+
+async function profileTitle(isOwnProfile: boolean, displayName: string) {
+  const t = await getTranslations('profile');
+  return isOwnProfile
+    ? t('myProfile')
+    : t('userProfile', { name: displayName });
+}
+
+function isSignedInUser(
+  cookieStore: Awaited<ReturnType<typeof cookies>>,
+  userId: string,
+) {
+  return cookieStore.get('user_id')?.value === userId;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { userId } = await params;
+  const { data } = await loadUserDetails(userId);
+  const t = await getTranslations('profile');
+  if (!data) return { title: t('notFound') };
+
+  const tCommon = await getTranslations('common');
+  const isOwnProfile = isSignedInUser(await cookies(), userId);
+  return {
+    title: await profileTitle(
+      isOwnProfile,
+      data.displayName ?? tCommon('unknownUser'),
+    ),
+  };
+}
+
 async function loadFriendsCount(): Promise<number | null> {
   const { data, response } = await client.GET('/friends', {
     params: { query: { page: 0, size: 1 } },
@@ -25,32 +61,25 @@ async function loadFriendsCount(): Promise<number | null> {
   return data?.totalElements ?? 0;
 }
 
-// A row of the export's info card: label left, value right, hairline under.
-// The label colour IS a token - `hub-muted` is exactly the #7c8a92 the export
-// uses - which makes this the one place in Etap D where the export's secondary
-// text maps onto something we already had.
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-elevated-border px-5.5 py-4.5 flex justify-between border-b last:border-b-0">
-      <span className="text-hub-muted text-sm font-semibold">{label}</span>
-      <span className="text-sm font-bold">{value}</span>
+      <dt className="text-muted text-sm font-semibold">{label}</dt>
+      <dd className="text-sm font-bold">
+        <bdi>{value}</bdi>
+      </dd>
     </div>
   );
 }
 
-// Everything to do with the friends list left this file at unit 2a and lives at
-// app/(app)/friends/. The page no longer takes `searchParams` because the only
-// query parameter it ever read was the friends pager's `?page=`.
 export default async function UserProfilePage({ params }: Props) {
   const { userId } = await params;
+  const t = await getTranslations('profile');
+  const tCommon = await getTranslations('common');
 
-  const cookieStore = await cookies();
-  const signedInUserId = cookieStore.get('user_id')?.value ?? null;
-  const isOwnProfile = signedInUserId !== null && signedInUserId === userId;
+  const isOwnProfile = isSignedInUser(await cookies(), userId);
 
-  const { data, response } = await client.GET('/users/{userId}/details', {
-    params: { path: { userId } },
-  });
+  const { data, response } = await loadUserDetails(userId);
 
   if (response.status === 401 || response.status === 403) {
     redirect('/auth/logout');
@@ -60,43 +89,18 @@ export default async function UserProfilePage({ params }: Props) {
     notFound();
   }
 
-  const displayName = data.displayName ?? 'Unknown User';
+  const displayName = data.displayName ?? tCommon('unknownUser');
   const avatarSrc = data.avatarId ? `/api/users/avatar/${data.avatarId}` : null;
 
-  // GET /friends always returns the caller's own friends, so the count is only
-  // meaningful on your own profile - the same reason unit 2a could drop the
-  // route parameter entirely when it moved the list out.
   const friendsCount = isOwnProfile ? await loadFriendsCount() : null;
 
-  // Three structural changes from the export (isProfile, lines 280-304):
-  // the route gains its own h1, the banner becomes the export's gradient hero
-  // with the avatar leading, and the info card below it is entirely new.
-  //
-  // Logout also moves: it was a white button inside the banner, and the export
-  // puts it alone at the bottom right, outside the cards.
   return (
     <div className="flex min-w-0 w-full flex-1 flex-col gap-5 lg:gap-7">
-      {/* The heading has to answer "whose profile is this", because the route
-          serves both. Unit 27 promoted a static "My Profile" into this slot and
-          the non-owner branch was not revisited, so every stranger's page
-          claimed to be yours - the three blocks below are all gated on
-          `isOwnProfile`, and this was the one that was not. It also cost the
-          accessible name: before this h1 existed the display name WAS the h1,
-          which was right for both cases, and a screen reader navigating by
-          heading heard "My Profile" on someone else's page. */}
       <h1 className="text-2xl font-extrabold tracking-tight lg:text-3xl">
-        {isOwnProfile ? 'My Profile' : `${displayName}'s profile`}
+        {await profileTitle(isOwnProfile, displayName)}
       </h1>
 
-      {/* Hero. The gradient and its shadow are the export's; the shadow IS a
-          dictionary row ("element podniesiony na gradiencie").
-          The gradient was an arbitrary value "because none of its three stops
-          has a token" - which turned out to be wrong on inspection at Step 5:
-          #146b7a, #2f9bcf and #4ac9a0 are the literal values of hub-teal,
-          hub-blue and hub-mint, because the export reuses the message bubble's
-          hues here. Unit 5.5 made it `bg-hub-hero` and it needed no new tokens
-          at all. */}
-      <div className="bg-hub-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_rgba(10,42,77,0.18)] lg:p-9">
+      <div className="bg-hero flex items-center gap-7 rounded-3xl p-6 shadow-[0_12px_32px_var(--color-shadow-hero)] lg:p-9">
         {isOwnProfile ? (
           <EditAvatarButton
             avatarId={data.avatarId}
@@ -104,7 +108,11 @@ export default async function UserProfilePage({ params }: Props) {
           />
         ) : (
           <div className={`shrink-0 ${AVATAR_RING_CLASSES}`}>
-            <Avatar src={avatarSrc} alt={`${displayName}'s avatar`} size={96} />
+            <Avatar
+              src={avatarSrc}
+              alt={tCommon('avatarAlt', { name: displayName })}
+              size={96}
+            />
           </div>
         )}
 
@@ -112,32 +120,27 @@ export default async function UserProfilePage({ params }: Props) {
           {isOwnProfile ? (
             <EditDisplayNameButton displayName={displayName} />
           ) : (
-            <p className="text-hub-on-accent truncate text-2xl font-extrabold">
-              {displayName}
+            <p className="text-on-accent truncate text-2xl font-extrabold">
+              <bdi>{displayName}</bdi>
             </p>
           )}
         </div>
       </div>
 
-      <div className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_rgba(10,42,77,0.08)]">
-        {/* The export's card has three rows: Email, Username, Friends. Email is
-            missing because the data is: `/users/{userId}/details` returns only
-            `displayName` and `avatarId`, confirmed by the generated types.
-            Showing a placeholder would be worse than showing nothing - it would
-            imply the field exists and is empty. Recorded in 12.5. */}
-        <InfoRow label="Username" value={displayName} />
+      <dl className="bg-elevated-surface text-on-elevated-surface flex flex-col rounded-[20px] p-2 shadow-[0_8px_24px_var(--color-shadow-card)]">
+        <InfoRow label={t('username')} value={displayName} />
         {friendsCount !== null && (
-          <InfoRow label="Friends" value={String(friendsCount)} />
+          <InfoRow label={t('friends')} value={String(friendsCount)} />
         )}
-      </div>
+      </dl>
 
       {isOwnProfile && (
         <form action={logout} className="flex justify-end">
           <button
             type="submit"
-            className="bg-hub-danger-cta text-hub-on-accent px-7.5 py-3.25 rounded-[14px] text-sm font-bold shadow-[0_8px_20px_rgba(192,69,63,0.28)] transition-[filter] hover:brightness-110"
+            className="bg-danger-cta text-on-accent px-7.5 py-3.25 rounded-[14px] text-sm font-bold shadow-[0_8px_20px_color-mix(in_srgb,var(--color-danger-end)_28%,transparent)] transition-[filter] hover:brightness-110"
           >
-            Logout
+            {t('logout')}
           </button>
         </form>
       )}

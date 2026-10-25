@@ -1,14 +1,11 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import TextField from './TextField';
 import UserList, { type UserListItem } from './UserList';
 
-// The contract a caller's search action must satisfy. Declared here rather
-// than imported from a route's actions file so this component stays free of
-// any route dependency: TypeScript is structurally typed, so any action whose
-// return shape matches can be passed in.
 export type UserSearchPage =
   | { success: true; results: UserListItem[]; hasMore: boolean }
   | { success: false; message: string };
@@ -21,9 +18,8 @@ interface Props {
     page: number,
     size: number,
   ) => Promise<UserSearchPage>;
-  // `dismiss` hides the row once the caller's action succeeds; the caller
-  // decides what that action is (add a friend, invite to a game, …).
   renderAction: (user: UserListItem, dismiss: () => void) => ReactNode;
+  label: string;
   placeholder?: string;
   emptyMessage?: string;
 }
@@ -36,9 +32,11 @@ export default function UserSearch({
   excludedIds,
   searchAction,
   renderAction,
-  placeholder = 'Search users by name…',
-  emptyMessage = 'No users found.',
+  label,
+  placeholder,
+  emptyMessage,
 }: Props) {
+  const t = useTranslations('userSearch');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<UserListItem[]>([]);
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
@@ -49,11 +47,6 @@ export default function UserSearch({
   const [hasMore, setHasMore] = useState(false);
   const latestRequestId = useRef(0);
 
-  // Kept in a ref (rather than the debounce effect's dependency array) so the
-  // exclusion filter and search action used mid-fetch always see the latest
-  // props/state without re-triggering a search every time they change — which
-  // matters especially for `searchAction`, since a caller passing an inline
-  // arrow would otherwise change its identity on every render.
   const latestRef = useRef({
     currentUserId,
     excludedIds,
@@ -69,7 +62,6 @@ export default function UserSearch({
     };
   });
 
-  // Safe to call during render: reads props/state directly, not the ref.
   function isVisible(user: UserListItem): boolean {
     return (
       !!user.id &&
@@ -79,9 +71,6 @@ export default function UserSearch({
     );
   }
 
-  // For use only inside the async fetch loops below, where a plain closure
-  // over props/state could go stale across an `await` (e.g. the user adds a
-  // friend while a "Load more" fetch is in flight).
   function isVisibleLatest(user: UserListItem): boolean {
     const { currentUserId, excludedIds, dismissedIds } = latestRef.current;
     return (
@@ -106,9 +95,6 @@ export default function UserSearch({
     }
   }
 
-  // Debounce: wait until the user pauses typing before hitting the backend,
-  // and ignore any response that isn't from the most recent keystroke burst
-  // (a slow earlier request could otherwise resolve after a newer one).
   useEffect(() => {
     const trimmed = query.trim();
     if (!trimmed) return;
@@ -116,13 +102,6 @@ export default function UserSearch({
     const requestId = ++latestRequestId.current;
 
     const handle = setTimeout(async () => {
-      // Exclusion filtering (self, excluded ids, just-dismissed) happens
-      // client-side, after pagination has already happened server-side. A
-      // fetched page can therefore come back with zero *new* visible users
-      // even though the server reports more pages exist. Keep fetching
-      // subsequent pages until at least one is visible, or the server runs
-      // out, so we never land on an empty list sitting above a "Load more"
-      // button.
       let accumulated: UserListItem[] = [];
       let fetchedPage = 0;
       let more = false;
@@ -164,9 +143,6 @@ export default function UserSearch({
     const trimmed = query.trim();
     if (!trimmed) return;
 
-    // Take a ticket from the same counter the debounce effect uses, so a
-    // query change while this fetch loop is in flight (or a second
-    // "Load more" click) invalidates this run's state updates below.
     const requestId = ++latestRequestId.current;
     setIsLoadingMore(true);
 
@@ -208,36 +184,29 @@ export default function UserSearch({
 
   const visibleResults = results.filter(isVisible);
 
-  // `size="md"`, not `sm`. 12.5 recorded this at position 1 as a call-site
-  // decision parked here: the export's search screen uses its LARGE field
-  // (`searchInputStyle`, 15x18px), not the small one it reserves for the field
-  // sunk into the chat rail. Neither of our two sizes is 15x18 - `SIZE_CLASSES`
-  // is still frozen by /chat via the shared `md` - but `md` (16x12) is the one
-  // the export means, and picking the right of two available sizes is what this
-  // call site can decide.
-  //
-  // The gap between the field and its results is the dictionary's "między
-  // sekcjami strony" row: the export puts 24px there, which 12.0 unified with
-  // the profile's 28px into 28px wide / 20px narrow.
   return (
     <div className="mb-4 flex flex-col gap-5 lg:gap-7">
       <TextField
-        type="text"
+        type="search"
+        aria-label={label}
         value={query}
         onChange={handleQueryChange}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('placeholder')}
+        dir="auto"
         size="md"
       />
 
-      {/* `text-danger`, not `text-red-400`: the raw Tailwind palette is what
-          Steps 2-3 spent their effort removing, and a token already exists. */}
-      {error && <p className="text-danger text-xs">{error}</p>}
+      {error && (
+        <p role="alert" className="text-danger text-xs">
+          {error}
+        </p>
+      )}
 
       {query.trim() && !isSearching && !error && (
         <>
           <UserList
             users={visibleResults}
-            emptyMessage={emptyMessage}
+            emptyMessage={emptyMessage ?? t('empty')}
             renderAction={(user) =>
               renderAction(user, () =>
                 setDismissedIds((prev) => new Set(prev).add(user.id)),
@@ -248,9 +217,9 @@ export default function UserSearch({
             <button
               onClick={handleLoadMore}
               disabled={isLoadingMore}
-              className="text-on-surface/60 bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+              className="text-on-surface bg-on-surface/10 hover:bg-on-surface/20 self-center rounded-[10px] px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoadingMore ? 'Loading…' : 'Load more'}
+              {isLoadingMore ? t('loading') : t('loadMore')}
             </button>
           )}
         </>

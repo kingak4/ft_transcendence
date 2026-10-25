@@ -32,7 +32,7 @@ export type ChatUser = {
   id: string;
   name: string;
   initial: string;
-  color: string;
+  color?: string;
   avatarId?: string | null;
   online: boolean;
   status: string;

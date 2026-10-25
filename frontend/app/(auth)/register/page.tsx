@@ -1,123 +1,139 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useState, type FormEvent } from 'react';
+import { useForm } from 'react-hook-form';
 
 import AccentLink from '../../components/AccentLink';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import TextField from '../../components/TextField';
+import FormField from '../../components/FormField';
+import { useValidationMessage } from '../../hooks/useValidationMessage';
 import { register } from '../../lib/register';
+import { registerSchema, type RegisterValues } from '../../lib/validation/auth';
 
 export default function RegisterPage() {
-  const [nameValue, setName] = useState('');
-  const [passwordValue, setPassword] = useState('');
-  const [confirmPasswordValue, setConfirmPassword] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const t = useTranslations('auth');
+  const tErrors = useTranslations('errors');
+  const validationMessage = useValidationMessage();
+  const {
+    register: registerField,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    mode: 'onTouched',
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      agreedToTerms: false,
+    },
+  });
 
-  async function handleRegister(e: FormEvent) {
-    e.preventDefault();
-    if (passwordValue !== confirmPasswordValue) {
-      alert('Passwords do not match.');
-      return;
-    }
-    if (!agreedToTerms) {
-      alert('Please agree to the Terms & Privacy Policy.');
-      return;
-    }
-    const response = await register(nameValue, passwordValue);
+  async function handleRegister({ email, password }: RegisterValues) {
+    const response = await register(email, password);
     if (!response.success) {
-      if (response.status === 500) {
-        alert('Server error. Please try again later.');
-      } else {
-        alert(response.message || 'An unknown error occurred.');
-      }
+      alert(response.message || tErrors('unknown'));
       return;
     }
-    alert(`Successfully registered!\n${response.message}`);
-    window.location.href = '/login';
+    alert(t('register.success'));
+    window.location.assign('/login');
   }
 
   return (
     <div className="flex flex-1 items-center justify-center">
       <Card>
-        <h1 className="mb-1 text-xl font-extrabold">Register</h1>
-        {/* Inherited and modulated rather than named - see login/page.tsx. Only
-            the leaf text nodes convert: `opacity` compounds down the tree and
-            colour alpha does not, so the two blocks below that wrap coloured
-            children keep their named colours (12.5). */}
-        <p className="mb-6 text-sm font-medium opacity-60">Nice to meet you!</p>
+        <h1 className="mb-1 text-xl font-extrabold">{t('register.title')}</h1>
+        <p className="mb-6 text-sm font-medium">{t('register.subtitle')}</p>
 
-        <form onSubmit={handleRegister}>
-          <TextField
+        <form onSubmit={handleSubmit(handleRegister)}>
+          <FormField
             id="user-name"
             type="text"
-            value={nameValue}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Email"
+            {...registerField('email')}
+            error={validationMessage(errors.email?.message)}
+            label={t('email')}
+            autoComplete="email"
+            dir="ltr"
             tone="card"
             className="mb-3"
           />
 
-          <TextField
+          <FormField
             id="user-password"
             type="password"
-            value={passwordValue}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            {...registerField('password', { deps: ['confirmPassword'] })}
+            error={validationMessage(errors.password?.message)}
+            label={t('password')}
+            autoComplete="new-password"
             tone="card"
             className="mb-3"
           />
 
-          <TextField
+          <FormField
             id="user-confirm-password"
             type="password"
-            value={confirmPasswordValue}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm password"
+            {...registerField('confirmPassword')}
+            error={validationMessage(errors.confirmPassword?.message)}
+            label={t('confirmPassword')}
+            autoComplete="new-password"
             tone="card"
             className="mb-5"
           />
 
-          <label className="mb-6 flex cursor-pointer items-start gap-2">
-            <input
-              type="checkbox"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="accent-primary mt-0.5"
-            />
-            {/* Named alpha, deliberately. `opacity-60` here plus `opacity-80` on
-                the links would multiply to 0.48 and render the links DIMMER
-                than the sentence they sit in, inverting the emphasis - alpha is
-                absolute, opacity compounds. Recorded in 12.5. */}
-            <span className="text-hub-on-card/60 text-xs">
-              I agree to the{' '}
-              <Link
-                href="/terms-of-service"
-                className="text-hub-on-card/80 hover:text-hub-on-card underline transition-colors"
+          <div className="mb-6">
+            <label className="flex cursor-pointer items-start gap-2">
+              <input
+                type="checkbox"
+                {...registerField('agreedToTerms')}
+                aria-invalid={errors.agreedToTerms ? true : undefined}
+                aria-describedby={
+                  errors.agreedToTerms ? 'agreed-to-terms-error' : undefined
+                }
+                className="accent-primary mt-0.5"
+              />
+              <span className="text-on-card text-xs">
+                {t.rich('register.agreeToTerms', {
+                  terms: (chunks) => (
+                    <Link
+                      href="/terms-of-service"
+                      className="text-on-card hover:no-underline underline transition-colors"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                  privacy: (chunks) => (
+                    <Link
+                      href="/privacy-policy"
+                      className="text-on-card hover:no-underline underline transition-colors"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })}
+              </span>
+            </label>
+            {errors.agreedToTerms && (
+              <p
+                id="agreed-to-terms-error"
+                className="text-danger mt-1 text-sm"
               >
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link
-                href="/privacy-policy"
-                className="text-hub-on-card/80 hover:text-hub-on-card underline transition-colors"
-              >
-                Privacy Policy
-              </Link>
-            </span>
-          </label>
+                {validationMessage(errors.agreedToTerms.message)}
+              </p>
+            )}
+          </div>
 
           <Button type="submit" fullWidth>
-            Register
+            {t('register.submit')}
           </Button>
         </form>
 
-        {/* Named alpha for the same reason as the block above: this wraps an
-            `AccentLink` with its own `text-primary`, which opacity would fade
-            along with the sentence. */}
-        <p className="text-hub-on-card/50 mt-4 text-center text-xs">
-          Already have an account? <AccentLink href="/login">Login</AccentLink>
+        <p className="text-on-card mt-4 text-center text-xs">
+          {t.rich('register.haveAccount', {
+            link: (chunks) => <AccentLink href="/login">{chunks}</AccentLink>,
+          })}
         </p>
       </Card>
     </div>

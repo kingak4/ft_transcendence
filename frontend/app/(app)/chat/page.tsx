@@ -1,19 +1,21 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { client } from '../../lib/api-clients';
 import Conversation from './Conversation';
 import ChatSidebar from './ChatSidebar';
 import type { ChatUser } from './types';
 import type { components } from '../../types/api';
-import { CHAT_DICT } from './dictionary';
 
 type FriendResult = components['schemas']['FriendResult'];
 type ChatResponse = components['schemas']['ChatResponse'];
 
-export const metadata = {
-  title: 'Chat',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('chat');
+  return { title: t('title') };
+}
 
-async function loadUsers(): Promise<ChatUser[]> {
+async function loadUsers(unknownUser: string): Promise<ChatUser[]> {
   const { data, response } = await client.GET('/friends', {
     params: { query: { page: 0, size: 20 } },
   });
@@ -22,21 +24,17 @@ async function loadUsers(): Promise<ChatUser[]> {
     return [];
   }
 
-  // Map the response based on the backend structure.
-  // Assuming data is a Page<FriendResult> with content array.
-  // FriendResult contains id and details (displayName, avatarId).
   return (data?.content ?? []).map((friend: FriendResult) => ({
     id: friend.id ?? '',
-    name: friend.details?.displayName ?? 'Unknown User',
+    name: friend.details?.displayName ?? unknownUser,
     initial: (friend.details?.displayName ?? 'U').charAt(0).toUpperCase(),
-    color: 'bg-hub-panel', // Assign a default or dynamic color
     avatarId: friend.details?.avatarId?.val ?? null,
-    online: false, // We'll handle this in ChatInterface
+    online: false,
     status: 'Offline',
   }));
 }
 
-async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: ChatUser }[]> {
+async function loadChats(allUsers: ChatUser[], unknownUser: string): Promise<{ chatId: string; user: ChatUser }[]> {
   const { data, response } = await client.GET('/chats', {
     params: { query: { page: 0, size: 20 } },
   });
@@ -50,12 +48,11 @@ async function loadChats(allUsers: ChatUser[]): Promise<{ chatId: string; user: 
 
     if (!user) {
       const fallbackId = userId ?? chat.chatId ?? '';
-      const fallbackName = chat.displayName ?? chat.chatId ?? 'Unknown';
+      const fallbackName = chat.displayName ?? chat.chatId ?? unknownUser;
       user = {
         id: fallbackId,
         name: fallbackName,
         initial: fallbackName.charAt(0).toUpperCase(),
-        color: 'bg-hub-panel',
         avatarId: chat.avatarId ?? null,
         online: false,
         status: 'Offline',
@@ -81,10 +78,13 @@ export default async function ChatPage({
   const cookieStore = await cookies();
   const myUserId = cookieStore.get('user_id')?.value ?? null;
 
-  const allUsers = await loadUsers();
-  const activeChats = await loadChats(allUsers);
+  const t = await getTranslations('chat');
+  const tCommon = await getTranslations('common');
+  const unknownUser = tCommon('unknownUser');
 
-  // Find the active user either by userId or by looking up the chatId
+  const allUsers = await loadUsers(unknownUser);
+  const activeChats = await loadChats(allUsers, unknownUser);
+
   let activeUser = allUsers.find((f) => f.id === userId) || null;
   let activeChatId = urlChatId || null;
 
@@ -94,22 +94,19 @@ export default async function ChatPage({
   }
 
   if (!activeUser && userId) {
-    // Handle the case where userId in URL is actually a chatId from the mock
     const chatSession = activeChats.find((c) => c.chatId === userId || c.user.id === userId);
     if (chatSession) {
       activeUser = chatSession.user;
       activeChatId = chatSession.chatId;
     } else {
-      // Global search fallback
       const { data: userDetails, response } = await client.GET('/users/{userId}/details', {
         params: { path: { userId: userId } }
       });
       if (response.ok && userDetails) {
         activeUser = {
           id: userId,
-          name: userDetails.displayName ?? 'Unknown User',
+          name: userDetails.displayName ?? unknownUser,
           initial: (userDetails.displayName ?? 'U').charAt(0).toUpperCase(),
-          color: 'bg-hub-panel',
           avatarId: userDetails.avatarId ?? null,
           online: false,
           status: 'Offline',
@@ -125,26 +122,15 @@ export default async function ChatPage({
 
   const isFriend = activeUser ? allUsers.some(f => f.id === activeUser?.id) : false;
 
-  // Unit 2b - one pane at a time below `lg:`, both above it.
-  //
-  // Which pane shows is decided by `?friend=`, which this route already read
-  // before 2b existed: no chat selected means the list, a chat selected means
-  // the conversation. So the narrow layout needed no new state, no new client
-  // component and no new prop threading - only three display utilities.
-  //
-  // The placeholder is the piece that simply has no narrow equivalent: "select a
-  // chat" is what you say beside a list, and below `lg:` the list IS the screen.
   return (
-    // `flex-1 min-h-0` instead of `h-full`: the height now comes from the
-    // layout rather than from an assumption about it. `min-h-0` is what lets
-    // this shrink below its content so the panes' own `overflow-y-auto` engages.
-    <div className="border-hub-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
+    <div className="border-elevated-border flex min-h-0 flex-1 overflow-hidden rounded-2xl border">
+      <h1 className="sr-only">{t('title')}</h1>
       <ChatSidebar activeChats={activeChats} allUsers={allUsers} activeUserId={activeUser?.id || ''} myUserId={myUserId} hiddenOnNarrow={!!activeUser} />
       {activeUser ? (
         <Conversation user={activeUser} initialChatId={activeChatId} myUserId={myUserId} isFriend={isFriend} />
       ) : (
-        <div className="bg-hub-panel-sunken hidden flex-1 items-center justify-center text-sm text-hub-muted lg:flex">
-          {CHAT_DICT.page.selectChatToStart}
+        <div className="bg-sunken-surface hidden flex-1 items-center justify-center text-sm text-muted lg:flex">
+          {t('selectChatToStart')}
         </div>
       )}
     </div>

@@ -1,19 +1,9 @@
 'use server';
 
+import { getTranslations } from 'next-intl/server';
+
 import { client } from '../../lib/api-clients';
 
-// Declared here rather than shared with the profile's actions file. A grep at
-// unit 2a showed nothing imports `ActionResult` across a module boundary -
-// `useAsyncAction` declares its own structurally identical `AsyncActionResult`
-// - so this is file vocabulary, not a contract two routes have to agree on.
-// TypeScript is structurally typed, so the buttons accept either.
-//
-// Krok 6 unit 6.11 listed this as duplication to collapse and CLOSED IT AS
-// INTENTIONAL instead. The step's subject is components that describe the same
-// appearance twice; two files each naming their own local result shape is not
-// that. Extracting it would create the cross-module dependency the note above
-// says does not exist, and the third copy in `useAsyncAction` shows the shape is
-// a convention rather than a type anyone shares. Recorded in 14.2.
 export type ActionResult =
   | { success: true }
   | { success: false; message: string };
@@ -26,7 +16,8 @@ export async function removeFriendAction(
   });
 
   if (response.ok) return { success: true };
-  return { success: false, message: 'Failed to remove friend.' };
+  const t = await getTranslations('errors');
+  return { success: false, message: t('removeFriend') };
 }
 
 export async function addFriendAction(friendId: string): Promise<ActionResult> {
@@ -35,7 +26,8 @@ export async function addFriendAction(friendId: string): Promise<ActionResult> {
   });
 
   if (response.ok) return { success: true };
-  return { success: false, message: 'Failed to add friend.' };
+  const t = await getTranslations('errors');
+  return { success: false, message: t('addFriend') };
 }
 
 export type SearchUserResult = {
@@ -58,12 +50,14 @@ export async function searchUsersAction(
   });
 
   if (!response.ok || !data) {
-    return { success: false, message: 'Failed to search users.' };
+    const t = await getTranslations('errors');
+    return { success: false, message: t('searchUsers') };
   }
 
+  const tCommon = await getTranslations('common');
   const results = (data.content ?? []).map((user) => ({
     id: user.id ?? '',
-    displayName: user.displayName ?? 'Unknown User',
+    displayName: user.displayName ?? tCommon('unknownUser'),
     avatarId: user.avatarId?.val,
   }));
 

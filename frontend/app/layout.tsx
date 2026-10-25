@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
+import { Geist_Mono, Manrope, Noto_Sans_Arabic } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import SkipLink from './components/SkipLink';
+import { getDirection } from './lib/i18n/config';
 import { THEME_CLASSES, THEME_STORAGE_KEY } from './lib/theme';
 
-// Runs before paint to apply the stored flavour, avoiding a flash of the default
-// theme. The body is never compiled or type-checked, so keep it plain ES5 and
-// inject every theme-specific value from ./lib/theme.
 const themeInitScript = `
   (function () {
     try {
@@ -19,9 +20,9 @@ const themeInitScript = `
   })();
 `;
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const manrope = Manrope({
+  variable: '--font-manrope',
+  subsets: ['latin', 'latin-ext'],
   preload: false,
 });
 
@@ -31,20 +32,48 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-export const metadata: Metadata = {
-  title: '42Hub',
-  description: 'Every skill has a story — start yours.',
-};
+// Manrope has no Arabic glyphs; globals.css switches to this font under :lang(ar).
+const notoSansArabic = Noto_Sans_Arabic({
+  variable: '--font-noto-arabic',
+  subsets: ['arabic'],
+  preload: false,
+});
 
-export default function RootLayout({
+// Only Server Components read these, so they stay out of the client payload.
+const SERVER_ONLY_NAMESPACES = ['legal'];
+
+function clientMessages(messages: Awaited<ReturnType<typeof getMessages>>) {
+  return Object.fromEntries(
+    Object.entries(messages).filter(
+      ([namespace]) => !SERVER_ONLY_NAMESPACES.includes(namespace),
+    ),
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('metadata');
+  return {
+    title: {
+      default: '42Hub',
+      template: '%s · 42Hub',
+    },
+    description: t('description'),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang={locale}
+      dir={getDirection(locale)}
+      className={`${manrope.variable} ${geistMono.variable} ${notoSansArabic.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -53,7 +82,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="flex h-full flex-col">
-        {children}
+        <NextIntlClientProvider messages={clientMessages(messages)}>
+          <SkipLink />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

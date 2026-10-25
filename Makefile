@@ -1,4 +1,4 @@
-include ./infra/.env
+-include ./infra/.env
 
 .PHONY: up down re build rebuild
 
@@ -21,13 +21,15 @@ re: down up
 
 # Setup
 .PHONY: env
-
 env:
-	find . -name ".env.example" -type f | while read file; do \
-		dir=$$(dirname $$file); \
-		cp $$file $$dir/.env; \
-		echo "Created $$dir/.env from $$file"; \
-	done
+	cp infra/.env.example infra/.env
+	cp infra/postgres/.env.example infra/postgres/.env
+	cp infra/redis/.env.example infra/redis/.env
+	cp backend/transcend/.env.example backend/transcend/.env
+	cp backend/transcend/.env.local.example backend/transcend/.env.local
+	cp backend/.env.example backend/.env
+	cp frontend/.env.example frontend/.env
+	cp frontend/.env.local.example frontend/.env.local
 
 # Utils
 .PHONY: frontend-local

@@ -34,7 +34,9 @@ public class SecurityConfig {
                         "/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/users/**",
+//                        "/users/**",
+                        "/users/login",
+                        "/users/register",
                         "/ws/**",
                         "/springwolf/**",
                         "/actuator/health")
