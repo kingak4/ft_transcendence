@@ -21,7 +21,8 @@
     "main": "Główna",
     "myProfile": "Mój profil",
     "chat": "Czat",
-    "friends": "Znajomi"
+    "friends": "Znajomi",
+    "games": "Gry"
   },
   "footer": {
     "label": "Stopka",

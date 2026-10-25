@@ -131,9 +131,9 @@ export default function Sidebar({ userId }: Props) {
             <Link
               href="/games"
               onClick={close}
-              className={navLinkClasses(pathname.startsWith('/games'))}
+              {...navLinkProps(pathname.startsWith('/games'))}
             >
-              Games
+              {t('games')}
             </Link>
           </nav>
         )}

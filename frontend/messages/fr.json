@@ -21,7 +21,8 @@
     "main": "Principale",
     "myProfile": "Mon profil",
     "chat": "Discussions",
-    "friends": "Amis"
+    "friends": "Amis",
+    "games": "Jeux"
   },
   "footer": {
     "label": "Pied de page",

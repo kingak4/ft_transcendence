@@ -21,7 +21,8 @@
     "main": "Main",
     "myProfile": "My Profile",
     "chat": "Chat",
-    "friends": "Friends"
+    "friends": "Friends",
+    "games": "Games"
   },
   "footer": {
     "label": "Footer",
