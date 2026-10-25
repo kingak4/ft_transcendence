@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 import Button from './Button';
 import Card from './Card';
 
@@ -16,17 +18,19 @@ export default function SessionCard({
   logoutAction,
   headingLevel: Heading = 'h2',
 }: SessionCardProps) {
+  const t = useTranslations('session');
+
   return (
     <Card>
       <Heading className="mb-1 text-xl font-extrabold">{title}</Heading>
       <p className="mb-6 text-sm font-medium opacity-60">{subtitle}</p>
       <div className="flex flex-col gap-4">
         <Button href={`/${userId}`} fullWidth>
-          Go to my profile
+          {t('goToProfile')}
         </Button>
         <form action={logoutAction}>
           <Button type="submit" variant="outline" fullWidth>
-            Log out
+            {t('logOut')}
           </Button>
         </form>
       </div>

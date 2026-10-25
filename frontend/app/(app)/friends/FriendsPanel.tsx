@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 
 import UserList from '../../components/UserList';
@@ -29,6 +30,7 @@ export default function FriendsPanel({
   page,
   totalPages,
 }: Props) {
+  const t = useTranslations('friends');
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
 
   const friendCards = friends.filter((friend) => !removedIds.has(friend.id));
@@ -43,11 +45,11 @@ export default function FriendsPanel({
         renderAction={(user, dismiss) => (
           <AddFriendButton friendId={user.id} onAdded={dismiss} />
         )}
-        label="Search users"
+        label={t('searchUsers')}
       />
       <UserList
         users={friendCards}
-        emptyMessage="No friends yet."
+        emptyMessage={t('noFriends')}
         getHref={(user) => `/${user.id}`}
         renderAction={(user) => (
           <div className="flex items-center gap-3">
@@ -63,20 +65,20 @@ export default function FriendsPanel({
       />
       {totalPages > 1 && (
         <nav
-          aria-label="Friends pages"
+          aria-label={t('pagesLabel')}
           className="mt-3 flex items-center justify-between"
         >
           <PagerLink href={`/friends?page=${page - 1}`} disabled={page === 0}>
-            ‹ Prev
+            {t('prev')}
           </PagerLink>
           <span className="text-muted text-xs">
-            Page {page + 1} of {totalPages}
+            {t('pageOf', { page: page + 1, total: totalPages })}
           </span>
           <PagerLink
             href={`/friends?page=${page + 1}`}
             disabled={page >= totalPages - 1}
           >
-            Next ›
+            {t('next')}
           </PagerLink>
         </nav>
       )}

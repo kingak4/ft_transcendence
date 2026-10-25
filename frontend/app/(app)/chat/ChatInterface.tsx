@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useChat, useChatSubscription } from '@/app/hooks/useChat';
 import { usePresence } from '@/app/hooks/usePresence';
 import { client } from '@/app/lib/api-clients';
@@ -9,9 +10,12 @@ import Announcer, { type Announcement } from '@/app/components/Announcer';
 import MessageBubble from './MessageBubble';
 import Composer from './Composer';
 import { ChatMessage, ChatUser, BackendChatMessage } from './types';
-import { CHAT_DICT } from './dictionary';
 
-const DELETED_MESSAGE_TEXT = CHAT_DICT.chat.messageDeleted;
+// Error state holds a key, not text, so effects don't depend on the translator.
+type ChatErrorKey =
+  | 'errorInitChat'
+  | 'errorSendNotConnected'
+  | 'errorDeleteNotConnected';
 
 interface Props {
   myUserId: string | null;
@@ -24,10 +28,12 @@ export default function ChatInterface({
   user,
   initialChatId,
 }: Props) {
+  const t = useTranslations('chat.messages');
+  const deletedText = t('deleted');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatId, setChatId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<ChatErrorKey | null>(null);
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
   const messagesListRef = useRef<HTMLDivElement>(null);
   const creationPromiseRef = useRef<{
@@ -74,12 +80,12 @@ export default function ChatInterface({
               if (response.ok && data) {
                 return data.chatId as string;
               }
-              throw new Error(CHAT_DICT.chat.errorCreateChat);
+              throw new Error('Failed to create/get chat');
             }).catch((err) => {
               if (creationPromiseRef.current?.friendId === userId) {
                 creationPromiseRef.current = null;
               }
-              setErrorMsg(CHAT_DICT.chat.errorInitChat);
+              setErrorKey('errorInitChat');
               throw err;
             });
             creationPromiseRef.current = { friendId: userId, promise };
@@ -126,14 +132,17 @@ export default function ChatInterface({
     if (newMessage.content !== undefined && newMessage.senderId !== myUserId) {
       setAnnouncement({
         id: newMessage.messageId,
-        text: `${CHAT_DICT.chat.newMessageFrom} ${userName}: ${newMessage.content}`,
+        text: t('newMessageFrom', {
+          name: userName,
+          content: newMessage.content,
+        }),
       });
     }
     setMessages((prev) => {
       if (newMessage.content === undefined && newMessage.time === undefined) {
         return prev.map((m) =>
           m.messageId === newMessage.messageId
-            ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
+            ? { ...m, content: deletedText, isDeleted: true }
             : m,
         );
       }
@@ -169,9 +178,9 @@ export default function ChatInterface({
     if (inputValue.trim() === '' || !chatId) return;
     const success = sendMessage(chatId, inputValue);
     if (!success) {
-      setErrorMsg(CHAT_DICT.chat.errorSendNotConnected);
+      setErrorKey('errorSendNotConnected');
     } else {
-      setErrorMsg(null);
+      setErrorKey(null);
       setInputValue('');
     }
   };
@@ -182,8 +191,8 @@ export default function ChatInterface({
         ref={messagesListRef}
         tabIndex={0}
         role="region"
-        aria-label={CHAT_DICT.chat.messagesLabel}
-        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6 focus-visible:-outline-offset-2"
+        aria-label={t('label')}
+        className="relative flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6 focus-visible:-outline-offset-2"
       >
         {messages.map((message) => (
           <MessageBubble
@@ -192,20 +201,20 @@ export default function ChatInterface({
             isMine={message.senderId === myUserId}
             senderName={
               message.senderId === myUserId
-                ? CHAT_DICT.chat.you
+                ? t('you')
                 : userName
             }
             onDelete={() => {
               if (chatId) {
                 if (!deleteMessage(chatId, message.messageId)) {
-                  setErrorMsg(CHAT_DICT.chat.errorDeleteNotConnected);
+                  setErrorKey('errorDeleteNotConnected');
                   return;
                 }
-                setErrorMsg(null);
+                setErrorKey(null);
                 setMessages((prev) =>
                   prev.map((m) =>
                     m.messageId === message.messageId
-                      ? { ...m, content: DELETED_MESSAGE_TEXT, isDeleted: true }
+                      ? { ...m, content: deletedText, isDeleted: true }
                       : m,
                   ),
                 );
@@ -222,7 +231,7 @@ export default function ChatInterface({
         handleSend={handleSend}
         isInputDisabled={!chatId}
         isButtonDisabled={!chatId || inputValue.trim() === ''}
-        errorMsg={errorMsg}
+        errorMsg={errorKey && t(errorKey)}
       />
       <Announcer announcement={announcement} />
     </>

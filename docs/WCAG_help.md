@@ -21,11 +21,13 @@ How to check the frontend against **WCAG 2.1 AA**: an automated scan (axe-core +
 
 ## Quick reference
 
-**Full scan** (both page sets × 3 themes, prints only failures):
+**Full scan** (both page sets × 3 themes × 4 languages, prints only failures):
 
 ```bash
-cd ~/a11y-audit && for t in brand mocha latte; do THEME=$t node WCAG_audit.mjs; ROUTES=routes.app.json AUTH=auth.json THEME=$t node WCAG_audit.mjs; done 2>&1 | grep -v ': 0 failing' | grep -v '^$'
+cd ~/a11y-audit && for l in en pl fr ar; do for t in brand mocha latte; do LOCALE=$l THEME=$t node WCAG_audit.mjs; LOCALE=$l ROUTES=routes.app.json AUTH=auth.json THEME=$t node WCAG_audit.mjs; done; done 2>&1 | grep -v ': 0 failing' | grep -v '^$'
 ```
+
+A `(expected ar/rtl!)` line means the page did not render in the requested language — a WCAG 3.1.1 failure even if axe reports 0.
 
 **Lint and type check:**
 
@@ -60,7 +62,7 @@ The scripts' **source of truth is the repo** (`docs/`). They **run** from a work
 | `routes.app.json` | Pages scanned logged in — **contains user IDs**, see [step 3](#3-put-the-ids-into-routesappjson) |
 | `auth.json` | Saved login session of user A |
 | `auth-b.json` | Saved login session of user B |
-| `report-<set>-<theme>.json` | Full results of the last run (`violations` + `incomplete`), overwritten each run |
+| `report-<set>-<theme>-<locale>.json` | Full results of the last run (`violations` + `incomplete`), overwritten each run |
 
 ### Environment variables
 
@@ -70,6 +72,7 @@ The scripts' **source of truth is the repo** (`docs/`). They **run** from a work
 | `ROUTES` | `routes.public.json` | Which route list to scan |
 | `AUTH` | *(unset)* | Session file; unset = logged-out visitor |
 | `THEME` | `brand` | `brand` \| `mocha` \| `latte` — switched the same way as `applyTheme()` in `hooks/useTheme.ts` |
+| `LOCALE` | `en` | `en` \| `pl` \| `fr` \| `ar` — sets the `NEXT_LOCALE` cookie, like the footer language switcher; the output shows each page's `[lang/dir]` |
 | `REVIEW` | *(unset)* | `1` = also print `[review]` lines: elements axe **could not decide** (gradients, images) |
 | `BEST_PRACTICE` | *(unset)* | `1` = also run axe best-practice rules (landmarks, heading order) |
 
@@ -229,7 +232,7 @@ Columns: report file · route · rule · CSS selector · text colour · backgrou
 
 ```bash
 cd ~/a11y-audit && node -e '
-for (const r of require("./report-public-brand.json"))
+for (const r of require("./report-public-brand-en.json"))
   for (const v of r.incomplete ?? [])
     for (const n of v.nodes) {
       const d = n.any[0]?.data ?? {};
@@ -282,6 +285,8 @@ The `[review]` lines for these elements will keep appearing — that's expected.
 | Screen reader | [NVDA scenario](#nvda-scenario) below | Every section matches |
 | Zoom | 200 % browser zoom, and a 320 px-wide window | No horizontal scrolling, no clipped text |
 | Themes | Switch in the footer, repeat the visual checks | Same results in brand, mocha, latte |
+| Languages | Switch in the footer; repeat zoom + keyboard in PL and FR (longest strings) and AR | No clipped or overlapping text; tab title translated |
+| RTL (Arabic) | Narrow window + drawer, chat with B, profile | Drawer slides in from the right; own bubbles on the left; the back arrow points right and the send icon points up-left; Latin names keep their punctuation in place; switching EN↔AR keeps focus on the pressed button |
 
 ---
 
@@ -447,6 +452,18 @@ Make the Chrome window narrow (< 1024 px) until the hamburger appears.
 | `Tab` to the theme buttons | "Theme, grouping"; "42Hub, toggle button, pressed"; "Mocha, toggle button, not pressed" |
 | `Space` on "Mocha" | "pressed"; the page switches to the dark theme |
 
+### 9 · Footer language switch — any page
+
+Turn on NVDA → Preferences → Settings → Speech → **Automatic language switching** first; otherwise NVDA reads every language with the English voice.
+
+| Action | Expect |
+|---|---|
+| `Tab` to the language buttons | "Language, grouping"; "English, toggle button, pressed" |
+| `Tab` to "Polski" | Read with the **Polish** voice (`lang="pl"` on the button) |
+| `Space` on "Polski" | "pressed"; focus stays on the button; the page text is Polish |
+| `H` | "nagłówek poziom 1, …" — NVDA now speaks Polish |
+| `Space` on "العربية" | Page mirrors right-to-left; NVDA switches to the Arabic voice |
+
 ### Reporting results
 
 For each section: the section number + the Speech Viewer text. For any step that didn't match, one line with what you pressed and what happened instead, e.g. `S4 Esc: dialog closed but NVDA said nothing`.
@@ -471,3 +488,8 @@ Patterns established during the WCAG work — follow them in new code:
 | **Decorative images get `alt=""`** — e.g. an avatar next to the visible name | Otherwise the name is read twice |
 | **Scrollable regions are focusable** (`tabIndex={0}` + a name) | Keyboard users must be able to scroll (2.1.1); allowed in `eslint.config.mjs` for `main` and `region` |
 | **Never remove focus outlines** (`outline-none`) without an equally visible replacement | Chrome's default two-colour ring works on every background (2.4.7) |
+| **No literal UI text** — every string, `aria-label`, `alt` and `placeholder` comes from `messages/*.json` via `useTranslations` / `getTranslations` | Untranslated text is read with the wrong voice and breaks 3.1.1; `react/jsx-no-literals` catches JSX text, attributes need review |
+| **Visible text stays inside the accessible name in every language** — e.g. PL "Edytuj" / "Edytuj awatar" | WCAG 2.5.3 Label in Name; check it when translating `aria-label`s |
+| **Logical classes only** — `ms-`/`me-`, `ps-`/`pe-`, `start-`/`end-`, `rounded-s`/`-e`; never `ml-`, `left-`, `text-left` | They flip automatically under `dir="rtl"` |
+| **User-written text in `<bdi>` or `dir="auto"`** — names, messages, search fields | A Latin name in an Arabic page (or the reverse) otherwise moves its punctuation to the wrong side |
+| **Directional icons use `<Icon mirrorInRtl />`** — arrows, send; never checkmarks, clocks, logos | An arrow must point along the reading direction |

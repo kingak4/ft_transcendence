@@ -35,7 +35,7 @@ export default function UserRow({ user, isActive, onClick }: Props) {
         online={user.online}
       />
       <span className="text-on-elevated-surface min-w-0 flex-1 truncate text-sm font-semibold">
-        {user.name}
+        <bdi>{user.name}</bdi>
       </span>
     </Link>
   );

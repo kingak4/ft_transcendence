@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
-import { Geist_Mono, Manrope } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { Geist_Mono, Manrope, Noto_Sans_Arabic } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import SkipLink from './components/SkipLink';
+import { getDirection } from './lib/i18n/config';
 import { THEME_CLASSES, THEME_STORAGE_KEY } from './lib/theme';
 
 const themeInitScript = `
@@ -29,23 +32,36 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: '42Hub',
-    template: '%s · 42Hub',
-  },
-  description: 'Every skill has a story — start yours.',
-};
+// Manrope has no Arabic glyphs; globals.css switches to this font under :lang(ar).
+const notoSansArabic = Noto_Sans_Arabic({
+  variable: '--font-noto-arabic',
+  subsets: ['arabic'],
+  preload: false,
+});
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('metadata');
+  return {
+    title: {
+      default: '42Hub',
+      template: '%s · 42Hub',
+    },
+    description: t('description'),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="en"
-      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
+      lang={locale}
+      dir={getDirection(locale)}
+      className={`${manrope.variable} ${geistMono.variable} ${notoSansArabic.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -54,8 +70,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="flex h-full flex-col">
-        <SkipLink />
-        {children}
+        <NextIntlClientProvider>
+          <SkipLink />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

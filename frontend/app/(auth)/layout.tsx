@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
 import BareLayout from '../components/BareLayout';
@@ -13,13 +14,15 @@ export default async function AuthLayout({
   const userId = cookieStore.get('user_id')?.value;
 
   if (userId) {
+    const t = await getTranslations('session');
+
     return (
       <BareLayout>
         <div className="flex flex-1 items-center justify-center">
           <SessionCard
             headingLevel="h1"
-            title="Already logged in"
-            subtitle="You are currently logged in to your account."
+            title={t('alreadyLoggedIn')}
+            subtitle={t('alreadyLoggedInSubtitle')}
             userId={userId}
             logoutAction={logout}
           />

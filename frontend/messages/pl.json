@@ -1,0 +1,327 @@
+{
+  "metadata": {
+    "description": "Każda umiejętność ma swoją historię — zacznij swoją."
+  },
+  "common": {
+    "unknownUser": "Nieznany użytkownik",
+    "online": "Online",
+    "offline": "Offline",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "avatarAlt": "Awatar użytkownika {name}",
+    "back": "Wstecz"
+  },
+  "shell": {
+    "skipToMain": "Przejdź do treści głównej"
+  },
+  "nav": {
+    "open": "Otwórz nawigację",
+    "close": "Zamknij nawigację",
+    "main": "Główna",
+    "myProfile": "Mój profil",
+    "chat": "Czat",
+    "friends": "Znajomi"
+  },
+  "footer": {
+    "label": "Stopka",
+    "github": "GitHub",
+    "privacyPolicy": "Polityka prywatności",
+    "termsOfService": "Regulamin",
+    "api": "API",
+    "theme": "Motyw",
+    "language": "Język"
+  },
+  "session": {
+    "goToProfile": "Przejdź do mojego profilu",
+    "logOut": "Wyloguj się",
+    "alreadyLoggedIn": "Już zalogowano",
+    "alreadyLoggedInSubtitle": "Twoja sesja jest aktywna.",
+    "welcomeBack": "Witaj ponownie!",
+    "continueJourney": "Kontynuuj swoją podróż."
+  },
+  "home": {
+    "heroTitle": "Czatuj ze znajomymi.",
+    "heroSubtitle": "Dołącz do 42Hub i bądź blisko ludzi, na których ci zależy — prawdziwe rozmowy, po prostu.",
+    "hello": "Cześć!",
+    "tagline": "Rób swoje. Nie odpuszczaj.",
+    "login": "Zaloguj się",
+    "noAccount": "Nie masz jeszcze konta? <link>Zarejestruj się</link>"
+  },
+  "auth": {
+    "email": "E-mail",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "login": {
+      "title": "Logowanie",
+      "subtitle": "Witaj ponownie!",
+      "submit": "Zaloguj się",
+      "noAccount": "Nie masz konta? <link>Zarejestruj się</link>"
+    },
+    "register": {
+      "title": "Rejestracja",
+      "subtitle": "Miło cię poznać!",
+      "submit": "Zarejestruj się",
+      "agreeToTerms": "Akceptuję <terms>Regulamin</terms> i <privacy>Politykę prywatności</privacy>",
+      "haveAccount": "Masz już konto? <link>Zaloguj się</link>",
+      "success": "Rejestracja zakończona sukcesem! Możesz się teraz zalogować."
+    }
+  },
+  "validation": {
+    "emailBlank": "Adres e-mail nie może być pusty",
+    "emailSpaces": "Adres e-mail nie może zawierać spacji",
+    "emailInvalid": "Podaj prawidłowy adres e-mail",
+    "passwordBlank": "Hasło nie może być puste",
+    "passwordLength": "Hasło musi mieć od {passwordMin} do {passwordMax} znaków",
+    "passwordWhitespace": "Hasło nie może zawierać białych znaków",
+    "termsRequired": "Zaakceptuj Regulamin i Politykę prywatności.",
+    "passwordsMismatch": "Hasła nie są zgodne.",
+    "displayNameBlank": "Nazwa wyświetlana nie może być pusta",
+    "displayNameLength": "Nazwa wyświetlana musi mieć od {displayNameMin} do {displayNameMax} znaków",
+    "displayNamePattern": "Nazwa wyświetlana może zawierać tylko litery, cyfry, podkreślenia i kropki",
+    "avatarType": "Wybierz plik graficzny.",
+    "avatarSize": "Obraz może mieć maksymalnie {avatarMaxMb} MB.",
+    "messageEmpty": "Wiadomość nie może być pusta.",
+    "messageTooLong": "Wiadomość może mieć maksymalnie {messageMax} znaków."
+  },
+  "errors": {
+    "unknown": "Wystąpił nieznany błąd.",
+    "server": "Błąd serwera. Spróbuj ponownie później.",
+    "invalidCredentials": "Nieprawidłowy e-mail lub hasło.",
+    "registrationRejected": "Rejestracja nie powiodła się. Sprawdź e-mail i hasło, a potem spróbuj ponownie.",
+    "emailTaken": "Konto z tym adresem e-mail już istnieje.",
+    "updateDisplayName": "Nie udało się zmienić nazwy. Spróbuj innej.",
+    "uploadAvatar": "Nie udało się przesłać awatara.",
+    "addFriend": "Nie udało się dodać znajomego.",
+    "removeFriend": "Nie udało się usunąć znajomego.",
+    "searchUsers": "Nie udało się wyszukać użytkowników."
+  },
+  "profile": {
+    "myProfile": "Mój profil",
+    "userProfile": "Profil użytkownika {name}",
+    "notFound": "Nie znaleziono profilu",
+    "username": "Nazwa użytkownika",
+    "friends": "Znajomi",
+    "logout": "Wyloguj się",
+    "edit": "Edytuj",
+    "editAvatar": "Edytuj awatar",
+    "changeAvatar": "Zmień awatar",
+    "changeAvatarDescription": "Wybierz nowe zdjęcie do profilu.",
+    "choosePhoto": "Kliknij, aby wybrać zdjęcie",
+    "addPhoto": "Dodaj zdjęcie",
+    "preview": "Podgląd",
+    "currentAvatar": "Obecny awatar",
+    "selectPhotoFirst": "Najpierw wybierz zdjęcie.",
+    "displayName": "Nazwa wyświetlana",
+    "changeName": "Zmień nazwę"
+  },
+  "friends": {
+    "title": "Znajomi",
+    "loadError": "Nie udało się wczytać znajomych. Spróbuj ponownie później.",
+    "searchUsers": "Szukaj użytkowników",
+    "noFriends": "Nie masz jeszcze znajomych.",
+    "pagesLabel": "Strony znajomych",
+    "prev": "‹ Poprzednia",
+    "next": "Następna ›",
+    "pageOf": "Strona {page} z {total}",
+    "add": "Dodaj",
+    "adding": "Dodawanie…",
+    "remove": "Usuń",
+    "removing": "Usuwanie…",
+    "openChat": "Czat"
+  },
+  "userSearch": {
+    "placeholder": "Szukaj użytkowników po nazwie…",
+    "empty": "Nie znaleziono użytkowników.",
+    "loading": "Wczytywanie…",
+    "loadMore": "Wczytaj więcej"
+  },
+  "chat": {
+    "title": "Czat",
+    "selectChatToStart": "Wybierz czat, aby zacząć pisać",
+    "rail": {
+      "title": "Czaty",
+      "searchPlaceholder": "Szukaj użytkowników",
+      "noUsersFound": "Nie znaleziono użytkowników"
+    },
+    "conversation": {
+      "back": "Wróć do rozmów",
+      "notFriendBanner": "Tego użytkownika nie ma na twojej liście znajomych."
+    },
+    "messages": {
+      "label": "Wiadomości",
+      "you": "Ty",
+      "senderPrefix": "{name}: ",
+      "newMessageFrom": "Nowa wiadomość od {name}: {content}",
+      "deleted": "(wiadomość usunięta)",
+      "delete": "Usuń wiadomość",
+      "yesterday": "Wczoraj",
+      "errorInitChat": "Nie udało się uruchomić czatu",
+      "errorSendNotConnected": "Nie udało się wysłać wiadomości: brak połączenia z serwerem",
+      "errorDeleteNotConnected": "Nie udało się usunąć wiadomości: brak połączenia z serwerem"
+    },
+    "composer": {
+      "placeholder": "Napisz wiadomość",
+      "ariaLabel": "Wiadomość",
+      "send": "Wyślij"
+    },
+    "status": {
+      "sending": "Wysyłanie",
+      "sent": "Wysłano",
+      "failed": "Nie udało się wysłać"
+    }
+  },
+  "connection": {
+    "reconnecting": "Ponowne łączenie z serwerem...",
+    "unreachable": "Brak połączenia z serwerem. Ponawianie..."
+  },
+  "legal": {
+    "contact": {
+      "country": "Polska",
+      "email": "E-mail: {email}"
+    },
+    "privacy": {
+      "title": "Polityka prywatności",
+      "sections": [
+        {
+          "title": "1. Wprowadzenie",
+          "paragraphs": [
+            "Niniejsza Polityka prywatności wyjaśnia, w jaki sposób ft_transcendence zbiera, wykorzystuje i chroni informacje o użytkownikach.",
+            "ft_transcendence to projekt studencki zrealizowany w ramach programu nauczania 42 Warsaw."
+          ]
+        },
+        {
+          "title": "2. Jakie dane zbieramy",
+          "paragraphs": ["Aplikacja może zbierać następujące informacje:"],
+          "items": [
+            "Nazwa użytkownika i informacje profilowe",
+            "Adres e-mail (jeśli został podany)",
+            "Dane uwierzytelniające",
+            "Statystyki gier i historia meczów",
+            "Zdjęcia profilowe przesłane przez użytkownika",
+            "Informacje techniczne, takie jak adres IP i typ przeglądarki",
+            "Dane sesji i plików cookie niezbędne do uwierzytelniania"
+          ]
+        },
+        {
+          "title": "3. Jak wykorzystujemy dane",
+          "paragraphs": [
+            "Zebrane dane są wykorzystywane wyłącznie do celów związanych z działaniem aplikacji, w tym:"
+          ],
+          "items": [
+            "Uwierzytelnianie użytkowników i zarządzanie kontami",
+            "Udostępnianie funkcji gry wieloosobowej",
+            "Wyświetlanie rankingów i historii meczów",
+            "Poprawa stabilności i bezpieczeństwa aplikacji",
+            "Zapobieganie nadużyciom i nieuprawnionemu dostępowi"
+          ]
+        },
+        {
+          "title": "4. Pliki cookie",
+          "paragraphs": [
+            "ft_transcendence używa plików cookie i pamięci sesji, aby utrzymać uwierzytelnienie użytkownika i zapewnić prawidłowe działanie aplikacji.",
+            "Plik cookie języka zapamiętuje język interfejsu wybrany przez użytkownika.",
+            "Użytkownicy mogą wyłączyć pliki cookie w ustawieniach przeglądarki, jednak niektóre funkcje aplikacji mogą wtedy przestać działać prawidłowo."
+          ]
+        },
+        {
+          "title": "5. Przechowywanie i bezpieczeństwo danych",
+          "paragraphs": [
+            "Stosujemy uzasadnione środki techniczne, aby chronić dane użytkowników przed nieuprawnionym dostępem, modyfikacją, ujawnieniem lub zniszczeniem.",
+            "Żadna metoda transmisji przez internet ani elektronicznego przechowywania danych nie jest jednak w pełni bezpieczna."
+          ]
+        },
+        {
+          "title": "6. Prawa użytkowników",
+          "paragraphs": [
+            "Użytkownicy mogą zażądać dostępu do swoich danych osobowych, sprostowania nieprawidłowych informacji lub usunięcia konta wraz z powiązanymi danymi."
+          ]
+        },
+        {
+          "title": "7. Usługi podmiotów trzecich",
+          "paragraphs": [
+            "ft_transcendence może korzystać z usług uwierzytelniania lub hostingu podmiotów trzecich, niezbędnych do działania aplikacji.",
+            "Usługi te mogą przetwarzać dane zgodnie z własnymi politykami prywatności."
+          ]
+        },
+        {
+          "title": "8. Kontakt",
+          "paragraphs": [
+            "W razie pytań dotyczących niniejszej Polityki prywatności można skontaktować się z administratorami projektu:"
+          ],
+          "contact": true
+        }
+      ]
+    },
+    "terms": {
+      "title": "Regulamin",
+      "lastUpdated": "Ostatnia aktualizacja: maj 2026",
+      "sections": [
+        {
+          "title": "1. Wprowadzenie",
+          "paragraphs": [
+            "Witamy w ft_transcendence.",
+            "Uzyskując dostęp do aplikacji lub korzystając z niej, zgadzasz się przestrzegać niniejszego Regulaminu.",
+            "ft_transcendence to projekt studencki zrealizowany w ramach programu nauczania 42 Warsaw."
+          ]
+        },
+        {
+          "title": "2. Konta użytkowników",
+          "paragraphs": [
+            "Użytkownicy odpowiadają za bezpieczeństwo swoich kont i danych uwierzytelniających.",
+            "Zgadzasz się nie podszywać pod innych użytkowników ani nie próbować uzyskać nieuprawnionego dostępu do kont, systemów lub danych."
+          ]
+        },
+        {
+          "title": "3. Dopuszczalne korzystanie",
+          "paragraphs": ["Korzystając z aplikacji, zgadzasz się nie:"],
+          "items": [
+            "wykorzystywać platformy do działań niezgodnych z prawem",
+            "wykorzystywać luk ani problemów z bezpieczeństwem",
+            "zakłócać działania serwerów, dobierania graczy ani rozgrywki",
+            "przesyłać złośliwych ani szkodliwych treści",
+            "nękać, obrażać ani zastraszać innych użytkowników",
+            "podejmować prób nieuprawnionego dostępu do systemu"
+          ]
+        },
+        {
+          "title": "4. Własność intelektualna",
+          "paragraphs": [
+            "Wszystkie treści projektu, kod źródłowy, elementy marki, elementy interfejsu i zasoby aplikacji pozostają własnością ich twórców, chyba że wskazano inaczej."
+          ]
+        },
+        {
+          "title": "5. Dostępność usługi",
+          "paragraphs": [
+            "Aplikacja jest udostępniana w stanie „takim, jaki jest” i „w miarę dostępności”.",
+            "Nie gwarantujemy nieprzerwanej dostępności, bezbłędnego działania ani stałego dostępu do usługi."
+          ]
+        },
+        {
+          "title": "6. Ograniczenie odpowiedzialności",
+          "paragraphs": [
+            "Twórcy ft_transcendence nie ponoszą odpowiedzialności za jakiekolwiek szkody, utratę danych, przerwy w działaniu lub problemy wynikające z korzystania z aplikacji."
+          ]
+        },
+        {
+          "title": "7. Zamknięcie konta",
+          "paragraphs": [
+            "Zastrzegamy sobie prawo do zawieszenia lub usunięcia kont użytkowników, którzy naruszają niniejszy Regulamin lub zagrażają bezpieczeństwu i stabilności aplikacji."
+          ]
+        },
+        {
+          "title": "8. Zmiany Regulaminu",
+          "paragraphs": [
+            "Niniejszy Regulamin może zostać zaktualizowany lub zmieniony w dowolnym momencie bez wcześniejszego powiadomienia.",
+            "Dalsze korzystanie z aplikacji po wprowadzeniu zmian oznacza akceptację zaktualizowanego Regulaminu."
+          ]
+        },
+        {
+          "title": "9. Kontakt",
+          "paragraphs": [],
+          "contact": true
+        }
+      ]
+    }
+  }
+}

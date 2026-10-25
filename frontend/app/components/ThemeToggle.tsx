@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useTheme, type Theme } from '../hooks/useTheme';
 import { THEME_ORDER } from '../lib/theme';
 
@@ -10,12 +12,13 @@ const THEME_LABEL: Record<Theme, string> = {
 };
 
 export default function ThemeToggle() {
+  const t = useTranslations('footer');
   const { theme, setTheme } = useTheme();
 
   return (
     <div
       role="group"
-      aria-label="Theme"
+      aria-label={t('theme')}
       className="border-current/15 flex items-center gap-0.5 rounded-xl border p-0.5"
     >
       {THEME_ORDER.map((option) => {

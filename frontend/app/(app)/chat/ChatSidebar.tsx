@@ -2,12 +2,12 @@
 
 import { useMemo, useEffect, useId, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import TextField from '../../components/TextField';
 import UserRow from './UserRow';
 import type { ChatUser } from './types';
 import { usePresence } from '../../hooks/usePresence';
 import { client } from '../../lib/api-clients';
-import { CHAT_DICT } from './dictionary';
 
 interface Props {
   activeChats: { chatId: string; user: ChatUser }[];
@@ -25,9 +25,13 @@ export default function ChatSidebar({
   activeUserId,
   myUserId,
   hiddenOnNarrow = false,
-  searchPlaceholder = CHAT_DICT.rail.searchPlaceholder,
-  emptyStateText = CHAT_DICT.rail.noUsersFound
+  searchPlaceholder,
+  emptyStateText
 }: Props) {
+  const t = useTranslations('chat.rail');
+  const tCommon = useTranslations('common');
+  const unknownUser = tCommon('unknownUser');
+  const shownPlaceholder = searchPlaceholder ?? t('searchPlaceholder');
   const titleId = useId();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
@@ -54,7 +58,7 @@ export default function ChatSidebar({
           .filter(u => u.id !== myUserId)
           .map(u => ({
             id: u.id ?? '',
-            name: u.displayName ?? 'Unknown User',
+            name: u.displayName ?? unknownUser,
             initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
             avatarId: u.avatarId?.val ?? null,
             online: false,
@@ -65,7 +69,7 @@ export default function ChatSidebar({
     }
     performSearch();
     return () => { active = false; };
-  }, [debouncedQuery, myUserId]);
+  }, [debouncedQuery, myUserId, unknownUser]);
 
   const searchResults = useMemo(() => {
     return globalSearchResults;
@@ -106,20 +110,21 @@ export default function ChatSidebar({
           }
         }}
       >
-        <h2 id={titleId}className="text-on-elevated-surface text-base font-bold">{CHAT_DICT.rail.title}</h2>
+        <h2 id={titleId}className="text-on-elevated-surface text-base font-bold">{t('title')}</h2>
         <TextField
           tone="chat"
           size="sm"
           type="search"
-          placeholder={searchPlaceholder}
-          aria-label={searchPlaceholder}
+          dir="auto"
+          placeholder={shownPlaceholder}
+          aria-label={shownPlaceholder}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onFocus={() => setIsFocused(true)}
         />
 
         {(debouncedQuery || isFocused) && (
-          <div className="absolute top-[100%] left-4 right-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-elevated-border bg-elevated-surface shadow-lg">
+          <div className="absolute top-[100%] start-4 end-4 z-10 mt-1 max-h-64 overflow-y-auto rounded-xl border border-elevated-border bg-elevated-surface shadow-lg">
             {searchResults.length > 0 ? (
               <div className="flex flex-col p-2 gap-1">
                 {searchResults.map((user) => (
@@ -132,7 +137,7 @@ export default function ChatSidebar({
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center text-sm text-muted">{emptyStateText}</div>
+              <div className="p-4 text-center text-sm text-muted">{emptyStateText ?? t('noUsersFound')}</div>
             )}
           </div>
         )}
