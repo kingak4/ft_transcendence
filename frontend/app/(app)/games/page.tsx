@@ -11,7 +11,7 @@ export default function GamesHubPage() {
         </p>
 
         <div className="flex flex-col gap-4">
-          <div className="border-hub-border/50 hover:border-hub-border rounded-lg border p-4 transition-colors">
+          <div className="border-elevated-border/50 hover:border-elevated-border rounded-lg border p-4 transition-colors">
             <h2 className="mb-1 text-lg font-bold">2048</h2>
             <p className="mb-3 text-sm opacity-60">
               Join the numbers and get to the 2048 tile!

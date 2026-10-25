@@ -10,7 +10,7 @@ export default function My2048Game() {
 
   return (
     <div
-      className="text-hub-on-surface flex min-h-[85vh] touch-none select-none flex-col items-center justify-center p-4"
+      className="text-on-elevated-surface flex min-h-[85vh] touch-none select-none flex-col items-center justify-center p-4"
       onPointerDown={game.handlePointerDown}
       onPointerUp={game.handlePointerUp}
       onPointerCancel={game.handlePointerCancel}
@@ -34,14 +34,14 @@ export default function My2048Game() {
           keepPlaying={game.keepPlaying}
         />
       ) : (
-        <div className="bg-hub-panel border-hub-border aspect-square w-full max-w-[380px] rounded-2xl border p-3 shadow-xl sm:max-w-[420px]">
+        <div className="bg-elevated-surface border-elevated-border aspect-square w-full max-w-[380px] rounded-2xl border p-3 shadow-xl sm:max-w-[420px]">
           <div className="grid h-full w-full grid-cols-4 grid-rows-4 gap-3">
             {Array(16)
               .fill(0)
               .map((_, i) => (
                 <div
                   key={i}
-                  className="bg-hub-panel-sunken/90 border-hub-border/50 h-full w-full rounded-xl border"
+                  className="bg-sunken-surface/90 border-elevated-border/50 h-full w-full rounded-xl border"
                 />
               ))}
           </div>

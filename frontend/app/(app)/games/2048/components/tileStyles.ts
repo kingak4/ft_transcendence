@@ -56,9 +56,9 @@ const BASE_TILE_STYLES: Record<number, TileStyle> = {
     shadow: 'shadow-[0_0_24px_rgba(237,197,63,0.9)]',
   },
   2048: {
-    bg: 'bg-hub-cta',
-    text: 'text-hub-ink',
-    shadow: 'shadow-[0_0_30px_rgba(74,201,160,0.9)] ring-2 ring-hub-lime/80',
+    bg: 'bg-cta',
+    text: 'text-on-primary',
+    shadow: 'shadow-[0_0_30px_rgba(74,201,160,0.9)] ring-2 ring-accent-lime/80',
   },
 };
 

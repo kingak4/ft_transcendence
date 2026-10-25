@@ -58,7 +58,7 @@ export default function InviteModal({
               id: u.id ?? '',
               name: u.displayName ?? 'Unknown User',
               initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
-              color: 'bg-hub-panel',
+              color: 'bg-elevated-surface',
               avatarId: u.avatarId?.val ?? null,
               online: false,
               status: 'Offline',
@@ -126,36 +126,37 @@ export default function InviteModal({
 
   return (
     <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200">
-      <div className="bg-hub-panel border-hub-border w-full max-w-md rounded-2xl border p-6 shadow-2xl">
+      <div className="bg-elevated-surface border-elevated-border w-full max-w-md rounded-2xl border p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-hub-on-surface text-xl font-bold">
+          <h2 className="text-on-elevated-surface text-xl font-bold">
             {currentScore !== undefined && currentScore > 0
               ? 'Share & Challenge'
               : 'Challenge a Friend'}
           </h2>
           <button
             onClick={handleClose}
-            className="text-hub-muted hover:text-hub-on-surface cursor-pointer rounded-lg p-1 transition-colors"
+            className="text-muted hover:text-on-elevated-surface cursor-pointer rounded-lg p-1 transition-colors"
             aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        <p className="text-hub-muted mb-4 text-sm">
+        <p className="text-muted mb-4 text-sm">
           Search for a friend to challenge them in{' '}
-          <span className="text-hub-on-surface font-bold">{gameName}</span>.
+          <span className="text-on-elevated-surface font-bold">{gameName}</span>
+          .
         </p>
 
         {currentScore !== undefined && currentScore > 0 && (
-          <div className="bg-hub-panel-sunken border-hub-border mb-4 flex items-center justify-between rounded-xl border p-3">
+          <div className="bg-sunken-surface border-elevated-border mb-4 flex items-center justify-between rounded-xl border p-3">
             <div className="flex flex-col">
-              <span className="text-hub-on-surface text-xs font-bold">
+              <span className="text-on-elevated-surface text-xs font-bold">
                 Brag with current score
               </span>
-              <span className="text-hub-muted text-[11px]">
+              <span className="text-muted text-[11px]">
                 Include score to beat:{' '}
-                <strong className="text-hub-teal">{currentScore} pts</strong>
+                <strong className="text-accent-teal">{currentScore} pts</strong>
               </span>
             </div>
             <label className="relative inline-flex cursor-pointer items-center">
@@ -165,7 +166,7 @@ export default function InviteModal({
                 onChange={(e) => setIncludeScore(e.target.checked)}
                 className="peer sr-only"
               />
-              <div className="bg-hub-field peer-checked:bg-hub-teal peer h-5 w-10 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
+              <div className="bg-field peer-checked:bg-accent-teal peer h-5 w-10 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
             </label>
           </div>
         )}
@@ -181,12 +182,12 @@ export default function InviteModal({
         />
 
         {errorMsg && (
-          <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 p-2.5 text-xs font-medium text-red-500">
+          <div className="border-danger/20 bg-danger/10 text-danger mb-4 rounded-xl border p-2.5 text-xs font-medium">
             {errorMsg}
           </div>
         )}
         {successMsg && (
-          <div className="mb-4 rounded-xl border border-green-500/20 bg-green-500/10 p-2.5 text-xs font-medium text-green-500">
+          <div className="border-success/20 bg-success/10 text-success mb-4 rounded-xl border p-2.5 text-xs font-medium">
             {successMsg}
           </div>
         )}
@@ -196,7 +197,7 @@ export default function InviteModal({
             searchResults.map((u) => (
               <div
                 key={u.id}
-                className="border-hub-border bg-hub-field/50 hover:bg-hub-field flex items-center justify-between rounded-xl border p-3 transition-colors"
+                className="border-elevated-border bg-field/50 hover:bg-field flex items-center justify-between rounded-xl border p-3 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <Avatar
@@ -205,7 +206,7 @@ export default function InviteModal({
                     initial={u.initial}
                     size={36}
                   />
-                  <span className="text-hub-on-surface text-sm font-semibold">
+                  <span className="text-on-elevated-surface text-sm font-semibold">
                     {u.name}
                   </span>
                 </div>
@@ -220,11 +221,11 @@ export default function InviteModal({
               </div>
             ))
           ) : debouncedQuery ? (
-            <div className="text-hub-muted p-4 text-center text-sm">
+            <div className="text-muted p-4 text-center text-sm">
               No players found.
             </div>
           ) : (
-            <div className="text-hub-muted p-4 text-center text-sm opacity-60">
+            <div className="text-muted p-4 text-center text-sm opacity-60">
               Type a player name above to search.
             </div>
           )}
