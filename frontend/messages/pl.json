@@ -335,5 +335,47 @@
         }
       ]
     }
+  },
+  "games": {
+    "hub": {
+      "title": "Gry",
+      "subtitle": "Wybierz grę!"
+    },
+    "game2048": {
+      "title": "2048",
+      "description": "Łącz liczby i dojdź do kafelka 2048!",
+      "play": "Zagraj w 2048",
+      "tagline": "Łącz kafelki i dojdź do 2048!",
+      "moves": "Ruchy",
+      "score": "Wynik",
+      "newGame": "Nowa gra",
+      "challenge": "Wyzwij znajomego",
+      "gameOver": "Koniec gry!",
+      "noMoves": "Brak możliwych ruchów",
+      "finalScore": "Wynik końcowy",
+      "tryAgain": "Spróbuj ponownie",
+      "shareScore": "Udostępnij wynik",
+      "youWin": "Wygrana!",
+      "reached2048": "Udało ci się dojść do kafelka 2048!",
+      "currentScore": "Aktualny wynik",
+      "keepPlaying": "Graj dalej"
+    },
+    "invite": {
+      "titleShare": "Udostępnij i wyzwij",
+      "title": "Wyzwij znajomego",
+      "close": "Zamknij",
+      "description": "Wyszukaj znajomego, aby wyzwać go w grze <b>{game}</b>.",
+      "bragTitle": "Pochwal się aktualnym wynikiem",
+      "includeScore": "Dołącz wynik do pobicia: <strong>{score} pkt</strong>",
+      "searchPlaceholder": "Szukaj graczy...",
+      "searchLabel": "Szukaj graczy",
+      "noResults": "Nie znaleziono graczy.",
+      "typeToSearch": "Wpisz nazwę gracza powyżej, aby wyszukać.",
+      "challenge": "Wyzwij",
+      "sending": "Wysyłanie…",
+      "sent": "Wysłano wyzwanie do {name}!",
+      "errorNotConnected": "Brak połączenia z czatem",
+      "errorSend": "Nie udało się wysłać wyzwania."
+    }
   }
 }

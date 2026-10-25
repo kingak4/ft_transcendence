@@ -335,5 +335,47 @@
         }
       ]
     }
+  },
+  "games": {
+    "hub": {
+      "title": "Games Hub",
+      "subtitle": "Choose a game to play!"
+    },
+    "game2048": {
+      "title": "2048",
+      "description": "Join the numbers and get to the 2048 tile!",
+      "play": "Play 2048",
+      "tagline": "Join the tiles and reach 2048!",
+      "moves": "Moves",
+      "score": "Score",
+      "newGame": "New Game",
+      "challenge": "Challenge a friend",
+      "gameOver": "Game Over!",
+      "noMoves": "No moves left",
+      "finalScore": "Final Score",
+      "tryAgain": "Try Again",
+      "shareScore": "Share Score",
+      "youWin": "You Win!",
+      "reached2048": "You reached the 2048 tile!",
+      "currentScore": "Current Score",
+      "keepPlaying": "Keep Playing"
+    },
+    "invite": {
+      "titleShare": "Share & Challenge",
+      "title": "Challenge a Friend",
+      "close": "Close",
+      "description": "Search for a friend to challenge them in <b>{game}</b>.",
+      "bragTitle": "Brag with current score",
+      "includeScore": "Include score to beat: <strong>{score} pts</strong>",
+      "searchPlaceholder": "Search players...",
+      "searchLabel": "Search players",
+      "noResults": "No players found.",
+      "typeToSearch": "Type a player name above to search.",
+      "challenge": "Challenge",
+      "sending": "Sending…",
+      "sent": "Challenge sent to {name}!",
+      "errorNotConnected": "No connection to chat service",
+      "errorSend": "Failed to send challenge."
+    }
   }
 }

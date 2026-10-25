@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Tile } from '../logic/gameLogic';
 import { TileView } from './TileView';
 
@@ -24,6 +26,8 @@ export function Board({
   onShare,
   keepPlaying,
 }: BoardProps) {
+  const t = useTranslations('games.game2048');
+
   return (
     <div className="bg-sunken-surface border-elevated-border relative aspect-square w-full max-w-[380px] select-none rounded-2xl border p-3 shadow-2xl sm:max-w-[420px]">
       <div className="grid h-full w-full grid-cols-4 grid-rows-4 gap-3">
@@ -45,11 +49,15 @@ export function Board({
 
       {gameOver && (
         <div className="bg-elevated-surface/90 border-elevated-border animate-in fade-in absolute inset-0 z-30 flex flex-col items-center justify-center rounded-2xl border p-4 backdrop-blur-md duration-300">
-          <h2 className="text-danger mb-1 text-4xl font-black">Game Over!</h2>
-          <p className="text-muted mb-2 text-xs font-semibold">No moves left</p>
+          <h2 className="text-danger mb-1 text-4xl font-black">
+            {t('gameOver')}
+          </h2>
+          <p className="text-muted mb-2 text-xs font-semibold">
+            {t('noMoves')}
+          </p>
           <div className="bg-sunken-surface border-elevated-border mb-5 rounded-xl border px-4 py-1.5 text-center">
             <span className="text-muted block text-[10px] font-bold uppercase">
-              Final Score
+              {t('finalScore')}
             </span>
             <span className="text-accent-teal text-xl font-extrabold">
               {score}
@@ -60,13 +68,13 @@ export function Board({
               onClick={onReset}
               className="bg-elevated-surface hover:bg-field text-on-elevated-surface border-elevated-border flex-1 cursor-pointer rounded-xl border py-2.5 text-xs font-bold shadow-md transition-transform active:scale-95"
             >
-              Try Again
+              {t('tryAgain')}
             </button>
             <button
               onClick={onShare}
               className="bg-cta text-on-primary flex-1 cursor-pointer rounded-xl py-2.5 text-xs font-bold shadow-md transition-transform hover:opacity-90 active:scale-95"
             >
-              Share Score
+              {t('shareScore')}
             </button>
           </div>
         </div>
@@ -75,14 +83,14 @@ export function Board({
       {gameWon && !keepPlaying && (
         <div className="bg-elevated-surface/95 border-elevated-border animate-in fade-in absolute inset-0 z-30 flex flex-col items-center justify-center rounded-2xl border p-4 backdrop-blur-md duration-300">
           <h2 className="text-accent-teal mb-1 text-4xl font-black drop-shadow-md">
-            You Win!
+            {t('youWin')}
           </h2>
           <p className="text-muted mb-2 text-xs font-semibold">
-            You reached the 2048 tile!
+            {t('reached2048')}
           </p>
           <div className="bg-sunken-surface border-elevated-border mb-5 rounded-xl border px-4 py-1.5 text-center">
             <span className="text-muted block text-[10px] font-bold uppercase">
-              Current Score
+              {t('currentScore')}
             </span>
             <span className="text-accent-teal text-xl font-extrabold">
               {score}
@@ -94,20 +102,20 @@ export function Board({
                 onClick={onContinue}
                 className="bg-cta text-on-primary flex-1 cursor-pointer rounded-xl py-2.5 text-xs font-bold shadow-md transition-transform hover:opacity-90 active:scale-95"
               >
-                Keep Playing
+                {t('keepPlaying')}
               </button>
               <button
                 onClick={onShare}
                 className="bg-elevated-surface hover:bg-field text-on-elevated-surface border-elevated-border flex-1 cursor-pointer rounded-xl border py-2.5 text-xs font-bold shadow-md transition-transform active:scale-95"
               >
-                Share Score
+                {t('shareScore')}
               </button>
             </div>
             <button
               onClick={onReset}
               className="hover:bg-field/50 text-muted w-full cursor-pointer rounded-lg bg-transparent py-2 text-xs font-semibold transition-colors"
             >
-              New Game
+              {t('newGame')}
             </button>
           </div>
         </div>

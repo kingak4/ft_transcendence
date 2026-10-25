@@ -1,11 +1,13 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { useChat } from '../../../hooks/useChat';
 import { client } from '../../../lib/api-clients';
 import Button from '../../../components/Button';
 import TextField from '../../../components/TextField';
 import Avatar from '../../../components/Avatar';
+import Icon from '../../../components/Icon';
 import { ChatUser } from '../../chat/types';
 
 interface Props {
@@ -23,6 +25,10 @@ export default function InviteModal({
   myUserId,
   currentScore,
 }: Props) {
+  const t = useTranslations('games.invite');
+  const tCommon = useTranslations('common');
+  const unknownUser = tCommon('unknownUser');
+  const offline = tCommon('offline');
   const [searchInput, setSearchInput] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [searchResults, setSearchResults] = useState<ChatUser[]>([]);
@@ -56,12 +62,12 @@ export default function InviteModal({
             .filter((u) => u.id !== myUserId)
             .map((u) => ({
               id: u.id ?? '',
-              name: u.displayName ?? 'Unknown User',
+              name: u.displayName ?? unknownUser,
               initial: (u.displayName ?? 'U').charAt(0).toUpperCase(),
               color: 'bg-elevated-surface',
               avatarId: u.avatarId?.val ?? null,
               online: false,
-              status: 'Offline',
+              status: offline,
             }));
           setSearchResults(results);
         }
@@ -73,7 +79,7 @@ export default function InviteModal({
     return () => {
       active = false;
     };
-  }, [debouncedQuery, myUserId]);
+  }, [debouncedQuery, myUserId, unknownUser, offline]);
 
   const handleClose = () => {
     setErrorMsg(null);
@@ -84,7 +90,7 @@ export default function InviteModal({
 
   const handleInvite = async (user: ChatUser) => {
     if (!isConnected) {
-      setErrorMsg('No connection to chat service (STOMP)');
+      setErrorMsg(t('errorNotConnected'));
       return;
     }
     setErrorMsg(null);
@@ -109,14 +115,14 @@ export default function InviteModal({
       const success = sendMessage(chatId as string, payload);
 
       if (success) {
-        setSuccessMsg(`Challenge sent to ${user.name}!`);
+        setSuccessMsg(t('sent', { name: user.name }));
         setSearchInput('');
       } else {
-        setErrorMsg('Failed to send challenge over socket.');
+        setErrorMsg(t('errorSend'));
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg('Failed to send challenge.');
+      setErrorMsg(t('errorSend'));
     } finally {
       setIsSending(null);
     }
@@ -130,36 +136,35 @@ export default function InviteModal({
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-on-elevated-surface text-xl font-bold">
             {currentScore !== undefined && currentScore > 0
-              ? 'Share & Challenge'
-              : 'Challenge a Friend'}
+              ? t('titleShare')
+              : t('title')}
           </h2>
           <button
             onClick={handleClose}
             className="text-muted hover:text-on-elevated-surface cursor-pointer rounded-lg p-1 transition-colors"
-            aria-label="Close"
+            aria-label={t('close')}
           >
-            ✕
+            <Icon name="x" size="sm" />
           </button>
         </div>
 
         <p className="text-muted mb-4 text-sm">
-          Search for a friend to challenge them in{' '}
-          <span className="text-on-elevated-surface font-bold">{gameName}</span>
-          .
+          {t.rich('description', {
+            game: gameName,
+            b: (chunks) => (
+              <span className="text-on-elevated-surface font-bold">
+                {chunks}
+              </span>
+            ),
+          })}
         </p>
 
         {currentScore !== undefined && currentScore > 0 && (
-          <div className="bg-sunken-surface border-elevated-border mb-4 flex items-center justify-between rounded-xl border p-3">
-            <div className="flex flex-col">
-              <span className="text-on-elevated-surface text-xs font-bold">
-                Brag with current score
-              </span>
-              <span className="text-muted text-[11px]">
-                Include score to beat:{' '}
-                <strong className="text-accent-teal">{currentScore} pts</strong>
-              </span>
-            </div>
-            <label className="relative inline-flex cursor-pointer items-center">
+          <label className="bg-sunken-surface border-elevated-border mb-4 grid cursor-pointer grid-cols-[1fr_auto] items-center gap-x-3 rounded-xl border p-3">
+            <span className="text-on-elevated-surface text-xs font-bold">
+              {t('bragTitle')}
+            </span>
+            <span className="relative row-span-2 inline-flex items-center">
               <input
                 type="checkbox"
                 checked={includeScore}
@@ -167,14 +172,23 @@ export default function InviteModal({
                 className="peer sr-only"
               />
               <div className="bg-field peer-checked:bg-accent-teal peer h-5 w-10 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
-            </label>
-          </div>
+            </span>
+            <span className="text-muted text-[11px]">
+              {t.rich('includeScore', {
+                score: currentScore,
+                strong: (chunks) => (
+                  <strong className="text-accent-teal">{chunks}</strong>
+                ),
+              })}
+            </span>
+          </label>
         )}
 
         <TextField
           id="friend-search"
           type="search"
-          placeholder="Search players..."
+          placeholder={t('searchPlaceholder')}
+          aria-label={t('searchLabel')}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           className="mb-4"
@@ -216,17 +230,17 @@ export default function InviteModal({
                   disabled={isSending === u.id}
                   className="px-3.5 py-1.5 text-xs"
                 >
-                  {isSending === u.id ? 'Sending...' : 'Challenge'}
+                  {isSending === u.id ? t('sending') : t('challenge')}
                 </Button>
               </div>
             ))
           ) : debouncedQuery ? (
             <div className="text-muted p-4 text-center text-sm">
-              No players found.
+              {t('noResults')}
             </div>
           ) : (
             <div className="text-muted p-4 text-center text-sm opacity-60">
-              Type a player name above to search.
+              {t('typeToSearch')}
             </div>
           )}
         </div>
