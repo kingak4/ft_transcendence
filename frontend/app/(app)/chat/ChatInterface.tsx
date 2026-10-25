@@ -29,7 +29,6 @@ export default function ChatInterface({
   initialChatId,
 }: Props) {
   const t = useTranslations('chat.messages');
-  const deletedText = t('deleted');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatId, setChatId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
@@ -142,7 +141,7 @@ export default function ChatInterface({
       if (newMessage.content === undefined && newMessage.time === undefined) {
         return prev.map((m) =>
           m.messageId === newMessage.messageId
-            ? { ...m, content: deletedText, isDeleted: true }
+            ? { ...m, isDeleted: true }
             : m,
         );
       }
@@ -214,7 +213,7 @@ export default function ChatInterface({
                 setMessages((prev) =>
                   prev.map((m) =>
                     m.messageId === message.messageId
-                      ? { ...m, content: deletedText, isDeleted: true }
+                      ? { ...m, isDeleted: true }
                       : m,
                   ),
                 );

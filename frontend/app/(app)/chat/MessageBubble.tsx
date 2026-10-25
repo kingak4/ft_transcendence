@@ -76,7 +76,7 @@ export default function MessageBubble({
           <span className="sr-only">
             {t('senderPrefix', { name: senderName })}
           </span>
-          <bdi>{message.content}</bdi>
+          <bdi>{message.isDeleted ? t('deleted') : message.content}</bdi>
         </div>
         {isMine && onDelete && !message.isDeleted && (
           <button

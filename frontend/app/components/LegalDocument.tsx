@@ -25,16 +25,17 @@ export default function LegalDocument({ title, lastUpdated, sections }: Props) {
         <p className="text-muted mb-5 text-sm font-semibold">{lastUpdated}</p>
       )}
 
-      {sections.map((section) => (
-        <LegalSection key={section.title} title={section.title}>
-          {section.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+      {/* Static, never-reordered lists: the index is a stable key; text may repeat. */}
+      {sections.map((section, sectionIndex) => (
+        <LegalSection key={sectionIndex} title={section.title}>
+          {section.paragraphs.map((paragraph, paragraphIndex) => (
+            <p key={paragraphIndex}>{paragraph}</p>
           ))}
 
           {section.items && (
             <ul className="mt-1 list-disc space-y-2 ps-5">
-              {section.items.map((item) => (
-                <li key={item}>{item}</li>
+              {section.items.map((item, itemIndex) => (
+                <li key={itemIndex}>{item}</li>
               ))}
             </ul>
           )}

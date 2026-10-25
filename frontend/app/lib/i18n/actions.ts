@@ -14,6 +14,7 @@ export async function setLocale(locale: string) {
   const cookieStore = await cookies();
   cookieStore.set(LOCALE_COOKIE, locale, {
     maxAge: ONE_YEAR_SECONDS,
+    httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',

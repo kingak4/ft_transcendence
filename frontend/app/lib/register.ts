@@ -3,7 +3,7 @@
 import { getTranslations } from 'next-intl/server';
 import type { ActionResponse } from './action-response';
 import { client } from './api-clients';
-import { apiErrorKey } from './i18n/apiErrors';
+import { apiErrorKey, registerFieldErrorKey } from './i18n/apiErrors';
 
 export async function register(
   name: string,
@@ -23,8 +23,11 @@ export async function register(
       console.error('Register Error:', error);
       return {
         success: false,
-        status: error?.status,
-        message: t(apiErrorKey('register', response.status)),
+        status: response.status,
+        message: t(
+          registerFieldErrorKey(error) ??
+            apiErrorKey('register', response.status),
+        ),
       };
     }
     return { success: true, status: 200, message: `user ID: ${data?.id}` };

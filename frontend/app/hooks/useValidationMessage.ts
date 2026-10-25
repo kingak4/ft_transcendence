@@ -25,6 +25,11 @@ export function useValidationMessage() {
   return (key: string | undefined): string | undefined => {
     if (!key) return undefined;
     const validationKey = key as ValidationKey;
-    return t.has(validationKey) ? t(validationKey, VALIDATION_LIMITS) : key;
+    if (t.has(validationKey)) return t(validationKey, VALIDATION_LIMITS);
+    // A zod built-in message (not a messageKey) would leak English into any locale.
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('Untranslated validation message:', key);
+    }
+    return t('invalid');
   };
 }

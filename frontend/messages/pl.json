@@ -82,13 +82,16 @@
     "avatarType": "Wybierz plik graficzny.",
     "avatarSize": "Obraz może mieć maksymalnie {avatarMaxMb} MB.",
     "messageEmpty": "Wiadomość nie może być pusta.",
-    "messageTooLong": "Wiadomość może mieć maksymalnie {messageMax} znaków."
+    "messageTooLong": "Wiadomość może mieć maksymalnie {messageMax} znaków.",
+    "invalid": "Nieprawidłowa wartość."
   },
   "errors": {
     "unknown": "Wystąpił nieznany błąd.",
     "server": "Błąd serwera. Spróbuj ponownie później.",
     "invalidCredentials": "Nieprawidłowy e-mail lub hasło.",
     "registrationRejected": "Rejestracja nie powiodła się. Sprawdź e-mail i hasło, a potem spróbuj ponownie.",
+    "emailRejected": "Serwer odrzucił ten adres e-mail. Użyj innego.",
+    "passwordRejected": "To hasło zostało odrzucone — może być zbyt popularne. Wybierz inne.",
     "emailTaken": "Konto z tym adresem e-mail już istnieje.",
     "updateDisplayName": "Nie udało się zmienić nazwy. Spróbuj innej.",
     "uploadAvatar": "Nie udało się przesłać awatara.",

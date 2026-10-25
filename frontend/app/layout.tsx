@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Geist_Mono, Manrope, Noto_Sans_Arabic } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
@@ -39,6 +39,17 @@ const notoSansArabic = Noto_Sans_Arabic({
   preload: false,
 });
 
+// Only Server Components read these, so they stay out of the client payload.
+const SERVER_ONLY_NAMESPACES = ['legal'];
+
+function clientMessages(messages: Awaited<ReturnType<typeof getMessages>>) {
+  return Object.fromEntries(
+    Object.entries(messages).filter(
+      ([namespace]) => !SERVER_ONLY_NAMESPACES.includes(namespace),
+    ),
+  );
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata');
   return {
@@ -56,6 +67,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
     <html
@@ -70,7 +82,7 @@ export default async function RootLayout({
         </Script>
       </head>
       <body className="flex h-full flex-col">
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={clientMessages(messages)}>
           <SkipLink />
           {children}
         </NextIntlClientProvider>

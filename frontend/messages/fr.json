@@ -68,6 +68,7 @@
     }
   },
   "validation": {
+    "invalid": "Valeur non valide.",
     "emailBlank": "L’e-mail ne peut pas être vide",
     "emailSpaces": "L’e-mail ne peut pas contenir d’espaces",
     "emailInvalid": "Saisis un e-mail valide",
@@ -89,6 +90,8 @@
     "server": "Erreur du serveur. Réessaie plus tard.",
     "invalidCredentials": "E-mail ou mot de passe incorrect.",
     "registrationRejected": "L’inscription a échoué. Vérifie ton e-mail et ton mot de passe, puis réessaie.",
+    "emailRejected": "Le serveur a refusé cette adresse e-mail. Utilises-en une autre.",
+    "passwordRejected": "Ce mot de passe a été refusé ; il est peut-être trop courant. Choisis-en un autre.",
     "emailTaken": "Un compte existe déjà avec cet e-mail.",
     "updateDisplayName": "Impossible de modifier le nom d’affichage. Essaie un autre nom.",
     "uploadAvatar": "Impossible d’envoyer l’avatar.",

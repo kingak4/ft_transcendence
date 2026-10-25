@@ -24,7 +24,7 @@ export async function login(
       console.error('Login Error:', error);
       return {
         success: false,
-        status: error?.status,
+        status: response.status,
         message: t(apiErrorKey('login', response.status)),
       };
     }

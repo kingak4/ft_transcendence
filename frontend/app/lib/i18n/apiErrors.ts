@@ -21,6 +21,27 @@ const STATUS_KEYS: Record<
   },
 };
 
+// A 400 lists failed fields by Bean Validation path (method.param.field) with
+// English text, so the field - not the text - picks the message. A backend
+// rename only degrades to the generic `registrationRejected`.
+const REGISTER_FIELD_KEYS: Partial<Record<string, ErrorKey>> = {
+  'register.command.email': 'emailRejected',
+  'register.command.rawPassword': 'passwordRejected',
+};
+
+function failedFields(error: unknown): string[] {
+  if (typeof error !== 'object' || error === null) return [];
+  const { properties } = error as { properties?: unknown };
+  if (typeof properties !== 'object' || properties === null) return [];
+  return Object.keys(properties);
+}
+
+// Specific only when exactly one known field failed; otherwise undefined.
+export function registerFieldErrorKey(error: unknown): ErrorKey | undefined {
+  const keys = failedFields(error).map((field) => REGISTER_FIELD_KEYS[field]);
+  return keys.length === 1 ? keys[0] : undefined;
+}
+
 export function apiErrorKey(
   context: ApiErrorContext,
   status: number | undefined,

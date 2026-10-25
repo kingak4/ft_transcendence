@@ -82,13 +82,16 @@
     "avatarType": "Please choose an image file.",
     "avatarSize": "Image must be {avatarMaxMb} MB or smaller.",
     "messageEmpty": "Message cannot be empty.",
-    "messageTooLong": "Message must be {messageMax} characters or fewer."
+    "messageTooLong": "Message must be {messageMax} characters or fewer.",
+    "invalid": "This value is invalid."
   },
   "errors": {
     "unknown": "An unknown error occurred.",
     "server": "Server error. Please try again later.",
     "invalidCredentials": "Invalid email or password.",
     "registrationRejected": "Registration failed. Check your email and password and try again.",
+    "emailRejected": "The server rejected this email address. Please use a different one.",
+    "passwordRejected": "This password was rejected — it may be too common. Please choose a different one.",
     "emailTaken": "An account with this email already exists.",
     "updateDisplayName": "Failed to update display name. Try a different one.",
     "uploadAvatar": "Failed to upload avatar.",

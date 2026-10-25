@@ -286,7 +286,7 @@ The `[review]` lines for these elements will keep appearing — that's expected.
 | Zoom | 200 % browser zoom, and a 320 px-wide window | No horizontal scrolling, no clipped text |
 | Themes | Switch in the footer, repeat the visual checks | Same results in brand, mocha, latte |
 | Languages | Switch in the footer; repeat zoom + keyboard in PL and FR (longest strings) and AR | No clipped or overlapping text; tab title translated |
-| RTL (Arabic) | Narrow window + drawer, chat with B, profile | Drawer slides in from the right; own bubbles on the left; the back arrow points right and the send icon points up-left; Latin names keep their punctuation in place; switching EN↔AR keeps focus on the pressed button |
+| RTL (Arabic) | Narrow window + drawer, chat with B, profile | Drawer slides in from the right; own bubbles on the left; the back arrow points right and the send icon points up-left; Latin names keep their punctuation in place; footer links mirror and the language/theme group moves to the left edge with its button order unchanged; switching EN↔AR keeps focus on the pressed button; a deleted chat message's label follows the switch |
 
 ---
 
@@ -462,7 +462,7 @@ Turn on NVDA → Preferences → Settings → Speech → **Automatic language sw
 | `Tab` to "Polski" | Read with the **Polish** voice (`lang="pl"` on the button) |
 | `Space` on "Polski" | "pressed"; focus stays on the button; the page text is Polish |
 | `H` | "nagłówek poziom 1, …" — NVDA now speaks Polish |
-| `Space` on "العربية" | Page mirrors right-to-left; NVDA switches to the Arabic voice |
+| `Space` on "العربية" | Page mirrors right-to-left; NVDA switches to the Arabic voice; focus stays on "العربية" although the button group has moved to the left edge |
 
 ### Reporting results
 
@@ -491,5 +491,6 @@ Patterns established during the WCAG work — follow them in new code:
 | **No literal UI text** — every string, `aria-label`, `alt` and `placeholder` comes from `messages/*.json` via `useTranslations` / `getTranslations` | Untranslated text is read with the wrong voice and breaks 3.1.1; `react/jsx-no-literals` catches JSX text, attributes need review |
 | **Visible text stays inside the accessible name in every language** — e.g. PL "Edytuj" / "Edytuj awatar" | WCAG 2.5.3 Label in Name; check it when translating `aria-label`s |
 | **Logical classes only** — `ms-`/`me-`, `ps-`/`pe-`, `start-`/`end-`, `rounded-s`/`-e`; never `ml-`, `left-`, `text-left` | They flip automatically under `dir="rtl"` |
+| **Pin `dir="ltr"` only on a control group whose order must not change** (the footer language/theme buttons) — never on a whole region | The buttons keep their order on EN↔AR, while everything around them still mirrors |
 | **User-written text in `<bdi>` or `dir="auto"`** — names, messages, search fields | A Latin name in an Arabic page (or the reverse) otherwise moves its punctuation to the wrong side |
 | **Directional icons use `<Icon mirrorInRtl />`** — arrows, send; never checkmarks, clocks, logos | An arrow must point along the reading direction |
