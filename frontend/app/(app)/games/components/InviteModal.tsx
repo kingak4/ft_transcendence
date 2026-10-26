@@ -206,7 +206,7 @@ export default function InviteModal({
             >
               <div className="flex items-center gap-3">
                 <Avatar
-                  src={u.avatarId ? `/api/avatars/${u.avatarId}` : null}
+                  src={u.avatarId ? `/api/users/avatar/${u.avatarId}` : null}
                   alt={u.name}
                   initial={u.initial}
                   size={36}
