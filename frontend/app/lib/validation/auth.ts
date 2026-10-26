@@ -14,7 +14,7 @@ const emailField = z
   .pipe(z.email(messageKey('emailInvalid')));
 
 export const loginSchema = z.object({
-  email: z.string().min(1, messageKey('emailBlank')),
+  email: emailField,
   password: z.string().min(1, messageKey('passwordBlank')),
 });
 
