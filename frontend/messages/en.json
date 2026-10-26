@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Every skill has a story — start yours."
+    "description": "Every skill has a story, so start yours."
   },
   "common": {
     "unknownUser": "Unknown User",
@@ -61,10 +61,6 @@
         "paragraphs": [
           "Errors are returned as application/problem+json (RFC 9457) in this shape:"
         ]
-      },
-      "interactive": {
-        "title": "Interactive reference",
-        "body": "Try every endpoint in your browser with the <link>interactive Swagger reference</link>."
       }
     },
     "labels": {
@@ -138,7 +134,7 @@
   },
   "home": {
     "heroTitle": "Let's play and chat with your friends.",
-    "heroSubtitle": "Join JustPlay42 to stay close to the people you care about — enjoy real conversations, challenge your friends in 2048, and make every moment more fun.",
+    "heroSubtitle": "Join JustPlay42 to stay close to the people you care about, enjoy real conversations, challenge your friends in 2048, and make every moment more fun.",
     "hello": "Hello!",
     "tagline": "Do your thing. Grind.",
     "login": "Login",
@@ -187,7 +183,7 @@
     "invalidCredentials": "Invalid email or password.",
     "registrationRejected": "Registration failed. Check your email and password and try again.",
     "emailRejected": "The server rejected this email address. Please use a different one.",
-    "passwordRejected": "This password was rejected — it may be too common. Please choose a different one.",
+    "passwordRejected": "This password was rejected, as it may be too common. Please choose a different one.",
     "emailTaken": "An account with this email already exists.",
     "updateDisplayName": "Failed to update display name. Try a different one.",
     "uploadAvatar": "Failed to upload avatar.",

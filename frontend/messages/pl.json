@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Każda umiejętność ma swoją historię — zacznij swoją."
+    "description": "Każda umiejętność ma swoją historię, więc zacznij swoją."
   },
   "common": {
     "unknownUser": "Nieznany użytkownik",
@@ -61,10 +61,6 @@
         "paragraphs": [
           "Błędy są zwracane jako application/problem+json (RFC 9457) w takim formacie:"
         ]
-      },
-      "interactive": {
-        "title": "Interaktywna dokumentacja",
-        "body": "Przetestuj każdy endpoint w przeglądarce w <link>interaktywnej dokumentacji Swagger</link>."
       }
     },
     "labels": {
@@ -138,7 +134,7 @@
   },
   "home": {
     "heroTitle": "Graj i czatuj ze znajomymi.",
-    "heroSubtitle": "Dołącz do JustPlay42 i bądź blisko ludzi, na których ci zależy — ciesz się prawdziwymi rozmowami, rzucaj znajomym wyzwanie w 2048 i spraw, by każda chwila była fajniejsza.",
+    "heroSubtitle": "Dołącz do JustPlay42, aby być blisko ludzi, na których ci zależy, cieszyć się prawdziwymi rozmowami, rzucać znajomym wyzwanie w 2048 i sprawić, by każda chwila była fajniejsza.",
     "hello": "Cześć!",
     "tagline": "Rób swoje. Nie odpuszczaj.",
     "login": "Zaloguj się",
@@ -187,7 +183,7 @@
     "invalidCredentials": "Nieprawidłowy e-mail lub hasło.",
     "registrationRejected": "Rejestracja nie powiodła się. Sprawdź e-mail i hasło, a potem spróbuj ponownie.",
     "emailRejected": "Serwer odrzucił ten adres e-mail. Użyj innego.",
-    "passwordRejected": "To hasło zostało odrzucone — może być zbyt popularne. Wybierz inne.",
+    "passwordRejected": "To hasło zostało odrzucone, ponieważ może być zbyt popularne. Wybierz inne.",
     "emailTaken": "Konto z tym adresem e-mail już istnieje.",
     "updateDisplayName": "Nie udało się zmienić nazwy. Spróbuj innej.",
     "uploadAvatar": "Nie udało się przesłać awatara.",

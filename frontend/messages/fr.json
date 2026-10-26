@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Chaque compétence a son histoire — commence la tienne."
+    "description": "Chaque compétence a son histoire, alors commence la tienne."
   },
   "common": {
     "unknownUser": "Utilisateur inconnu",
@@ -61,10 +61,6 @@
         "paragraphs": [
           "Les erreurs sont renvoyées au format application/problem+json (RFC 9457) sous cette forme :"
         ]
-      },
-      "interactive": {
-        "title": "Référence interactive",
-        "body": "Teste chaque endpoint dans ton navigateur avec la <link>référence interactive Swagger</link>."
       }
     },
     "labels": {
@@ -138,7 +134,7 @@
   },
   "home": {
     "heroTitle": "Joue et discute avec tes amis.",
-    "heroSubtitle": "Rejoins JustPlay42 pour rester proche des personnes qui comptent pour toi — profite de vraies conversations, défie tes amis au 2048 et rends chaque moment plus amusant.",
+    "heroSubtitle": "Rejoins JustPlay42 pour rester proche des personnes qui comptent pour toi, profiter de vraies conversations, défier tes amis au 2048 et rendre chaque moment plus amusant.",
     "hello": "Salut !",
     "tagline": "Fais ton truc. Bosse.",
     "login": "Se connecter",
