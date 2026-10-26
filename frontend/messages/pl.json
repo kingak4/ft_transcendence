@@ -32,6 +32,95 @@
     "theme": "Motyw",
     "language": "Język"
   },
+  "apiDocs": {
+    "title": "Dokumentacja API",
+    "intro": "JustPlay42 udostępnia publiczne REST API do zarządzania znajomymi i profilami użytkowników. Żądania i odpowiedzi używają formatu JSON.",
+    "overview": {
+      "baseUrl": {
+        "title": "Bazowy URL",
+        "paragraphs": [
+          "Wysyłaj każde żądanie przez HTTPS na poniższy adres. Ścieżki endpointów na tej stronie zawierają już prefiks /api."
+        ]
+      },
+      "auth": {
+        "title": "Uwierzytelnianie",
+        "paragraphs": [
+          "Każdy endpoint wymaga ważnego tokenu dostępu. Zaloguj się przez POST /api/users/login, aby go otrzymać.",
+          "Wysyłaj token w nagłówku Authorization każdego żądania. Żądania bez ważnego tokenu są odrzucane z kodem 401."
+        ]
+      },
+      "rateLimit": {
+        "title": "Limit żądań",
+        "paragraphs": [
+          "Każdy klient może wysłać ograniczoną liczbę żądań na minutę. Żądania ponad limit są odrzucane z kodem 429 Too Many Requests."
+        ]
+      },
+      "errors": {
+        "title": "Błędy",
+        "paragraphs": [
+          "Błędy są zwracane jako application/problem+json (RFC 9457) w takim formacie:"
+        ]
+      },
+      "interactive": {
+        "title": "Interaktywna dokumentacja",
+        "body": "Przetestuj każdy endpoint w przeglądarce w <link>interaktywnej dokumentacji Swagger</link>."
+      }
+    },
+    "labels": {
+      "parameters": "Parametry",
+      "requestExample": "Przykładowe żądanie",
+      "responseExample": "Przykładowa odpowiedź",
+      "responses": "Odpowiedzi"
+    },
+    "table": {
+      "name": "Nazwa",
+      "location": "Miejsce",
+      "type": "Typ",
+      "required": "Wymagany",
+      "description": "Opis",
+      "yes": "Tak",
+      "no": "Nie"
+    },
+    "params": {
+      "friendId": "ID użytkownika do dodania lub usunięcia.",
+      "page": "Numer strony, liczony od 0.",
+      "size": "Liczba wyników na stronę.",
+      "query": "Tekst wyszukiwany w nazwach wyświetlanych.",
+      "displayName": "Nowa nazwa wyświetlana: litery, cyfry, podkreślenia lub kropki."
+    },
+    "status": {
+      "200": "Sukces.",
+      "201": "Utworzono.",
+      "204": "Sukces, bez treści odpowiedzi.",
+      "400": "Nieprawidłowe żądanie (błędny parametr lub treść).",
+      "401": "Brak lub nieprawidłowy token dostępu.",
+      "403": "Nie masz uprawnień do tej operacji.",
+      "404": "Nie znaleziono zasobu.",
+      "500": "Błąd serwera."
+    },
+    "endpoints": {
+      "listFriends": {
+        "summary": "Lista znajomych",
+        "description": "Zwraca twoich znajomych, strona po stronie."
+      },
+      "addFriend": {
+        "summary": "Dodaj znajomego",
+        "description": "Dodaje użytkownika o podanym ID do twojej listy znajomych."
+      },
+      "removeFriend": {
+        "summary": "Usuń znajomego",
+        "description": "Usuwa użytkownika o podanym ID z twojej listy znajomych."
+      },
+      "updateDisplayName": {
+        "summary": "Zmień nazwę wyświetlaną",
+        "description": "Aktualizuje twoją nazwę wyświetlaną. Zmieniane są tylko pola wysłane w treści żądania."
+      },
+      "searchUsers": {
+        "summary": "Szukaj użytkowników",
+        "description": "Wyszukuje użytkowników, których nazwa wyświetlana pasuje do szukanego tekstu, strona po stronie."
+      }
+    }
+  },
   "session": {
     "goToProfile": "Przejdź do mojego profilu",
     "logOut": "Wyloguj się",
