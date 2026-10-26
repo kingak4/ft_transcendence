@@ -358,7 +358,11 @@
       "youWin": "Wygrana!",
       "reached2048": "Udało ci się dojść do kafelka 2048!",
       "currentScore": "Aktualny wynik",
-      "keepPlaying": "Graj dalej"
+      "keepPlaying": "Graj dalej",
+      "boardLabel": "Plansza gry 2048",
+      "instructions": "Przesuwaj kafelki strzałkami lub klawiszami W, A, S, D. Na ekranie dotykowym przesuń palcem.",
+      "gameOverAnnouncement": "Koniec gry. Wynik końcowy: {score}.",
+      "winAnnouncement": "Udało ci się dojść do kafelka 2048! Wynik: {score}."
     },
     "invite": {
       "titleShare": "Udostępnij i wyzwij",

@@ -7,8 +7,7 @@ export type IconName =
   | 'alert'
   | 'trash'
   | 'chevron-left'
-  | 'arrow-left'
-  | 'x';
+  | 'arrow-left';
 
 // Stroke-only shapes on a 24x24 grid. Icon.tsx supplies the <svg> wrapper,
 // so every entry inherits the same stroke width, caps and currentColor.
@@ -45,12 +44,6 @@ export const ICON_PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M19 12H5" />
       <path d="m12 19-7-7 7-7" />
-    </>
-  ),
-  x: (
-    <>
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
     </>
   ),
 };

@@ -358,7 +358,11 @@
       "youWin": "You Win!",
       "reached2048": "You reached the 2048 tile!",
       "currentScore": "Current Score",
-      "keepPlaying": "Keep Playing"
+      "keepPlaying": "Keep Playing",
+      "boardLabel": "2048 game board",
+      "instructions": "Use the arrow keys or W, A, S, D to slide the tiles. On touch screens, swipe.",
+      "gameOverAnnouncement": "Game over. Final score: {score}.",
+      "winAnnouncement": "You reached the 2048 tile! Score: {score}."
     },
     "invite": {
       "titleShare": "Share & Challenge",

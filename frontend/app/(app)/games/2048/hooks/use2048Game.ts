@@ -90,6 +90,13 @@ export function use2048Game() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isInviteModalOpen) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (
+        target?.isContentEditable ||
+        target?.closest('input, textarea, select')
+      )
+        return;
 
       if (
         ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(

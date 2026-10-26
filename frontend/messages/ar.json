@@ -358,7 +358,11 @@
       "youWin": "فزت!",
       "reached2048": "وصلت إلى المربع 2048!",
       "currentScore": "النتيجة الحالية",
-      "keepPlaying": "تابع اللعب"
+      "keepPlaying": "تابع اللعب",
+      "boardLabel": "لوحة لعبة 2048",
+      "instructions": "استخدم مفاتيح الأسهم أو W وA وS وD لتحريك المربعات. على الشاشات اللمسية، اسحب بإصبعك.",
+      "gameOverAnnouncement": "انتهت اللعبة. النتيجة النهائية: {score}.",
+      "winAnnouncement": "وصلت إلى المربع 2048! النتيجة: {score}."
     },
     "invite": {
       "titleShare": "شارك وتحدَّ",

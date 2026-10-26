@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useId } from 'react';
 
 import { Tile } from '../logic/gameLogic';
 import { TileView } from './TileView';
@@ -27,9 +28,26 @@ export function Board({
   keepPlaying,
 }: BoardProps) {
   const t = useTranslations('games.game2048');
+  const instructionsId = useId();
 
   return (
-    <div className="bg-sunken-surface border-elevated-border relative aspect-square w-full max-w-[380px] select-none rounded-2xl border p-3 shadow-2xl sm:max-w-[420px]">
+    <div
+      dir="ltr"
+      role="region"
+      aria-label={t('boardLabel')}
+      aria-describedby={instructionsId}
+      className="bg-sunken-surface border-elevated-border relative aspect-square w-full max-w-[380px] select-none rounded-2xl border p-3 shadow-2xl sm:max-w-[420px]"
+    >
+      <p id={instructionsId} className="sr-only">
+        {t('instructions')}
+      </p>
+      <p role="status" className="sr-only">
+        {gameOver
+          ? t('gameOverAnnouncement', { score })
+          : gameWon && !keepPlaying
+            ? t('winAnnouncement', { score })
+            : ''}
+      </p>
       <div className="grid h-full w-full grid-cols-4 grid-rows-4 gap-3">
         {Array(16)
           .fill(0)

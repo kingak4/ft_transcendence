@@ -358,7 +358,11 @@
       "youWin": "Gagné !",
       "reached2048": "Vous avez atteint la tuile 2048 !",
       "currentScore": "Score actuel",
-      "keepPlaying": "Continuer"
+      "keepPlaying": "Continuer",
+      "boardLabel": "Plateau du jeu 2048",
+      "instructions": "Utilisez les flèches ou W, A, S, D pour faire glisser les tuiles. Sur écran tactile, balayez.",
+      "gameOverAnnouncement": "Partie terminée. Score final : {score}.",
+      "winAnnouncement": "Vous avez atteint la tuile 2048 ! Score : {score}."
     },
     "invite": {
       "titleShare": "Partager et défier",
