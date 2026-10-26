@@ -32,6 +32,101 @@
     "theme": "Thème",
     "language": "Langue"
   },
+  "apiDocs": {
+    "title": "Documentation de l’API",
+    "intro": "JustPlay42 propose une API REST publique pour gérer les amis et les profils utilisateurs. Les requêtes et les réponses utilisent JSON.",
+    "overview": {
+      "baseUrl": {
+        "title": "URL de base",
+        "paragraphs": [
+          "Envoie chaque requête en HTTPS à l’hôte ci-dessous. Les chemins des endpoints sur cette page incluent déjà le préfixe /api."
+        ]
+      },
+      "auth": {
+        "title": "Authentification",
+        "paragraphs": [
+          "Chaque endpoint nécessite un jeton d’accès valide. Connecte-toi avec POST /api/users/login pour en obtenir un.",
+          "Envoie le jeton dans l’en-tête Authorization de chaque requête. Les requêtes sans jeton valide sont rejetées avec le code 401."
+        ]
+      },
+      "rateLimit": {
+        "title": "Limitation du débit",
+        "paragraphs": [
+          "Chaque client peut envoyer un nombre limité de requêtes par minute. Les requêtes au-delà de la limite sont rejetées avec le code 429 Too Many Requests."
+        ]
+      },
+      "errors": {
+        "title": "Erreurs",
+        "paragraphs": [
+          "Les erreurs sont renvoyées au format application/problem+json (RFC 9457) sous cette forme :"
+        ]
+      },
+      "interactive": {
+        "title": "Référence interactive",
+        "body": "Teste chaque endpoint dans ton navigateur avec la <link>référence interactive Swagger</link>."
+      }
+    },
+    "labels": {
+      "parameters": "Paramètres",
+      "requestExample": "Exemple de requête",
+      "responseExample": "Exemple de réponse",
+      "responses": "Réponses"
+    },
+    "table": {
+      "name": "Nom",
+      "location": "Emplacement",
+      "type": "Type",
+      "required": "Obligatoire",
+      "description": "Description",
+      "yes": "Oui",
+      "no": "Non"
+    },
+    "params": {
+      "friendId": "ID de l’utilisateur à ajouter ou à retirer.",
+      "page": "Numéro de page, à partir de 0.",
+      "size": "Nombre de résultats par page.",
+      "query": "Texte à rechercher dans les noms d’affichage.",
+      "displayName": "Le nouveau nom d’affichage : lettres, chiffres, tirets bas ou points."
+    },
+    "status": {
+      "200": "Succès.",
+      "201": "Créé.",
+      "204": "Succès, aucun contenu renvoyé.",
+      "400": "Requête invalide (paramètre ou corps incorrect).",
+      "401": "Jeton d’accès manquant ou invalide.",
+      "403": "Tu n’as pas le droit d’effectuer cette action.",
+      "404": "Ressource introuvable.",
+      "500": "Erreur du serveur."
+    },
+    "endpoints": {
+      "getFriendList": {
+        "summary": "Lister les amis",
+        "description": "Renvoie tes amis, page par page."
+      },
+      "addFriend": {
+        "summary": "Ajouter un ami",
+        "description": "Ajoute l’utilisateur ayant l’ID indiqué à ta liste d’amis.",
+        "params": {
+          "friendId": "ID de l’utilisateur à ajouter."
+        }
+      },
+      "removeFriend": {
+        "summary": "Retirer un ami",
+        "description": "Retire l’utilisateur ayant l’ID indiqué de ta liste d’amis.",
+        "params": {
+          "friendId": "ID de l’utilisateur à retirer."
+        }
+      },
+      "updateDisplayName": {
+        "summary": "Changer le nom d’affichage",
+        "description": "Met à jour ton nom d’affichage. Seuls les champs envoyés dans le corps sont modifiés."
+      },
+      "searchUsers": {
+        "summary": "Rechercher des utilisateurs",
+        "description": "Trouve les utilisateurs dont le nom d’affichage correspond au texte recherché, page par page."
+      }
+    }
+  },
   "session": {
     "goToProfile": "Aller à mon profil",
     "logOut": "Se déconnecter",
@@ -41,8 +136,8 @@
     "continueJourney": "Poursuis ton aventure."
   },
   "home": {
-    "heroTitle": "Discute avec tes amis.",
-    "heroSubtitle": "Rejoins 42Hub pour rester proche des personnes qui comptent pour toi — de vraies conversations, en toute simplicité.",
+    "heroTitle": "Joue et discute avec tes amis.",
+    "heroSubtitle": "Rejoins JustPlay42 pour rester proche des personnes qui comptent pour toi — profite de vraies conversations, défie tes amis au 2048 et rends chaque moment plus amusant.",
     "hello": "Salut !",
     "tagline": "Fais ton truc. Bosse.",
     "login": "Se connecter",
@@ -195,7 +290,9 @@
         },
         {
           "title": "2. Données collectées",
-          "paragraphs": ["L’application peut collecter les informations suivantes :"],
+          "paragraphs": [
+            "L’application peut collecter les informations suivantes :"
+          ],
           "items": [
             "Nom d’utilisateur et informations de profil",
             "Adresse e-mail (si fournie)",
@@ -277,7 +374,9 @@
         },
         {
           "title": "3. Utilisation acceptable",
-          "paragraphs": ["En utilisant l’application, vous vous engagez à ne pas :"],
+          "paragraphs": [
+            "En utilisant l’application, vous vous engagez à ne pas :"
+          ],
           "items": [
             "utiliser la plateforme à des fins illégales",
             "exploiter des vulnérabilités ou des failles de sécurité",
