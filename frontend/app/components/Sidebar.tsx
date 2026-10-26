@@ -129,11 +129,11 @@ export default function Sidebar({ userId }: Props) {
               {t('friends')}
             </Link>
             <Link
-              href="/games"
+              href="/games/2048"
               onClick={close}
-              {...navLinkProps(pathname.startsWith('/games'))}
+              {...navLinkProps(pathname === '/games/2048')}
             >
-              {t('games')}
+              {t('game2048')}
             </Link>
           </nav>
         )}

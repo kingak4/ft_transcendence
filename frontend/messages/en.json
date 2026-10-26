@@ -22,7 +22,7 @@
     "myProfile": "My Profile",
     "chat": "Chat",
     "friends": "Friends",
-    "games": "Games"
+    "game2048": "2048"
   },
   "footer": {
     "label": "Footer",
@@ -337,14 +337,8 @@
     }
   },
   "games": {
-    "hub": {
-      "title": "Games Hub",
-      "subtitle": "Choose a game to play!"
-    },
     "game2048": {
       "title": "2048",
-      "description": "Join the numbers and get to the 2048 tile!",
-      "play": "Play 2048",
       "tagline": "Join the tiles and reach 2048!",
       "moves": "Moves",
       "score": "Score",

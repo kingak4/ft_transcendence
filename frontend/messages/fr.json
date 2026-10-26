@@ -22,7 +22,7 @@
     "myProfile": "Mon profil",
     "chat": "Discussions",
     "friends": "Amis",
-    "games": "Jeux"
+    "game2048": "2048"
   },
   "footer": {
     "label": "Pied de page",
@@ -337,14 +337,8 @@
     }
   },
   "games": {
-    "hub": {
-      "title": "Jeux",
-      "subtitle": "Choisissez un jeu !"
-    },
     "game2048": {
       "title": "2048",
-      "description": "Fusionnez les nombres et atteignez la tuile 2048 !",
-      "play": "Jouer à 2048",
       "tagline": "Fusionnez les tuiles et atteignez 2048 !",
       "moves": "Coups",
       "score": "Score",

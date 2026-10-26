@@ -22,7 +22,7 @@
     "myProfile": "Mój profil",
     "chat": "Czat",
     "friends": "Znajomi",
-    "games": "Gry"
+    "game2048": "2048"
   },
   "footer": {
     "label": "Stopka",
@@ -337,14 +337,8 @@
     }
   },
   "games": {
-    "hub": {
-      "title": "Gry",
-      "subtitle": "Wybierz grę!"
-    },
     "game2048": {
       "title": "2048",
-      "description": "Łącz liczby i dojdź do kafelka 2048!",
-      "play": "Zagraj w 2048",
       "tagline": "Łącz kafelki i dojdź do 2048!",
       "moves": "Ruchy",
       "score": "Wynik",
