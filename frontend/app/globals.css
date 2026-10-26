@@ -367,7 +367,7 @@ body {
 
 /*
  * Arabic: the Arabic font comes first and Manrope still covers Latin glyphs
- * (names, "42Hub"). Unlayered rules beat Tailwind's utilities layer, so
+ * (names, "JustPlay42"). Unlayered rules beat Tailwind's utilities layer, so
  * tracking-* can't space out the letters - that would break their joins -
  * and tight headings get room for the taller Arabic letterforms.
  */

@@ -33,6 +33,101 @@
     "theme": "Theme",
     "language": "Language"
   },
+  "apiDocs": {
+    "title": "API documentation",
+    "intro": "JustPlay42 provides a public REST API for managing friends and user profiles. Requests and responses use JSON.",
+    "overview": {
+      "baseUrl": {
+        "title": "Base URL",
+        "paragraphs": [
+          "Send every request over HTTPS to the host below. The endpoint paths on this page already include the /api prefix."
+        ]
+      },
+      "auth": {
+        "title": "Authentication",
+        "paragraphs": [
+          "Every endpoint requires a valid access token. Log in with POST /api/users/login to receive one.",
+          "Send the token in the Authorization header of every request. Requests without a valid token are rejected with 401."
+        ]
+      },
+      "rateLimit": {
+        "title": "Rate limiting",
+        "paragraphs": [
+          "Each client may send a limited number of requests per minute. Requests above the limit are rejected with 429 Too Many Requests."
+        ]
+      },
+      "errors": {
+        "title": "Errors",
+        "paragraphs": [
+          "Errors are returned as application/problem+json (RFC 9457) in this shape:"
+        ]
+      },
+      "interactive": {
+        "title": "Interactive reference",
+        "body": "Try every endpoint in your browser with the <link>interactive Swagger reference</link>."
+      }
+    },
+    "labels": {
+      "parameters": "Parameters",
+      "requestExample": "Request example",
+      "responseExample": "Response example",
+      "responses": "Responses"
+    },
+    "table": {
+      "name": "Name",
+      "location": "In",
+      "type": "Type",
+      "required": "Required",
+      "description": "Description",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "params": {
+      "friendId": "ID of the user to add or remove.",
+      "page": "Page number, starting from 0.",
+      "size": "Number of results per page.",
+      "query": "Text to search for in display names.",
+      "displayName": "The new display name: letters, numbers, underscores or periods."
+    },
+    "status": {
+      "200": "Success.",
+      "201": "Created.",
+      "204": "Success, no content returned.",
+      "400": "Invalid request (bad parameter or body).",
+      "401": "Missing or invalid access token.",
+      "403": "You are not allowed to do this.",
+      "404": "Resource not found.",
+      "500": "Server error."
+    },
+    "endpoints": {
+      "getFriendList": {
+        "summary": "List friends",
+        "description": "Returns your friends, one page at a time."
+      },
+      "addFriend": {
+        "summary": "Add a friend",
+        "description": "Adds the user with the given ID to your friend list.",
+        "params": {
+          "friendId": "ID of the user to add."
+        }
+      },
+      "removeFriend": {
+        "summary": "Remove a friend",
+        "description": "Removes the user with the given ID from your friend list.",
+        "params": {
+          "friendId": "ID of the user to remove."
+        }
+      },
+      "updateDisplayName": {
+        "summary": "Change display name",
+        "description": "Updates your display name. Only the fields sent in the body are changed."
+      },
+      "searchUsers": {
+        "summary": "Search users",
+        "description": "Finds users whose display name matches the search text, one page at a time."
+      }
+    }
+  },
   "session": {
     "goToProfile": "Go to my profile",
     "logOut": "Log out",
@@ -42,8 +137,8 @@
     "continueJourney": "Continue your journey."
   },
   "home": {
-    "heroTitle": "Let's chat with your friends.",
-    "heroSubtitle": "Join 42Hub to stay close to the people you care about — real conversations, made simple.",
+    "heroTitle": "Let's play and chat with your friends.",
+    "heroSubtitle": "Join JustPlay42 to stay close to the people you care about — enjoy real conversations, challenge your friends in 2048, and make every moment more fun.",
     "hello": "Hello!",
     "tagline": "Do your thing. Grind.",
     "login": "Login",
@@ -204,7 +299,9 @@
         },
         {
           "title": "2. Data We Collect",
-          "paragraphs": ["The application may collect the following information:"],
+          "paragraphs": [
+            "The application may collect the following information:"
+          ],
           "items": [
             "Username and profile information",
             "Email address (if provided)",

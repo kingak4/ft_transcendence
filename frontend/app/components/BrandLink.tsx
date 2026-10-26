@@ -10,7 +10,7 @@ export default function BrandLink({ className }: Props) {
       href="/"
       className={`text-xl font-extrabold${className ? ` ${className}` : ''}`}
     >
-      42Hub
+      JustPlay42
     </Link>
   );
 }

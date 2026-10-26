@@ -15,7 +15,7 @@ const FOOTER_LINKS: { href: string; label: FooterLabel; external?: boolean }[] =
     },
     { href: '/privacy-policy', label: 'privacyPolicy' },
     { href: '/terms-of-service', label: 'termsOfService' },
-    { href: '/api/docs', label: 'api' },
+    { href: '/api-docs', label: 'api' },
   ];
 
 type FooterTone = 'surface' | 'start-page';
