@@ -54,8 +54,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata');
   return {
     title: {
-      default: '42Hub',
-      template: '%s · 42Hub',
+      default: 'JustPlay42',
+      template: '%s · JustPlay42',
     },
     description: t('description'),
   };

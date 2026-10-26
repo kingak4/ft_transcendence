@@ -6,7 +6,7 @@ import { useTheme, type Theme } from '../hooks/useTheme';
 import { THEME_ORDER } from '../lib/theme';
 
 const THEME_LABEL: Record<Theme, string> = {
-  brand: '42Hub',
+  brand: 'JustPlay42',
   mocha: 'Mocha',
   latte: 'Latte',
 };
