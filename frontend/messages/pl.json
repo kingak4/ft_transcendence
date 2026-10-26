@@ -99,17 +99,23 @@
       "500": "Błąd serwera."
     },
     "endpoints": {
-      "listFriends": {
+      "getFriendList": {
         "summary": "Lista znajomych",
         "description": "Zwraca twoich znajomych, strona po stronie."
       },
       "addFriend": {
         "summary": "Dodaj znajomego",
-        "description": "Dodaje użytkownika o podanym ID do twojej listy znajomych."
+        "description": "Dodaje użytkownika o podanym ID do twojej listy znajomych.",
+        "params": {
+          "friendId": "ID użytkownika do dodania."
+        }
       },
       "removeFriend": {
         "summary": "Usuń znajomego",
-        "description": "Usuwa użytkownika o podanym ID z twojej listy znajomych."
+        "description": "Usuwa użytkownika o podanym ID z twojej listy znajomych.",
+        "params": {
+          "friendId": "ID użytkownika do usunięcia."
+        }
       },
       "updateDisplayName": {
         "summary": "Zmień nazwę wyświetlaną",

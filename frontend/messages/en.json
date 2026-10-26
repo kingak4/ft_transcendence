@@ -99,17 +99,23 @@
       "500": "Server error."
     },
     "endpoints": {
-      "listFriends": {
+      "getFriendList": {
         "summary": "List friends",
         "description": "Returns your friends, one page at a time."
       },
       "addFriend": {
         "summary": "Add a friend",
-        "description": "Adds the user with the given ID to your friend list."
+        "description": "Adds the user with the given ID to your friend list.",
+        "params": {
+          "friendId": "ID of the user to add."
+        }
       },
       "removeFriend": {
         "summary": "Remove a friend",
-        "description": "Removes the user with the given ID from your friend list."
+        "description": "Removes the user with the given ID from your friend list.",
+        "params": {
+          "friendId": "ID of the user to remove."
+        }
       },
       "updateDisplayName": {
         "summary": "Change display name",

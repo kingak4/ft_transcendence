@@ -14,6 +14,14 @@ const OVERVIEW = [
   { id: 'errors', code: ERROR_EXAMPLE },
 ] as const;
 
+// t.raw skips type checking; fail loudly if a locale file has the wrong shape.
+function toParagraphs(value: unknown, key: string): string[] {
+  if (Array.isArray(value) && value.every((p) => typeof p === 'string')) {
+    return value;
+  }
+  throw new Error(`apiDocs.${key} must be an array of strings`);
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('apiDocs');
   return { title: t('title') };
@@ -32,11 +40,12 @@ export default async function ApiDocs() {
           title={t(`overview.${section.id}.title`)}
         >
           {/* Static, never-reordered list: the index is a stable key. */}
-          {(t.raw(`overview.${section.id}.paragraphs`) as string[]).map(
-            (paragraph, paragraphIndex) => (
-              <p key={paragraphIndex}>{paragraph}</p>
-            ),
-          )}
+          {toParagraphs(
+            t.raw(`overview.${section.id}.paragraphs`),
+            `overview.${section.id}.paragraphs`,
+          ).map((paragraph, paragraphIndex) => (
+            <p key={paragraphIndex}>{paragraph}</p>
+          ))}
           {'code' in section && <CodeBlock>{section.code}</CodeBlock>}
         </LegalSection>
       ))}

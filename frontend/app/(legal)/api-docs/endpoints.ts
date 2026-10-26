@@ -1,12 +1,22 @@
-// Language-neutral facts about each public endpoint, mirrored from
-// app/types/api.d.ts. Human-readable text lives in messages/*.json under
-// apiDocs.endpoints.<id> and apiDocs.params.<name>.
+// Language-neutral facts about each public endpoint, type-checked against
+// app/types/api.d.ts: ids are backend operationIds, and paths and statuses
+// must exist there, so regenerating the schema breaks the build on drift.
+// Human-readable text lives in messages/*.json under apiDocs.endpoints.<id>
+// and apiDocs.params.<name>.
+
+import type { operations, paths } from '../../types/api';
 
 export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 export type ParamName = 'friendId' | 'page' | 'size' | 'query' | 'displayName';
 
-export type StatusCode = 200 | 201 | 204 | 400 | 401 | 403 | 404 | 500;
+type OperationId = keyof operations;
+
+type StatusOf<Op extends OperationId> = keyof operations[Op]['responses'] &
+  number;
+
+// nginx exposes every backend path under /api (prefix-stripping).
+type DocumentedPath = `/api${keyof paths & string}`;
 
 export interface EndpointParam {
   name: ParamName;
@@ -15,14 +25,22 @@ export interface EndpointParam {
   required: boolean;
 }
 
-export interface Endpoint {
-  id: string;
+export interface Endpoint<Op extends OperationId = OperationId> {
+  id: Op;
   method: HttpMethod;
-  path: string;
+  path: DocumentedPath;
   params: readonly EndpointParam[];
   requestExample?: string;
   responseExample?: string;
-  statuses: readonly StatusCode[];
+  statuses: readonly StatusOf<Op>[];
+}
+
+// Identity helper: lets each entry infer its own Op from `id`, so its
+// statuses are checked against that operation's responses only.
+function defineEndpoint<const Op extends OperationId>(
+  endpoint: Endpoint<Op>,
+): Endpoint<Op> {
+  return endpoint;
 }
 
 const json = (value: unknown) => JSON.stringify(value, null, 2);
@@ -36,8 +54,8 @@ const PAGINATION_PARAMS: readonly EndpointParam[] = [
 ];
 
 export const ENDPOINTS = [
-  {
-    id: 'listFriends',
+  defineEndpoint({
+    id: 'getFriendList',
     method: 'GET',
     path: '/api/friends',
     params: PAGINATION_PARAMS,
@@ -59,8 +77,8 @@ export const ENDPOINTS = [
       last: true,
     }),
     statuses: [200, 400, 401, 403, 500],
-  },
-  {
+  }),
+  defineEndpoint({
     id: 'addFriend',
     method: 'POST',
     path: '/api/friends/{friendId}',
@@ -68,8 +86,8 @@ export const ENDPOINTS = [
       { name: 'friendId', location: 'path', type: 'uuid', required: true },
     ],
     statuses: [201, 400, 401, 403, 404, 500],
-  },
-  {
+  }),
+  defineEndpoint({
     id: 'removeFriend',
     method: 'DELETE',
     path: '/api/friends/{friendId}',
@@ -77,8 +95,8 @@ export const ENDPOINTS = [
       { name: 'friendId', location: 'path', type: 'uuid', required: true },
     ],
     statuses: [204, 400, 401, 403, 404, 500],
-  },
-  {
+  }),
+  defineEndpoint({
     id: 'updateDisplayName',
     method: 'PATCH',
     path: '/api/users/display-name',
@@ -87,8 +105,8 @@ export const ENDPOINTS = [
     ],
     requestExample: json({ displayName: 'marvin' }),
     statuses: [200, 400, 401, 403, 404, 500],
-  },
-  {
+  }),
+  defineEndpoint({
     id: 'searchUsers',
     method: 'GET',
     path: '/api/users/search',
@@ -112,10 +130,12 @@ export const ENDPOINTS = [
       last: true,
     }),
     statuses: [200, 400, 401, 403, 404, 500],
-  },
-] as const satisfies readonly Endpoint[];
+  }),
+] as const;
 
 export type EndpointId = (typeof ENDPOINTS)[number]['id'];
+
+export type StatusCode = (typeof ENDPOINTS)[number]['statuses'][number];
 
 export const ERROR_EXAMPLE = json({
   type: 'about:blank',

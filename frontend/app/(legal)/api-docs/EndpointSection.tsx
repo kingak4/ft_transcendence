@@ -3,9 +3,33 @@ import { useTranslations } from 'next-intl';
 import CodeBlock from '../../components/CodeBlock';
 import LegalSection from '../../components/LegalSection';
 import Tag from '../../components/Tag';
-import type { ENDPOINTS } from './endpoints';
+import type { ENDPOINTS, EndpointId, ParamName } from './endpoints';
 
 type DocumentedEndpoint = (typeof ENDPOINTS)[number];
+type ApiDocsT = ReturnType<typeof useTranslations<'apiDocs'>>;
+type ApiDocsKey = Parameters<ApiDocsT>[0];
+
+// Each slot only accepts its own endpoints.<id>.params.<name> key, and only
+// if that message exists, so an override can't point at missing text.
+type ParamOverrides = {
+  [Id in EndpointId]?: {
+    [Name in ParamName]?: Extract<`endpoints.${Id}.params.${Name}`, ApiDocsKey>;
+  };
+};
+
+const PARAM_OVERRIDES: ParamOverrides = {
+  addFriend: { friendId: 'endpoints.addFriend.params.friendId' },
+  removeFriend: { friendId: 'endpoints.removeFriend.params.friendId' },
+};
+
+// Endpoint-specific text wins; the shared params.<name> text is the default.
+function paramDescription(
+  t: ApiDocsT,
+  endpointId: EndpointId,
+  name: ParamName,
+) {
+  return t(PARAM_OVERRIDES[endpointId]?.[name] ?? `params.${name}`);
+}
 
 const SUBHEADING_CLASSES =
   'text-on-elevated-surface mt-2 text-sm font-extrabold';
@@ -86,7 +110,7 @@ export default function EndpointSection({
                       {param.required ? t('table.yes') : t('table.no')}
                     </td>
                     <td className={CELL_CLASSES}>
-                      {t(`params.${param.name}`)}
+                      {paramDescription(t, endpoint.id, param.name)}
                     </td>
                   </tr>
                 ))}
@@ -96,14 +120,14 @@ export default function EndpointSection({
         </>
       )}
 
-      {'requestExample' in endpoint && (
+      {endpoint.requestExample && (
         <>
           <h3 className={SUBHEADING_CLASSES}>{t('labels.requestExample')}</h3>
           <CodeBlock>{endpoint.requestExample}</CodeBlock>
         </>
       )}
 
-      {'responseExample' in endpoint && (
+      {endpoint.responseExample && (
         <>
           <h3 className={SUBHEADING_CLASSES}>{t('labels.responseExample')}</h3>
           <CodeBlock>{endpoint.responseExample}</CodeBlock>

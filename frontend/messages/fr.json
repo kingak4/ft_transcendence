@@ -99,17 +99,23 @@
       "500": "Erreur du serveur."
     },
     "endpoints": {
-      "listFriends": {
+      "getFriendList": {
         "summary": "Lister les amis",
         "description": "Renvoie tes amis, page par page."
       },
       "addFriend": {
         "summary": "Ajouter un ami",
-        "description": "Ajoute l’utilisateur ayant l’ID indiqué à ta liste d’amis."
+        "description": "Ajoute l’utilisateur ayant l’ID indiqué à ta liste d’amis.",
+        "params": {
+          "friendId": "ID de l’utilisateur à ajouter."
+        }
       },
       "removeFriend": {
         "summary": "Retirer un ami",
-        "description": "Retire l’utilisateur ayant l’ID indiqué de ta liste d’amis."
+        "description": "Retire l’utilisateur ayant l’ID indiqué de ta liste d’amis.",
+        "params": {
+          "friendId": "ID de l’utilisateur à retirer."
+        }
       },
       "updateDisplayName": {
         "summary": "Changer le nom d’affichage",
