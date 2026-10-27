@@ -524,3 +524,4 @@ AI assistance was limited to:
 
 All architectural decisions, feature design, code implementation, and integration of functionality were carried out by the project team. Any AI-assisted input was reviewed, tested, and validated by team members and discussed with peers before being relied upon, consistent with the good-practice approach of using AI to reduce repetitive or tedious tasks while ensuring the team could fully explain and take responsibility for the resulting work.
 
+   
