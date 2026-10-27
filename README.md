@@ -133,7 +133,7 @@ Owned the application's visual language and frontend quality bar, and the build 
 *   **Accessibility & Internationalization:** Responsible for WCAG 2.1 AA compliance and multi-language support (EN / PL / FR / AR with RTL).
 *   **CI & Build Environments:** Responsible for the GitHub Actions pipeline, the two supported build profiles, and their automated verification.
 
-### 📊 Project Management
+## 📊 Project Management
 
 Established a structured workflow for team coordination and task execution:
 
