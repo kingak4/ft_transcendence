@@ -266,85 +266,143 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 **Total Points Calculated: 19 Points** (Major = 2pts, Minor = 1pt)
 
-## 42Hub Modules table summary
+<a id="modules-table"></a>
+### 42Hub Modules table summary
 
 | Module ID | Module Name | Points | Detailed requirements list | 42Hub requirements fulfillment |
 | --- | --- | --- | --- | --- |
-| 1 | IV.1 Web - A. Use a framework for both the frontend and backend. | 2 |◦ Use a frontend framework (React, Vue, Angular, Svelte, etc.).◦ Use a backend framework (Express, NestJS, Django, Flask, Ruby on Rails, etc.).◦ Full-stack frameworks (Next.js, Nuxt.js, SvelteKit) count as both if you use both their frontend and backend capabilities.| Java Spring Boot on Backend, Next.js on Frontend |
-| 2 | IV.1 Web - D. Implement real-time features using WebSockets or similar technology. | 2 |◦ Real-time updates across clients.◦ Handle connection/disconnection gracefully.◦ Efficient message broadcasting. | |
-| 3 | IV.1 Web - E. Allow users to interact with other users. | 2 | ◦ A basic chat system (send/receive messages between users).◦ A profile system (view user information).◦ A friends system (add/remove friends, see friends list).| |
-| 4 | IV.1 Web - F. A public API to interact with the database with a secured API key, rate limiting, documentation, and at least 5 endpoints | 2 | | |
-| 5 | IV.1 Web - G. Use an ORM for the database. | 1 | | |
-| 6 | IV.1 Web - J. Server-Side Rendering (SSR) for improved performance and SEO.| 1 | | |
-| 7 | IV.1 Web - L. Custom-made design system with reusable components, including a proper color palette, typography, and icons (minimum: 10 reusable components).| 1 | | |
-| 8 | IV.2 Accessibility and Internationalization - A. Complete accessibility compliance (WCAG 2.1 AA) with screen reader support, keyboard navigation, and assistive technologies. | 2 | | |
-| 9 | IV.2 Accessibility and Internationalization - B. Support for multiple languages (at least 3 languages). | 1 | | |
-| 10 | IV.2 Accessibility and Internationalization - C. Right-to-left (RTL) language support. | 1 | | |
-| 11 | IV.2 Accessibility and Internationalization - D.  Support for additional browsers. | 1 | | |
-| 12 | IV.3 User Management - A. Standard user management and authentication. | 2 | ◦ Users can update their profile information.◦ Users can upload an avatar (with a default avatar if none provided).◦ Users can add other users as friends and see their online status.◦ Users have a profile page displaying their information.| |
-| 13 | IV.10 Modules of Choice: CI on GitHub | 1 | | |
+| [1](#module-1) | [IV.1 Web - A. Use a framework for both the frontend and backend.](#module-1) | 2 |◦ Use a frontend framework (React, Vue, Angular, Svelte, etc.).◦ Use a backend framework (Express, NestJS, Django, Flask, Ruby on Rails, etc.).◦ Full-stack frameworks (Next.js, Nuxt.js, SvelteKit) count as both if you use both their frontend and backend capabilities.| Java Spring Boot on Backend, Next.js on Frontend |
+| [2](#module-2) | [IV.1 Web - D. Implement real-time features using WebSockets or similar technology.](#module-2) | 2 |◦ Real-time updates across clients.◦ Handle connection/disconnection gracefully.◦ Efficient message broadcasting. | |
+| [3](#module-3) | [IV.1 Web - E. Allow users to interact with other users.](#module-3) | 2 | ◦ A basic chat system (send/receive messages between users).◦ A profile system (view user information).◦ A friends system (add/remove friends, see friends list).| |
+| [4](#module-4) | [IV.1 Web - F. A public API to interact with the database with a secured API key, rate limiting, documentation, and at least 5 endpoints](#module-4) | 2 | | |
+| [5](#module-5) | [IV.1 Web - G. Use an ORM for the database.](#module-5) | 1 | | |
+| [6](#module-6) | [IV.1 Web - J. Server-Side Rendering (SSR) for improved performance and SEO.](#module-6) | 1 | | |
+| [7](#module-7) | [IV.1 Web - L. Custom-made design system with reusable components, including a proper color palette, typography, and icons (minimum: 10 reusable components).](#module-7) | 1 | | |
+| [8](#module-8) | [IV.2 Accessibility and Internationalization - A. Complete accessibility compliance (WCAG 2.1 AA) with screen reader support, keyboard navigation, and assistive technologies.](#module-8) | 2 | | |
+| [9](#module-9) | [IV.2 Accessibility and Internationalization - B. Support for multiple languages (at least 3 languages).](#module-9) | 1 | | |
+| [10](#module-10) | [IV.2 Accessibility and Internationalization - C. Right-to-left (RTL) language support.](#module-10) | 1 | | |
+| [11](#module-11) | [IV.2 Accessibility and Internationalization - D.  Support for additional browsers.](#module-11) | 1 | | |
+| [12](#module-12) | [IV.3 User Management - A. Standard user management and authentication.](#module-12) | 2 | ◦ Users can update their profile information.◦ Users can upload an avatar (with a default avatar if none provided).◦ Users can add other users as friends and see their online status.◦ Users have a profile page displaying their information.| |
+| [13](#module-13) | [IV.10 Modules of Choice: CI on GitHub](#module-13) | 1 | | |
 
-### Core Web Infrastructure
+### IV.1 Web
 
+<a id="module-1"></a>
 #### 1. Framework-Based Architecture (Major — 2pts)
 * **Implementation:** Backend built with **Java Spring Boot**; frontend built with **Next.js** using a Backend-for-Frontend (BFF) pattern.
 * **Justification:** Provides a robust ecosystem, dependency injection on the backend, and industry-standard SSR capabilities on the frontend.
 * **Contributors:** All team members
 
-#### 2. Server-Side Rendering (SSR) (Minor — 1pt)
-* **Implementation:** Leveraged Next.js Server Components and server-side logic for rendering profiles and layouts before sending them to the client.
-* **Justification:** Ensures faster First Contentful Paint, improved performance, and significantly better SEO compared to a standard SPA.
-* **Contributors:** Zyta, Kacper
+[↑ Back to modules table](#modules-table)
 
-#### 3. Database Object-Relational Mapping (Minor — 1pt)
-* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping in PostgreSQL.
-* **Justification:** Prevents SQL injection vulnerabilities, maintains type safety, and abstracts database schema complexity.
-* **Contributors:** Alina
-
-
-#### 4. Secured Public API (Major — 2pts)
-* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens, with rate limiting and comprehensive documentation (OpenAPI). Includes more than 5 distinct endpoints.
-* **Justification:** Essential for allowing secure client interactions while protecting the backend from unauthorized access or brute-force requests.
-* **Contributors:** Szymon
-
----
-
-### Communication, Social & UI Features
-
-#### 5. Real-Time WebSockets Module (Major — 2pts)
+<a id="module-2"></a>
+#### 2. Real-Time WebSockets Module (Major — 2pts)
 * **Implementation:** Built a real-time system using **Java WebSockets (STOMP protocol)** and **sockJS** on the frontend. Broadcasts messages, synchronizes status, and handles disconnects.
 * **Justification:** Eliminates HTTP polling overhead, providing an immersive, low-latency user experience for chatting and presence updates.
 * **Contributors:** Szymon, Kacper
 
-#### 6. User Interaction & Core Social Systems (Major — 2pts)
+[↑ Back to modules table](#modules-table)
+
+<a id="module-3"></a>
+#### 3. User Interaction & Core Social Systems (Major — 2pts)
 * **Implementation:** Developed a chat system (send/receive messages), user profile pages, and a friends system (add/remove friends, online statuses).
 * **Justification:** Establishes the core pillars for a social platform, allowing users to connect and communicate effectively.
 * **Contributors:** All team members
 
+[↑ Back to modules table](#modules-table)
+
+<a id="module-4"></a>
+#### 4. Secured Public API (Major — 2pts)
+* **Implementation:** Developed a public REST API for database interaction, protected via JWT Tokens, with rate limiting and comprehensive documentation (OpenAPI). Includes 5 distinct endpoints.
+* **Justification:** Essential for allowing secure client interactions while protecting the backend from unauthorized access or brute-force requests.
+* **Contributors:** Szymon
+
+[↑ Back to modules table](#modules-table)
+
+<a id="module-5"></a>
+#### 5. Database Object-Relational Mapping (Minor — 1pt)
+* **Implementation:** Used **Spring Data JPA (Hibernate)** as the ORM layer for object-to-database mapping in PostgreSQL.
+* **Justification:** Prevents SQL injection vulnerabilities, maintains type safety, and abstracts database schema complexity.
+* **Contributors:** Alina
+
+[↑ Back to modules table](#modules-table)
+
+<a id="module-6"></a>
+#### 6. Server-Side Rendering (SSR) (Minor — 1pt)
+* **Implementation:** Leveraged Next.js Server Components and server-side logic for rendering profiles and layouts before sending them to the client.
+* **Justification:** Ensures faster First Contentful Paint, improved performance, and significantly better SEO compared to a standard SPA.
+* **Contributors:** Zyta, Kacper
+
+[↑ Back to modules table](#modules-table)
+
+<a id="module-7"></a>
 #### 7. Custom-made Design System (Minor — 1pt)
 * **Implementation:** Built a semantic design-token layer using TailwindCSS and Catppuccin, extracting more than 10 reusable components (Buttons, Cards, TextFields, Avatars, etc.).
 * **Justification:** Ensures visual consistency, allows rapid theming across the application, and standardizes UI 
 * **Contributors:** Zyta, Kinga
 
-#### 8. Support for Additional Browsers (Minor — 1pt)
+[↑ Back to modules table](#modules-table)
+
+---
+
+### IV.2 Accessibility and Internationalization
+
+<a id="module-8"></a>
+#### 8. WCAG 2.1 AA Accessibility Compliance (Major — 2pts)
+* **Implementation:** Brought every page to WCAG 2.1 AA in all three themes. Contrast was fixed at the design-token level; pages gained a skip link, per-page titles, landmark regions, and keyboard-reachable scroll regions; a reusable `Dialog` built on the native `<dialog>` element handles focus management; a live-region announcer lets screen readers speak incoming chat messages; and form fields carry programmatic labels, required state, and `autoComplete` hints. The 2048 game is playable by keyboard and screen reader. `eslint-plugin-jsx-a11y` in strict mode blocks regressions, and compliance was verified with axe-core scans (driven by Playwright) of every route in every theme and language, plus a manual NVDA screen-reader pass.
+* **Justification:** Real-time chat and games are where assistive-technology users are most often left out, and a social platform that only part of its audience can use fails its purpose. Because colors already flowed through semantic design tokens, meeting contrast requirements took one change per token instead of one per component.
+* **Contributors:** Zyta, Kacper
+
+[↑ Back to modules table](#modules-table)
+
+<a id="module-9"></a>
+#### 9. Support for Multiple Languages (Minor — 1pt)
+* **Implementation:** The full interface is available in English, Polish, French, and Arabic, built with **next-intl** and one message catalogue per language (`messages/*.json`). Users switch language from the footer; a server action stores the choice in an HttpOnly `NEXT_LOCALE` cookie, so server-rendered pages arrive already translated. Type-checking enforces that all four catalogues define the same keys, and the `react/jsx-no-literals` lint rule stops untranslated text from entering the UI. Backend error responses are mapped to translated messages instead of being shown in English, and server-only text (the legal pages) is kept out of the client bundle.
+* **Justification:** Polish serves the team's home campus, English is the common language of the 42 network, French reflects 42's origin, and Arabic exercises right-to-left support. next-intl was chosen because it works with Next.js Server Components, so translation happens on the server alongside SSR.
+* **Contributors:** Zyta, Kacper
+
+[↑ Back to modules table](#modules-table)
+
+<a id="module-10"></a>
+#### 10. Right-to-Left (RTL) Language Support (Minor — 1pt)
+* **Implementation:** Selecting Arabic switches the document to `<html dir="rtl" lang="ar">` from a single source of truth (`getDirection()` in `lib/i18n/config.ts`), so the layout, sidebar, chat bubbles, and footer links mirror. User-generated content is wrapped in `<bdi>` so names and messages that mix scripts render in the correct order, and a dedicated Arabic font applies through the `:lang(ar)` selector. The language and theme toggles stay left-to-right so they do not move under the pointer when switching languages.
+* **Justification:** RTL support is more than translated text: reading order, alignment, and mixed-direction user input must all follow the language. Setting direction in markup rather than CSS also informs assistive technology and the browser's bidirectional text algorithm.
+* **Contributors:** Zyta, Kacper
+
+[↑ Back to modules table](#modules-table)
+
+<a id="module-11"></a>
+#### 11. Support for Additional Browsers (Minor — 1pt)
 * **Implementation:** Verified and adjusted UI/UX consistency and feature compatibility across major modern browsers.
 * **Justification:** Broadens accessibility to users regardless of their browser preference.
 * **Contributors:** Alina
 
+[↑ Back to modules table](#modules-table)
+
 ---
 
-### Security & Devops
+### IV.3 User Management
 
-#### 9. Standard User Management & Authentication (Major — 2pts)
+<a id="module-12"></a>
+#### 12. Standard User Management & Authentication (Major — 2pts)
 * **Implementation:** Used **Spring Security** for registration/login flows. Users can update their profile information and upload custom avatars.
 * **Justification:** Securing user identity and managing profiles is the foundational requirement for personalizing the user experience and maintaining data integrity.
 * **Contributors:** Szymon, Kacper, Alina
 
-#### 10. Modules of Choice: CI on GitHub (Minor — 1pt)
+[↑ Back to modules table](#modules-table)
+
+---
+
+### IV.10 Modules of Choice
+
+<a id="module-13"></a>
+#### 13. Modules of Choice: CI on GitHub (Minor — 1pt)
 * **Implementation:** Created a comprehensive GitHub Actions CI pipeline separating frontend and backend jobs. It handles API type generation, Docker stack bring-up, Gradle caching, and end-to-end verification.
 * **Justification:** We chose GitHub Actions CI because automated verification is critical for a dual-stack architecture. It addresses the technical challenge of ensuring the API contracts (OpenAPI/AsyncAPI) stay synced with the frontend before merging, preventing regression bugs and broken builds. It deserves module recognition because it significantly stabilized our development workflow.
-
 * **Contributors:** Zyta
+
+[↑ Back to modules table](#modules-table)
+
 ---
 
 ## 🙋 Individual Contributions
@@ -403,7 +461,7 @@ As Frontend Developer, Designer, and Product Owner, Zyta owned the application's
 *   **Flaky, slow CI:** Jobs failed intermittently when tests started before services were ready. Healthcheck-gated startup removed the races, and Buildx and Gradle caching kept runs to a few minutes.
 *   **Verifying the chat announcer:** NVDA only reads live regions in the focused window, so sending a message from a second browser window could never be heard. A helper script that sends a message as a second user after a delay made the announcement testable.
 *   **Contrast on gradients:** axe cannot compute contrast over gradient backgrounds and reports those cases as "incomplete". They were reviewed by hand and fixed by adjusting the tokens.
-*   **RTL side effects:** Switching the document to right-to-left also mirrored the footer layout. The footer was excluded from the direction switch.
+*   **RTL side effects:** Switching the document to right-to-left also mirrored the language and theme toggles, so the buttons jumped under the pointer when switching languages. The toggle group was pinned left-to-right while the rest of the page, footer links included, still mirrors.
 
 ### Szymon
 
