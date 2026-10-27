@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Chaque compétence a son histoire — commence la tienne."
+    "description": "Chaque compétence a son histoire, alors commence la tienne."
   },
   "common": {
     "unknownUser": "Utilisateur inconnu",
@@ -21,7 +21,8 @@
     "main": "Principale",
     "myProfile": "Mon profil",
     "chat": "Discussions",
-    "friends": "Amis"
+    "friends": "Amis",
+    "game2048": "2048"
   },
   "footer": {
     "label": "Pied de page",
@@ -60,10 +61,6 @@
         "paragraphs": [
           "Les erreurs sont renvoyées au format application/problem+json (RFC 9457) sous cette forme :"
         ]
-      },
-      "interactive": {
-        "title": "Référence interactive",
-        "body": "Teste chaque endpoint dans ton navigateur avec la <link>référence interactive Swagger</link>."
       }
     },
     "labels": {
@@ -137,7 +134,7 @@
   },
   "home": {
     "heroTitle": "Joue et discute avec tes amis.",
-    "heroSubtitle": "Rejoins JustPlay42 pour rester proche des personnes qui comptent pour toi — profite de vraies conversations, défie tes amis au 2048 et rends chaque moment plus amusant.",
+    "heroSubtitle": "Rejoins JustPlay42 pour rester proche des personnes qui comptent pour toi, profiter de vraies conversations, défier tes amis au 2048 et rendre chaque moment plus amusant.",
     "hello": "Salut !",
     "tagline": "Fais ton truc. Bosse.",
     "login": "Se connecter",
@@ -256,7 +253,15 @@
       "yesterday": "Hier",
       "errorInitChat": "Impossible d’initialiser la discussion",
       "errorSendNotConnected": "Échec de l’envoi du message : non connecté au serveur",
-      "errorDeleteNotConnected": "Échec de la suppression du message : non connecté au serveur"
+      "errorDeleteNotConnected": "Échec de la suppression du message : non connecté au serveur",
+      "invite": {
+        "title": "Défi : {game}",
+        "sent": "Vous avez envoyé une invitation à jouer.",
+        "received": "Vous invite à découvrir le jeu.",
+        "sentScore": "Vous avez lancé un défi avec un score de {score} pts !",
+        "receivedScore": "Vous êtes défié ! Score à battre : {score} pts.",
+        "play": "Jouer à {game}"
+      }
     },
     "composer": {
       "placeholder": "Écris un message",
@@ -424,6 +429,46 @@
           "contact": true
         }
       ]
+    }
+  },
+  "games": {
+    "game2048": {
+      "title": "2048",
+      "tagline": "Fusionnez les tuiles et atteignez 2048 !",
+      "moves": "Coups",
+      "score": "Score",
+      "newGame": "Nouvelle partie",
+      "challenge": "Défier un ami",
+      "gameOver": "Partie terminée !",
+      "noMoves": "Plus aucun coup possible",
+      "finalScore": "Score final",
+      "tryAgain": "Réessayer",
+      "shareScore": "Partager le score",
+      "youWin": "Gagné !",
+      "reached2048": "Vous avez atteint la tuile 2048 !",
+      "currentScore": "Score actuel",
+      "keepPlaying": "Continuer",
+      "boardLabel": "Plateau du jeu 2048",
+      "instructions": "Utilisez les flèches ou W, A, S, D pour faire glisser les tuiles. Sur écran tactile, balayez.",
+      "gameOverAnnouncement": "Partie terminée. Score final : {score}.",
+      "winAnnouncement": "Vous avez atteint la tuile 2048 ! Score : {score}."
+    },
+    "invite": {
+      "titleShare": "Partager et défier",
+      "title": "Défier un ami",
+      "close": "Fermer",
+      "description": "Recherchez un ami pour le défier à <b>{game}</b>.",
+      "bragTitle": "Montrer votre score actuel",
+      "includeScore": "Inclure le score à battre : <strong>{score} pts</strong>",
+      "searchPlaceholder": "Rechercher des joueurs...",
+      "searchLabel": "Rechercher des joueurs",
+      "noResults": "Aucun joueur trouvé.",
+      "typeToSearch": "Saisissez un nom de joueur ci-dessus.",
+      "challenge": "Défier",
+      "sending": "Envoi…",
+      "sent": "Défi envoyé à {name} !",
+      "errorNotConnected": "Pas de connexion au service de chat",
+      "errorSend": "Échec de l'envoi du défi."
     }
   }
 }

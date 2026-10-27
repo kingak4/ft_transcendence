@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Każda umiejętność ma swoją historię — zacznij swoją."
+    "description": "Każda umiejętność ma swoją historię, więc zacznij swoją."
   },
   "common": {
     "unknownUser": "Nieznany użytkownik",
@@ -21,7 +21,8 @@
     "main": "Główna",
     "myProfile": "Mój profil",
     "chat": "Czat",
-    "friends": "Znajomi"
+    "friends": "Znajomi",
+    "game2048": "2048"
   },
   "footer": {
     "label": "Stopka",
@@ -60,10 +61,6 @@
         "paragraphs": [
           "Błędy są zwracane jako application/problem+json (RFC 9457) w takim formacie:"
         ]
-      },
-      "interactive": {
-        "title": "Interaktywna dokumentacja",
-        "body": "Przetestuj każdy endpoint w przeglądarce w <link>interaktywnej dokumentacji Swagger</link>."
       }
     },
     "labels": {
@@ -137,7 +134,7 @@
   },
   "home": {
     "heroTitle": "Graj i czatuj ze znajomymi.",
-    "heroSubtitle": "Dołącz do JustPlay42 i bądź blisko ludzi, na których ci zależy — ciesz się prawdziwymi rozmowami, rzucaj znajomym wyzwanie w 2048 i spraw, by każda chwila była fajniejsza.",
+    "heroSubtitle": "Dołącz do JustPlay42, aby być blisko ludzi, na których ci zależy, cieszyć się prawdziwymi rozmowami, rzucać znajomym wyzwanie w 2048 i sprawić, by każda chwila była fajniejsza.",
     "hello": "Cześć!",
     "tagline": "Rób swoje. Nie odpuszczaj.",
     "login": "Zaloguj się",
@@ -186,7 +183,7 @@
     "invalidCredentials": "Nieprawidłowy e-mail lub hasło.",
     "registrationRejected": "Rejestracja nie powiodła się. Sprawdź e-mail i hasło, a potem spróbuj ponownie.",
     "emailRejected": "Serwer odrzucił ten adres e-mail. Użyj innego.",
-    "passwordRejected": "To hasło zostało odrzucone — może być zbyt popularne. Wybierz inne.",
+    "passwordRejected": "To hasło zostało odrzucone, ponieważ może być zbyt popularne. Wybierz inne.",
     "emailTaken": "Konto z tym adresem e-mail już istnieje.",
     "updateDisplayName": "Nie udało się zmienić nazwy. Spróbuj innej.",
     "uploadAvatar": "Nie udało się przesłać awatara.",
@@ -256,7 +253,15 @@
       "yesterday": "Wczoraj",
       "errorInitChat": "Nie udało się uruchomić czatu",
       "errorSendNotConnected": "Nie udało się wysłać wiadomości: brak połączenia z serwerem",
-      "errorDeleteNotConnected": "Nie udało się usunąć wiadomości: brak połączenia z serwerem"
+      "errorDeleteNotConnected": "Nie udało się usunąć wiadomości: brak połączenia z serwerem",
+      "invite": {
+        "title": "Wyzwanie: {game}",
+        "sent": "Wysłano zaproszenie do gry.",
+        "received": "Zaprasza cię do gry.",
+        "sentScore": "Rzucono wyzwanie z wynikiem {score} pkt!",
+        "receivedScore": "Wyzwanie! Wynik do pobicia: {score} pkt.",
+        "play": "Zagraj w {game}"
+      }
     },
     "composer": {
       "placeholder": "Napisz wiadomość",
@@ -420,6 +425,46 @@
           "contact": true
         }
       ]
+    }
+  },
+  "games": {
+    "game2048": {
+      "title": "2048",
+      "tagline": "Łącz kafelki i dojdź do 2048!",
+      "moves": "Ruchy",
+      "score": "Wynik",
+      "newGame": "Nowa gra",
+      "challenge": "Wyzwij znajomego",
+      "gameOver": "Koniec gry!",
+      "noMoves": "Brak możliwych ruchów",
+      "finalScore": "Wynik końcowy",
+      "tryAgain": "Spróbuj ponownie",
+      "shareScore": "Udostępnij wynik",
+      "youWin": "Wygrana!",
+      "reached2048": "Udało ci się dojść do kafelka 2048!",
+      "currentScore": "Aktualny wynik",
+      "keepPlaying": "Graj dalej",
+      "boardLabel": "Plansza gry 2048",
+      "instructions": "Przesuwaj kafelki strzałkami lub klawiszami W, A, S, D. Na ekranie dotykowym przesuń palcem.",
+      "gameOverAnnouncement": "Koniec gry. Wynik końcowy: {score}.",
+      "winAnnouncement": "Udało ci się dojść do kafelka 2048! Wynik: {score}."
+    },
+    "invite": {
+      "titleShare": "Udostępnij i wyzwij",
+      "title": "Wyzwij znajomego",
+      "close": "Zamknij",
+      "description": "Wyszukaj znajomego, aby wyzwać go w grze <b>{game}</b>.",
+      "bragTitle": "Pochwal się aktualnym wynikiem",
+      "includeScore": "Dołącz wynik do pobicia: <strong>{score} pkt</strong>",
+      "searchPlaceholder": "Szukaj graczy...",
+      "searchLabel": "Szukaj graczy",
+      "noResults": "Nie znaleziono graczy.",
+      "typeToSearch": "Wpisz nazwę gracza powyżej, aby wyszukać.",
+      "challenge": "Wyzwij",
+      "sending": "Wysyłanie…",
+      "sent": "Wysłano wyzwanie do {name}!",
+      "errorNotConnected": "Brak połączenia z czatem",
+      "errorSend": "Nie udało się wysłać wyzwania."
     }
   }
 }

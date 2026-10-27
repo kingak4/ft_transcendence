@@ -50,22 +50,6 @@ export default async function ApiDocs() {
         </LegalSection>
       ))}
 
-      <LegalSection title={t('overview.interactive.title')}>
-        <p>
-          {t.rich('overview.interactive.body', {
-            link: (chunks) => (
-              // eslint-disable-next-line @next/next/no-html-link-for-pages -- /api/docs is the backend's Swagger UI (proxied by nginx), not a Next.js page
-              <a
-                href="/api/docs"
-                className="text-on-elevated-surface-accent font-bold underline underline-offset-2"
-              >
-                {chunks}
-              </a>
-            ),
-          })}
-        </p>
-      </LegalSection>
-
       {ENDPOINTS.map((endpoint) => (
         <EndpointSection key={endpoint.id} endpoint={endpoint} />
       ))}

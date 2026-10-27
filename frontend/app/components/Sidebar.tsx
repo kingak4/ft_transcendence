@@ -128,6 +128,13 @@ export default function Sidebar({ userId }: Props) {
             >
               {t('friends')}
             </Link>
+            <Link
+              href="/games/2048"
+              onClick={close}
+              {...navLinkProps(pathname === '/games/2048')}
+            >
+              {t('game2048')}
+            </Link>
           </nav>
         )}
       </div>

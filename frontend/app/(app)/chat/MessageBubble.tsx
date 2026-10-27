@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 
 import Icon from '../../components/Icon';
@@ -17,6 +18,8 @@ interface Props {
    */
 }
 
+const GAME_INVITE_PATTERN = /^#game-invite:([a-zA-Z0-9_-]+)(?::(\d+))?#$/;
+
 export default function MessageBubble({
   message,
   isMine,
@@ -27,6 +30,13 @@ export default function MessageBubble({
   // App language, browser time zone: next-intl's formatter would use the
   // server's zone, which is wrong for a timestamp rendered on the client.
   const locale = useLocale();
+
+  const inviteMatch = message.isDeleted
+    ? null
+    : message.content.match(GAME_INVITE_PATTERN);
+  const gameInvite = inviteMatch
+    ? { game: inviteMatch[1], score: inviteMatch[2] ?? null }
+    : null;
 
   const formatTime = (timeStr?: string) => {
     if (!timeStr) return '';
@@ -76,7 +86,32 @@ export default function MessageBubble({
           <span className="sr-only">
             {t('senderPrefix', { name: senderName })}
           </span>
-          <bdi>{message.isDeleted ? t('deleted') : message.content}</bdi>
+          {gameInvite ? (
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-semibold">
+                {t('invite.title', { game: gameInvite.game })}
+              </span>
+              <p className="mb-1 text-[11px] opacity-80">
+                {gameInvite.score
+                  ? t(isMine ? 'invite.sentScore' : 'invite.receivedScore', {
+                      score: gameInvite.score,
+                    })
+                  : t(isMine ? 'invite.sent' : 'invite.received')}
+              </p>
+              <Link
+                href={`/games/${gameInvite.game}`}
+                className={`mt-1 inline-block rounded-md px-3 py-1.5 text-center text-xs font-bold transition-colors ${
+                  isMine
+                    ? 'bg-on-accent/15 text-on-accent hover:bg-on-accent/25'
+                    : 'bg-bubble text-on-accent hover:opacity-90'
+                }`}
+              >
+                {t('invite.play', { game: gameInvite.game })}
+              </Link>
+            </div>
+          ) : (
+            <bdi>{message.isDeleted ? t('deleted') : message.content}</bdi>
+          )}
         </div>
         {isMine && onDelete && !message.isDeleted && (
           <button

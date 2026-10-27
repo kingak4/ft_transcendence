@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Every skill has a story — start yours."
+    "description": "Every skill has a story, so start yours."
   },
   "common": {
     "unknownUser": "Unknown User",
@@ -21,7 +21,8 @@
     "main": "Main",
     "myProfile": "My Profile",
     "chat": "Chat",
-    "friends": "Friends"
+    "friends": "Friends",
+    "game2048": "2048"
   },
   "footer": {
     "label": "Footer",
@@ -60,10 +61,6 @@
         "paragraphs": [
           "Errors are returned as application/problem+json (RFC 9457) in this shape:"
         ]
-      },
-      "interactive": {
-        "title": "Interactive reference",
-        "body": "Try every endpoint in your browser with the <link>interactive Swagger reference</link>."
       }
     },
     "labels": {
@@ -137,7 +134,7 @@
   },
   "home": {
     "heroTitle": "Let's play and chat with your friends.",
-    "heroSubtitle": "Join JustPlay42 to stay close to the people you care about — enjoy real conversations, challenge your friends in 2048, and make every moment more fun.",
+    "heroSubtitle": "Join JustPlay42 to stay close to the people you care about, enjoy real conversations, challenge your friends in 2048, and make every moment more fun.",
     "hello": "Hello!",
     "tagline": "Do your thing. Grind.",
     "login": "Login",
@@ -186,7 +183,7 @@
     "invalidCredentials": "Invalid email or password.",
     "registrationRejected": "Registration failed. Check your email and password and try again.",
     "emailRejected": "The server rejected this email address. Please use a different one.",
-    "passwordRejected": "This password was rejected — it may be too common. Please choose a different one.",
+    "passwordRejected": "This password was rejected, as it may be too common. Please choose a different one.",
     "emailTaken": "An account with this email already exists.",
     "updateDisplayName": "Failed to update display name. Try a different one.",
     "uploadAvatar": "Failed to upload avatar.",
@@ -256,7 +253,15 @@
       "yesterday": "Yesterday",
       "errorInitChat": "Failed to initialize chat",
       "errorSendNotConnected": "Failed to send message: Not connected to server",
-      "errorDeleteNotConnected": "Failed to delete message: Not connected to server"
+      "errorDeleteNotConnected": "Failed to delete message: Not connected to server",
+      "invite": {
+        "title": "Challenge: {game}",
+        "sent": "You sent a game invitation.",
+        "received": "Invited you to check out the game.",
+        "sentScore": "You challenged with a score of {score} pts!",
+        "receivedScore": "Challenged you! Score to beat: {score} pts.",
+        "play": "Play {game}"
+      }
     },
     "composer": {
       "placeholder": "Type a message",
@@ -422,6 +427,46 @@
           "contact": true
         }
       ]
+    }
+  },
+  "games": {
+    "game2048": {
+      "title": "2048",
+      "tagline": "Join the tiles and reach 2048!",
+      "moves": "Moves",
+      "score": "Score",
+      "newGame": "New Game",
+      "challenge": "Challenge a friend",
+      "gameOver": "Game Over!",
+      "noMoves": "No moves left",
+      "finalScore": "Final Score",
+      "tryAgain": "Try Again",
+      "shareScore": "Share Score",
+      "youWin": "You Win!",
+      "reached2048": "You reached the 2048 tile!",
+      "currentScore": "Current Score",
+      "keepPlaying": "Keep Playing",
+      "boardLabel": "2048 game board",
+      "instructions": "Use the arrow keys or W, A, S, D to slide the tiles. On touch screens, swipe.",
+      "gameOverAnnouncement": "Game over. Final score: {score}.",
+      "winAnnouncement": "You reached the 2048 tile! Score: {score}."
+    },
+    "invite": {
+      "titleShare": "Share & Challenge",
+      "title": "Challenge a Friend",
+      "close": "Close",
+      "description": "Search for a friend to challenge them in <b>{game}</b>.",
+      "bragTitle": "Brag with current score",
+      "includeScore": "Include score to beat: <strong>{score} pts</strong>",
+      "searchPlaceholder": "Search players...",
+      "searchLabel": "Search players",
+      "noResults": "No players found.",
+      "typeToSearch": "Type a player name above to search.",
+      "challenge": "Challenge",
+      "sending": "Sending…",
+      "sent": "Challenge sent to {name}!",
+      "errorNotConnected": "No connection to chat service",
+      "errorSend": "Failed to send challenge."
     }
   }
 }
