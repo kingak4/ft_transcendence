@@ -124,33 +124,14 @@ Led the initial frontend setup and established core integrations for REST API an
 *   **UI/UX Design:** Designed and developed the foundational layout and aesthetics for the platform's landing page and user profile views.
 *   **Chat implementation:** Developed the chat logic based on STOMP and HTTPS backend endpoints, with sending and removing messeges, creating conversations with friends and error handling when backend connection breaks.
 
-### [Zyta](https://github.com/) — Product Owner, Frontend Developer & Designer
-Owned the application's visual language and component library, built the identity and social surfaces of the SPA (profile, friends, chat), introduced the project's CI pipeline, and took ownership of the build environments and their verification. In addition to her design and frontend engineering work, she served as Product Owner for the workstreams she led, guiding the design system, theming, and social-feature direction.
+### [Zyta](https://github.com/aktyz) — Product Owner, Frontend Developer & Designer
+Owned the application's visual language and frontend quality bar, and the build environments the team develops and evaluates on.
 
-#### 🎨 Design System & Theming
-
-*   **Design System:** Built a semantic design-token layer (`surface`, `on-surface`, `primary`, `elevated-*`, `success`, `danger`) so pages and components consume intention-revealing theme roles instead of hardcoded palette colors — the change that made re-theming possible at all.
-*   **Theming:** Implemented a three-way runtime theme switcher (42Hub / Catppuccin Mocha / Catppuccin Latte) driven by a single source of truth in `lib/theme.ts`, with Tailwind's `dark` variant rebound from `prefers-color-scheme` to the theme class and a blocking pre-hydration script that applies the stored flavour before first paint. Adding a fourth flavour is one array entry plus one CSS block — no component changes.
-*   **Component Library:** Extracted the component library the tokens imply — primitives (`Button`, `Card`, `TextField`, `AccentLink`, `Tag`, `Avatar`, `PresenceAvatar`) and composites (`SessionCard`, `ContactBlock`, `LegalSection`, `Hero`, `Footer`, `BareLayout`, `ThemeToggle`) — reducing pages to composition and auditing every page to route colors through the token layer.
-*   **Route Architecture:** Restructured the app into route groups so unauthenticated routes stop rendering the app sidebar, and inverted dependencies in shared components (`UserSearch` parameterised over its search and action renderers) so they are reusable beyond the flow they were born in.
-*   **Visual Identity:** Introduced the 42Hub palette as an additive brand-token layer with dedicated gradient utilities, applied across the app shell, navigation, and CTAs.
-
-#### 👤 Identity & Social Features
-
-*   **User Profile:** Replaced the hardcoded mock profile with a live per-user page — a server component fetching real user details with 401/403/404 handling, inline display-name editing, and avatar upload with modal, file picker, and preview via Next.js Server Actions.
-*   **Session Handling:** Wired the authenticated session through the UI entirely server-side (no client-side cookie reads): login/logout flows, an auth-layout guard for already-authenticated visitors, and session-aware sidebar and landing page.
-*   **Friends System:** Built the friends feature end-to-end — user search with pagination, add/remove friendships, and a friends list with avatars, names, and live rendering — using Server Actions over the typed `openapi-fetch` client, with profile ownership derived server-side so visitors never see the owner's controls.
-*   **Chat UI:** Delivered the chat screen in the new design language (friend rail, conversation, message bubbles, composer) as a presentational split with all placeholder data isolated in a single fixtures module, so the data layer is wired in by replacing one file rather than restructuring components.
-*   **State Handling:** Introduced a shared `useAsyncAction` hook to manage loading and error state consistently across friend and profile actions.
-
-#### ⚙️ Build, CI & Environment Engineering
-
-*   **Continuous Integration:** Introduced the project's GitHub Actions CI pipeline, splitting frontend and backend into separate jobs for sound technical reasons: the frontend job brings up the full Docker stack because API types are generated at CI time from live OpenAPI/AsyncAPI endpoints, while the backend job uses native service containers to enable Gradle caching. Added Docker Buildx layer caching and healthcheck-gated startup to remove race-condition flakiness.
-*   **Dual Build Profiles:** Established the two supported builds as single-command flows — the Docker dev/eval build (`make`, fully nginx-fronted over HTTPS on port 8443) and the local frontend-development build (`make frontend-local`, host-run `next dev` against a loopback-only backend).
-*   **HTTPS Enforcement:** Closed the backend's host-published port so it is reachable exclusively through nginx's TLS termination, satisfying the HTTPS-only requirement.
-*   **nginx Routing:** Introduced dynamic upstream resolution and explicit prefix rewriting in nginx, breaking a startup circular dependency between nginx, the frontend image build, and API type generation.
-*   **Build Reliability:** Repaired the root-to-service Makefile chain and added content-based staleness tracking, so `make up` rebuilds images only when their build context actually changed. Made the shared Docker network creation idempotent and fixed the environment strategy (`.env` + optional `.env.local`) so local and containerized runs stay consistent.
-*   **Automated Verification:** Authored `docs/env_verification.sh` — an end-to-end check of both builds covering HTTPS routes, closed backend ports, loopback isolation, and cross-build leak checks.
+*   **Product Owner:** Set the direction for the workstreams she led — design system, theming, social features, accessibility, and internationalization.
+*   **Design System & Theming:** Responsible for the design-token layer, the shared component library, and the three application themes.
+*   **Identity & Social Frontend:** Responsible for the profile, friends, and chat surfaces of the SPA.
+*   **Accessibility & Internationalization:** Responsible for WCAG 2.1 AA compliance and multi-language support (EN / PL / FR / AR with RTL).
+*   **CI & Build Environments:** Responsible for the GitHub Actions pipeline, the two supported build profiles, and their automated verification.
 
 ### 📊 Project Management
 
@@ -283,7 +264,25 @@ Integration standards were enforced through an CI pipeline combined with team po
 
 ## Modules
 
-**Total Points Calculated: 15 Points** (Major = 2pts, Minor = 1pt)
+**Total Points Calculated: 19 Points** (Major = 2pts, Minor = 1pt)
+
+## 42Hub Modules table summary
+
+| Module ID | Module Name | Points | Detailed requirements list | 42Hub requirements fulfillment |
+| --- | --- | --- | --- | --- |
+| 1 | IV.1 Web - A. Use a framework for both the frontend and backend. | 2 |◦ Use a frontend framework (React, Vue, Angular, Svelte, etc.).◦ Use a backend framework (Express, NestJS, Django, Flask, Ruby on Rails, etc.).◦ Full-stack frameworks (Next.js, Nuxt.js, SvelteKit) count as both if you use both their frontend and backend capabilities.| Java Spring Boot on Backend, Next.js on Frontend |
+| 2 | IV.1 Web - D. Implement real-time features using WebSockets or similar technology. | 2 |◦ Real-time updates across clients.◦ Handle connection/disconnection gracefully.◦ Efficient message broadcasting. | |
+| 3 | IV.1 Web - E. Allow users to interact with other users. | 2 | ◦ A basic chat system (send/receive messages between users).◦ A profile system (view user information).◦ A friends system (add/remove friends, see friends list).| |
+| 4 | IV.1 Web - F. A public API to interact with the database with a secured API key, rate limiting, documentation, and at least 5 endpoints | 2 | | |
+| 5 | IV.1 Web - G. Use an ORM for the database. | 1 | | |
+| 6 | IV.1 Web - J. Server-Side Rendering (SSR) for improved performance and SEO.| 1 | | |
+| 7 | IV.1 Web - L. Custom-made design system with reusable components, including a proper color palette, typography, and icons (minimum: 10 reusable components).| 1 | | |
+| 8 | IV.2 Accessibility and Internationalization - A. Complete accessibility compliance (WCAG 2.1 AA) with screen reader support, keyboard navigation, and assistive technologies. | 2 | | |
+| 9 | IV.2 Accessibility and Internationalization - B. Support for multiple languages (at least 3 languages). | 1 | | |
+| 10 | IV.2 Accessibility and Internationalization - C. Right-to-left (RTL) language support. | 1 | | |
+| 11 | IV.2 Accessibility and Internationalization - D.  Support for additional browsers. | 1 | | |
+| 12 | IV.3 User Management - A. Standard user management and authentication. | 2 | ◦ Users can update their profile information.◦ Users can upload an avatar (with a default avatar if none provided).◦ Users can add other users as friends and see their online status.◦ Users have a profile page displaying their information.| |
+| 13 | IV.10 Modules of Choice: CI on GitHub | 1 | | |
 
 ### Core Web Infrastructure
 
@@ -356,7 +355,55 @@ As Project Manager and Developer, Kinga guided the project through its full deve
 
 ### Zyta
 
-As Frontend Developer, Designer, and Product Owner, Zyta owned the application's visual language, building a semantic design-token layer and a three-way runtime theme switcher (42Hub / Catppuccin Mocha / Catppuccin Latte) that made consistent re-theming possible across the platform. She extracted the shared component library and restructured the app's route architecture, and delivered the identity and social surfaces of the SPA — the live user profile page, server-side session handling, the end-to-end friends system, and the redesigned chat UI. She also introduced the project's GitHub Actions CI pipeline, established the two supported build profiles, enforced HTTPS-only backend access, and authored the automated environment-verification script, taking ownership of the build environments and their verification.
+As Frontend Developer, Designer, and Product Owner, Zyta owned the application's visual language — from the semantic token layer and runtime theming to the shared component library — and delivered the identity and social surfaces of the SPA. She later brought the whole frontend to WCAG 2.1 AA and added four-language support with right-to-left layout. On the infrastructure side, she introduced the project's CI pipeline and took ownership of the build environments and their verification.
+
+#### 🎨 Design System & Theming
+
+*   **Design System:** Built a semantic design-token layer (`surface`, `on-surface`, `primary`, `elevated-*`, `success`, `danger`) so pages and components consume intention-revealing theme roles instead of hardcoded palette colors — the change that made re-theming possible at all.
+*   **Theming:** Implemented a three-way runtime theme switcher (42Hub / Catppuccin Mocha / Catppuccin Latte) driven by a single source of truth in `lib/theme.ts`, with Tailwind's `dark` variant rebound from `prefers-color-scheme` to the theme class and a blocking pre-hydration script that applies the stored flavour before first paint. Adding a fourth flavour is one array entry plus one CSS block — no component changes.
+*   **Component Library:** Extracted the component library the tokens imply — primitives (`Button`, `Card`, `TextField`, `AccentLink`, `Tag`, `Avatar`, `PresenceAvatar`) and composites (`SessionCard`, `ContactBlock`, `LegalSection`, `Hero`, `Footer`, `BareLayout`, `ThemeToggle`) — reducing pages to composition and auditing every page to route colors through the token layer.
+*   **Route Architecture:** Restructured the app into route groups so unauthenticated routes stop rendering the app sidebar, and inverted dependencies in shared components (`UserSearch` parameterised over its search and action renderers) so they are reusable beyond the flow they were born in.
+*   **Visual Identity:** Introduced the 42Hub palette as an additive brand-token layer with dedicated gradient utilities, applied across the app shell, navigation, and CTAs.
+*   **Design Migration:** Completed the migration to the new design — split border roles into `divider` and `edge`, themed the light-page shadows, switched the sans font to Manrope, and retired the parallel legacy palettes so every color now flows through the token layer. Added a custom icon set to the interface.
+
+#### 👤 Identity & Social Features
+
+*   **User Profile:** Replaced the hardcoded mock profile with a live per-user page — a server component fetching real user details with 401/403/404 handling, inline display-name editing, and avatar upload with modal, file picker, and preview via Next.js Server Actions.
+*   **Session Handling:** Wired the authenticated session through the UI entirely server-side (no client-side cookie reads): login/logout flows, an auth-layout guard for already-authenticated visitors, and session-aware sidebar and landing page.
+*   **Friends System:** Built the friends feature end-to-end — user search with pagination, add/remove friendships, and a friends list with avatars, names, and live rendering — using Server Actions over the typed `openapi-fetch` client, with profile ownership derived server-side so visitors never see the owner's controls.
+*   **Chat UI:** Delivered the chat screen in the new design language (friend rail, conversation, message bubbles, composer) as a presentational split with all placeholder data isolated in a single fixtures module, so the data layer is wired in by replacing one file rather than restructuring components.
+*   **State Handling:** Introduced a shared `useAsyncAction` hook to manage loading and error state consistently across friend and profile actions.
+*   **Forms & Navigation:** Added client-side form validation (including login email validation), linked friends-list entries to their profiles, and made the legal pages publicly reachable without signing in.
+*   **Public API Page & Rebrand:** Added a public API documentation page and rebranded the application to JustPlay42, aligning the name and hero copy across every language.
+
+#### ♿ Accessibility (WCAG 2.1 AA)
+
+*   **Contrast:** Re-tuned the token layer so text and controls meet AA contrast in all three themes, including a dedicated on-CTA token and a re-pointed footer band on the start page.
+*   **Keyboard & Structure:** Added a skip link, per-page titles, landmark regions, and keyboard-reachable scroll regions; built a reusable `Dialog` component on the native `<dialog>` element for correct focus handling.
+*   **Screen Readers:** Added a live-region announcer so incoming chat messages are spoken, and gave form fields programmatic required-state labels and `autoComplete` hints.
+*   **Enforcement & Verification:** Switched `eslint-plugin-jsx-a11y` to strict mode, scanned every route in all three themes with axe-core driven by Playwright, and completed a manual NVDA screen-reader pass.
+
+#### 🌍 Internationalization
+
+*   **Multi-language Support:** Added English, Polish, French, and Arabic translations across the application, with right-to-left layout for Arabic.
+
+#### ⚙️ Build, CI & Environment Engineering
+
+*   **Continuous Integration:** Introduced the project's GitHub Actions CI pipeline, splitting frontend and backend into separate jobs for sound technical reasons: the frontend job brings up the full Docker stack because API types are generated at CI time from live OpenAPI/AsyncAPI endpoints, while the backend job uses native service containers to enable Gradle caching. Added Docker Buildx layer caching and healthcheck-gated startup to remove race-condition flakiness.
+*   **Dual Build Profiles:** Established the two supported builds as single-command flows — the Docker dev/eval build (`make`, fully nginx-fronted over HTTPS on port 8443) and the local frontend-development build (`make frontend-local`, host-run `next dev` against a loopback-only backend).
+*   **HTTPS Enforcement:** Closed the backend's host-published port so it is reachable exclusively through nginx's TLS termination, satisfying the HTTPS-only requirement.
+*   **nginx Routing:** Introduced dynamic upstream resolution and explicit prefix rewriting in nginx, breaking a startup circular dependency between nginx, the frontend image build, and API type generation.
+*   **Build Reliability:** Repaired the root-to-service Makefile chain and added content-based staleness tracking, so `make up` rebuilds images only when their build context actually changed. Made the shared Docker network creation idempotent and fixed the environment strategy (`.env` + optional `.env.local`) so local and containerized runs stay consistent.
+*   **Automated Verification:** Authored `docs/env_verification.sh` — an end-to-end check of both builds covering HTTPS routes, closed backend ports, loopback isolation, and cross-build leak checks.
+
+#### 🧗 Challenges
+
+*   **Re-theming was impossible:** Pages used hardcoded palette colors, so a new theme meant editing every component. Introducing semantic tokens and auditing every page to use them turned a theme change into a single CSS block.
+*   **Startup circular dependency:** nginx needed the frontend running, the frontend image build needed generated API types, and type generation needed nginx. Dynamic upstream resolution and explicit prefix rewriting in nginx broke the cycle.
+*   **Flaky, slow CI:** Jobs failed intermittently when tests started before services were ready. Healthcheck-gated startup removed the races, and Buildx and Gradle caching kept runs to a few minutes.
+*   **Verifying the chat announcer:** NVDA only reads live regions in the focused window, so sending a message from a second browser window could never be heard. A helper script that sends a message as a second user after a delay made the announcement testable.
+*   **Contrast on gradients:** axe cannot compute contrast over gradient backgrounds and reports those cases as "incomplete". They were reviewed by hand and fixed by adjusting the tokens.
+*   **RTL side effects:** Switching the document to right-to-left also mirrored the footer layout. The footer was excluded from the direction switch.
 
 ### Szymon
 
