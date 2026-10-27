@@ -248,19 +248,26 @@ Integration standards were enforced through an CI pipeline combined with team po
 | `created_at` | `timestamptz` |
 
 ## ✨ Features List
-* **GetChatMessages** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Loads a chat's message history, page by page.
-* **GetChats** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Returns the list of chats a user is part of.
-* **ManageMessages** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Lets users send and delete messages, with checks in place so messages can't be empty and users can only delete their own.
-* **StartChat** — *[Kinga](https://github.com/kingak4)* & *[Szymon](https://github.com/monandszy)* — Starts a new chat between two users, or just returns the existing one if they already have a chat going.
-* **GetProfile** — *[Szymon](https://github.com/monandszy)* — Fetches a user's profile details, and their avatar (falling back to a default avatar if one isn't set).
-* **ManageFriends** — *[Szymon](https://github.com/monandszy)* — Lets users add, remove, and view their friends list.
-* **ReadPresence** — *[Szymon](https://github.com/monandszy)* — Checks whether a given user is currently online.
-* **Register** — *[Szymon](https://github.com/monandszy)* — Handles new user sign-up, making sure the email isn't already taken and setting up default profile details.
-* **UpdateAvatar** — *[Szymon](https://github.com/monandszy)* — Lets a user upload and set a new avatar.
-* **UpdatePresence** — *[Szymon](https://github.com/monandszy)* — Marks a user as online or offline based on their session.
-* **Login** — *[Szymon](https://github.com/monandszy)* — Verifies a user's email and password, and issues an access token if they match.
-* **SearchUsers** — *[Szymon](https://github.com/monandszy)* — Searches for users by name, with paging and a max page size to keep results manageable.
-* **UpdateDisplayName** — *[Szymon](https://github.com/monandszy)* — Lets a user change their display name.
+Each feature spans several layers, so the last column names who built which part.
+
+| Feature | Description | Who worked on it |
+| --- | --- | --- |
+| **Registration & Login** | Sign up with email and password — passwords must meet strength rules (length, no whitespace, not a common password) and emails must be unique. Logging in issues a JWT kept in a cookie; users can log out. The forms validate input before it reaches the server. | Backend: [Szymon](https://github.com/monandszy) · Database: [Alina](https://github.com/alrltgit) · Frontend: [Kacper](https://github.com/Fistxszek) (BFF auth flow, token cookie), [Zyta](https://github.com/aktyz) (pages, form validation, logout) |
+| **User Profile** | Every user has a profile page with a display name and avatar (a default avatar if none is set). Owners can edit their name and upload a new avatar; visitors see a read-only view. | Backend: [Szymon](https://github.com/monandszy) · Database: [Alina](https://github.com/alrltgit) · Frontend: [Zyta](https://github.com/aktyz), [Kacper](https://github.com/Fistxszek) (initial layout) |
+| **User Search** | Find other users by display name, with paginated results, and add them as friends from the results. | Backend: [Szymon](https://github.com/monandszy), [Alina](https://github.com/alrltgit) (page-size limits) · Frontend: [Zyta](https://github.com/aktyz) |
+| **Friends** | Add and remove friends; a paginated friends list shows avatars and online status and links to each friend's profile. | Backend: [Szymon](https://github.com/monandszy) · Database: [Alina](https://github.com/alrltgit) (query optimization, pagination) · Frontend: [Zyta](https://github.com/aktyz) |
+| **Online Presence** | Users are marked online or offline from their live connection, and their status updates for others in real time. | Backend: [Szymon](https://github.com/monandszy) (STOMP WebSockets, Redis) · Frontend: [Kacper](https://github.com/Fistxszek) |
+| **Real-Time Chat** | Start a conversation with a friend, send messages that arrive instantly, delete your own messages, and scroll back through history. An offline banner and automatic reconnection handle dropped connections, and screen readers announce new messages. | Backend: [Kinga](https://github.com/kingak4) (chat domain model, starting a chat), [Szymon](https://github.com/monandszy) (REST and WebSocket chat API) · Database: [Alina](https://github.com/alrltgit) · Frontend: [Kacper](https://github.com/Fistxszek) (messaging logic, reconnection), [Zyta](https://github.com/aktyz) (chat UI) |
+| **2048 Game** | The classic 2048 puzzle in the browser — slide tiles to merge matching numbers and reach 2048 — with friends invited to play through the chat. | [Kacper](https://github.com/Fistxszek) |
+| **Themes & Design System** | Three switchable themes (42Hub, Catppuccin Mocha, Catppuccin Latte) remembered between visits, a shared component library, and a responsive layout with compact navigation on narrow screens. | Frontend: [Zyta](https://github.com/aktyz) · UI/UX mockups: [Kinga](https://github.com/kingak4) |
+| **Accessibility** | WCAG 2.1 AA compliance: full keyboard navigation, skip link, landmark regions, screen-reader support, and AA contrast in every theme. | [Zyta](https://github.com/aktyz), [Kacper](https://github.com/Fistxszek) (2048 game) |
+| **Multiple Languages & RTL** | The interface is available in English, Polish, French, and Arabic, switchable at any time; Arabic is laid out right-to-left. | [Zyta](https://github.com/aktyz), [Kacper](https://github.com/Fistxszek) (2048 game) |
+| **Landing Page** | Public start page that introduces JustPlay42 and leads visitors to sign up or log in. | [Kacper](https://github.com/Fistxszek) (initial layout), [Zyta](https://github.com/aktyz) (redesign, rebrand) |
+| **Legal Pages & License** | Privacy Policy and Terms of Service pages, readable without logging in; the project is licensed under GNU GPL v3. | [Kinga](https://github.com/kingak4), [Kacper](https://github.com/Fistxszek), [Zyta](https://github.com/aktyz) (public access, restyle) |
+| **Public API & Documentation** | A secured REST API (JWT authentication, rate limiting) documented with OpenAPI/Swagger, WebSocket events documented with AsyncAPI, and an in-app page explaining how to use the API. | [Szymon](https://github.com/monandszy) (API, rate limiting, docs) · [Alina](https://github.com/alrltgit) (endpoint access fixes) · [Kacper](https://github.com/Fistxszek) (Swagger over HTTPS) · [Zyta](https://github.com/aktyz) (API docs page) |
+| **HTTPS Deployment** | The whole stack starts in Docker with a single `make` command and is served only over HTTPS through nginx on port 8443. | [Alina](https://github.com/alrltgit) (containerization, PostgreSQL, Docker network) · [Szymon](https://github.com/monandszy) (Compose orchestration, nginx TLS) · [Zyta](https://github.com/aktyz) (build profiles, HTTPS-only backend) |
+| **Continuous Integration** | A GitHub Actions pipeline runs the backend tests and verifies both builds end-to-end on every pull request. | [Zyta](https://github.com/aktyz), [Szymon](https://github.com/monandszy) (backend test job) |
+| **Generated Backend Documentation** | AsciiDoc reference pages and architecture diagrams generated directly from the backend code. | [Szymon](https://github.com/monandszy), [Kinga](https://github.com/kingak4) (module documentation) |
 
 ## Modules
 
